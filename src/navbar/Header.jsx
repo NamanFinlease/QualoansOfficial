@@ -34,16 +34,22 @@ const Header = () => {
     setAnchorEl(null);
   };
 
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
   return (
     <>
-      {/* Navbar */}
       <AppBar position="static" sx={{ backgroundColor: '#f9f9f9' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', minHeight: '64px', marginTop: '30px' }}>
-          <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center' }} onClick={scrollToTop}>
             <img src={logo} alt="Logo" style={{ width: '51%', height: 'auto' }} />
           </Link>
 
-          {/* Sticky Dropdown menu button */}
           <IconButton
             edge="end"
             color="inherit"
@@ -57,10 +63,10 @@ const Header = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              position: 'fixed', // Make it sticky
-              top: '34px', // Adjust the top position as needed
-              right: '20px', // Adjust the right position as needed
-              zIndex: 1000, // Ensure it is on top of other elements
+              position: 'fixed',
+              top: '34px',
+              right: '20px',
+              zIndex: 1000,
               '&:hover': {
                 backgroundColor: 'gray',
               },
@@ -73,66 +79,65 @@ const Header = () => {
       </AppBar>
 
       <Menu
-  anchorEl={anchorEl}
-  open={open}
-  onClose={handleMenuClose}
-  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-  transformOrigin={{ vertical: 'top', horizontal: 'center' }}
->
-  <Box sx={{ background: '#D9D9D9', width: '300px', p: 2 }}>
-    <MenuItem onClick={handleMenuClose}>
-      <Link to="/" style={{ color: '#0b2747', display: 'flex', alignItems: 'center', textDecoration: 'none', width: '100%' }}>
-        <HomeIcon sx={{ mr: 1 }} /> HOME
-      </Link>
-    </MenuItem>
-    <MenuItem onClick={handleMenuClose}>
-      <Link to="/about-us" style={{ color: '#0b2747', display: 'flex', alignItems: 'center', textDecoration: 'none', width: '100%' }}>
-        <InfoIcon sx={{ mr: 1 }} /> ABOUT US
-      </Link>
-    </MenuItem>
-    <MenuItem onClick={handleMenuClose}>
-      <Link to="/repay-now" style={{ color: '#0b2747', display: 'flex', alignItems: 'center', textDecoration: 'none', width: '100%' }}>
-        <PaymentIcon sx={{ mr: 1 }} /> REPAY NOW
-      </Link>
-    </MenuItem>
-    <MenuItem onClick={handleMenuClose}>
-      <Link to="/contact-us" style={{ color: '#0b2747', display: 'flex', alignItems: 'center', textDecoration: 'none', width: '100%' }}>
-        <ContactMailIcon sx={{ mr: 1 }} /> CONTACT US
-      </Link>
-    </MenuItem>
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleMenuClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Box sx={{ background: '#D9D9D9', width: '300px', p: 2 }}>
+          <MenuItem onClick={() => { handleMenuClose(); scrollToTop(); }}>
+            <Link to="/" style={{ color: '#0b2747', display: 'flex', alignItems: 'center', textDecoration: 'none', width: '100%' }}>
+              <HomeIcon sx={{ mr: 1 }} /> HOME
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={() => { handleMenuClose(); scrollToTop(); }}>
+            <Link to="/about-us" style={{ color: '#0b2747', display: 'flex', alignItems: 'center', textDecoration: 'none', width: '100%' }}>
+              <InfoIcon sx={{ mr: 1 }} /> ABOUT US
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={() => { handleMenuClose(); scrollToTop(); }}>
+            <Link to="/repay-now" style={{ color: '#0b2747', display: 'flex', alignItems: 'center', textDecoration: 'none', width: '100%' }}>
+              <PaymentIcon sx={{ mr: 1 }} /> REPAY NOW
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={() => { handleMenuClose(); scrollToTop(); }}>
+            <Link to="/contact-us" style={{ color: '#0b2747', display: 'flex', alignItems: 'center', textDecoration: 'none', width: '100%' }}>
+              <ContactMailIcon sx={{ mr: 1 }} /> CONTACT US
+            </Link>
+          </MenuItem>
 
-    <Box sx={{ width: '100%', borderTop: '1px solid black', my: 2 }} />
+          <Box sx={{ width: '100%', borderTop: '1px solid black', my: 2 }} />
 
-    <Box sx={{ p: 2 }}>
-      <Link to="/apply-now" style={{ textDecoration: 'none', width: '100%' }}>
-        <Button
-          variant="contained"
-          sx={{ backgroundColor: '#333', color: 'white', borderRadius: '5px', '&:hover': { backgroundColor: '#555' } }}
-          fullWidth
-          onClick={handleMenuClose}
-        >
-          <AssignmentIcon sx={{ mr: 1 }} /> APPLY NOW
-        </Button>
-      </Link>
-    </Box>
+          <Box sx={{ p: 2 }}>
+            <Link to="/apply-now" style={{ textDecoration: 'none', width: '100%' }} onClick={scrollToTop}>
+              <Button
+                variant="contained"
+                sx={{ backgroundColor: '#333', color: 'white', borderRadius: '5px', '&:hover': { backgroundColor: '#555' } }}
+                fullWidth
+                onClick={handleMenuClose}
+              >
+                <AssignmentIcon sx={{ mr: 1 }} /> APPLY NOW
+              </Button>
+            </Link>
+          </Box>
 
-    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mt: 2 }}>
-      <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
-        <Facebook sx={{ color: '#0b2747', cursor: 'pointer' }} />
-      </a>
-      <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer">
-        <Twitter sx={{ color: '#0b2747', cursor: 'pointer' }} />
-      </a>
-      <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
-        <Instagram sx={{ color: '#0b2747', cursor: 'pointer' }} />
-      </a>
-      <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
-        <LinkedIn sx={{ color: '#0b2747', cursor: 'pointer' }} />
-      </a>
-    </Box>
-  </Box>
-</Menu>
-
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mt: 2 }}>
+            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+              <Facebook sx={{ color: '#0b2747', cursor: 'pointer' }} />
+            </a>
+            <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer">
+              <Twitter sx={{ color: '#0b2747', cursor: 'pointer' }} />
+            </a>
+            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
+              <Instagram sx={{ color: '#0b2747', cursor: 'pointer' }} />
+            </a>
+            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
+              <LinkedIn sx={{ color: '#0b2747', cursor: 'pointer' }} />
+            </a>
+          </Box>
+        </Box>
+      </Menu>
     </>
   );
 };
