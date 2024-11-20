@@ -11,22 +11,24 @@ const RepayLoan = () => {
     <Box 
       sx={{ 
         background: '#f9f9f9',
-        backgroundImage: `url(${backgroundImg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
-        padding: { xs: '20px', sm: '30px' }, // Adjust padding for small screens
+        padding: { xs: '20px', sm: '45px' }, // Adjust padding for small screens
       }}
     >
       {/* Image Section */}
-      <Box 
-        sx={{ 
+     
+        <Box
+        sx={{
           position: 'relative',
           width: '100%',
-          height: { xs: '30vh', sm: '35vh', md: '45vh', lg: '100vh' }, // Responsive height
+          height: { xs: '20vh', md: '60vh' },
           overflow: 'hidden',
-          mb: 2,
+          borderRadius: '20px',
+          mb: 5,
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
         }}
       >
               <Box
@@ -35,15 +37,9 @@ const RepayLoan = () => {
           alt="Repay Loan"
           sx={{
             position: 'absolute',
-            top: 0,
-            left: 0,
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            padding: { xs: '5px', md: '30px' },
-            border: '2px solid transparent',
-            borderRadius: '50px',
-            
           }}
         />
 
@@ -53,20 +49,19 @@ const RepayLoan = () => {
       <Box 
         sx={{ 
           textAlign: 'center', 
-          border: '2px solid white', 
           borderRadius: '30px',
           padding: '16px',
           maxWidth: '80vw',
           margin: '0 auto',
           mt:6,
 
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
         }}
       >
         <Typography 
           variant="h5" 
           color="black" 
           sx={{ 
+            
             fontFamily: 'Inter',
             fontSize: { xs: '22px', sm: '30px' }, // Adjust font size for small screens
             lineHeight: '50px',
@@ -87,9 +82,7 @@ const RepayLoan = () => {
             mb: 2, 
           }}
         >
-          <hr style={{ flex: 1, border: '1px solid gray', marginLeft: '80px', marginRight: '8px' }} />
           <WarningIcon color="error" />
-          <hr style={{ flex: 1, border: '1px solid gray', marginRight: '80px', marginLeft: '8px' }} />
         </Box>
 
         <Typography 
@@ -97,126 +90,203 @@ const RepayLoan = () => {
           sx={{ 
             mt: 1, 
             fontFamily: 'Inter',
-            fontSize: { xs: '16px', sm: '24px' }, // Adjust font size for small screens
+            fontSize: { xs: '16px', sm: '25px' }, // Adjust font size for small screens
             lineHeight: '36px',
             letterSpacing: '-0.408px',
             mb: 5,
           }}
         >
-          Please share a screenshot of your transfer <br />
-          from your bank/Google Pay to <br />
-          <strong>recovery@Salarysathi.com</strong>.
+
+          
+        Please repay your loan and interest amount into the following bank a/c:
+
         </Typography>
       </Box>
 
       {/* Main Content */}
-      <Box mt={10}>
-        <Grid container spacing={4}>
-          {/* Bank Details Form */}
-          <Grid item xs={12}>
-            <Typography 
-              variant="h5" 
-              gutterBottom 
-              textAlign="center" 
-              sx={{ fontWeight: 'bold', mb: 4, paddingX: { xs: '20px', sm: '50px' } }} // Responsive padding
+      <Box mt={10} sx={{ background:'#D9D9D9',
+          borderRadius:'30px', margin:1}}>
+  <Grid container spacing={4} alignItems="center">
+    {/* Heading Section */}
+    <Grid item xs={12} md={4}>
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{
+         
+          fontWeight: 500,
+          mb: 4,
+          textAlign: { xs: 'center', md: 'left' }, // Center on small screens, left-align on larger screens
+          paddingX: { xs: '20px', sm: '50px' },
+        }}
+      >
+          Please share a screenshot of your transfer <br />
+                    from your bank/Google Pay to <br />
+                    <strong>recovery@qualoan.com</strong>.
+
+      </Typography>
+    </Grid>
+
+    {/* Account Details Section */}
+    <Grid item xs={12} md={8} sx={{marginLeft:{xs:3,md:0}}}>
+      <Box
+        component="form"
+        sx={{
+         marginRight:3.5,
+         marginBottom:3.5,
+          display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
+          alignItems: 'center',
+          padding: '20px',
+          borderRadius: '20px',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+          background: 'linear-gradient(180deg, #AE285D 0%, #5B437C 100%)',
+        }}
+      >
+        {/* Left Side - Centered Bank Image and Name */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            color: 'white',
+            mr: 3,
+            textAlign: 'center',
+            mb: { xs: 3, sm: 0 },
+          }}
+        >
+          <img
+            src={AXIS}
+            alt="AXIS Bank"
+            style={{ width: '50px', marginBottom: '8px' }}
+          />
+          <Typography variant="h6" sx={{ color: 'white' }}>
+            AXIS Bank
+          </Typography>
+        </Box>
+
+        {/* Vertical Divider */}
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{ backgroundColor: 'white', mx: 5 }}
+        />
+
+        {/* Right Side - Bank Details */}
+        <Box sx={{ color: 'white' }}>
+          <Typography
+            variant="body1"
+            sx={{ mb: 2, display: 'flex', alignItems: 'center' }}
+          >
+            <Box
+              component="span"
+              sx={{
+                fontWeight: 'bold',
+                minWidth: { xs: '100px', sm: '130px' },
+              }}
             >
-              Please repay your loan and interest amount into the following bank a/c:
+              Bank Name
+            </Box>
+            <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
+              AXIS Bank Limited
             </Typography>
+          </Typography>
 
-            <Grid container spacing={3} justifyContent="center" sx={{ mb: 8 }}>
-              <Grid item xs={12} sm={10} md={8}>
-                <Box
-                  component="form"
-                  sx={{
-                    display: 'flex',
-                    flexDirection: { xs: 'column', sm: 'row' }, // Stack elements on small screens
-                    alignItems: 'center',
-                    padding: '20px',
-                    borderRadius: '20px',
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-                    background: 'linear-gradient(180deg, #AE285D 0%, #5B437C 100%)',
-                  }}
-                >
-                  {/* Left Side - Centered Bank Image and Name */}
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      color: 'white',
-                      mr: 3,
-                      textAlign: 'center',
-                      mb: { xs: 3, sm: 0 }, // Add margin for small screens
-                    }}
-                  >
-                    <img 
-                      src={AXIS} 
-                      alt="AXIS Bank" 
-                      style={{ width: '50px', marginBottom: '8px' }} 
-                    />
-                    <Typography variant="h6" sx={{ color: 'white' }}>
-                      AXIS Bank
-                    </Typography>
-                  </Box>
+          <Typography
+            variant="body1"
+            sx={{ mb: 2, display: 'flex', alignItems: 'center' }}
+          >
+            <Box
+              component="span"
+              sx={{
+                fontWeight: 'bold',
+                minWidth: { xs: '100px', sm: '130px' },
+              }}
+            >
+              Name
+            </Box>
+            <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
+              Naman Finlease Private Limited
+            </Typography>
+          </Typography>
 
-                  {/* Vertical Divider */}
-                  <Divider orientation="vertical" flexItem sx={{ backgroundColor: 'white', mx: 5 }} />
+          <Typography
+            variant="body1"
+            sx={{ mb: 2, display: 'flex', alignItems: 'center' }}
+          >
+            <Box
+              component="span"
+              sx={{
+                fontWeight: 'bold',
+                minWidth: { xs: '100px', sm: '130px' },
+              }}
+            >
+              Account Number
+            </Box>
+            <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
+              920020009314172
+            </Typography>
+          </Typography>
 
-                  {/* Right Side - Bank Details */}
-                 <Box sx={{ color: 'white' }}>
-                  <Typography variant="body1" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                    <Box component="span" sx={{ fontWeight: 'bold', minWidth: { xs: '100px', sm: '130px' } }}>
-                      Bank Name
-                    </Box>
-                    <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}> AXIS Bank Limited</Typography>
-                  </Typography>
+          <Typography
+            variant="body1"
+            sx={{ mb: 2, display: 'flex', alignItems: 'center' }}
+          >
+            <Box
+              component="span"
+              sx={{
+                fontWeight: 'bold',
+                minWidth: { xs: '100px', sm: '130px' },
+              }}
+            >
+              IFSC Code
+            </Box>
+            <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
+              UTIB0000160
+            </Typography>
+          </Typography>
 
-                  <Typography variant="body1" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                    <Box component="span" sx={{ fontWeight: 'bold', minWidth: { xs: '100px', sm: '130px' } }}>
-                     Name
-                    </Box>
-                    <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
-                      Naman Finlease Private Limited
-                    </Typography>
-                  </Typography>
+          <Typography
+            variant="body1"
+            sx={{ mb: 2, display: 'flex', alignItems: 'center' }}
+          >
+            <Box
+              component="span"
+              sx={{
+                fontWeight: 'bold',
+                minWidth: { xs: '100px', sm: '130px' },
+              }}
+            >
+              Branch Name
+            </Box>
+            <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
+              Saket, New Delhi 110017, India
+            </Typography>
+          </Typography>
 
-                  <Typography variant="body1" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                    <Box component="span" sx={{ fontWeight: 'bold', minWidth: { xs: '100px', sm: '130px' } }}>
-                      Account Number
-                    </Box>
-                    <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>920020009314172</Typography>
-                  </Typography>
-
-                  <Typography variant="body1" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                    <Box component="span" sx={{ fontWeight: 'bold', minWidth: { xs: '100px', sm: '130px' } }}>
-                      IFSC Code
-                    </Box>
-                    <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>UTIB0000160</Typography>
-                  </Typography>
-
-                  <Typography variant="body1" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                    <Box component="span" sx={{ fontWeight: 'bold', minWidth: { xs: '100px', sm: '130px' } }}>
-                      Branch Name
-                    </Box>
-                    <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
-                      Saket, New Delhi 110017, India
-                    </Typography>
-                  </Typography>
-
-                  <Typography variant="body1" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                    <Box component="span" sx={{ fontWeight: 'bold', minWidth: { xs: '100px', sm: '130px' } }}>
-                      Account Type
-                    </Box>
-                    <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>Current Account</Typography>
-                  </Typography>
-                </Box>
-
-                </Box>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
+          <Typography
+            variant="body1"
+            sx={{ mb: 2, display: 'flex', alignItems: 'center' }}
+          >
+            <Box
+              component="span"
+              sx={{
+                fontWeight: 'bold',
+                minWidth: { xs: '100px', sm: '130px' },
+              }}
+            >
+              Account Type
+            </Box>
+            <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
+              Current Account
+            </Typography>
+          </Typography>
+        </Box>
       </Box>
+    </Grid>
+  </Grid>
+</Box>
+
     </Box>
   );
 };

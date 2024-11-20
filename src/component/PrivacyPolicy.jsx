@@ -112,20 +112,23 @@ const PrivacyPolicy = () => {
         <div ref={policyRef}>
             <Box 
                 sx={{ 
-                    background: `url(${backgroundImg}) center/cover no-repeat`,
                     minHeight: '100vh',
                     padding: '30px',
                     backgroundColor: '#f9f9f9',
                 }}
             >
                 {/* Image Section */}
-                <Box 
-                    sx={{ 
-                        position: 'relative',
-                        width: '100%',
-                        height: { xs: '20vh', sm: '30vh', md: '40vh', lg: '90vh' },
-                        overflow: 'hidden',
-                        mb: 2,
+                <Box
+                    sx={{
+                    backgroundColor: '#f9f9f9',
+
+                    position: 'relative',
+                    width: '100%',
+                    height: { xs: '20vh', md: '60vh' },
+                    overflow: 'hidden',
+                    borderRadius: '50px',
+                    mb: 5,
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
                     }}
                 >
                     <Slide direction="left" in={isVisible} timeout={1000}>
@@ -164,7 +167,7 @@ const PrivacyPolicy = () => {
                     </Box>
 
                     {/* Policy Content */}
-                    <Paper elevation={3} sx={{ borderRadius: '8px', overflow: 'hidden' ,  backgroundColor: 'transparent',  padding:{xs:1,md:8}}}>
+                    <Paper elevation={3} sx={{ borderRadius: '30px', overflow: 'hidden' ,  backgroundColor: 'transparent',  padding:{xs:1,md:8}}}>
                     {sections.map((section, sectionIndex) => (
                             <div key={sectionIndex}>
                                 <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>

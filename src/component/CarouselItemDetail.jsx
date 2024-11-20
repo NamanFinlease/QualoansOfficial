@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import { Box, Typography, Card, CardMedia, IconButton } from "@mui/material";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
-import backgroundImg from "../assets/image/Frame 464.png";
 
 // Import images
 import image1 from "../assets/image/Trust-and-Transparency 1.png";
@@ -64,8 +63,8 @@ function CarouselItemDetail({ imgUrl, imgTitle, description, index }) {
   return (
     <Card
       sx={{
-        width: 380,
-        height: 450,
+        width:380 ,
+        height:  450,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -87,14 +86,16 @@ function CarouselItemDetail({ imgUrl, imgTitle, description, index }) {
           image={imgUrl}
           alt={imgTitle}
           sx={{
-            width: "100%",
-            height: "100%",
+
+            width:{xs:'100%',md:'100%'} ,
+            height:{xs:'50%',md:'100%'},
             maxHeight: 150,
-            marginBottom: 13,
+            marginBottom: 10,
+            marginTop:10
           }}
         />
       </Box>
-      <Typography variant="h5" fontWeight="bold" color="white" align="center">
+      <Typography variant="h5" fontWeight="bold" color="white" align="center" >
         {imgTitle}
       </Typography>
       <Box mt={1} textAlign="center">
@@ -103,6 +104,10 @@ function CarouselItemDetail({ imgUrl, imgTitle, description, index }) {
             key={lineIndex}
             color="white"
             sx={{
+              marginBottom: 10,
+              paddingLeft:'30px',
+              paddingRight:'30px',
+
               fontSize: "20px",
               opacity: visibleLines.includes(lineIndex) ? 1 : 0,
               transition: "opacity 0.5s ease",
@@ -155,87 +160,122 @@ export default function AutoplayCarousel() {
   return (
     <Box
       sx={{
-        backgroundImage: `url(${backgroundImg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundColor: "#f9f9f9",
+        backgroundColor: "#F5F5F5",
         position: "relative",
+        display: "flex",
+        flexDirection: { xs: "column", md: "row" }, // Responsive layout
+        padding: { xs: "10px", sm: "20px", md: "30px" },
       }}
     >
-      <Typography variant="h4" fontWeight={750} align="center" color="black" gutterBottom style={{fontWeight:'bold', color: 'black',fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' }}}>
-        Why Us?
-      </Typography>
-         <Typography
+      {/* Left Section: Heading, Description, and Icons */}
+      <Box
+        sx={{
+          flex: { md: 1 }, // Take 1 part of the available space
+          textAlign: { xs: "center", md: "left" },
+          marginBottom: { xs: "20px", md: "0px" },
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: { xs: "center", md: "flex-start" },
+        }}
+      >
+        <Typography
+          variant="h4"
+          fontWeight={750}
+          color="black"
+          gutterBottom
+          sx={{
+            fontWeight: "bold",
+            fontSize: { xs: "1.8rem", sm: "2.5rem", md: "3rem" },
+          }}
+        >
+          Why Us?
+        </Typography>
+        <Typography
           variant="h5"
-          align="center"
           color="black"
           paragraph
           sx={{
-            display: "block", // Remove line clamping for full text display
-            textAlign: "center",
+            fontSize: { xs: "1rem", sm: "1.2rem", md: "1.5rem" },
           }}
         >
-        Receive fast financial assistance with our rapid approval process, easy repayment choices,<br />
-        and clear interest rates. Enjoy a secure and straightforward experience with minimal paperwork. <br />
-        Your funds will be available in no time!
-      </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
-        }}
-      >
-        <IconButton
-          onClick={() => scrollCarousel("left")}
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "10px",
-            transform: "translateY(-50%)",
-            zIndex: 1,
-            color: "black",
-          }}
-        >
-          <ArrowBackIos />
-        </IconButton>
+          Get quick financial support with our swift approval system, flexible repayment options,
+          and transparent interest rates. Experience a safe and hassle-free process with minimal documentation.
+          Your money will reach you in an instant!
+        </Typography>
+
+        {/* Backward and Forward Icons */}
         <Box
-          ref={carouselRef}
           sx={{
             display: "flex",
-            overflowX: "auto",
-            scrollBehavior: "smooth",
-            whiteSpace: "nowrap",
-            "&::-webkit-scrollbar": { display: "none" },
-            gap: 2, // Adding gap between cards
-            padding: "20px 0", // Padding around the carousel for better spacing
+            justifyContent: { xs: "center", md: "flex-start" },
+            gap: 2,
+            marginTop: { xs: "20px", md: "40px" },
           }}
         >
-          {cardDetails.map((item, index) => (
-            <Box key={index} sx={{ display: "inline-block" }}>
-              <CarouselItemDetail
-                imgUrl={item.imgUrl}
-                imgTitle={item.title}
-                description={item.description}
-                index={index}
-              />
-            </Box>
-          ))}
+          <IconButton
+            onClick={() => scrollCarousel("left")}
+            sx={{
+              padding: { xs: 2, md: 4 },
+              border: "2px solid gray",
+              color: "gray",
+              "&:hover": {
+                backgroundColor: "#f2f2f2",
+                color: "black",
+              },
+            }}
+          >
+            <ArrowBackIos />
+          </IconButton>
+          <IconButton
+            onClick={() => scrollCarousel("right")}
+            sx={{
+              padding: { xs: 2, md: 4 },
+              border: "2px solid gray",
+              color: "gray",
+              "&:hover": {
+                backgroundColor: "#f2f2f2",
+                color: "black",
+              },
+            }}
+          >
+            <ArrowForwardIos />
+          </IconButton>
         </Box>
-        <IconButton
-          onClick={() => scrollCarousel("right")}
-          sx={{
-            position: "absolute",
-            top: "50%",
-            right: "10px",
-            transform: "translateY(-50%)",
-            zIndex: 1,
-            color: "black",
-          }}
-        >
-          <ArrowForwardIos />
-        </IconButton>
+      </Box>
+
+      {/* Right Section: Carousel Boxes */}
+      <Box
+        ref={carouselRef}
+        sx={{
+          flex: { md: 2 }, // Take 2 parts of the available space
+          display: "flex",
+          overflowX: "auto",
+          scrollBehavior: "smooth",
+          gap: { xs: 15, sm: 3, md: 1 }, // Adjust gap between cards for small screens
+          padding: { xs: "10px 0", sm: "20px 0" },
+          "&::-webkit-scrollbar": { display: "none" }, // Hide scrollbar
+          justifyContent: { xs: "flex-start", sm: "start" }, // Align cards to the left
+        }}
+      >
+        {cardDetails.map((item, index) => (
+          <Box
+            key={index}
+            sx={{
+              display: "inline-block", // Horizontal alignment
+              width: { xs: "260px", sm: "300px", md: "360px" }, // Adjust card width for responsiveness
+              flexShrink: 0, // Prevent shrinking
+              margin: { xs: "0 8px", sm: "0 12px", md: "0 16px" }, // Adjust margin for gaps
+            }}
+          >
+            <CarouselItemDetail
+              imgUrl={item.imgUrl}
+              imgTitle={item.title}
+              description={item.description}
+              index={index}
+            />
+          </Box>
+        ))}
       </Box>
     </Box>
   );

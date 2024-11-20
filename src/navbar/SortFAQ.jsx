@@ -8,7 +8,7 @@ import {
     Paper,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import backgroundImage from '../assets/image/Frame 45.png'; // Replace with your background image path
+// import backgroundImage from '../assets/image/Frame 45.png'; // Replace with your background image path
 
 const SortFAQ = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -45,7 +45,7 @@ const SortFAQ = () => {
                 width: '100%',
                 height: 'auto',
                 padding: 4,
-                backgroundImage: `url(${backgroundImage})`,
+                // backgroundImage: `url(${backgroundImage})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
@@ -80,7 +80,8 @@ const SortFAQ = () => {
 
             <Box
                 sx={{
-                    margin: '40px',
+                    marginTop: '40px',
+                    
                     padding: '2rem',
                     opacity: isVisible ? 1 : 0,
                     transition: 'opacity 1s ease-in-out',
@@ -132,26 +133,16 @@ const SortFAQ = () => {
                                         },
                                     }}
                                 >
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-                                        <Typography
-                                            sx={{
-                                                fontFamily: 'Arial, sans-serif',
-                                                color: 'inherit',
-                                                fontSize: '2rem',
-                                                fontWeight: 'bold',
-                                                margin: '0 1rem 0 0',
-                                                textAlign: 'left',
-                                            }}
-                                        >
-                                            {String(index + 1).padStart(2, '0')}.
-                                        </Typography>
+                                    <Box sx={{ display: 'flex', width: '50%' }}>
+                                        
+                                       
                                         <Typography
                                             sx={{
                                                 fontFamily: 'Arial, sans-serif',
                                                 color: 'inherit',
                                                 fontSize: '1.25rem',
                                                 margin: '0',
-                                                textAlign: 'center',
+                                                textAlign: 'left',
                                                 width: '100%',
                                             }}
                                         >
@@ -166,7 +157,7 @@ const SortFAQ = () => {
                                         color: 'black',
                                         fontSize: '1rem',
                                         padding: '1rem 1.8rem',
-                                        textAlign: 'center',
+                                        textAlign: 'left',
                                     }}
                                 >
                                     <Typography

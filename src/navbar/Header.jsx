@@ -1,37 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  IconButton,
-  AppBar,
-  Toolbar,
-  Menu,
-  MenuItem,
-  Box,
-  Typography,
-  Button,
-} from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
-import InfoIcon from '@mui/icons-material/Info';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import PaymentIcon from '@mui/icons-material/Payment';
-import ContactMailIcon from '@mui/icons-material/ContactMail';
-import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
+import { IconButton, AppBar, Toolbar, Box, Button } from '@mui/material';
+import { Menu as MenuIcon } from '@mui/icons-material';
 import logo from '../assets/image/Qua Black LOgo (1).png'; // Adjust the path based on your structure
-import { useMediaQuery } from '@mui/material';
-import { Facebook, Twitter, Instagram, LinkedIn } from '@mui/icons-material';
 
 const Header = () => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const isMobile = useMediaQuery('(max-width:600px)');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const open = Boolean(anchorEl);
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
+  const toggleSidebar = (open) => {
+    setIsSidebarOpen(open);
   };
 
   // Scroll to top function
@@ -44,100 +21,169 @@ const Header = () => {
 
   return (
     <>
-      <AppBar position="static" sx={{ backgroundColor: '#f9f9f9' }}>
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', minHeight: '64px', marginTop: '30px' }}>
-          <Link to="/" style={{ display: 'flex', alignItems: 'center' }} onClick={scrollToTop}>
-            <img src={logo} alt="Logo" style={{ width: '51%', height: 'auto' }} />
+      <AppBar
+        position="sticky"
+        sx={{ backgroundColor: '#f9f9f9', boxShadow: 'none', zIndex: 5 }}
+      >
+        <Toolbar
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            minHeight: '64px',
+            marginTop: '10px',
+            paddingX: { xs: 2, sm: 3 }, // Add padding for small screens
+          }}
+        >
+          {/* Logo */}
+          <Link
+            to="/"
+            style={{ display: 'flex', alignItems: 'center' }}
+            onClick={scrollToTop}
+          >
+            <img src={logo} alt="Logo" style={{ width: '40%', height: 'auto' }} />
           </Link>
 
-          <IconButton
-            edge="end"
-            color="inherit"
-            onClick={handleMenuOpen}
+          {/* Apply Now Button and Menu Icon */}
+          <Box
             sx={{
-              backgroundColor: 'black',
-              color: 'white',
-              padding: '5px',
-              borderRadius: '10px',
-              width: '120px',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              position: 'fixed',
-              top: '34px',
-              right: '20px',
-              zIndex: 1000,
-              '&:hover': {
-                backgroundColor: 'gray',
+              border: '2px solid',
+              background: '#D9D9D9',
+              padding: '5px',
+              borderRadius: isSidebarOpen ? '0px 10px 10px 0px' : '10px',
+              position: 'relative',
+              gap: { xs: 1, sm: 2 }, // Adjust gap for smaller screens
+              '@media (max-width: 600px)': {
+                padding: '4px', // Reduce padding for small screens
               },
             }}
           >
-            {open ? <CloseIcon sx={{ fontSize: '20px' }} /> : <MenuIcon sx={{ fontSize: '20px' }} />}
-            <Typography variant="h6" sx={{ ml: 1 }}>Menu</Typography>
-          </IconButton>
+            {/* Sidebar Drawer */}
+            {isSidebarOpen && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: '-150%',
+                  width: '200%',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                  alignItems: 'center',
+                  padding: '10px',
+                  backgroundColor: '#D9D9D9',
+                  borderRadius: '10px 0px 0px 10px',
+                  zIndex: 2,
+                  animation: 'slideInSidebar 1s ease-out forwards', // Sidebar animation
+                  '@media (max-width: 600px)': {
+                    width: '220%', // Adjust width for small screens
+                    left: '-190%',
+                    padding: '6.7px',
+                  },
+                }}
+                onMouseLeave={() => toggleSidebar(false)} // Close on mouse leave
+              >
+                {['HOME', 'ABOUT', 'REPAY', 'CONTACT'].map((text, index) => (
+                  <Link
+                    key={text}
+                    to={
+                      text === 'HOME'
+                        ? '/'
+                        : text === 'REPAY'
+                        ? '/repay-now'
+                        : text === 'CONTACT'
+                        ? '/contact-us'
+                        : '/about-us'
+                    }
+                    style={{
+                      color: '#0b2747',
+                      textDecoration: 'none',
+                      padding: '5px 10px',
+                      borderRadius: '10px',
+                      animation: `textFadeIn 0.5s ease-out ${1 + index * 0.3}s forwards`, // Text appears after box
+                      opacity: 0,
+                    }}
+                    onClick={() => toggleSidebar(false)}
+                  >
+                    {text}
+                  </Link>
+                ))}
+              </Box>
+            )}
+
+            {/* IconButton */}
+            <IconButton
+              onMouseEnter={() => toggleSidebar(true)}
+              sx={{
+                color: 'white',
+                borderRadius: '10px',
+                padding: '5px',
+                paddingX: { xs: '10px', sm: '20px' }, // Adjust padding for small screens
+                opacity: isSidebarOpen ? 0 : 1,
+                transition: 'opacity 0.3s ease',
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+
+            {/* Apply Button */}
+            <Button
+              component={Link}
+              to="/apply-now"
+              variant="contained"
+              color="primary"
+              sx={{
+                backgroundColor: 'black',
+                color: 'white',
+                padding: '9.9px 18px',
+                borderRadius: '10px',
+                fontWeight: 'bold',
+                zIndex: 2,
+                '&:hover': {
+                  backgroundColor: 'gray',
+                  color: 'white',
+                },
+                '@media (max-width: 600px)': {
+                  fontSize: '14px', // Adjust font size for smaller screens
+                  padding: '8px 12px', // Reduce padding on small screens
+                },
+              }}
+            >
+              Apply
+            </Button>
+          </Box>
         </Toolbar>
       </AppBar>
 
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleMenuClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Box sx={{ background: '#D9D9D9', width: '300px', p: 2 }}>
-          <MenuItem onClick={() => { handleMenuClose(); scrollToTop(); }}>
-            <Link to="/" style={{ color: '#0b2747', display: 'flex', alignItems: 'center', textDecoration: 'none', width: '100%' }}>
-              <HomeIcon sx={{ mr: 1 }} /> HOME
-            </Link>
-          </MenuItem>
-          <MenuItem onClick={() => { handleMenuClose(); scrollToTop(); }}>
-            <Link to="/about-us" style={{ color: '#0b2747', display: 'flex', alignItems: 'center', textDecoration: 'none', width: '100%' }}>
-              <InfoIcon sx={{ mr: 1 }} /> ABOUT US
-            </Link>
-          </MenuItem>
-          <MenuItem onClick={() => { handleMenuClose(); scrollToTop(); }}>
-            <Link to="/repay-now" style={{ color: '#0b2747', display: 'flex', alignItems: 'center', textDecoration: 'none', width: '100%' }}>
-              <PaymentIcon sx={{ mr: 1 }} /> REPAY NOW
-            </Link>
-          </MenuItem>
-          <MenuItem onClick={() => { handleMenuClose(); scrollToTop(); }}>
-            <Link to="/contact-us" style={{ color: '#0b2747', display: 'flex', alignItems: 'center', textDecoration: 'none', width: '100%' }}>
-              <ContactMailIcon sx={{ mr: 1 }} /> CONTACT US
-            </Link>
-          </MenuItem>
+      {/* Keyframe Animations */}
+      <style>
+        {`
+          /* Sidebar Slide-in Animation */
+          @keyframes slideInSidebar {
+            from {
+              transform: translateX(30%);
+              opacity: 0;
+            }
+            to {
+              transform: translateX(0);
+              opacity: 1;
+            }
+          }
 
-          <Box sx={{ width: '100%', borderTop: '1px solid black', my: 2 }} />
-
-          <Box sx={{ p: 2 }}>
-            <Link to="/apply-now" style={{ textDecoration: 'none', width: '100%' }} onClick={scrollToTop}>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: '#333', color: 'white', borderRadius: '5px', '&:hover': { backgroundColor: '#555' } }}
-                fullWidth
-                onClick={handleMenuClose}
-              >
-                <AssignmentIcon sx={{ mr: 1 }} /> APPLY NOW
-              </Button>
-            </Link>
-          </Box>
-
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mt: 2 }}>
-            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
-              <Facebook sx={{ color: '#0b2747', cursor: 'pointer' }} />
-            </a>
-            <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer">
-              <Twitter sx={{ color: '#0b2747', cursor: 'pointer' }} />
-            </a>
-            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
-              <Instagram sx={{ color: '#0b2747', cursor: 'pointer' }} />
-            </a>
-            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
-              <LinkedIn sx={{ color: '#0b2747', cursor: 'pointer' }} />
-            </a>
-          </Box>
-        </Box>
-      </Menu>
+          /* Text Fade-in Animation */
+          @keyframes textFadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        `}
+      </style>
     </>
   );
 };

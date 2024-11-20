@@ -1,13 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Typography } from '@mui/material';
-import backgroundImage from '../assets/image/Frame 46.png'; // Adjust the path accordingly
+import { Box, Typography, Button } from '@mui/material';
 
 const WhoWeAre = () => {
-  const content = `Welcome to Qualoan – where we redefine lending!
-  We’re passionate innovators committed to making borrowing faster and easier.With us,
-   you can get a loan disbursed in your account in just  5 minutes.`;
+  const content = `Welcome to Qualoan – where we transform borrowing into a breeze! Our dedicated team is here to simplify lending like never before. With us, secure a loan and have the amount credited to your account in as little as 5 minutes.`;
 
-  const words = content.split('\n'); // Split the content into words
+  const words = content.split(' '); // Split the content into words
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef(null);
 
@@ -42,59 +39,56 @@ const WhoWeAre = () => {
       ref={containerRef}
       sx={{
         position: 'relative',
-        width: '100%',
-        height: { xs: 'auto', md: '70vh' }, // Make height responsive based on screen size
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundPosition: 'center',
-        backgroundSize: 'cover', // Ensure the image covers the full area
+        backgroundColor: "#f9f9f9",
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        padding: { xs: '20px', sm: '30px' },
         overflow: 'hidden',
-        backgroundColor: '#f9f9f9',
       }}
     >
-      {/* Dark overlay */}
+     
+      {/* Left Section: Heading */}
       <Box
         sx={{
-          position: 'absolute',
-          top: { xs: '100px', md: '0' }, // Adjust overlay top for smaller screens
-          left: 0,
-          width: '100%',
-          height: { xs: '300%', sm: '200%' }, // Adjust height for different screen sizes
-        }}
-      />
-
-      {/* Content overlay */}
-      <Box
-        sx={{
-          marginBottom: { xs: '20px', sm: '50px' }, // Responsive margin
-          position: 'relative',
-          textAlign: 'center',
+        
+          flex: 1,
+          textAlign: 'left',
           zIndex: 1,
-          maxWidth: '90%', // Allow content to take up more width on small screens
+          
+          marginRight: { xs: '0', md: '40px' },
         }}
       >
         <Typography
           variant="h2"
           fontWeight="bold"
           color="black"
-          mb={2}
+          mb={1}
           sx={{
+            marginLeft:{xs:2,sm:10},
             fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' }, // Adjust font size based on screen size
           }}
         >
           Who Are We?
         </Typography>
-        <Box sx={{ display: 'inline-block', textAlign: 'center' }}>
+      </Box>
+
+      {/* Right Section: Content */}
+      <Box
+        sx={{
+          flex: 2,
+          textAlign: 'left',
+          zIndex: 1,
+          maxWidth: '600px',
+        }}
+      >
+        <Box sx={{ display: 'inline-block', textAlign: 'left', mb: 3 }}>
           {words.map((word, index) => (
             <Typography
               key={index}
               fontSize={{ xs: '16px', sm: '22px' }} // Adjust font size of words for smaller screens
-              lineHeight={{xs:'25px',lg:"40px",md:'30px'}}
+              lineHeight={{ xs: '25px', lg: '40px', md: '30px' }}
               fontWeight={50}
               sx={{
-                fontWeight:540,
+                fontWeight: 540,
                 opacity: isVisible ? 1 : 0,
                 transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
                 transition: `opacity 0.3s ease ${index * 0.01}s, transform 0.3s ease ${index * 0.01}s`,
@@ -106,8 +100,29 @@ const WhoWeAre = () => {
             </Typography>
           ))}
         </Box>
+
+        {/* Read More Button */}
+        <Button
+          variant="contained"
+          href="/about-us" // Add your 'About Us' page link here
+          sx={{
+            backgroundColor: 'black',
+            color: 'white',
+            borderRadius:'80px',
+            fontWeight: 'bold',
+            fontSize: { xs: '14px', sm: '16px' },
+            padding: { xs: "8px 16px", sm: "6px 30px" },
+            '&:hover': {
+              backgroundColor: '#FFAA00',
+            },
+            
+          }}
+        >
+          Read More
+        </Button>
       </Box>
-    </Box>
+      </Box>
+  
   );
 };
 

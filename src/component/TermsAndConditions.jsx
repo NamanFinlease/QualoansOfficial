@@ -1,14 +1,12 @@
 import React from 'react';
 import { Box, Typography, Container, Paper, Divider } from '@mui/material';
 import { Fade } from '@mui/material';
-import backgroundImg from '../assets/image/Contact Us Frame 1.png';
 
 const TermsAndConditions = () => {
     return (
         <div>
             <Box 
                 sx={{ 
-                    background: `url(${backgroundImg}) center/cover no-repeat`,
                     minHeight: '100vh',
                     padding: '30px',
                     backgroundColor: '#f9f9f9',
@@ -36,7 +34,7 @@ const TermsAndConditions = () => {
                     </Box>
 
                     {/* Terms and Conditions Content */}
-                    <Paper elevation={3} sx={{ borderRadius: '8px', overflow: 'hidden' ,  backgroundColor: 'transparent',  padding:{xs:1,md:8}}}>
+                    <Paper elevation={3} sx={{ borderRadius: '30px', overflow: 'hidden' ,  backgroundColor: 'transparent',  padding:{xs:1,md:8}}}>
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
                             <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
                                 Welcome to QUAloan.com. By accessing and using this website or applying for any of our loan products, you agree to comply with the terms and conditions outlined here.

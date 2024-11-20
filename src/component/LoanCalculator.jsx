@@ -19,8 +19,6 @@ import {
 import { useInView } from 'react-intersection-observer';
 import { keyframes } from '@mui/system';
 
-// Import your background image
-import backgroundImage from '../assets/image/Frame .png'; // Adjust the path accordingly
 
 // Define keyframes for the animations
 const slideInLeft = keyframes`
@@ -91,9 +89,7 @@ const LoanCalculator = () => {
     return (
         <Box
             sx={{
-                backgroundImage: `url(${backgroundImage})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
+
                 borderRadius: { xs: '40px', md: '0' }, // No border radius on small screens, 40px on larger screens
 
                 paddingY: 4, // Adds vertical padding
@@ -101,41 +97,47 @@ const LoanCalculator = () => {
               
             }}
         >
-            <Box sx={{ marginTop: 4, marginBottom: 4 }}>
-                <Container>
-                    <Typography  align="center" gutterBottom sx={{fontWeight:'bold', color: 'black',fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } // Adjust font size based on screen size
+            <Box sx={{ marginTop: 0,  paddingBottom:10, backgroundColor: 'black', // Dark overlay for readability
+ marginBottom: 10,border:'2px solid gray',borderRadius:'50px',marginLeft:'20px',marginRight:'20px' }}>
+                <Container style={{marginTop:50}}>
+                    <Typography  align="center" gutterBottom sx={{fontWeight:'bold', color: 'white',fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } // Adjust font size based on screen size
  }}>
                         Personal Loan Calculator
                     </Typography>
-                    <Typography  align="center" gutterBottom sx={{ color: 'black',fontSize:{xs: '16px', sm: '22px' } }}>
-                    "Easily estimate your loan details with our handy calculator. See how different loan amounts, tenures, and interest rates impact your total payable amount. Find out exactly what you'll owe and plan your finances confidently."                    </Typography>
+                    <Typography  align="center" gutterBottom sx={{ color: 'white',fontSize:{xs: '16px', sm: '22px' } }}>
+                    "Calculate your loan effortlessly with our user-friendly tool. Adjust amounts, tenure, and interest rates to see the total cost and make informed financial decisions."                                    </Typography>
 
                     <Grid container spacing={4} justifyContent="center">
-                        <Grid item xs={12} md={6}>
-                            <Paper
-                                elevation={4}
-                                sx={{
-                                    mt:4,
-                                    padding: 3,
-                                    borderRadius: 10,
-                                    textAlign: 'center',
-                                    background: 'rgba(255, 255, 255, 0.4)', // Transparent background to see blur effect
-                                    color: 'black',
-                                    minHeight: '400px',
-                                    animation: calculatorInView ? `${slideInLeft} 0.5s ease` : 'none',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'space-between',
-                                }}
-                                ref={calculatorRef}
-                            >
-                                <Typography variant="h6" sx={{ marginBottom: 1,textAlign:'left' }}>
+                    <Grid item xs={12} md={6}>
+                        <Paper
+                            elevation={4}
+                            sx={{
+                                mt: 4,
+                                padding: 3,
+                                borderRadius: 10,
+                                textAlign: 'center',
+                                background: 'white', // Transparent background to see blur effect
+                                color: 'black',
+                                minHeight: '400px',
+                                animation: calculatorInView ? `${slideInLeft} 0.5s ease` : 'none',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                            }}
+                            ref={calculatorRef}
+                        >
+                            <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'left' }}>
                                 Loan Amount (₹)
-                                </Typography>
-                                <TextField
+                            </Typography>
+                            <TextField
                                 type="number"
                                 value={loanAmount}
-                                onChange={(e) => setLoanAmount(Number(e.target.value))}
+                                onChange={(e) => {
+                                    const value = Number(e.target.value);
+                                    if (value >= 5000 && value <= 100000) {
+                                        setLoanAmount(value);  // Update only if within the valid range
+                                    }
+                                }}
                                 variant="outlined"
                                 fullWidth
                                 sx={{
@@ -154,34 +156,38 @@ const LoanCalculator = () => {
                                 }} 
                             />
 
-                                <Slider
-                                    value={loanAmount}
-                                    min={5000}
-                                    max={100000}
-                                    onChange={handleLoanAmountChange}
-                                    valueLabelDisplay="auto"
-                                    marks={[{ value: 5000, label: '5K' }, { value: 100000, label: '100K' }]}
-                                    sx={{
-                                       
-                                        color: 'black',
-                                        height: 8,
-                                        marginBottom: 2,
-                                        '& .MuiSlider-markLabel[data-index="0"]': {
-                                            transform: 'translateX(5%)', // Shift min label to the right
-                                        },
-                                        '& .MuiSlider-markLabel[data-index="1"]': {
-                                            transform: 'translateX(-90%)', // Shift max label to the left
-                                        },
-                                    }}
-                                />
+                            <Slider
+                                value={loanAmount}
+                                min={5000}
+                                max={100000}
+                                onChange={handleLoanAmountChange}
+                                valueLabelDisplay="auto"
+                                marks={[{ value: 5000, label: '5K' }, { value: 100000, label: '100K' }]}
+                                sx={{
+                                    color: 'black',
+                                    height: 8,
+                                    marginBottom: 2,
+                                    '& .MuiSlider-markLabel[data-index="0"]': {
+                                        transform: 'translateX(5%)', // Shift min label to the right
+                                    },
+                                    '& .MuiSlider-markLabel[data-index="1"]': {
+                                        transform: 'translateX(-90%)', // Shift max label to the left
+                                    },
+                                }}
+                            />
 
-                                <Typography variant="h6" sx={{ marginBottom: 1,textAlign:'left' }}>
-                                    Loan Tenure (Days)
-                                </Typography>
-                                <TextField
+                            <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'left' }}>
+                                Loan Tenure (Days)
+                            </Typography>
+                            <TextField
                                 type="number"
                                 value={loanTenure}
-                                onChange={(e) => setLoanAmount(Number(e.target.value))}
+                                onChange={(e) => {
+                                    const value = Number(e.target.value);
+                                    if (value >= 1 && value <= 90) {
+                                        setLoanTenure(value);  // Update only if within the valid range
+                                    }
+                                }}
                                 variant="outlined"
                                 fullWidth
                                 sx={{
@@ -200,33 +206,38 @@ const LoanCalculator = () => {
                                 }} 
                             />
 
-                                <Slider
-                                    value={loanTenure}
-                                    min={1}
-                                    max={90}
-                                    onChange={handleLoanTenureChange}
-                                    valueLabelDisplay="auto"
-                                    marks={[{ value: 1, label: '1' }, { value: 90, label: '90' }]}
-                                    sx={{
-                                        color: 'black',
-                                        height: 8,
-                                        marginBottom: 2,
-                                                        '& .MuiSlider-markLabel[data-index="0"]': {
-                                                transform: 'translateX(5%)', // Shift min label to the right
-                                            },
-                                            '& .MuiSlider-markLabel[data-index="1"]': {
-                                                transform: 'translateX(-90%)', // Shift max label to the left
-                                            },
-                                                        }}
-                                />
+                            <Slider
+                                value={loanTenure}
+                                min={1}
+                                max={90}
+                                onChange={handleLoanTenureChange}
+                                valueLabelDisplay="auto"
+                                marks={[{ value: 1, label: '1' }, { value: 90, label: '90' }]}
+                                sx={{
+                                    color: 'black',
+                                    height: 8,
+                                    marginBottom: 2,
+                                    '& .MuiSlider-markLabel[data-index="0"]': {
+                                        transform: 'translateX(5%)', // Shift min label to the right
+                                    },
+                                    '& .MuiSlider-markLabel[data-index="1"]': {
+                                        transform: 'translateX(-90%)', // Shift max label to the left
+                                    },
+                                }}
+                            />
 
-                                <Typography variant="h6" sx={{ marginBottom: 1,textAlign:'left' }}>
-                                    Interest Rate (%)
-                                </Typography>
-                                <TextField
+                            <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'left' }}>
+                                Interest Rate (%)
+                            </Typography>
+                            <TextField
                                 type="number"
                                 value={interestRate}
-                                onChange={(e) => setLoanAmount(Number(e.target.value))}
+                                onChange={(e) => {
+                                    const value = Number(e.target.value);
+                                    if (value >= 0.5 && value <= 2.75) {
+                                        setInterestRate(value);  // Update only if within the valid range
+                                    }
+                                }}
                                 variant="outlined"
                                 fullWidth
                                 sx={{
@@ -245,36 +256,36 @@ const LoanCalculator = () => {
                                 }} 
                             />
 
-                                <Slider
-                                    value={interestRate}
-                                    min={0.8}
-                                    max={2.75}
-                                    step={0.1}
-                                    onChange={handleInterestRateChange}
-                                    valueLabelDisplay="auto"
-                                    marks={[{ value: 0.8, label: '0.8%' }, { value: 2.75, label: '2.75%' }]}
-                                    sx={{
-                                        color: 'black',
-                                        height: 8,
-                                        marginBottom: 2,
-                                        '& .MuiSlider-markLabel[data-index="0"]': {
-                                            transform: 'translateX(5%)', // Shift min label to the right
-                                        },
-                                        '& .MuiSlider-markLabel[data-index="1"]': {
-                                            transform: 'translateX(-90%)', // Shift max label to the left
-                                        },
-                                    }}
-                                />
-                                <Button
+                            <Slider
+                                value={interestRate}
+                                min={0.5}
+                                max={2.75}
+                                step={0.1}
+                                onChange={handleInterestRateChange}
+                                valueLabelDisplay="auto"
+                                marks={[{ value: 0.5, label: '0.5%' }, { value: 2.75, label: '2.75%' }]}
+                                sx={{
+                                    color: 'black',
+                                    height: 8,
+                                    marginBottom: 2,
+                                    '& .MuiSlider-markLabel[data-index="0"]': {
+                                        transform: 'translateX(5%)', // Shift min label to the right
+                                    },
+                                    '& .MuiSlider-markLabel[data-index="1"]': {
+                                        transform: 'translateX(-90%)', // Shift max label to the left
+                                    },
+                                }}
+                            />
+                            <Button
                                 component={Link}
-                            href="/apply-now"
-                                    variant="contained"
-                                    sx={{ marginTop: 2, backgroundColor: 'black', borderRadius: '16px',padding:2 }} 
-                                >
-                                    <Typography >₹{totalAmount}</Typography>
-                                </Button>
-                            </Paper>
-                        </Grid>
+                                href="/apply-now"
+                                variant="contained"
+                                sx={{ marginTop: 2, backgroundColor: 'black', borderRadius: '16px', padding: 2 }} 
+                            >
+                                <Typography>₹{totalAmount}</Typography>
+                            </Button>
+                        </Paper>
+                    </Grid>
 
                         <Grid item xs={12} md={6}>
                             <Paper
@@ -284,7 +295,7 @@ const LoanCalculator = () => {
                                     padding: 3,
                                     borderRadius: '30px',
                                     textAlign: 'center',
-                                    background: 'rgba(255, 255, 255, 0.4)', // Transparent background to see blur effect
+                                    background: 'white', // Transparent background to see blur effect
                                     color: 'black',
                                     minHeight: '400px',
                                     animation: detailsInView ? `${slideInRight} 0.5s ease` : 'none',
@@ -348,7 +359,7 @@ const LoanCalculator = () => {
                             component={Link}
                             href="/apply-now" // Change this to your actual "Apply Now" URL
                             variant="contained"
-                            sx={{ marginTop: 15.5, backgroundColor: 'black', borderRadius: '16px', padding: 2, textDecoration: 'none' }}
+                            sx={{ marginTop: 16, backgroundColor: 'black', borderRadius: '16px', padding: 2, textDecoration: 'none' }}
                             >
                             Apply Now
                             </Button>

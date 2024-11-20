@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Grid, Paper, Typography } from '@mui/material';
 import { useInView } from 'react-intersection-observer';
-import backgroundImage from '../assets/image/Frame .png'; // Adjust the path accordingly
 
 const LoanCalculate = () => {
     const { ref, inView } = useInView({
@@ -18,7 +17,6 @@ const LoanCalculate = () => {
                 minHeight: '130vh', // Minimum height
                 position: 'relative',
                 overflow: 'hidden',
-                backgroundImage: `url(${backgroundImage})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 color: 'black',
@@ -40,7 +38,7 @@ const LoanCalculate = () => {
                     },
                 }}
             >
-                Make Your Dreams Come True
+                Your Dreams, Our Priority
             </Typography>
 
             <Grid container spacing={2} ref={ref} sx={{ px: { xs: 1, md: 4 } }}>

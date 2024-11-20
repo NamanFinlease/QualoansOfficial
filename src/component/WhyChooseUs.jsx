@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Typography, Card, IconButton } from "@mui/material";
+import { Box, Typography, Card, IconButton, useMediaQuery } from "@mui/material";
 import {
   ArrowBackIos,
   ArrowForwardIos,
@@ -44,153 +44,187 @@ const cardDetails = [
   },
 ];
 
-
 function CarouselItemDetail({ icon, imgTitle, description, index }) {
   const colors = ["#EB685A", "#A77AE2", "#56B8DC", "#AFD97E", "#d7ccc8"];
-
   return (
     <Card
-    sx={{
-      width: 300,
-      height: 400,
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: colors[index % colors.length],
-      boxShadow: 4,
-      borderRadius: 3,
-      margin: 2,
-      transition: "transform 0.3s",
-      "&:hover": {
-        transform: "scale(1.05)",
-        boxShadow: 6,
-      },
-    }}
-  >
-    <Box sx={{ marginBottom: 2 }}>
-      {React.cloneElement(icon, { sx: { fontSize: "50px", color: "white" } })}
-    </Box>
-    <Typography
-      variant="h5"
-      fontWeight="bold"
-      color="white"
-      align="center"
-      sx={{ fontSize: "1.2rem", marginBottom: "10px" }}
+      sx={{
+        width: { xs: 250, sm: 300 },
+        height: { xs: 350, sm: 350 },
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: colors[index % colors.length],
+        boxShadow: 4,
+        borderRadius: 5,
+        padding: 2, // Added padding for card
+        margin: { xs: 1, sm: 2 }, // Adjust margin for spacing between cards
+      }}
     >
-      {imgTitle}
-    </Typography>
-    <Box mt={1} textAlign="center">
+      <Box sx={{ marginBottom: 2 }}>
+        {React.cloneElement(icon, { sx: { fontSize: "50px", color: "white" } })}
+      </Box>
       <Typography
-        variant="body1"
+        variant="h5"
+        fontWeight="bold"
         color="white"
+        align="center"
+        sx={{ fontSize: { xs: "1rem", sm: "1.2rem" }, marginBottom: "10px" }}
+      >
+        {imgTitle}
+      </Typography>
+      <Box
+        mt={1}
+        textAlign="center"
         sx={{
-          textAlign: "center",
-          fontSize: "0.9rem",
-          lineHeight: "1.3",
-          whiteSpace: "pre-line",  // This respects line breaks
-          paddingX: 2,
+          paddingX: 2, // Added padding inside text box for better spacing
         }}
       >
-        {description}
-      </Typography>
-    </Box>
-  </Card>
+        <Typography
+          variant="body1"
+          color="white"
+          sx={{
+            textAlign: "center",
+            fontSize: "0.9rem",
+            lineHeight: "1.3",
+            whiteSpace: "pre-line",
+          }}
+        >
+          {description}
+        </Typography>
+      </Box>
+    </Card>
   );
 }
 
 export default function WhyChooseUs() {
   const carouselRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
 
   const scrollLeft = () => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollLeft -= 300;
-    }
-    setIsPaused(true);
-  };
-
-  const scrollRight = () => {
     if (carouselRef.current) {
       carouselRef.current.scrollLeft += 300;
     }
     setIsPaused(true);
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!isPaused && carouselRef.current) {
-        carouselRef.current.scrollLeft += 1;
-      }
-    }, 20);
-
-    return () => clearInterval(interval);
-  }, [isPaused]);
-
-  useEffect(() => {
-    if (isPaused) {
-      const timeout = setTimeout(() => setIsPaused(false), 3000);
-      return () => clearTimeout(timeout);
+  const scrollRight = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft -= 300;
     }
-  }, [isPaused]);
+    setIsPaused(true);
+  };
 
+  
   return (
-    <Box sx={{ marginTop: '100px', paddingBottom: '30px', position: "relative" }}>  
-      <Typography variant="h3" fontWeight={750} align="center" color="black" gutterBottom > 
-        Why Choose Us?
-      </Typography>
-
-      {/* Left Scroll Button */}
-      <IconButton
-        onClick={scrollLeft}
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "10px",
-          transform: "translateY(-50%)",
-          zIndex: 1,
-          color: "black",
-        }}
-      >
-        <ArrowBackIos />
-      </IconButton>
-
       <Box
-        ref={carouselRef}
         sx={{
+          marginTop:'50px',
           display: "flex",
-          overflowX: "auto",
-          scrollBehavior: "smooth",
-          whiteSpace: "nowrap",
-          "&::-webkit-scrollbar": { display: "none" },
+          flexDirection: { xs: "column", sm: "row" }, // Adjust layout for small screens
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          backgroundColor: "#f5f5f5",
+          borderRadius: 4,
+          padding: 4,
+          gap: 4,
         }}
       >
-        {cardDetails.map((item, index) => (
-          <Box key={index} sx={{ display: "inline-block" }}>
-            <CarouselItemDetail
-              icon={item.icon}
-              imgTitle={item.title}
-              description={item.description}
-              index={index}
-            />
+        {/* Left Section */}
+        <Box sx={{ flex: "1", textAlign: { xs: "center", sm: "left" } }}>
+          <Typography
+            variant="h4"
+            fontWeight='bold'
+            color="black"
+            gutterBottom
+          >
+            Why Us?
+          </Typography>
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{ marginBottom: 2 ,fontSize:'20px'}}
+          >
+            Discover the reasons why customers trust us with their financial needs.
+            Our commitment to transparency, security, and convenience ensures a
+            seamless experience for you.
+          </Typography>
+          {/* Scroll Buttons */}
+           <Box
+            sx={{
+              display: "flex",
+              justifyContent: { xs: "center", sm: "flex-start" },
+              gap: 1,
+              marginTop: 8,
+            }}
+          >
+            <IconButton
+              onClick={scrollLeft}
+              sx={{
+                color: "gray",
+                border: "2px solid gray", // Black border
+                borderRadius: "50%", // Circular shape
+                width: 60, // Ensure a square shape for the circle
+                height: 60,
+                justifyContent: "center",
+                alignItems: "center",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.1)", // Slight hover effect
+                },
+              }}
+              aria-label="Scroll Left"
+            >
+              <ArrowBackIos />
+            </IconButton>
+            <IconButton
+              onClick={scrollRight}
+              sx={{
+                color: "gray",
+                border: "2px solid gray", // Black border
+                borderRadius: "50%", // Circular shape
+                width: 60, // Ensure a square shape for the circle
+                height: 60,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.1)", // Slight hover effect
+                },
+              }}
+              aria-label="Scroll Right"
+            >
+              <ArrowForwardIos />
+            </IconButton>
           </Box>
-        ))}
+        </Box>
+
+        {/* Right Section */}
+        <Box
+          ref={carouselRef}
+          sx={{
+            display: "flex",
+            overflowX: "auto", // Enable horizontal scrolling
+            scrollBehavior: "smooth",
+            whiteSpace: "nowrap",
+            "&::-webkit-scrollbar": { display: "none" }, // Hide scrollbar
+            flex: 2,
+            width: "100%", // Full width on small screens
+          }}
+        >
+          {cardDetails.map((item, index) => (
+            <Box key={index} sx={{ display: "inline-block" }}>
+              <CarouselItemDetail
+                icon={item.icon}
+                imgTitle={item.title}
+                description={item.description}
+                index={index}
+              />
+            </Box>
+          ))}
+        </Box>
       </Box>
 
-      {/* Right Scroll Button */}
-      <IconButton
-        onClick={scrollRight}
-        sx={{
-          position: "absolute",
-          top: "50%",
-          right: "10px",
-          transform: "translateY(-50%)",
-          zIndex: 1,
-          color: "black",
-        }}
-      >
-        <ArrowForwardIos />
-      </IconButton>
-    </Box>
   );
 }

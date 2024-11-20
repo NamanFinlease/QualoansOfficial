@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { keyframes } from '@mui/system';
-import backgroundImage from '../assets/image/Frame 445.png'; // Replace with your image path
 
 const FAQs = () => {
     // Animation for lines coming in one by one
@@ -29,7 +28,6 @@ const FAQs = () => {
         <Box
             sx={{
                 padding: 4,
-                backgroundImage: `url(${backgroundImage})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
