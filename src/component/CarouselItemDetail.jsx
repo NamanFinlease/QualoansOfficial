@@ -205,43 +205,43 @@ export default function AutoplayCarousel() {
         </Typography>
 
         {/* Backward and Forward Icons */}
-        <Box
-  sx={{
-    display: "flex",
-    justifyContent: { xs: "center", md: "flex-start" },
-    gap: 2,
-    marginTop: { xs: "20px", md: "40px" }, // Ensure marginTop is applied on both small and large screens
-  }}
->
-  <IconButton
-    onClick={() => scrollCarousel("left")}
-    sx={{
-      padding: { xs: 2, md: 4 },
-      border: "2px solid gray",
-      color: "gray",
-      "&:hover": {
-        backgroundColor: "#f2f2f2",
-        color: "black",
-      },
-    }}
-  >
-    <ArrowBackIos />
-  </IconButton>
-  <IconButton
-    onClick={() => scrollCarousel("right")}
-    sx={{
-      padding: { xs: 2, md: 4 },
-      border: "2px solid gray",
-      color: "gray",
-      "&:hover": {
-        backgroundColor: "#f2f2f2",
-        color: "black",
-      },
-    }}
-  >
-    <ArrowForwardIos />
-  </IconButton>
-</Box>
+         <Box
+          sx={{
+            display: "flex",
+            justifyContent: { xs: "center", md: "flex-start" },
+            gap: 2,
+            marginTop: { xs: "20px", md: "40px" }, // Ensure marginTop is applied on both small and large screens
+          }}
+        >
+          <IconButton
+            onClick={() => scrollCarousel("left")}
+            sx={{
+              padding: { xs: 2, md: 4 },
+              border: "2px solid gray",
+              color: "gray",
+              "&:hover": {
+                backgroundColor: "#f2f2f2",
+                color: "black",
+              },
+            }}
+          >
+            <ArrowBackIos />
+          </IconButton>
+          <IconButton
+            onClick={() => scrollCarousel("right")}
+            sx={{
+              padding: { xs: 2, md: 4 },
+              border: "2px solid gray",
+              color: "gray",
+              "&:hover": {
+                backgroundColor: "#f2f2f2",
+                color: "black",
+              },
+            }}
+          >
+            <ArrowForwardIos />
+          </IconButton>
+        </Box>
 
       </Box>
 
