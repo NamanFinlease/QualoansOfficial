@@ -157,7 +157,8 @@ export default function WhyChooseUs() {
               display: "flex",
               justifyContent: { xs: "center", sm: "flex-start" },
               gap: 1,
-              marginTop: 8,
+              marginTop: { xs: "20px", md: "100px" },
+
             }}
           >
             <IconButton
