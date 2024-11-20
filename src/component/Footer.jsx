@@ -77,7 +77,7 @@ const Footer = () => {
                 <Box component="ul" sx={{ listStyleType: 'none', padding: 0, margin: 0 }}>
                   <li><Link href="contact-us" sx={{ ...linkStyle, display: 'flex', alignItems: 'center' }}><Email sx={{ mr: 1 }} /> info@qualoan.com</Link></li>
                   <li><Link href="contact-us" sx={{ ...linkStyle, display: 'flex', alignItems: 'center' }}><Phone sx={{ mr: 1 }} /> +91 9999999341</Link></li>
-                  <li><Link href="contact-us" sx={{ ...linkStyle, display: 'flex', alignItems: 'center' }}><LocationOn sx={{ mr: 1 }} /> S-370, Panchsheel Park, New Delhi 110017, India</Link></li>
+                  <li><Link href="contact-us" sx={{ ...linkStyle, display: 'flex', alignItems: 'center' }}><LocationOn sx={{ mr: 1,mt:-2 }} /> S-370, Panchsheel Park, New Delhi 110017, India</Link></li>
                 </Box>
               </Grid>
             </Grid>
