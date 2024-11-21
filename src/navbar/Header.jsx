@@ -118,8 +118,8 @@ const Header = () => {
               sx={{
                 color: 'white',
                 borderRadius: '10px',
-                padding: '5px',
-                paddingX: { xs: '10px', sm: '20px' }, // Adjust padding for small screens
+                // padding: '5px',
+                marginLeft: { xs: '10px', sm: '10px' }, // Adjust padding for small screens
                 opacity: isSidebarOpen ? 0 : 1,
                 transition: 'opacity 0.3s ease',
               }}

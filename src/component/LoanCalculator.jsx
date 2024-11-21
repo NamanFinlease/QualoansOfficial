@@ -46,7 +46,7 @@ const slideInRight = keyframes`
 const LoanCalculator = () => {
     const [loanAmount, setLoanAmount] = useState(5000);
     const [loanTenure, setLoanTenure] = useState(1);
-    const [interestRate, setInterestRate] = useState(2);
+    const [interestRate, setInterestRate] = useState(0.5);
     const [totalAmount, setTotalAmount] = useState(51000);
     const [dailyPayment, setDailyPayment] = useState(0);
     const [showDialog, setShowDialog] = useState(false); // State for dialog visibility
@@ -98,7 +98,7 @@ const LoanCalculator = () => {
             }}
         >
             <Box sx={{ marginTop: 0,  paddingBottom:10, backgroundColor: 'black', // Dark overlay for readability
- marginBottom: 10,border:'2px solid gray',borderRadius:'50px',marginLeft:'20px',marginRight:'20px' }}>
+           marginBottom: 10,border:'2px solid gray',borderRadius:'50px',marginLeft:'20px',marginRight:'20px' }}>
                 <Container style={{marginTop:50}}>
                     <Typography  align="center" gutterBottom sx={{fontWeight:'bold', color: 'white',fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } // Adjust font size based on screen size
  }}>
