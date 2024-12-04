@@ -39,11 +39,11 @@ const Footer = () => {
             <Grid item xs={12} md={4} container spacing={3} direction="column" justifyContent="center" alignItems="center">
               <img src={logo} alt="Logo" style={{ width: '50%', height: 'auto',mb:5 }} /> {/* Logo */}
               <Box display="flex" gap={2} justifyContent="center" mt={5}> {/* Social Media Icons */}
-                <Link href="https://www.facebook.com/profile.php?id=61567546377871" sx={{ ...iconStyle, backgroundColor: '#4267B2' }}><Facebook /></Link>
-                <Link href="https://x.com/speedo_loan" sx={{ ...iconStyle, backgroundColor: '#1DA1F2' }}><Twitter /></Link>
-                <Link href="https://www.linkedin.com/company/speedo-loan/about/?viewAsMember=true" target="_blank" sx={{ ...iconStyle, backgroundColor: '#0077B5' }}><LinkedIn /></Link>
-                <Link href="https://www.instagram.com/speedo.loan/" target="_blank" sx={{ ...iconStyle, backgroundColor: '#C13584' }}><Instagram /></Link>
-                <Link href="https://www.youtube.com/@SpeedLoans" target="_blank" sx={{ ...iconStyle, backgroundColor: '#FF0000' }}><YouTube /></Link>
+                <Link href="/" sx={{ ...iconStyle, backgroundColor: '#4267B2' }}><Facebook /></Link>
+                <Link href="/" sx={{ ...iconStyle, backgroundColor: '#1DA1F2' }}><Twitter /></Link>
+                <Link href="/" target="_blank" sx={{ ...iconStyle, backgroundColor: '#0077B5' }}><LinkedIn /></Link>
+                <Link href="/" target="_blank" sx={{ ...iconStyle, backgroundColor: '#C13584' }}><Instagram /></Link>
+                <Link href="/" target="_blank" sx={{ ...iconStyle, backgroundColor: '#FF0000' }}><YouTube /></Link>
               </Box>
             </Grid>
 
@@ -51,7 +51,7 @@ const Footer = () => {
             <Grid item xs={12} md={8} container spacing={3} direction="row" justifyContent="flex-start">
               {/* Fast Links Section */}
               <Grid item xs={12} sm={4} sx={{ paddingTop: '12px' }}>
-                <Typography variant="h6" sx={{ color: '#fff', fontWeight: 500, mb: 2 }}>Fast Link</Typography>
+                <Typography variant="h6" sx={{ color: '#fff', fontWeight: 500, mb: 2 }}>Fast Links</Typography>
                 <Box component="ul" sx={{ listStyleType: 'none', padding: 0, margin: 0 }}>
                   <li><Link href="/" sx={linkStyle}>Home</Link></li>
                   <li><Link href="about-us" sx={linkStyle}>About Us</Link></li>
