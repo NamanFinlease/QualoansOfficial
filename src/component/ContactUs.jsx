@@ -102,7 +102,7 @@ const AboutUs = () => {
             >
               Email
             </Typography>
-            <Typography sx={{ mb: 3 }}>info@qualoan.com</Typography>
+            <Typography sx={{ mb: 3 }}>info@QUA Loan.com</Typography>
             <Typography
               sx={{
                 fontWeight: 'bold',

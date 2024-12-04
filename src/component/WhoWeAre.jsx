@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 
 const WhoWeAre = () => {
-  const content = `Welcome to Qualoan – where we transform borrowing into a breeze! Our dedicated team is here to simplify lending like never before. With us, secure a loan and have the amount credited to your account in as little as 5 minutes.`;
+  const content = `Welcome to QUA Loan – where we make borrowings  really easy and hassle free! Our dedicated team is here to simplify lending like never before. With us, secure a loan and have the amount credited to your account in as little as 5 minutes.`;
 
   const words = content.split(' '); // Split the content into words
   const [isVisible, setIsVisible] = useState(false);

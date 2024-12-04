@@ -138,7 +138,7 @@ const AboutUs = () => {
             marginBottom: { xs: '40px', md: '20px' }, // Responsive bottom margin
           }}
         >
-          Welcome to QUAloan.com, your trusted partner in personal finance solutions. As a premier digital lending platform under Naman Finlease Private Limited, we specialize in providing fast, convenient, and short-term unsecured personal loans to salaried individuals across India. Our mission is to empower our customers with access to credit, simplifying the loan process through innovative technology and tailored solutions that meet your unique financial needs.
+          Welcome to QUA Loan, your trusted partner in personal finance solutions. As a premier digital lending platform under Naman Finlease Private Limited, we specialize in providing fast, convenient, and short-term unsecured personal loans to salaried individuals across India. Our mission is to make our customers feel empowered with full access to credit, simplifying the loan process through the use of innovative technology and customized solutions that meet their unique financial needs.
         </Typography>
 
         <Typography 
@@ -155,7 +155,10 @@ const AboutUs = () => {
             marginBottom: { xs: '40px', md: '60px' }, // Responsive bottom margin
           }}
         >
-        At QUAloan.com, we understand that life can be unpredictable whether it’s medical emergencies, wedding expenses, home improvements, we’re here to ensure that financial hurdles don’t hold you back. With our seamless, fully digital platform, you can apply for a loan in minutes, track your application status in real-time, and receive funds directly into your bank account.
+        At QUA Loan.com, we understand that life can be unpredictablewhen it
+comes to the medical emergencies,. There comes other sets of expenditures such as
+wedding expenses, home improvements, etc. So to cater to every need of an individual,
+we’re here to ensure that financial hurdles don’t hold you back. With our, fully digital platform services, you can apply for a loan in minutes, track your application status in real-time, and receive funds directly into your bank account.
       </Typography>
             
       {/* mission & vission */}
@@ -203,10 +206,10 @@ const AboutUs = () => {
               fontSize: '20px',
             }}
           >
-            Our mission is to make personal loans quick, simple, and accessible for salaried individuals. We believe in
-            financial empowerment and are committed to providing easy and affordable access to credit. Through our partnership
+            Our mission is to make personal loans quicker, simpler, and easily accessible for salaried
+            individuals. We believe in empowering people on financial grounds and are committed to providing easy and affordable access to credit. Through our partnership
             with Naman Finlease Private Limited, an RBI-registered NBFC (Non-Banking Financial Company), we offer loans that
-            are secure, transparent, and tailored to meet the needs of today’s modern consumer.
+            are secure, transparent, and designed as to meet the needs of today’s modern consumer.
           </Typography>
         </Box>
 
@@ -277,10 +280,11 @@ const AboutUs = () => {
               // Reset margin on smaller screens
             }}
           >
-            Our vision at QUAloan.com is to redefine how personal loans are accessed by salaried professionals in India. We aim
-            to create a transparent, customer-centric lending ecosystem that provides access to credit when it’s needed the
-            most. By harnessing cutting-edge technology and leveraging our expertise in financial services, we strive to build
-            a future where financial inclusion is a reality for all, regardless of their income or background.
+            Our vision at QUA Loan.is to redefine how personal loans are accessed by salaried
+professionals in India. We aim to create a transparent, customer-centric lending
+ecosystem that provides access to credit when it’s needed the most. By making use of
+the innovative technologies and leveraging our expertise in providing financial services, we strive to build
+            a future where financial inclusion is a reality for all, regardless of theirsource of income or financial background.
           </Typography>
         </Box>
 
@@ -370,7 +374,7 @@ const AboutUs = () => {
                         margin: { xs: 0, md: "0 auto" },
                       }}
                     >
-                      QUAloan.com is powered by a state-of-the-art digital platform that simplifies every step of the loan process. We use advanced algorithms to assess your creditworthiness quickly and accurately, ensuring that you get the best possible loan offers.
+                      QUA Loan is powered by a  digital platform that simplifies every step of the loan process. We use advanced algorithms to assess your creditworthiness quickly and accurately, ensuring that you get the best possible loan offers.
                     </Typography>
 
                     {/* Top line above Paper */}
@@ -485,7 +489,7 @@ const techItems = [
   },
   {
       title: ' User-Friendly Interface',
-      description: 'QUAloan offers an intuitive and easy-to-navigate platform, ensuring a smooth loan application process for all users.'
+      description: 'QUA Loan offers an intuitive and easy-to-navigate platform, ensuring a smooth loan application process for all users.'
   },
   {
       title: ' Real-Time Tracking',

@@ -37,10 +37,10 @@ const TermsAndConditions = () => {
                     <Paper elevation={3} sx={{ borderRadius: '30px', overflow: 'hidden' ,  backgroundColor: 'transparent',  padding:{xs:1,md:8}}}>
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
                             <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                                Welcome to QUAloan.com. By accessing and using this website or applying for any of our loan products, you agree to comply with the terms and conditions outlined here.
+                                Welcome to QUA Loan. By accessing and using this website or applying for any of our loan products, you agree to comply with the terms and conditions outlined here.
                             </Typography>
                             <Typography>
-                                These Terms and Conditions constitute a legal agreement between you and Naman Finlease Private Limited (an NBFC registered with RBI for lending purposes), which governs your use of our website and services. Please read these terms carefully. If you do not agree with these terms, you should refrain from using this website or applying for loans through QUAloan.com.
+                                These Terms and Conditions constitute a legal agreement between you and Naman Finlease Private Limited (an NBFC registered with RBI for lending purposes), which governs your use of our website and services. Please read these terms carefully. If you do not agree with these terms, you should refrain from using this website or applying for loans through QUA Loan.
                             </Typography>
                         </Box>
                         <Divider sx={{ my: 2 }} />
@@ -50,7 +50,7 @@ const TermsAndConditions = () => {
                                 1. Introduction
                             </Typography>
                             <Typography>
-                                QUAloan.com provides personal loans to salaried individuals under the regulatory oversight of Naman Finlease Private Limited, an NBFC registered with the RBI. Our primary goal is to provide seamless, easy, and transparent financial solutions to help individuals manage their personal finances.
+                                QUA Loan provides personal loans to salaried individuals under the regulatory oversight of Naman Finlease Private Limited, an NBFC registered with the RBI. Our primary goal is to provide instant, easy, and transparent financial solutions to help individuals manage their personal finances.
                             </Typography>
                         </Box>
                         <Divider sx={{ my: 2 }} />
@@ -60,11 +60,11 @@ const TermsAndConditions = () => {
                                 2. Eligibility Criteria
                             </Typography>
                             <Typography>
-                                To apply for a personal loan with QUAloan.com, you must meet the following eligibility requirements:
+                                To apply for a personal loan with QUA Loan, you must meet the following eligibility requirements:
                             </Typography>
                             <ul>
                                 <li>Be at least 21 years old and not older than 60 at the time of loan application.</li>
-                                <li>Be a salaried individual with steady income from a recognized organization.</li>
+                                <li>Be a salaried individual with stable income from a recognized organization.</li>
                                 <li>Meet the minimum monthly income criteria defined by Naman Finlease Private Limited.</li>
                                 <li>Be a resident of India with a satisfactory credit score and financial history.</li>
                             </ul>
@@ -76,7 +76,7 @@ const TermsAndConditions = () => {
                                 3. Loan Application Process
                             </Typography>
                             <Typography>
-                                The loan application process at QUAloan.com includes registration, filling out the application form, document submission, and credit assessment. Approval of loans is at the sole discretion of Naman Finlease Private Limited.
+                                The loan application process at QUA Loan includes registration, filling out the application form, document submission, and credit assessment. Approval of loans is at the sole discretion of Naman Finlease Private Limited.
                             </Typography>
                         </Box>
                         <Divider sx={{ my: 2 }} />
@@ -106,7 +106,8 @@ const TermsAndConditions = () => {
                                 6. Loan Disbursement
                             </Typography>
                             <Typography>
-                                Upon approval of your loan application and completion of required formalities, the loan amount will be credited directly to your bank account. Disbursement times may vary depending on internal processes, but QUAloan.com strives to ensure quick and efficient transfer of funds.
+                            6. Loan Disbursement
+Upon approval of your loan application and completion of required formalities, the loan amount will be credited directly to your bank account. The times of disbursing your loan amount  may vary depending on internal processes, but QUA Loan strives to ensure quick and efficient transfer of funds.
                             </Typography>
                         </Box>
                         <Divider sx={{ my: 2 }} />
@@ -166,7 +167,7 @@ const TermsAndConditions = () => {
                                 12. Amendments to Terms
                             </Typography>
                             <Typography>
-                                We reserve the right to modify or update these terms and conditions at any time. The updated terms will be posted on the website, and it is your responsibility to stay informed.
+                                We reserve the right to modify or update these terms and conditions at any given time. The updated terms will be posted on the website, and it is your responsibility to stay informed.
                             </Typography>
                         </Box>
                         <Divider sx={{ my: 2 }} />

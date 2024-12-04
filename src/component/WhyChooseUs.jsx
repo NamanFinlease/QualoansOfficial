@@ -20,7 +20,7 @@ const cardDetails = [
   {
     icon: <Group fontSize="large" />,
     title: "Customer-Centric",
-    description: `We focus on providing personalized\nloan solutions tailored to meet\nyour unique financial needs.`,
+    description: `We focus on providing personalized\nloan solutions designed as per\nyour unique financial needs.`,
   },
   {
     icon: <Security fontSize="large" />,
@@ -35,7 +35,7 @@ const cardDetails = [
   {
     icon: <Payment fontSize="large" />,
     title: "Flexible Options",
-    description: `We provide flexible repayment options\nthat fit within your budget,\nensuring that you have the best experience possible.`,
+    description: `We provide flexible repayment options\nthat fit within your budget,\nensuring that you have the best possible experience.`,
   },
   {
     icon: <RateReview fontSize="large" />,
@@ -149,7 +149,7 @@ export default function WhyChooseUs() {
           >
             Discover the reasons why customers trust us with their financial needs.
             Our commitment to transparency, security, and convenience ensures a
-            seamless experience for you.
+            comforting experience for all.
           </Typography>
           {/* Scroll Buttons */}
            <Box

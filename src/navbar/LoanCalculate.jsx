@@ -77,10 +77,10 @@ const LoanCalculate = () => {
                         }}
                     >
                         <Typography variant="h5" fontWeight={550} component="strong" color="inherit" sx={{ mt: 4 }}>
-                            Health Emergencies? We’ve Got Your Back!
+                        Facing Health Concerns ? No Worries Anymore!
                         </Typography>
                         <Typography variant="h6" color="inherit" sx={{ mt: 1 }}>
-                            Got sudden medical bills or emergencies? We’re here to help you take care of your loved ones without financial worries!
+                            Got hefty medical bills or emergencies? Don’t worry, here to help you take care of your loved ones without having financial worries!
                         </Typography>
                     </Paper>
 
@@ -160,7 +160,7 @@ const LoanCalculate = () => {
                         }}
                     >
                         <Typography variant="h5" fontWeight={550} component="strong" color="inherit" sx={{ mt: 4 }}>
-                            Enjoy Your Big Day. Be Stress-Free
+                            Enjoy Your D-Day.With Zero Stress
                         </Typography>
                         <Typography variant="h6" color="inherit" sx={{ mt: 1 }}>
                             Your big day should be the most magical experience ever. That’s why we offer quick loans to make sure your wedding is a stress-free experience for you and your loved ones.

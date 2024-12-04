@@ -181,16 +181,16 @@ const SortFAQ = () => {
 // FAQ items data
 const faqItems = [
     {
-        question: 'What is QUAloan and how can it help me?',
-        answer: 'QUAloan is your digital lending buddy! We are here to offer fast, hassle-free personal loans, especially for salaried individuals who have struggled with traditional bank loans. Whether it’s an emergency, wedding, or consolidating debt, we provide financial solutions tailored to your needs.'
+        question: 'What is QUA Loan and how can it help me?',
+        answer: 'QUA Loan is your digital lending partner! We are here to offer fast, hassle-free process, especially for salaried individuals who have struggled with traditional bank loans. Whether it’s an emergency, wedding, or consolidating debt, we provide financial solutions designed as per your needs.'
     },
     {
-        question: 'How is QUAloan different from a traditional bank?',
-        answer: 'Unlike traditional banks that may reject loan applications based on strict criteria, QUAloan is part of Naman Finlease Private Limited, an RBI-registered NBFC. We specialize in providing loans to people who may not meet traditional lending standards. We offer quick approvals, minimal paperwork, and fast fund transfers, making borrowing easy and stress-free.'
+        question: 'How is QUA Loan different from a traditional bank?',
+        answer: 'Unlike traditional banks that may reject your loan applications based on strict criteria, QUA Loan differs from that. Being a part of Naman Finlease Private Limited, which is an RBI-registered NBFC. We specializes in providing loans to people who may not meet traditional lending standards. We offer quick approvals, minimal paperwork, and fast fund transfers, making borrowing easy and stress-free.'
     },
     {
-        question: 'How do I apply for a loan with QUAloan?',
-        answer: 'It’s super simple! Just follow these 3 steps:\n• Fill in your basic details\n• Upload your KYC documents (PAN, Aadhaar, salary slips, and bank statements)\n• Get instant credit directly into your bank account once approved!'
+        question: 'How do I apply for a loan with QUA Loan?',
+        answer: 'It’s super simple! Just follow these 3 steps:\n• Fill in your basic details\n• Upload your KYC documents (PAN, Aadhaar, salary slips, and bank statements)\n• Get instant credit transferred into your bank account once approved!'
     },
     {
         question: 'What loan amount can I borrow?',

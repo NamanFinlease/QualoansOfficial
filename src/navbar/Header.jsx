@@ -45,114 +45,148 @@ const Header = () => {
 
           {/* Apply Now Button and Menu Icon */}
           <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              border: '2px solid',
-              background: '#D9D9D9',
-              padding: '5px',
-              borderRadius: isSidebarOpen ? '0px 10px 10px 0px' : '10px',
-              position: 'relative',
-              gap: { xs: 1, sm: 2 }, // Adjust gap for smaller screens
-              '@media (max-width: 600px)': {
-                padding: '4px', // Reduce padding for small screens
-              },
-            }}
-          >
-            {/* Sidebar Drawer */}
-            {isSidebarOpen && (
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 0,
-                  left: '-150%',
-                  width: '200%',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                  alignItems: 'center',
-                  padding: '10px',
-                  backgroundColor: '#D9D9D9',
-                  borderRadius: '10px 0px 0px 10px',
-                  zIndex: 2,
-                  animation: 'slideInSidebar 1s ease-out forwards', // Sidebar animation
-                  '@media (max-width: 600px)': {
-                    width: '220%', // Adjust width for small screens
-                    left: '-190%',
-                    padding: '6.7px',
-                  },
-                }}
-                onMouseLeave={() => toggleSidebar(false)} // Close on mouse leave
-              >
-                {['HOME', 'ABOUT', 'REPAY', 'CONTACT'].map((text, index) => (
-                  <Link
-                    key={text}
-                    to={
-                      text === 'HOME'
-                        ? '/'
-                        : text === 'REPAY'
-                        ? '/repay-now'
-                        : text === 'CONTACT'
-                        ? '/contact-us'
-                        : '/about-us'
-                    }
-                    style={{
-                      color: '#0b2747',
-                      textDecoration: 'none',
-                      padding: '5px 10px',
-                      borderRadius: '10px',
-                      animation: `textFadeIn 0.5s ease-out ${1 + index * 0.3}s forwards`, // Text appears after box
-                      opacity: 0,
-                    }}
-                    onClick={() => toggleSidebar(false)}
-                  >
-                    {text}
-                  </Link>
-                ))}
-              </Box>
-            )}
+  sx={{
+    display: 'flex',
+    alignItems: 'center',
+    border: '2px solid',
+    background: '#D9D9D9',
+    padding: '5px',
+    borderRadius: '10px',
+    position: 'relative',
+    gap: { xs: 1, sm: 2 }, // Adjust gap for smaller screens
+    '@media (max-width: 600px)': {
+      padding: '4px', // Reduce padding for small screens
+    },
+  }}
+>
+  {/* Sidebar for larger screens */}
+  <Box
+    sx={{
+      display: { xs: 'none', sm: 'flex' }, // Hide on small screens
+      flexDirection: 'row',
+      gap: 2,
+      alignItems: 'center',
+    }}
+  >
+    {['HOME', 'ABOUT', 'REPAY', 'CONTACT', 'CALCULATOR'].map((text) => (
+      <Link
+        key={text}
+        to={
+          text === 'HOME'
+            ? '/'
+            : text === 'REPAY'
+            ? '/repay-now'
+            : text === 'CONTACT'
+            ? '/contact-us'
+            : text === 'ABOUT'
+            ? '/about-us'
+            : '/calculator'
+        }
+        style={{
+          color: '#0b2747',
+          textDecoration: 'none',
+          padding: '5px 10px',
+          borderRadius: '10px',
+        }}
+      >
+        {text}
+      </Link>
+    ))}
+  </Box>
 
-            {/* IconButton */}
-            <IconButton
-              onMouseEnter={() => toggleSidebar(true)}
-              sx={{
-                color: 'white',
-                borderRadius: '10px',
-                // padding: '5px',
-                marginLeft: { xs: '10px', sm: '10px' }, // Adjust padding for small screens
-                opacity: isSidebarOpen ? 0 : 1,
-                transition: 'opacity 0.3s ease',
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
+  {/* Dropdown menu for smaller screens */}
+  <Box sx={{ display: { xs: 'flex', sm: 'none' }, flexDirection: 'column', position: 'relative' }}>
+    {/* Menu Button */}
+    <IconButton
+      onClick={() => toggleSidebar((prev) => !prev)} // Toggles the dropdown
+      sx={{
+        color: '#0b2747',
+        borderRadius: '10px',
+      }}
+    >
+      <MenuIcon />
+    </IconButton>
 
-            {/* Apply Button */}
-            <Button
-              component={Link}
-              to="/apply-now"
-              variant="contained"
-              color="primary"
-              sx={{
-                backgroundColor: 'black',
-                color: 'white',
-                padding: '9.9px 18px',
-                borderRadius: '10px',
-                fontWeight: 'bold',
-                zIndex: 2,
-                '&:hover': {
-                  backgroundColor: 'gray',
-                  color: 'white',
-                },
-                '@media (max-width: 600px)': {
-                  fontSize: '14px', // Adjust font size for smaller screens
-                  padding: '8px 12px', // Reduce padding on small screens
-                },
-              }}
-            >
-              Apply
-            </Button>
-          </Box>
+    {/* Dropdown Menu */}
+    {isSidebarOpen && (
+  <Box
+    sx={{
+      position: 'absolute',
+      top: '100%',
+      left: -5,
+      width: 'auto', // Dynamically adjusts width based on content
+      minWidth: 'fit-content', // Ensures the minimum width fits the text
+      background: '#D9D9D9',
+      borderRadius: '10px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 1,
+      padding: '5px 1px',
+      boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Shadow for better effect
+      zIndex: 2,
+      animation: 'fadeIn 0.3s ease-in-out', // Smooth fade-in effect
+    }}
+  >
+    {['HOME', 'ABOUT', 'REPAY', 'CONTACT', 'CALCULATOR'].map((text) => (
+      <Link
+        key={text}
+        to={
+          text === 'HOME'
+            ? '/'
+            : text === 'REPAY'
+            ? '/repay-now'
+            : text === 'CONTACT'
+            ? '/contact-us'
+            : text === 'ABOUT'
+            ? '/about-us'
+            : '/calculator'
+        }
+        style={{
+          color: '#0b2747',
+          textDecoration: 'none',
+          padding: '10px 15px',
+          borderRadius: '5px',
+          whiteSpace: 'nowrap', // Prevents text wrapping
+          transition: 'background 0.3s ease, transform 0.2s ease', // Smooth hover effect
+        }}
+        onMouseEnter={(e) => (e.target.style.background = '#f0f0f0')}
+        onMouseLeave={(e) => (e.target.style.background = 'transparent')}
+        onClick={() => toggleSidebar(false)} // Close the dropdown on click
+      >
+        {text}
+      </Link>
+    ))}
+  </Box>
+)}  </Box>
+
+  {/* Apply Button */}
+  <Button
+    component={Link}
+    to="/apply-now"
+    variant="contained"
+    color="primary"
+    sx={{
+      backgroundColor: 'black',
+      color: 'white',
+      padding: '9.9px 18px',
+      borderRadius: '10px',
+      fontWeight: 'bold',
+      zIndex: 2,
+      '&:hover': {
+        backgroundColor: 'gray',
+        color: 'white',
+      },
+      '@media (max-width: 600px)': {
+        fontSize: '14px', // Adjust font size for smaller screens
+        padding: '8px 12px', // Reduce padding on small screens
+      },
+    }}
+  >
+    Apply
+  </Button>
+</Box>
+
+
         </Toolbar>
       </AppBar>
 

@@ -75,7 +75,7 @@ const Footer = () => {
               <Grid item xs={12} sm={4} sx={{ paddingTop: '12px' }}>
                 <Typography variant="h6" sx={{ color: '#fff', fontWeight: 500, mb: 2 }}>Contact Us</Typography>
                 <Box component="ul" sx={{ listStyleType: 'none', padding: 0, margin: 0 }}>
-                  <li><Link href="contact-us" sx={{ ...linkStyle, display: 'flex', alignItems: 'center' }}><Email sx={{ mr: 1 }} /> info@qualoan.com</Link></li>
+                  <li><Link href="contact-us" sx={{ ...linkStyle, display: 'flex', alignItems: 'center' }}><Email sx={{ mr: 1 }} /> info@QUA Loan.com</Link></li>
                   <li><Link href="contact-us" sx={{ ...linkStyle, display: 'flex', alignItems: 'center' }}><Phone sx={{ mr: 1 }} /> +91 9999999341</Link></li>
                   <li><Link href="contact-us" sx={{ ...linkStyle, display: 'flex', alignItems: 'center' }}><LocationOn sx={{ mr: 1,mt:-2 }} /> S-370, Panchsheel Park, New Delhi 110017, India</Link></li>
                 </Box>
@@ -92,7 +92,7 @@ const Footer = () => {
           boxShadow: '0 -3px 10px rgba(0, 0, 0, 0.3)',
         }}>
           <Typography variant="body2" style={{ color: '#fff', textShadow: '1px 1px 2px rgba(0, 0, 0, 0.7)' }}>
-            Copyright &copy; 2024 QuaLoan. All Rights Reserved.
+            Copyright &copy; 2024 QUA Loan. All Rights Reserved.
           </Typography>
         </Box>
       </footer>

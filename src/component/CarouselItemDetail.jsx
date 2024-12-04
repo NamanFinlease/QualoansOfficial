@@ -20,7 +20,7 @@ const cardDetails = [
   {
     imgUrl: image2,
     title: "Stress-Free Repayment",
-    description: `With options like Easy Pay or Bank Transfer, our flexible repayment plans make it a breeze for you to stay on top of your finances. Enjoy upgrading your lifestyle without the worry of cash flow!`,
+    description: `With options like Easy Pay or Bank Transfer, our flexible repayment plans make it  for you to stay on top of your finances. Enjoy upgrading your lifestyle without the worry of cash flow!`,
   },
   {
     imgUrl: image3,
@@ -40,7 +40,7 @@ const cardDetails = [
   {
     imgUrl: image6,
     title: "Secure Process",
-    description: `Your information is in good hands! Our dedicated teams work diligently at every stage to ensure a safe and transparent experience. Your dreams are important to us, and we’ll protect them like our own.`,
+    description: `Your information absolutely lies in safe hands! Our dedicated teams work diligently at every phase to ensure a safe and transparent experience. Your dreams are important to us, and we’ll protect them like our own.`,
   },
 ];
 
@@ -199,9 +199,9 @@ export default function AutoplayCarousel() {
             fontSize: { xs: "1rem", sm: "1.2rem", md: "1.5rem" },
           }}
         >
-          Get quick financial support with our swift approval system, flexible repayment options,
+          Get  financial support at ease with our instant approval system, flexible repayment options,
           and transparent interest rates. Experience a safe and hassle-free process with minimal documentation.
-          Your money will reach you in an instant!
+          No waiting time, no unnecessary paperwork!
         </Typography>
 
         {/* Backward and Forward Icons */}

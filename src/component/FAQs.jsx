@@ -67,12 +67,12 @@ const FAQs = () => {
                  {[
         {
             id: 'faq1',
-            question: '1. What is QUAloan.com?',
-            answer: `QUAloan.com is an online platform offering quick and hassle-free personal loans to salaried individuals. As part of Naman Finlease Private Limited (An RBI registered NBFC), we aim to provide accessible financial solutions to meet your personal needs, whether it's for emergencies, home improvement, or celebrations.`,
+            question: '1. What is QUA Loan.com?',
+            answer: `QUA Loan.com is an online platform offering quick and hassle-free personal loans to salaried individuals. As part of Naman Finlease Private Limited (An RBI registered NBFC), we aim to provide accessible financial solutions to meet your personal needs, whether it's for emergencies, home improvement, or celebrations.`,
         },
         {
             id: 'faq2',
-            question: '2. Who is eligible to apply for a personal loan from QUAloan.com?',
+            question: '2. Who is eligible to apply for a personal loan from QUA Loan.com?',
             answer: `To be eligible for a personal loan, you must be:
             • A salaried individual
             • Aged between 21 and 60 years
@@ -90,12 +90,12 @@ const FAQs = () => {
         },
         {
             id: 'faq4',
-            question: '4. How much can I borrow from QUAloan.com?',
-            answer: `QUAloan.com offers personal loans ranging from ₹5,000 to ₹1,00,000 depending on your salary, repayment capacity, and credit score.`,
+            question: '4. How much can I borrow from QUA Loan.com?',
+            answer: `QUA Loan.com offers personal loans ranging from ₹5,000 to ₹1,00,000 depending on your salary, repayment capacity, and credit score.`,
         },
         {
             id: 'faq5',
-            question: '5. What is the interest rate on personal loans at QUAloan.com?',
+            question: '5. What is the interest rate on personal loans at QUA Loan.com?',
             answer: `The interest rate varies based on your credit profile, loan amount, and tenure. Typically, our rates are competitive and designed to be affordable for salaried individuals. Contact us to get a personalized quote.`,
         },
         {
@@ -106,11 +106,11 @@ const FAQs = () => {
         {
             id: 'faq7',
             question: '7. Can I repay my loan early?',
-            answer: `Yes, QUAloan.com allows early repayment of loans. Please review your loan agreement or contact us for details.`,
+            answer: `Yes, QUA Loan.com allows early repayment of loans. Please review your loan agreement or contact us for details.`,
         },
         {
             id: 'faq8',
-            question: '8. How does QUAloan.com assess my creditworthiness?',
+            question: '8. How does QUA Loan.com assess my creditworthiness?',
             answer: `We assess your loan eligibility based on factors such as your monthly income, credit score, job stability, and repayment history. A good credit score increases your chances of getting approved with a favorable interest rate.`,
         },
         {
@@ -120,13 +120,13 @@ const FAQs = () => {
         },
         {
             id: 'faq10',
-            question: '10. How do I repay my loan to QUAloan.com?',
+            question: '10. How do I repay my loan to QUA Loan.com?',
             answer: `You can repay your loan through various payment options such as NACH (National Automated Clearing House), direct debit, or online payments via our website.`,
         },
         {
             id: 'faq11',
-            question: '11. Is my personal and financial information safe with QUAloan.com?',
-            answer: `Absolutely. QUAloan.com uses advanced security measures, including encryption and secure servers, to ensure your personal and financial data is protected. We adhere to all data privacy regulations and take confidentiality seriously.`,
+            question: '11. Is my personal and financial information safe with QUA Loan.com?',
+            answer: `Absolutely. QUA Loan.com uses advanced security measures, including encryption and secure servers, to ensure your personal and financial data is protected. We adhere to all data privacy regulations and take confidentiality seriously.`,
         },
         {
             id: 'faq12',
@@ -136,7 +136,7 @@ const FAQs = () => {
         {
             id: 'faq13',
             question: '13. How can I contact customer support for further assistance?',
-            answer: `You can reach our customer support team through our website's contact form, by email at support@qualoan.com, or by calling our helpline during business hours. We're here to assist you with any questions or concerns.`,
+            answer: `You can reach our customer support team through our website's contact form, by email at support@QUA Loan.com, or by calling our helpline during business hours. We're here to assist you with any questions or concerns.`,
         },
     ].map((faq, index) => (
                             <Accordion

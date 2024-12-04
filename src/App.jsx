@@ -14,6 +14,7 @@ import TermsAndConditions from './component/TermsAndConditions';
 import RepayLoan from './component/RepayLoan';
 import Footer from './component/Footer';
 import FAQs from './component/FAQs';
+import LoanCalculator from './component/LoanCalculator';
 // import Navbar from "./navbar/NavBar"
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
         <Route path='/terms-condition' element={<TermsAndConditions/>}/>
         <Route path='/repay-now' element={<RepayLoan/>}/>
         <Route path='/fqa' element={<FAQs/>}/>
-
+        <Route path='/calculator' element={<LoanCalculator/>}/>
       </Routes>
       <Footer />
     </Router>

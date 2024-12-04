@@ -104,10 +104,10 @@ const LoanCalculator = () => {
  }}>
                         Personal Loan Calculator
                     </Typography>
-                    <Typography  align="center" gutterBottom sx={{ color: 'white',fontSize:{xs: '16px', sm: '22px' } }}>
-                    "Calculate your loan effortlessly with our user-friendly tool. Adjust amounts, tenure, and interest rates to see the total cost and make informed financial decisions."                                    </Typography>
+                    <Typography  align="center" gutterBottom sx={{ color: 'white',fontFamily:"italic", fontSize:{xs: '16px', sm: '22px' } }}>
+                    Calculate your loan effortlessly with our user-friendly plateform. Adjust amounts, tenure, and interest rates to see the total cost and make informed financial decisions.                                    </Typography>
 
-                    <Grid container spacing={4} justifyContent="center">
+                    <Grid container spacing={4}  id="calculator-grid-container" justifyContent="center">
                     <Grid item xs={12} md={6}>
                         <Paper
                             elevation={4}
@@ -131,31 +131,36 @@ const LoanCalculator = () => {
                             </Typography>
                             <TextField
                                 type="number"
-                                value={loanAmount}
+                                value={loanAmount || ''}
                                 onChange={(e) => {
                                     const value = Number(e.target.value);
-                                    if (value >= 5000 && value <= 100000) {
+                                    if (value <= 100000) {
                                         setLoanAmount(value);  // Update only if within the valid range
+                                    } else if (value > 100000) {
+                                        setLoanAmount(100000); // If above max, set it to max
+                                    } else if (value < 5000) {
+                                        setLoanAmount(5000); // If below min, set it to min
+                                    } else {
+                                        setLoanAmount(value); // Allow any value within the valid range
                                     }
                                 }}
                                 variant="outlined"
                                 fullWidth
                                 sx={{
-                                    marginBottom: 2,   // margin at the bottom
+                                    marginBottom: 2, // margin at the bottom
                                     background: 'transparent',
-                                    borderRadius: '16px',  // Rounded border
+                                    borderRadius: '16px', // Rounded border
                                     '& .MuiOutlinedInput-root': {
-                                        borderRadius: '16px',  // Ensure the border radius applies to the input field
+                                        borderRadius: '16px', // Ensure the border radius applies to the input field
                                     },
                                     '& .MuiOutlinedInput-notchedOutline': {
-                                        borderColor: 'rgba(0, 0, 0, 0.23)',  // Default border color
+                                        borderColor: 'rgba(0, 0, 0, 0.23)', // Default border color
                                     },
                                     '&:hover .MuiOutlinedInput-notchedOutline': {
-                                        borderColor: '#1976d2',  // Border color on hover
+                                        borderColor: '#1976d2', // Border color on hover
                                     },
-                                }} 
+                                }}
                             />
-
                             <Slider
                                 value={loanAmount}
                                 min={5000}
@@ -180,14 +185,22 @@ const LoanCalculator = () => {
                                 Loan Tenure (Days)
                             </Typography>
                             <TextField
-                                type="number"
-                                value={loanTenure}
-                                onChange={(e) => {
-                                    const value = Number(e.target.value);
-                                    if (value >= 1 && value <= 90) {
-                                        setLoanTenure(value);  // Update only if within the valid range
-                                    }
-                                }}
+
+                        type="number"
+                        value={loanTenure || ''}
+                        onChange={(e) => {
+                            const value = Number(e.target.value);
+                            if (value <= 90) {
+                                setLoanTenure(value);  // Update only if within the valid range (1 to 4 months)
+                            } else if (value > 1) {
+                                setLoanTenure(1); // If above max, set it to max
+                            } else if (value < 90) {
+                                setLoanAmount(90); // If below min, set it to min
+                            } else {
+                                setLoanTenure(value); // Allow any value within the valid range
+                            }
+                        }}
+    
                                 variant="outlined"
                                 fullWidth
                                 sx={{
@@ -231,13 +244,21 @@ const LoanCalculator = () => {
                             </Typography>
                             <TextField
                                 type="number"
-                                value={interestRate}
+
+                                value={interestRate || ''}
                                 onChange={(e) => {
                                     const value = Number(e.target.value);
-                                    if (value >= 0.5 && value <= 2.75) {
-                                        setInterestRate(value);  // Update only if within the valid range
+                                    if (value <= 2.75) {
+                                        setInterestRate(value);  // Update only if within the valid range (1 to 4 months)
+                                    } else if (value < 0.5) {
+                                        setInterestRate(0.5); // If above max, set it to max
+                                    } else if (value >2.75) {
+                                        setInterestRate(2.75); // If below min, set it to min
+                                    } else {
+                                        setInterestRate(value); // Allow any value within the valid range
                                     }
                                 }}
+                               
                                 variant="outlined"
                                 fullWidth
                                 sx={{
@@ -286,6 +307,7 @@ const LoanCalculator = () => {
                             </Button>
                         </Paper>
                     </Grid>
+
 
                         <Grid item xs={12} md={6}>
                             <Paper
@@ -355,7 +377,7 @@ const LoanCalculator = () => {
                         </TableContainer>
 
 
-                            <Button
+                        <Button
                             component={Link}
                             href="/apply-now" // Change this to your actual "Apply Now" URL
                             variant="contained"

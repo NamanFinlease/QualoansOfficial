@@ -8,7 +8,7 @@ const PrivacyPolicy = () => {
         {
             title: "Privacy Policy",
             content: [
-                "At QUAloan.com, a lending platform under Naman Finlease Private Limited, we prioritize your privacy. This policy explains how we collect, use, and protect your data. By using QUAloan.com, you agree to the collection and use of your information as outlined in this Privacy Policy."
+                "At QUA Loan, a lending platform under Naman Finlease Private Limited, we prioritize your privacy. This policy explains how we collect, use, and protect your data. By using QUA Loan.com, you agree to the collection and use of your information as outlined in this Privacy Policy."
             ]
         },
         {
@@ -35,14 +35,14 @@ const PrivacyPolicy = () => {
             content: [
                 "Your information may be shared with:",
                 "• Authorized Third Parties: We work with Credit Bureaus, Payment Gateways, and Verification Agencies to process and verify your information.",
-                "• Legal Authorities: We may disclose your information as required by law, such as for regulatory reporting or fraud investigations.",
-                "• Parent Company: We may share data with our parent company, Naman Finlease Private Limited, for loan processing."
+                "• Legal Authorities: We may disclose your information as required by the law, such as for regulatory reporting or fraud investigations.",
+                "• Parent Company: We may share your data with our parent company, Naman Finlease Private Limited, for loan processing."
             ]
         },
         {
             title: "4. Data Security",
             content: [
-                "We employ encryption, secure servers, and multi-factor authentication to safeguard your data. However, no system is 100% secure, and we encourage users to exercise caution."
+                "We employ encryption, secure servers, and multi-factor authentication to safeguard your data. However, no system is 100% secure, and we encourage users to proceed with caution."
             ]
         },
         {
@@ -60,7 +60,7 @@ const PrivacyPolicy = () => {
         {
             title: "7. Retention of Information",
             content: [
-                "We retain your information as long as necessary for business or legal reasons, and securely delete it when no longer needed."
+                "We retain your information as long as it is necessary for business or legal reasons, and securely delete it when it is no longer needed."
             ]
         },
         {
@@ -85,7 +85,7 @@ const PrivacyPolicy = () => {
             title: "11. Contact Us",
             content: [
                 "If you have any questions, please contact us at:",
-                "• Email: info@QUAloan.com",
+                "• Email: info@qualoanoan.com",
                 "• Phone: +91 9999999341",
                 "• Address: S-370, Panchsheel Park,New Delhi 110017, India",
                
