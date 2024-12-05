@@ -3,7 +3,7 @@ import { Typography, Box ,Paper, Accordion,
   AccordionSummary,
   AccordionDetails, } from '@mui/material';
 import VisionImage from '../assets/image/image.png'; // Import your vision image here
-import aboutImage from '../assets/image/about us qua (1).webp'; // Correct image path for about us
+import aboutImage from '../assets/image/About-Us-QUA.jpg'; // Correct image path for about us
 import WhyChooseUs from './WhyChooseUs';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MissionImage from '../assets/image/image1.png'; // Import your mission image here
@@ -68,46 +68,42 @@ const AboutUs = () => {
   
   return (
     <Box 
-        sx={{ 
-          background:'#f9f9f9',
-
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          minHeight: '100vh', // Adjust height as needed
-          padding: '30px',
-        }}
-      >
+    sx={{ 
+      background: '#f9f9f9',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      minHeight: '100vh',
+      padding: { xs: '20px', sm: '45px' }, // Adjust padding for small screens
+    }}
+  >
+    {/* Image Section */}
    
-      {/* Image Section */}
-      <Box 
-      sx={{ 
+      <Box
+      sx={{
         position: 'relative',
         width: '100%',
-        height: { xs: '30vh', sm: '60vh', md: '60vh', lg: '110vh' },          
+        height: { xs: '20vh', md: '65vh' },
         overflow: 'hidden',
-        mb: 2,
+        borderRadius: '20px',
+        mb: 5,
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
       }}
     >
-      <Box
+            <Box
         component="img"
         src={aboutImage}
-        alt="Contact Us"
+        alt="Repay Loan"
         sx={{
           position: 'absolute',
-          top: 0,
-          left: 0,
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          padding: {xs:'1px',md:'10px'},
-
-          border: '2px solid transparent', // Added a solid border for consistency
-          borderRadius: '50px',
         }}
       />
+
     </Box>
-    
+
             <Typography 
           variant="h4" // Heading style
           sx={{

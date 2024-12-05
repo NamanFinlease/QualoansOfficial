@@ -109,55 +109,56 @@ const Header = () => {
 
     {/* Dropdown Menu */}
     {isSidebarOpen && (
-  <Box
-    sx={{
-      position: 'absolute',
-      top: '100%',
-      left: -5,
-      width: 'auto', // Dynamically adjusts width based on content
-      minWidth: 'fit-content', // Ensures the minimum width fits the text
-      background: '#D9D9D9',
-      borderRadius: '10px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 1,
-      padding: '5px 1px',
-      boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Shadow for better effect
-      zIndex: 2,
-      animation: 'fadeIn 0.3s ease-in-out', // Smooth fade-in effect
-    }}
-  >
-    {['HOME', 'ABOUT', 'REPAY', 'CONTACT', 'LOAN CALCULATOR'].map((text) => (
-      <Link
-        key={text}
-        to={
-          text === 'HOME'
-            ? '/'
-            : text === 'REPAY'
-            ? '/repay-now'
-            : text === 'CONTACT'
-            ? '/contact-us'
-            : text === 'ABOUT'
-            ? '/about-us'
-            : '/calculator'
-        }
-        style={{
-          color: '#0b2747',
-          textDecoration: 'none',
-          padding: '10px 15px',
-          borderRadius: '5px',
-          whiteSpace: 'nowrap', // Prevents text wrapping
-          transition: 'background 0.3s ease, transform 0.2s ease', // Smooth hover effect
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '100%',
+          left: -5,
+          width: 'auto', // Dynamically adjusts width based on content
+          minWidth: 'fit-content', // Ensures the minimum width fits the text
+          background: '#D9D9D9',
+          borderRadius: '10px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+          padding: '5px 1px',
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Shadow for better effect
+          zIndex: 2,
+          animation: 'fadeIn 0.3s ease-in-out', // Smooth fade-in effect
         }}
-        onMouseEnter={(e) => (e.target.style.background = '#f0f0f0')}
-        onMouseLeave={(e) => (e.target.style.background = 'transparent')}
-        onClick={() => toggleSidebar(false)} // Close the dropdown on click
       >
-        {text}
-      </Link>
-    ))}
+        {['HOME', 'ABOUT', 'REPAY', 'CONTACT', 'LOAN CALCULATOR'].map((text) => (
+          <Link
+            key={text}
+            to={
+              text === 'HOME'
+                ? '/'
+                : text === 'REPAY'
+                ? '/repay-now'
+                : text === 'CONTACT'
+                ? '/contact-us'
+                : text === 'ABOUT'
+                ? '/about-us'
+                : '/calculator'
+            }
+            style={{
+              color: '#0b2747',
+              textDecoration: 'none',
+              padding: '10px 15px',
+              borderRadius: '5px',
+              whiteSpace: 'nowrap', // Prevents text wrapping
+              transition: 'background 0.3s ease, transform 0.2s ease', // Smooth hover effect
+            }}
+            onMouseEnter={(e) => (e.target.style.background = '#f0f0f0')}
+            onMouseLeave={(e) => (e.target.style.background = 'transparent')}
+            onClick={() => toggleSidebar(false)} // Close the dropdown on click
+          >
+            {text}
+          </Link>
+        ))}
+      </Box>
+    )}
   </Box>
-)}  </Box>
 
   {/* Apply Button */}
   <Button
@@ -172,6 +173,8 @@ const Header = () => {
       borderRadius: '10px',
       fontWeight: 'bold',
       zIndex: 2,
+      position: 'sticky',
+      top: 10, // Set how far from the top you want the button to stick
       '&:hover': {
         backgroundColor: 'gray',
         color: 'white',
@@ -190,34 +193,7 @@ const Header = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Keyframe Animations */}
-      <style>
-        {`
-          /* Sidebar Slide-in Animation */
-          @keyframes slideInSidebar {
-            from {
-              transform: translateX(30%);
-              opacity: 0;
-            }
-            to {
-              transform: translateX(0);
-              opacity: 1;
-            }
-          }
-
-          /* Text Fade-in Animation */
-          @keyframes textFadeIn {
-            from {
-              opacity: 0;
-              transform: translateY(-10px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-        `}
-      </style>
+    
     </>
   );
 };
