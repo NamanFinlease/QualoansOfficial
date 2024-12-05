@@ -152,9 +152,9 @@ const AboutUs = () => {
           }}
         >
         At QUA Loan, we understand that life can be unpredictable when it
-comes to the medical emergencies, There comes other sets of expenditures such as
+comes to the medical emergencies. There comes other sets of expenditures such as
 wedding expenses, home improvements, etc. So to cater to every need of an individual,
-we’re here to ensure that financial hurdles don’t hold you back. With our, fully digital platform services, you can apply for a loan in minutes, track your application status in real-time, and receive funds directly into your bank account.
+we’re here to ensure that financial hurdles don’t hold you back. With our fully digital platform services, you can apply for a loan in minutes, track your application status in real-time and receive funds directly into your bank account.
       </Typography>
             
       {/* mission & vission */}
