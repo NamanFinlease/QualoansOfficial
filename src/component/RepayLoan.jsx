@@ -122,7 +122,7 @@ const RepayLoan = () => {
       >
           Please share a screenshot of your transfer <br />
                     from your bank/Google Pay to <br />
-                    <strong>recovery@QUA Loan.com</strong>.
+                    <strong>recovery@qualoan.com</strong>.
 
       </Typography>
     </Grid>

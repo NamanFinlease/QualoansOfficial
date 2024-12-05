@@ -8,7 +8,7 @@ const PrivacyPolicy = () => {
         {
             title: "Privacy Policy",
             content: [
-                "At QUA Loan, a lending platform under Naman Finlease Private Limited, we prioritize your privacy. This policy explains how we collect, use, and protect your data. By using QUA Loan.com, you agree to the collection and use of your information as outlined in this Privacy Policy."
+                "At QUA Loan, a lending platform under Naman Finlease Private Limited, we prioritize your privacy. This policy explains how we collect, use, and protect your data. By using QUA Loan, you agree to the collection and use of your information as outlined in this Privacy Policy."
             ]
         },
         {
@@ -85,7 +85,7 @@ const PrivacyPolicy = () => {
             title: "11. Contact Us",
             content: [
                 "If you have any questions, please contact us at:",
-                "• Email: info@qualoanoan.com",
+                "• Email: info@qualoan.com",
                 "• Phone: +91 9999999341",
                 "• Address: S-370, Panchsheel Park,New Delhi 110017, India",
                

@@ -162,7 +162,7 @@ export default function WhyChooseUs() {
             }}
           >
             <IconButton
-              onClick={scrollLeft}
+              onClick={scrollRight}
               sx={{
                 color: "gray",
                 border: "2px solid gray", // Black border
@@ -175,12 +175,12 @@ export default function WhyChooseUs() {
                   backgroundColor: "rgba(0, 0, 0, 0.1)", // Slight hover effect
                 },
               }}
-              aria-label="Scroll Left"
+              aria-label="Scroll Right"
             >
               <ArrowBackIos />
             </IconButton>
             <IconButton
-              onClick={scrollRight}
+              onClick={scrollLeft}
               sx={{
                 color: "gray",
                 border: "2px solid gray", // Black border
@@ -194,7 +194,7 @@ export default function WhyChooseUs() {
                   backgroundColor: "rgba(0, 0, 0, 0.1)", // Slight hover effect
                 },
               }}
-              aria-label="Scroll Right"
+              aria-label="Scroll Left"
             >
               <ArrowForwardIos />
             </IconButton>

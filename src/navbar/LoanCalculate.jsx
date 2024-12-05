@@ -160,7 +160,7 @@ const LoanCalculate = () => {
                         }}
                     >
                         <Typography variant="h5" fontWeight={550} component="strong" color="inherit" sx={{ mt: 4 }}>
-                            Enjoy Your D-Day.With Zero Stress
+                            Enjoy Your D-Day With Zero Stress
                         </Typography>
                         <Typography variant="h6" color="inherit" sx={{ mt: 1 }}>
                             Your big day should be the most magical experience ever. That’s why we offer quick loans to make sure your wedding is a stress-free experience for you and your loved ones.

@@ -155,157 +155,154 @@ const AboutUs = () => {
             marginBottom: { xs: '40px', md: '60px' }, // Responsive bottom margin
           }}
         >
-        At QUA Loan.com, we understand that life can be unpredictablewhen it
-comes to the medical emergencies,. There comes other sets of expenditures such as
+        At QUA Loan, we understand that life can be unpredictable when it
+comes to the medical emergencies, There comes other sets of expenditures such as
 wedding expenses, home improvements, etc. So to cater to every need of an individual,
 we’re here to ensure that financial hurdles don’t hold you back. With our, fully digital platform services, you can apply for a loan in minutes, track your application status in real-time, and receive funds directly into your bank account.
       </Typography>
             
       {/* mission & vission */}
+                <Box
+                sx={{
+                  backgroundColor: '#C9DDE4',
+                  borderRadius: "80px",
+                  marginLeft: { xs: 0, md: '50px' },
+                  marginRight: { xs: 0, md: '50px' },
+                  marginTop: { xs: '20px', md: '100px' },
+                  marginBottom: '50px',
+                  display: 'flex',
+                  flexDirection: { xs: 'column', md: 'row' },
+                  justifyContent: 'space-between',
+                  padding: 3,
+                  position: 'relative',
+                  alignItems: 'center', // Vertically center content and image
+                  flexWrap: 'wrap', // Ensures elements wrap on smaller screens
+                }}
+              >
+                {/* Content Box */}
+                <Box
+                  sx={{
+                    border: 'none',
+                    padding: 3,
+                    textAlign: 'left',
+                    flex: 1,
+                    zIndex: 1,
+                    width: { xs: '100%', md: '50%' },
+                    backgroundColor: 'transparent',
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    component="h2"
+                    gutterBottom
+                    sx={{
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    Our Mission
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      fontSize: '20px',
+                    }}
+                  >
+                    Our mission is to make personal loans quicker, simpler, and easily accessible for salaried
+                    individuals. We believe in empowering people on financial grounds and are committed to providing easy and affordable access to credit. Through our partnership
+                    with Naman Finlease Private Limited, an RBI-registered NBFC (Non-Banking Financial Company), we offer loans that
+                    are secure, transparent, and designed as to meet the needs of today’s modern consumer.
+                  </Typography>
+                </Box>
 
-            <Box
-        sx={{
-          marginLeft: { xs: 0, md: '50px' }, // Remove margin for small screens
-          marginRight: { xs: 0, md: '50px' },
-          marginTop: {xs:'30px',md:"100px"},
-          marginBottom: {xs:0,md:'50px'},
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: { xs: 'column', md: 'column' }, // Keep stacked vertically
-          padding: 3,
-          position: 'relative', // Maintain zIndex stacking
-        }}
-      >
-        {/* Content Box */}
-        <Box
-          sx={{
-            padding: 3,
-            backgroundColor: '#C9DDE4',
-            borderRadius: '30px',
-            boxShadow: 2,
-            textAlign: 'left',
-            flex: 1,
-            zIndex: 1,
-            width: { xs: '100%', md: '100%' }, // Match image width for small screens
-          }}
-        >
-          <Typography
-            variant="h4"
-            component="h2"
-            gutterBottom
-            sx={{
-              fontWeight: 'bold',
-            }}
-          >
-            Our Mission
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              marginRight: { xs: 0, md: '400px' }, // No margin on small screens
-              fontSize: '20px',
-            }}
-          >
-            Our mission is to make personal loans quicker, simpler, and easily accessible for salaried
-            individuals. We believe in empowering people on financial grounds and are committed to providing easy and affordable access to credit. Through our partnership
-            with Naman Finlease Private Limited, an RBI-registered NBFC (Non-Banking Financial Company), we offer loans that
-            are secure, transparent, and designed as to meet the needs of today’s modern consumer.
-          </Typography>
-        </Box>
+                {/* Image Box */}
+                <Box
+                  component="img"
+                  src={MissionImage}
+                  alt="Our Mission"
+                  sx={{
+                    width: { xs: '100%', md: '50%' }, // Set image width based on screen size
+                    height: '400px', // Adjust height to prevent overlap and keep the aspect ratio
+                    borderRadius: '30px',
+                    objectFit: 'cover',
+                    marginTop: { xs: '20px', md: '0' }, // Adds margin top for small screens
+                    marginLeft: { md: 3 }, // Add spacing between content and image on larger screens
+                    marginBottom: { xs: '20px', md: '0' }, // Add margin for small screens
+                  }}
+                />
+              </Box>
 
-        {/* Image */}
-        <Box
-          component="img"
-          src={MissionImage}
-          alt="Our Mission"
-          sx={{
-            width: { xs: '110%', md: '33%' }, // Match content box width for small screens
-            height: 'auto',
-            borderRadius: '8px',
-            maxWidth: '60%',
-            position: { xs: 'static', md: 'absolute' }, // Absolute position only for larger screens
-            left: { md: '78%' },
-            transform: { md: 'translate(-50%, -20%)' }, // Apply only on larger screens
-            zIndex: 6,
-            marginTop: { xs: '20px', md: 4 }, // Add spacing on smaller screens
-          }}
-        />
-      </Box>
+              <Box
+                sx={{
+                  backgroundColor: '#DED3EE',
+                  borderRadius: "80px",
+                  marginLeft: { xs: 0, md: '50px' },
+                  marginRight: { xs: 0, md: '50px' },
+                  marginTop: { xs: '20px', md: '100px' },
+                  marginBottom: '50px',
+                  display: 'flex',
+                  flexDirection: { xs: 'column', md: 'row' },
+                  justifyContent: 'space-between',
+                  padding: 3,
+                  position: 'relative',
+                  alignItems: 'center', // Vertically centers content and image
+                  flexWrap: 'wrap', // Ensures elements wrap on smaller screens
+                }}
+              >
+                {/* Image Box */}
+                <Box
+                  component="img"
+                  src={VisionImage}
+                  alt="Our Vision"
+                  sx={{
+                    width: { xs: '100%', md: '50%' }, // Adjust image width for better responsiveness
+                    height: '400px', // Prevent image overlap with content
+                    borderRadius: '30px',
+                    objectFit: 'cover',
+                    marginTop: { xs: '20px', md: '0' }, // Adds margin top for small screens
+                    marginLeft: { md: 3 },
+                    marginBottom: { xs: '20px', md: '0' }, // Adds margin for small screens
+                  }}
+                />
+
+                {/* Content Box */}
+                <Box
+                  sx={{
+                    border: 'none',
+                    padding: 3,
+                    textAlign: 'left',
+                    flex: 1,
+                    zIndex: 1,
+                    width: { xs: '100%', md: '50%' },
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    component="h2"
+                    gutterBottom
+                    sx={{
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    Our Vision
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      fontSize: '20px',
+                    }}
+                  >
+                    Our vision at QUA Loan is to redefine how personal loans are accessed by salaried
+                    professionals in India. We aim to create a transparent, customer-centric lending
+                    ecosystem that provides access to credit when it’s needed the most. By making use of
+                    innovative technologies and leveraging our expertise in providing financial services, we strive to build
+                    a future where financial inclusion is a reality for all, regardless of their source of income or financial background.
+                  </Typography>
+                </Box>
+              </Box>
 
 
-      <Box
-         sx={{
-          marginLeft: { xs: 0, md: '50px' }, // Remove margin for small screens
-          marginRight: { xs: 0, md: '50px' },
-          marginTop:{xs:'20px',md:'100px'} ,
-          marginBottom: '50px',
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: { xs: 'column', md: 'column' }, // Keep stacked vertically
-          padding: 3,
-          position: 'relative', // Maintain zIndex stacking
-        }}
-      >
-        {/* Content Box */}
-        <Box
-          sx={{
-            padding: 3,
-            backgroundColor: '#DED3EE',
-            borderRadius: 2,
-            boxShadow: 2,
-            textAlign: 'left',
-            flex: 1,
-            zIndex: 1,
-            borderRadius: '30px',
 
-            width: { xs: '90%', md: '100%' }, // Adjust width for smaller screens
-          }}
-        >
-          <Typography
-            variant="h4"
-            component="h2"
-            gutterBottom
-            sx={{
-              marginLeft: { xs: 0, md: '400px' }, // Reset margin on smaller screens
-              fontWeight: 'bold',
-            }}
-          >
-            Our Vision
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              marginLeft: { xs: 0, md: '400px'  },
-              fontSize:'20px'
-              // Reset margin on smaller screens
-            }}
-          >
-            Our vision at QUA Loan.is to redefine how personal loans are accessed by salaried
-professionals in India. We aim to create a transparent, customer-centric lending
-ecosystem that provides access to credit when it’s needed the most. By making use of
-the innovative technologies and leveraging our expertise in providing financial services, we strive to build
-            a future where financial inclusion is a reality for all, regardless of theirsource of income or financial background.
-          </Typography>
-        </Box>
 
-        {/* Image */}
-        <Box
-          component="img"
-          src={VisionImage}
-          alt="Our Vision"
-          sx={{
-            width: { xs: '100%', md: '33%' }, // Adjust size for smaller screens
-            height: 'auto',
-            borderRadius: '30px',
-            maxWidth: '60%',
-            position: { xs: 'static', md: 'absolute' }, // Absolute position only for larger screens
-            right: { md: '45%' },
-            transform: { md: 'translate(-50%, -20%)' }, // Apply only on larger screens
-            zIndex: 6,
-            marginTop: { xs: '20px', md: 4 }, // Add spacing on smaller screens
-          }}
-        />
-      </Box>
    
          {/* <Technology/> */}
 

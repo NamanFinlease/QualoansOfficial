@@ -102,7 +102,7 @@ const AboutUs = () => {
             >
               Email
             </Typography>
-            <Typography sx={{ mb: 3 }}>info@QUA Loan.com</Typography>
+            <Typography sx={{ mb: 3 }}>info@qualoan.com</Typography>
             <Typography
               sx={{
                 fontWeight: 'bold',
@@ -243,7 +243,7 @@ const AboutUs = () => {
       >
         <Box
           component="iframe"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.246459582324!2d-122.08574968468185!3d37.42206527982659!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb5c44d6b41d3%3A0x30a9d6a89a2384e!2sGoogleplex!5e0!3m2!1sen!2sus!4v1614693744843!5m2!1sen!2sus"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d114174.517324222!2d77.2132906!3d28.5569781!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d2f079fc24f91%3A0xa2e5fa2d2a14c4fc!2sPanchsheel%20Park%2C%20New%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1633464537289!5m2!1sen!2sin" 
           allowFullScreen
           loading="lazy"
           sx={{

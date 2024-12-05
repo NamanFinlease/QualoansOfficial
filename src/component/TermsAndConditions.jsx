@@ -86,7 +86,7 @@ const TermsAndConditions = () => {
                                 4. Loan Terms
                             </Typography>
                             <Typography>
-                                Loan amounts, interest rates, and repayment schedules are determined based on the applicant’s profile. The interest rate will remain fixed for the entire loan tenure.
+                                Loan amount, interest rates, and repayment schedules are determined based on the applicant’s profile. The interest rate will remain fixed for the entire loan tenure.
                             </Typography>
                         </Box>
                         <Divider sx={{ my: 2 }} />
@@ -106,8 +106,8 @@ const TermsAndConditions = () => {
                                 6. Loan Disbursement
                             </Typography>
                             <Typography>
-                            6. Loan Disbursement
-Upon approval of your loan application and completion of required formalities, the loan amount will be credited directly to your bank account. The times of disbursing your loan amount  may vary depending on internal processes, but QUA Loan strives to ensure quick and efficient transfer of funds.
+                           
+                            Upon approval of your loan application and completion of required formalities, the loan amount will be credited directly to your bank account. The times of disbursing your loan amount  may vary depending on internal processes, but QUA Loan strives to ensure quick and efficient transfer of funds.
                             </Typography>
                         </Box>
                         <Divider sx={{ my: 2 }} />

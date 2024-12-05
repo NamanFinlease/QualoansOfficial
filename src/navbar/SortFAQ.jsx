@@ -198,7 +198,7 @@ const faqItems = [
     },
     {
         question: 'How do I repay the loan?',
-        answer: 'Repaying your loan is super easy! You can choose between Easy Pay or a Bank Transfer. We offer flexible repayment options so you can pay on time without any stress.'
+        answer: 'Repaying your loan is super easy! You can choose between UPI or a Bank Transfer. We offer flexible repayment options so you can pay on time without any stress.'
     },
 ];
 

@@ -105,7 +105,7 @@ const LoanCalculator = () => {
                         Personal Loan Calculator
                     </Typography>
                     <Typography  align="center" gutterBottom sx={{ color: 'white',fontFamily:"italic", fontSize:{xs: '16px', sm: '22px' } }}>
-                    Calculate your loan effortlessly with our user-friendly plateform. Adjust amounts, tenure, and interest rates to see the total cost and make informed financial decisions.                                    </Typography>
+                    Calculate your loan effortlessly with our user-friendly platform. Adjust amounts, tenure, and interest rates to see the total cost and make informed financial decisions.                                    </Typography>
 
                     <Grid container spacing={4}  id="calculator-grid-container" justifyContent="center">
                     <Grid item xs={12} md={6}>

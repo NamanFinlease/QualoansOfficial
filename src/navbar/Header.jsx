@@ -68,7 +68,7 @@ const Header = () => {
       alignItems: 'center',
     }}
   >
-    {['HOME', 'ABOUT', 'REPAY', 'CONTACT', 'CALCULATOR'].map((text) => (
+    {['HOME', 'ABOUT', 'REPAY', 'CONTACT', 'LOAN CALCULATOR'].map((text) => (
       <Link
         key={text}
         to={
@@ -127,7 +127,7 @@ const Header = () => {
       animation: 'fadeIn 0.3s ease-in-out', // Smooth fade-in effect
     }}
   >
-    {['HOME', 'ABOUT', 'REPAY', 'CONTACT', 'CALCULATOR'].map((text) => (
+    {['HOME', 'ABOUT', 'REPAY', 'CONTACT', 'LOAN CALCULATOR'].map((text) => (
       <Link
         key={text}
         to={

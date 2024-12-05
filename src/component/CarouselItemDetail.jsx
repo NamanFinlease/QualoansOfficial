@@ -20,7 +20,7 @@ const cardDetails = [
   {
     imgUrl: image2,
     title: "Stress-Free Repayment",
-    description: `With options like Easy Pay or Bank Transfer, our flexible repayment plans make it  for you to stay on top of your finances. Enjoy upgrading your lifestyle without the worry of cash flow!`,
+    description: `With options like UPI or Bank Transfer, our flexible repayment plans make it  for you to stay on top of your finances. Enjoy upgrading your lifestyle without the worry of cash flow!`,
   },
   {
     imgUrl: image3,
