@@ -219,7 +219,7 @@ const AboutUs = () => {
                       color: '#fff',
                       padding: '10px',
                       '&:hover': {
-                        backgroundColor: '#FF5722',
+                        backgroundColor: '#fc8403',
                       },
                     }}
                   >

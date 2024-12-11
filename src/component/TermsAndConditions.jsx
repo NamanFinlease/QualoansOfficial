@@ -20,7 +20,7 @@ const TermsAndConditions = () => {
                                 variant="h3" 
                                 gutterBottom 
                                 sx={{    
-                                    color: 'black', 
+                                    color: '#fc8403', 
                                     fontWeight: 'bold', 
                                     fontSize: '36px', 
                                     letterSpacing: '0.05em',
@@ -36,7 +36,7 @@ const TermsAndConditions = () => {
                     {/* Terms and Conditions Content */}
                     <Paper elevation={3} sx={{ borderRadius: '30px', overflow: 'hidden' ,  backgroundColor: 'transparent',  padding:{xs:1,md:8}}}>
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold',color:'#fc8403' }}>
                                 Welcome to QUA Loan. By accessing and using this website or applying for any of our loan products, you agree to comply with the terms and conditions outlined here.
                             </Typography>
                             <Typography>
@@ -46,7 +46,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 1. Introduction
                             </Typography>
                             <Typography>
@@ -56,7 +56,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 2. Eligibility Criteria
                             </Typography>
                             <Typography>
@@ -72,7 +72,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 3. Loan Application Process
                             </Typography>
                             <Typography>
@@ -82,7 +82,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 4. Loan Terms
                             </Typography>
                             <Typography>
@@ -92,7 +92,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 5. Fees and Charges
                             </Typography>
                             <Typography>
@@ -102,7 +102,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 6. Loan Disbursement
                             </Typography>
                             <Typography>
@@ -113,7 +113,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 7. Loan Repayment
                             </Typography>
                             <Typography>
@@ -123,7 +123,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 8. Default and Consequences
                             </Typography>
                             <Typography>
@@ -133,7 +133,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 9. Cancellation of Loan
                             </Typography>
                             <Typography>
@@ -143,7 +143,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 10. Data Privacy and Security
                             </Typography>
                             <Typography>
@@ -153,7 +153,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 11. User Responsibilities
                             </Typography>
                             <Typography>
@@ -163,7 +163,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 12. Amendments to Terms
                             </Typography>
                             <Typography>
@@ -173,7 +173,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 13. Dispute Resolution
                             </Typography>
                             <Typography>
@@ -183,7 +183,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 14. Limitation of Liability
                             </Typography>
                             <Typography>
@@ -193,7 +193,7 @@ const TermsAndConditions = () => {
                         <Divider sx={{ my: 2 }} />
 
                         <Box sx={{ transition: 'transform 0.3s ease-in-out', '&:hover': { transform: 'scale(1.05)' } }}>
-                            <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#fc8403', fontWeight: 'bold' }}>
                                 15. Governing Law
                             </Typography>
                             <Typography>

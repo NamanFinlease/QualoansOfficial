@@ -45,7 +45,7 @@ const cardDetails = [
 ];
 
 function CarouselItemDetail({ icon, imgTitle, description, index }) {
-  const colors = ["#EB685A", "#A77AE2", "#56B8DC", "#AFD97E", "#d7ccc8"];
+  const colors = ["#fc8403", "#5677d1", "#d1565c", "#15d8ed", "#d111d1"];
   return (
     <Card
       sx={{
@@ -137,7 +137,7 @@ export default function WhyChooseUs() {
           <Typography
             variant="h4"
             fontWeight='bold'
-            color="black"
+            color="#fc8403"
             gutterBottom
           >
             Why Us?
@@ -172,7 +172,9 @@ export default function WhyChooseUs() {
                 justifyContent: "center",
                 alignItems: "center",
                 "&:hover": {
-                  backgroundColor: "rgba(0, 0, 0, 0.1)", // Slight hover effect
+                  color: "orange",
+                  border: "2px solid orange",
+  
                 },
               }}
               aria-label="Scroll Right"
@@ -192,6 +194,9 @@ export default function WhyChooseUs() {
                 alignItems: "center",
                 "&:hover": {
                   backgroundColor: "rgba(0, 0, 0, 0.1)", // Slight hover effect
+                  color: "orange",
+                  border: "2px solid orange",
+  
                 },
               }}
               aria-label="Scroll Left"

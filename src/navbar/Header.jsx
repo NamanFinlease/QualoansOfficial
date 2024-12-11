@@ -1,199 +1,275 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IconButton, AppBar, Toolbar, Box, Button } from '@mui/material';
-import { Menu as MenuIcon } from '@mui/icons-material';
-import logo from '../assets/image/Qua Black LOgo (1).png'; // Adjust the path based on your structure
+import {
+  IconButton,
+  AppBar,
+  Toolbar,
+  Box,
+  Menu as MUI_Menu,
+  MenuItem,
+  Button,
+} from '@mui/material';
+import Menu from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import InfoIcon from '@mui/icons-material/Info';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
+import ApplyNowIcon from '@mui/icons-material/Assignment';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import { keyframes } from '@mui/system';
+
+import logo from '../assets/image/Artboard 1.webp'; // Adjust the path based on your structure
+
+// Blinking animation for the "Apply Now" button
+const blinking = keyframes`
+  0% { background-color: gray; color: white; }
+  50% { background-color: #fc8403; color: black; }
+  100% { background-color: black; color: white; }
+`;
 
 const Header = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  const toggleSidebar = (open) => {
-    setIsSidebarOpen(open);
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  // Scroll to top function
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <>
       <AppBar
         position="sticky"
-        sx={{ backgroundColor: '#f9f9f9', boxShadow: 'none', zIndex: 5 }}
+        elevation={0}
+        sx={{
+          paddingTop:'10px',
+          backgroundColor: '#f9f9f9',
+          border: 'none',
+          boxShadow: 'none',
+        }}
       >
         <Toolbar
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
-            minHeight: '64px',
-            marginTop: '10px',
-            paddingX: { xs: 2, sm: 3 }, // Add padding for small screens
+            flexWrap: 'nowrap',
+            minHeight: '80px',
           }}
         >
           {/* Logo */}
           <Link
             to="/"
-            style={{ display: 'flex', alignItems: 'center' }}
             onClick={scrollToTop}
+            style={{ display: 'flex', alignItems: 'center', zIndex: 10 }}
           >
-            <img src={logo} alt="Logo" style={{ width: '40%', height: 'auto' }} />
+            <img
+              src={logo}
+              alt="Logo"
+              style={{
+                width: '50%',
+                height: '50%',
+                objectFit: 'contain',
+                zIndex: 10,
+              }}
+            />
           </Link>
 
-          {/* Apply Now Button and Menu Icon */}
+          {/* Mobile Menu Button */}
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={handleMenu}
+            sx={{ display: { xs: 'block', md: 'none' }, color: '#0b2747', padding: '8px' }}
+          >
+            <Menu />
+          </IconButton>
+
+          {/* Mobile Menu */}
+          <MUI_Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            sx={{ display: { xs: 'block', md: 'none' }, '& .MuiPaper-root': { zIndex: 900 } }}
+          >
+            <MenuItem onClick={handleClose}>
+              <Link to="/" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
+                <HomeIcon sx={{ mr: 1 }} /> Home
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <Link to="/about-us" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
+                <InfoIcon sx={{ mr: 1 }} /> About Us
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <Link to="/contact-us" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
+                <ContactMailIcon sx={{ mr: 1 }} /> Contact Us
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <Link to="/repay-now" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
+                <ApplyNowIcon sx={{ mr: 1 }} /> Repay Now
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <Link to="/loan-calculator" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
+                <CalculateIcon sx={{ mr: 1 }} /> Loan Calculator
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <Link to="/apply-now" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
+                <ApplyNowIcon sx={{ mr: 1 }} /> Apply Now
+              </Link>
+            </MenuItem>
+            
+          </MUI_Menu>
+
+          {/* Desktop Navigation */}
           <Box
   sx={{
-    display: 'flex',
+    display: { xs: 'none', md: 'flex' },
+    justifyContent: 'space-between',
     alignItems: 'center',
-    border: '2px solid',
-    background: '#D9D9D9',
-    padding: '5px',
-    borderRadius: '10px',
-    position: 'relative',
-    gap: { xs: 1, sm: 2 }, // Adjust gap for smaller screens
-    '@media (max-width: 600px)': {
-      padding: '4px', // Reduce padding for small screens
+    width: '100%',
+    textAlign: 'center',
+  }}
+>
+  {/* Navigation Links */}
+  <Box
+  sx={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '1rem',
+    flexGrow: 1, // To allow centering
+    '&:hover *': { // Apply hover effect to all child elements
+      color: 'orange',
     },
   }}
 >
-  {/* Sidebar for larger screens */}
-  <Box
-    sx={{
-      display: { xs: 'none', sm: 'flex' }, // Hide on small screens
-      flexDirection: 'row',
-      gap: 2,
-      alignItems: 'center',
-    }}
-  >
-    {['HOME', 'ABOUT', 'REPAY', 'CONTACT', 'LOAN CALCULATOR'].map((text) => (
-      <Link
-        key={text}
-        to={
-          text === 'HOME'
-            ? '/'
-            : text === 'REPAY'
-            ? '/repay-now'
-            : text === 'CONTACT'
-            ? '/contact-us'
-            : text === 'ABOUT'
-            ? '/about-us'
-            : '/calculator'
-        }
-        style={{
-          color: '#0b2747',
-          textDecoration: 'none',
-          padding: '5px 10px',
-          borderRadius: '10px',
-        }}
-      >
-        {text}
-      </Link>
-    ))}
-  </Box>
 
-  {/* Dropdown menu for smaller screens */}
-  <Box sx={{ display: { xs: 'flex', sm: 'none' }, flexDirection: 'column', position: 'relative' }}>
-    {/* Menu Button */}
-    <IconButton
-      onClick={() => toggleSidebar((prev) => !prev)} // Toggles the dropdown
-      sx={{
+    <Link
+      to="/"
+      onClick={scrollToTop}
+      style={{
         color: '#0b2747',
-        borderRadius: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        textDecoration: 'none',
+        padding: '8px',
+        fontWeight:'700',
+        transition: 'color 0.3s ease',
+        fontFamily: 'Roboto, sans-serif',
+        
       }}
     >
-      <MenuIcon />
-    </IconButton>
+      <HomeIcon sx={{ mr: 1 }} /> Home
+    </Link>
+    <Link
+      to="/about-us"
+      onClick={scrollToTop}
+      style={{
+        color: '#0b2747',
+        display: 'flex',
+        alignItems: 'center',
+        textDecoration: 'none',
+        padding: '8px',
+        fontWeight:'700',
 
-    {/* Dropdown Menu */}
-    {isSidebarOpen && (
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '100%',
-          left: -5,
-          width: 'auto', // Dynamically adjusts width based on content
-          minWidth: 'fit-content', // Ensures the minimum width fits the text
-          background: '#D9D9D9',
-          borderRadius: '10px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 1,
-          padding: '5px 1px',
-          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Shadow for better effect
-          zIndex: 2,
-          animation: 'fadeIn 0.3s ease-in-out', // Smooth fade-in effect
-        }}
-      >
-        {['HOME', 'ABOUT', 'REPAY', 'CONTACT', 'LOAN CALCULATOR'].map((text) => (
-          <Link
-            key={text}
-            to={
-              text === 'HOME'
-                ? '/'
-                : text === 'REPAY'
-                ? '/repay-now'
-                : text === 'CONTACT'
-                ? '/contact-us'
-                : text === 'ABOUT'
-                ? '/about-us'
-                : '/calculator'
-            }
-            style={{
-              color: '#0b2747',
-              textDecoration: 'none',
-              padding: '10px 15px',
-              borderRadius: '5px',
-              whiteSpace: 'nowrap', // Prevents text wrapping
-              transition: 'background 0.3s ease, transform 0.2s ease', // Smooth hover effect
-            }}
-            onMouseEnter={(e) => (e.target.style.background = '#f0f0f0')}
-            onMouseLeave={(e) => (e.target.style.background = 'transparent')}
-            onClick={() => toggleSidebar(false)} // Close the dropdown on click
-          >
-            {text}
-          </Link>
-        ))}
-      </Box>
-    )}
+        transition: 'color 0.3s ease',
+        fontFamily: 'Roboto, sans-serif',
+      }}
+    >
+      <InfoIcon sx={{ mr: 1 }} /> About Us
+    </Link>
+    <Link
+      to="/contact-us"
+      onClick={scrollToTop}
+      style={{
+        color: '#0b2747',
+        display: 'flex',
+        alignItems: 'center',
+        textDecoration: 'none',
+        padding: '8px',
+        fontWeight:'700',
+
+        transition: 'color 0.3s ease',
+        fontFamily: 'Roboto, sans-serif',
+      }}
+    >
+      <ContactMailIcon sx={{ mr: 1 }} /> Contact Us
+    </Link>
+    <Link
+      to="/repay-now"
+      onClick={scrollToTop}
+      style={{
+        color: '#0b2747',
+        display: 'flex',
+        alignItems: 'center',
+        textDecoration: 'none',
+        padding: '8px',
+        fontWeight:'700',
+
+        transition: 'color 0.3s ease',
+        fontFamily: 'Roboto, sans-serif',
+      }}
+    >
+      <ApplyNowIcon sx={{ mr: 1 }} /> Repay Now
+    </Link>
+    <Link
+      to="/calculator"
+      onClick={scrollToTop}
+      style={{
+        color: '#0b2747',
+        display: 'flex',
+        alignItems: 'center',
+        textDecoration: 'none',
+        padding: '8px',
+        fontWeight:'700',
+
+        transition: 'color 0.3s ease',
+        fontFamily: 'Roboto, sans-serif',
+      }}
+    >
+      <CalculateIcon sx={{ mr: 1 }} /> Loan Calculator
+    </Link>
   </Box>
 
-  {/* Apply Button */}
+  {/* "Apply Now" Button */}
   <Button
     component={Link}
     to="/apply-now"
     variant="contained"
-    color="primary"
     sx={{
-      backgroundColor: 'black',
+      backgroundColor: 'orange',
       color: 'white',
-      padding: '9.9px 18px',
-      borderRadius: '10px',
+      padding: '10px 20px',
+      borderRadius: '50px',
       fontWeight: 'bold',
-      zIndex: 2,
-      position: 'sticky',
-      top: 10, // Set how far from the top you want the button to stick
+      animation: `${blinking} 1.5s infinite`,
+      fontFamily: 'Roboto, sans-serif',
+      textTransform: 'none', // Normal case
       '&:hover': {
-        backgroundColor: 'gray',
-        color: 'white',
+        backgroundColor: '#fc8403',
       },
       '@media (max-width: 600px)': {
-        fontSize: '14px', // Adjust font size for smaller screens
-        padding: '8px 12px', // Reduce padding on small screens
+        fontSize: '14px',
+        padding: '8px 12px',
       },
     }}
   >
-    Apply
+    Apply Now
   </Button>
 </Box>
 
-
         </Toolbar>
       </AppBar>
-
-    
     </>
   );
 };

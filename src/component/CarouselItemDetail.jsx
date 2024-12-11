@@ -1,53 +1,46 @@
 import React, { useRef } from "react";
-import { Box, Typography, Card, CardMedia, IconButton } from "@mui/material";
+import { Box, Typography, Card, IconButton } from "@mui/material";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
-
-// Import images
-import image1 from "../assets/image/Trust-and-Transparency 1.png";
-import image2 from "../assets/image/Easy-Approval-and-Disbursal 2.png";
-import image3 from "../assets/image/Easy-Approval-and-Disbursal 2.png";
-import image4 from "../assets/image/Easy-Repayment 1.png";
-import image5 from "../assets/image/Trust-and-Transparency 1.png";
-import image6 from "../assets/image/Trust-and-Transparency 1.png";
+import { Speed, MonetizationOn, Security, Description, AccountBalance, ThumbUp } from "@mui/icons-material";
 
 // Carousel content configuration
 const cardDetails = [
   {
-    imgUrl: image1,
+    icon: <Speed fontSize="80px" />,
     title: "Quick Approval",
-    description: `We know your time matters! With our friendly financial technology, we’ll check your documents and approve your loan in just minutes. Once you’re approved, the money will land in your account in no time!`,
+    description: ` We check your documents and updates you about the status in minutes.`,
   },
   {
-    imgUrl: image2,
-    title: "Stress-Free Repayment",
-    description: `With options like UPI or Bank Transfer, our flexible repayment plans make it  for you to stay on top of your finances. Enjoy upgrading your lifestyle without the worry of cash flow!`,
+    icon: <AccountBalance fontSize="80px" />,
+    title: "Easy Repayment",
+    description: `Pay back your loan your way. Use UPI or bank transfer With no prepayment charges.`,
   },
   {
-    imgUrl: image3,
+    icon: <MonetizationOn fontSize="80px" />,
     title: "Clear Pricing",
-    description: `Our interest rates and fees are clear, straightforward, and completely fair—there are no hidden surprises. We aim to make your financial journey as smooth and hassle-free as possible.`,
+    description: `No hidden fees! Our rates are competitive and fair, so you always know what to expect.`,
   },
   {
-    imgUrl: image4,
-    title: "Easy Documentation",
-    description: `Say goodbye to the hassle of paperwork and long trips to the bank. With our fully digital loan process, you can enjoy a quick, straightforward, and stress-free experience from start to finish.`,
+    icon: <Description fontSize="80px" />,
+    title: "Simple Documents",
+    description: `Skip the hassle of paperwork. Apply online quickly and easily from anywhere.`,
   },
   {
-    imgUrl: image5,
-    title: "Fast Fund Transfer",
-    description: `As soon as your documents are verified and approved, the money will be sent to your account right away. No waiting—just quick financial relief thanks to our advanced technology!`,
+    icon: <ThumbUp fontSize="80px" />,
+    title: "Instant Transfer",
+    description: `Once approved, your loan amount is sent to your account right away. No delays!`,
   },
   {
-    imgUrl: image6,
-    title: "Secure Process",
-    description: `Your information absolutely lies in safe hands! Our dedicated teams work diligently at every phase to ensure a safe and transparent experience. Your dreams are important to us, and we’ll protect them like our own.`,
+    icon: <Security fontSize="80px" />,
+    title: "Safe Process",
+    description: `Your data is secure with us. We ensure your loan process is safe and transparent.`,
   },
 ];
 
 // Carousel Item Component
-function CarouselItemDetail({ imgUrl, imgTitle, description, index }) {
+function CarouselItemDetail({ icon, imgTitle, description, index }) {
   const [visibleLines, setVisibleLines] = React.useState([]);
-  const colors = ["#EB685A", "#A77AE2", "#56B8DC", "#AFD97E", "#A77AE2"];
+  const colors = ["#fc8403", "#5677d1", "#d1565c", "#15d8ed", "#d111d1"];
 
   const descriptionLines = description.split("\n");
 
@@ -63,8 +56,8 @@ function CarouselItemDetail({ imgUrl, imgTitle, description, index }) {
   return (
     <Card
       sx={{
-        width:380 ,
-        height:  450,
+        width: 300,
+        height: 400,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -72,7 +65,7 @@ function CarouselItemDetail({ imgUrl, imgTitle, description, index }) {
         backgroundColor: colors[index % colors.length],
         boxShadow: 4,
         borderRadius: 3,
-        margin: 2,
+        // margin: 2,
         transition: "transform 0.3s",
         "&:hover": {
           transform: "scale(1.05)",
@@ -80,22 +73,16 @@ function CarouselItemDetail({ imgUrl, imgTitle, description, index }) {
         },
       }}
     >
-      <Box>
-        <CardMedia
-          component="img"
-          image={imgUrl}
-          alt={imgTitle}
-          sx={{
-
-            width:{xs:'100%',md:'100%'} ,
-            height:{xs:'50%',md:'100%'},
-            maxHeight: 150,
-            marginBottom: 10,
-            marginTop:10
-          }}
-        />
+      <Box
+        sx={{
+          fontSize: "4rem",
+          color: "white",
+          marginBottom: 8,
+        }}
+      >
+        {icon}
       </Box>
-      <Typography variant="h5" fontWeight="bold" color="white" align="center" >
+      <Typography variant="h5" fontWeight="bold" color="white" align="center" sx={{mb:4}}>
         {imgTitle}
       </Typography>
       <Box mt={1} textAlign="center">
@@ -104,10 +91,7 @@ function CarouselItemDetail({ imgUrl, imgTitle, description, index }) {
             key={lineIndex}
             color="white"
             sx={{
-              marginBottom: 10,
-              paddingLeft:'30px',
-              paddingRight:'30px',
-
+              marginBottom: 1,
               fontSize: "20px",
               opacity: visibleLines.includes(lineIndex) ? 1 : 0,
               transition: "opacity 0.5s ease",
@@ -132,27 +116,24 @@ export default function AutoplayCarousel() {
 
   const scrollCarousel = (direction) => {
     if (carouselRef.current) {
-      const scrollAmount = 400; // Adjust to control the scroll distance per click
+      const scrollAmount = 400;
       const currentScroll = carouselRef.current.scrollLeft;
       const maxScroll = carouselRef.current.scrollWidth - carouselRef.current.clientWidth;
-      
-      // Calculate the new scroll position
+
       let newScroll =
         direction === "left"
           ? currentScroll - scrollAmount
           : currentScroll + scrollAmount;
 
-      // Ensure that the scroll position stays within bounds
       if (newScroll < 0) {
         newScroll = 0;
       } else if (newScroll > maxScroll) {
         newScroll = maxScroll;
       }
 
-      // Set the scroll position to the new value with smooth behavior
       carouselRef.current.scrollTo({
         left: newScroll,
-        behavior: "smooth", // Add smooth scrolling behavior
+        behavior: "smooth",
       });
     }
   };
@@ -163,14 +144,13 @@ export default function AutoplayCarousel() {
         backgroundColor: "#F5F5F5",
         position: "relative",
         display: "flex",
-        flexDirection: { xs: "column", md: "row" }, // Responsive layout
+        flexDirection: { xs: "column", md: "row" },
         padding: { xs: "10px", sm: "20px", md: "30px" },
       }}
     >
-      {/* Left Section: Heading, Description, and Icons */}
       <Box
         sx={{
-          flex: { md: 1 }, // Take 1 part of the available space
+          flex: { md: 1 },
           textAlign: { xs: "center", md: "left" },
           marginBottom: { xs: "20px", md: "0px" },
           display: "flex",
@@ -182,7 +162,7 @@ export default function AutoplayCarousel() {
         <Typography
           variant="h4"
           fontWeight={750}
-          color="black"
+          color="#fc8403"
           gutterBottom
           sx={{
             fontWeight: "bold",
@@ -199,18 +179,17 @@ export default function AutoplayCarousel() {
             fontSize: { xs: "1rem", sm: "1.2rem", md: "1.5rem" },
           }}
         >
-          Get  financial support at ease with our instant approval system, flexible repayment options,
+          Get financial support at ease with our instant approval system, flexible repayment options,
           and transparent interest rates. Experience a safe and hassle-free process with minimal documentation.
           No waiting time, no unnecessary paperwork!
         </Typography>
 
-        {/* Backward and Forward Icons */}
-         <Box
+        <Box
           sx={{
             display: "flex",
             justifyContent: { xs: "center", md: "flex-start" },
             gap: 2,
-            marginTop: { xs: "20px", md: "40px" }, // Ensure marginTop is applied on both small and large screens
+            marginTop: { xs: "20px", md: "40px" },
           }}
         >
           <IconButton
@@ -221,7 +200,8 @@ export default function AutoplayCarousel() {
               color: "gray",
               "&:hover": {
                 backgroundColor: "#f2f2f2",
-                color: "black",
+                color: "orange",
+                border: "2px solid orange",
               },
             }}
           >
@@ -235,42 +215,42 @@ export default function AutoplayCarousel() {
               color: "gray",
               "&:hover": {
                 backgroundColor: "#f2f2f2",
-                color: "black",
+                color: "orange",
+                border: "2px solid orange",
               },
             }}
           >
             <ArrowForwardIos />
           </IconButton>
         </Box>
-
       </Box>
 
-      {/* Right Section: Carousel Boxes */}
       <Box
         ref={carouselRef}
         sx={{
-          flex: { md: 2 }, // Take 2 parts of the available space
+          flex: { md: 2 },
           display: "flex",
           overflowX: "auto",
+          textAlign:'center',
           scrollBehavior: "smooth",
-          gap: { xs: 15, sm: 3, md: 1 }, // Adjust gap between cards for small screens
+          gap: { xs: 15, sm: 3, md: 0 },
           padding: { xs: "10px 0", sm: "20px 0" },
-          "&::-webkit-scrollbar": { display: "none" }, // Hide scrollbar
-          justifyContent: { xs: "flex-start", sm: "start" }, // Align cards to the left
+          "&::-webkit-scrollbar": { display: "none" },
+          justifyContent: { xs: "flex-start", sm: "start" },
         }}
       >
         {cardDetails.map((item, index) => (
           <Box
             key={index}
             sx={{
-              display: "inline-block", // Horizontal alignment
-              width: { xs: "260px", sm: "300px", md: "360px" }, // Adjust card width for responsiveness
-              flexShrink: 0, // Prevent shrinking
-              margin: { xs: "0 8px", sm: "0 12px", md: "0 16px" }, // Adjust margin for gaps
+              display: "inline-block",
+              width: { xs: "260px", sm: "300px", md: "260px" },
+              flexShrink: 0,
+              margin: { xs: "0 8px", sm: "0 12px", md: "0 26px" },
             }}
           >
             <CarouselItemDetail
-              imgUrl={item.imgUrl}
+              icon={item.icon}
               imgTitle={item.title}
               description={item.description}
               index={index}

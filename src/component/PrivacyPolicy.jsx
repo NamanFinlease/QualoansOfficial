@@ -153,7 +153,7 @@ const PrivacyPolicy = () => {
                                 variant="h3" 
                                 gutterBottom 
                                 sx={{ 
-                                    color: 'black', 
+                                    color: '#fc8403', 
                                     fontWeight: 'bold', 
                                     fontSize: '2.8rem', 
                                     letterSpacing: '0.05em',
@@ -175,7 +175,7 @@ const PrivacyPolicy = () => {
                                         <Typography 
                                             variant="h6" 
                                             gutterBottom 
-                                            sx={{ color: 'black', fontWeight: 'bold' }}
+                                            sx={{ color: '#fc8403', fontWeight: 'bold' }}
                                         >
                                             {section.title}
                                         </Typography>

@@ -69,7 +69,7 @@ const SortFAQ = () => {
                 sx={{
                     textAlign: 'center',
                     fontWeight: 'bold',
-                    color: '#135deg',
+                    color: '#fc8403',
                     mb: 4,
                     fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' }, // Adjust font size based on screen size
                     fontFamily: 'Arial, sans-serif',
@@ -124,11 +124,11 @@ const SortFAQ = () => {
                                         color: 'black',
                                         transition: 'background-color 0.3s ease',
                                         '&:hover': {
-                                            backgroundColor: 'black',
+                                            backgroundColor: '#fc8403',
                                             color: 'white',
                                         },
                                         '&.Mui-expanded': {
-                                            backgroundColor: 'black',
+                                            backgroundColor: '#fc8403',
                                             color: 'white',
                                         },
                                     }}

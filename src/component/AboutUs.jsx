@@ -114,6 +114,7 @@ const AboutUs = () => {
             lineHeight: '73px', // Line height
             letterSpacing: '-0.408px', // Letter spacing
             textAlign: 'center',
+            color:'#fc8403',
             marginBottom: { xs: '20px', md: '2px' }, // Responsive margin-bottom
           }}
         >
@@ -192,6 +193,7 @@ we’re here to ensure that financial hurdles don’t hold you back. With our fu
                     component="h2"
                     gutterBottom
                     sx={{
+                      color:'#fc8403',
                       fontWeight: 'bold',
                     }}
                   >
@@ -276,6 +278,7 @@ we’re here to ensure that financial hurdles don’t hold you back. With our fu
                     component="h2"
                     gutterBottom
                     sx={{
+                      color:'#fc8403',
                       fontWeight: 'bold',
                     }}
                   >
@@ -340,6 +343,7 @@ we’re here to ensure that financial hurdles don’t hold you back. With our fu
               sx={{
                 fontWeight: "bold",
                 mb: 4,
+                color:'#fc8403',
                 fontSize: { xs: "2.4rem", md: "2.5rem" },
                 fontFamily: "Arial, sans-serif",
                 opacity: isVisible ? 1 : 0,
@@ -398,7 +402,7 @@ we’re here to ensure that financial hurdles don’t hold you back. With our fu
                                   color: "white",
                                 }, 
                               "&.Mui-expanded": {
-                                    backgroundColor: "black",
+                                    backgroundColor: "#fc8403",
                                     color: "white",
                                   },}} />}
                                 aria-controls={`tech${index}-content`}
@@ -406,11 +410,11 @@ we’re here to ensure that financial hurdles don’t hold you back. With our fu
                                 sx={{
                                   color: "black",
                                   "&:hover": {
-                                    backgroundColor: "black",
+                                    backgroundColor: "#fc8403",
                                     color: "white",
                                   },
                                   "&.Mui-expanded": {
-                                    backgroundColor: "black",
+                                    backgroundColor: "#fc8403",
                                     color: "white",
                                   },
                                 }}

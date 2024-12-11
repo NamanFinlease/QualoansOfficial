@@ -9,7 +9,6 @@ const FrontPage = () => {
   return (
     <Box
       sx={{
-        marginTop:'-10px',
         overflowX: "hidden",
         width: "100%",
         height: "auto",
@@ -33,8 +32,12 @@ const FrontPage = () => {
         <Typography
           variant="h2"
           sx={{
+            paddingTop:'40px',
+
             fontWeight: "bold",
             color: "black",
+            textTransform: "uppercase", // Ensures the text is in capital letters
+
             marginBottom: theme.spacing(2), // Space below heading
             [theme.breakpoints.down("sm")]: {
               fontSize: "1.5rem",
@@ -44,8 +47,22 @@ const FrontPage = () => {
             },
           }}
         >
-          Instant loans, endless <br /> possibilities—approved in just 5 minutes!
+          Instant loans, endless possibilities
         </Typography>
+        <Typography sx={{
+
+            fontWeight: "bold",
+            color: "#fc8403",
+            textTransform: "uppercase", // Ensures the text is in capital letters
+
+            marginBottom: theme.spacing(2), // Space below heading
+            [theme.breakpoints.down("sm")]: {
+              fontSize: "1.5rem",
+            },
+            [theme.breakpoints.up("md")]: {
+              fontSize: "2rem",
+            },
+          }}> approved in just 5 minutes!</Typography>
 
         {/* Button */}
         <Button
@@ -60,11 +77,11 @@ const FrontPage = () => {
             padding: { xs: "8px 16px", sm: "6px 30px" },
             animation: "blinking 1.5s infinite",
             "&:hover": {
-              backgroundColor: "#FFAA00",
+              backgroundColor: "#fc8403",
             },
             "@keyframes blinking": {
               "0%": { backgroundColor: "black", color: "white" },
-              "50%": { backgroundColor: "#FFAA00", color: "black" },
+              "50%": { backgroundColor: "#fc8403", color: "black" },
               "100%": { backgroundColor: "black", color: "white" },
             },
           }}
@@ -84,7 +101,7 @@ const FrontPage = () => {
           mx:'90px',
 
           backgroundColor: 'rgba(255, 255, 255, 0)',
-          borderRadius: '50px', // Parent border radius
+          borderRadius: '80px', // Parent border radius
           overflow: 'hidden', // Add this if needed
         }}
       >

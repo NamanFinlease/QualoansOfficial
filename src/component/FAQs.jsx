@@ -52,7 +52,7 @@ const FAQs = () => {
                     sx={{
                         textAlign: 'center',
                         fontWeight: 'bold',
-                        color: '#333',
+                        color: '#fc8403',
                         mb: 4,
                         fontSize: '3rem',
                         padding: '0.5rem',
@@ -61,7 +61,7 @@ const FAQs = () => {
                 >
                     Frequently Asked Questions
                 </Typography>
-                <Paper elevation={3} sx={{ borderRadius: '8px', overflow: 'hidden' ,  backgroundColor: 'transparent', }}>
+                <Paper elevation={6} sx={{ borderRadius: '8px', overflow: 'hidden' ,  backgroundColor: 'transparent', }}>
 
                  <div className="accordion-wrapper">
                  {[
@@ -144,7 +144,7 @@ const FAQs = () => {
                                 sx={{
                                     fontFamily: 'cursive',
                                     marginBottom: '1rem',
-                                    backgroundColor: 'transparent',                                     animation: `${lineAnimation} 0.5s ease-in-out ${index * 0.2}s forwards`,
+                                    backgroundColor: 'transparent',  animation: `${lineAnimation} 0.5s ease-in-out ${index * 0.2}s forwards`,
                                     opacity: 0,
                                     transform: 'translateY(20px)',
                                 }}
@@ -169,11 +169,11 @@ const FAQs = () => {
                                     sx={{
                                         color: 'black',
                                         '&:hover': {
-                                            backgroundColor: 'black', // Black background on hover
+                                            backgroundColor: '#fc8403', // Black background on hover
                                             color: 'white', // White text on hover
                                         },
                                         '&.Mui-expanded': {
-                                            backgroundColor: 'black',
+                                            backgroundColor: '#fc8403',
                                             color: 'white',
                                         },
                                     }}

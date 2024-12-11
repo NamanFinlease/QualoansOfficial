@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import {
   TextField,
   Button,
@@ -23,14 +24,20 @@ import {
   LocationOn,
 } from '@mui/icons-material';
 import Swal from 'sweetalert2';
+import { body } from 'framer-motion/client';
+import axios from 'axios';
+import MobileOtpModal from './MobileOtpModal';
+import { BASE_URL } from '../baseURL';
+
 
 const ApplyNow = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [state, setState] = useState('');
-  const [city, setCity] = useState('');
+  const [city, setCity] = useState('')
+  const [isMobileVerified, setIsMobileVerified] = useState(false)
   const [formValues, setFormValues] = useState({
     fName: '',
-    lName:' ',
+    lName: ' ',
     gender: '',
     pan: '',
     aadhaar: '',
@@ -45,6 +52,39 @@ const ApplyNow = () => {
   });
   const [formErrors, setFormErrors] = useState({});
   const [animationState, setAnimationState] = useState([]);
+  const [mobile, setMobile] = useState("");
+  const [otp, setOtp] = useState("");
+  const [openModal,setOpenModal] = useState(false)
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleMobileChange = (e) => {
+    setMobile(e.target.value);
+  };
+
+  const sendOtp = async () => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/verify/mobile/get-otp`, {
+        mobile: mobile,
+        fName: formValues.fName,
+        lName: formValues.lName,
+      });
+
+      if (response.data.success) {
+        setOpenModal(true)
+      } else {
+        throw new Error(response.data.message || 'Failed to send OTP');
+      } 
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.message || 'Failed to send OTP. Please try again later.',
+      });
+    }
+  };
+
 
 
   const handleCheckboxChange = (event) => {
@@ -53,82 +93,20 @@ const ApplyNow = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    console.log("the pan value is 1",value)
-  
-    // Validation for input fields (only block if invalid input is entered)
-  
-    // Mobile: Only digits and max 10 characters
-    if (name === 'fName' && !/^[A-Za-z\s]*$/.test(value)) return;
-    if (name === 'lName' && !/^[A-Za-z\s]*$/.test(value)) return;
-  
-    if (name === 'mobile' && (!/^\d*$/.test(value) || value.length > 10)) return;
-  
-    // Salary and Loan Amount: Only digits
+
+    // Validation for input fields
+    if (name === 'mobile' && !/^\d*$/.test(value)) return;
     if ((name === 'salary' || name === 'loanAmount') && !/^\d*$/.test(value)) return;
-  
-    // PinCode: Only digits and max 6 characters
     if (name === 'pinCode' && (!/^\d*$/.test(value) || value.length > 6)) return;
-  
-    // Aadhaar: Only digits and max 12 characters
     if (name === 'aadhaar' && (!/^\d*$/.test(value) || value.length > 12)) return;
-    
-    //pan validation 
-    if (name === 'pan') {
-      // Convert to uppercase for consistency
-      const panInput = value.toUpperCase();
-  
-      // Allow only up to 10 characters and validate per character
-      if (panInput.length <= 10) {
-          // Regular expression to match PAN format progressively
-          if (
-              /^[A-Z]{0,5}$/.test(panInput) || // First 5 characters must be letters
-              /^[A-Z]{5}\d{0,4}$/.test(panInput) || // Next 4 characters must be digits
-              /^[A-Z]{5}\d{4}[A-Z]?$/.test(panInput) // Last character must be a letter
-          ) {
-              setFormValues({ ...formValues, [name]: panInput });
-              setFormErrors((prevErrors) => ({ ...prevErrors, [name]: '' })); // Clear any error message
-          } else {
-              setFormErrors((prevErrors) => ({
-                  ...prevErrors,
-                  [name]: 'PAN format should be 5 letters, 4 digits, and 1 letter (e.g., ABCDE1234F).',
-              }));
-          }
-      }
-      return; // Prevent further processing if input exceeds 10 characters
-  }
-  
 
-  // validation for dob
-  if (name === 'dob') {
-    const birthDate = new Date(value); // Convert input to a date
-    const today = new Date();
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-  
-    // Adjust age if the current month and day are before the birth month and day
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-  
-    if (age < 18) {
-      setFormErrors((prevErrors) => ({
-        ...prevErrors,
-        dob: 'You must be at least 18 years old.',
-      }));
-      return; // Prevent updating the value if invalid
-    }
-  }
-  
-
-    console.log("the pan value is ",value)
-    // Update form values and reset errors for the specific field
     setFormValues({ ...formValues, [name]: value });
     setFormErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
   };
-  
+
   const validateForm = () => {
     const errors = {};
-    const mobileValid = /^\d{10}$/.test(formValues.mobile);
+    const mobileValid = /^\d{10}$/.test(mobile);
     const panValid = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(formValues.pan);
     const aadhaarValid = /^\d{12}$/.test(formValues.aadhaar);
     const emailValid = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formValues.personalEmail);
@@ -154,13 +132,12 @@ const ApplyNow = () => {
     return errors;
   };
 
-  
+
 
   const handlePincodeChange = async (e) => {
     const value = e.target.value;
     setFormValues({ ...formValues, pinCode: value });
-    console.log(value);
-    
+
     // Fetch city and state based on pincode
     if (value.length === 6) {
       try {
@@ -171,8 +148,7 @@ const ApplyNow = () => {
           const { Block, State } = data[0].PostOffice[0];
           setCity(Block);
           setState(State);
-          console.log(city, state);
-          
+
         } else {
           // Handle invalid pin code case
           setCity('');
@@ -197,43 +173,42 @@ const ApplyNow = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
     const errors = validateForm(); // Validate form and get errors
-    
-    console.log("the values of onject ",Object.keys(errors).length)
+
     // Check for validation errors
-    if (Object.keys(errors).length >=2) {
+    if (Object.keys(errors).length >= 2) {
       setFormErrors(errors); // Set the errors in state
       return; // Prevent submission
     }
-  
+
     // Proceed with form submission if there are no errors
     try {
-      const response = await fetch('https://api.fintechbasket.com/api/leads/', {
+      const response = await fetch(`${BASE_URL}/api/leads/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           ...formValues,
+          mobile: mobile,
           state: state,
           city: city,
           termsAccepted,
           source: 'website',
         }),
       });
-  
+
       if (!response.ok) throw new Error('Network response was not ok');
-  
+
       const result = await response.json();
-  
+
       Swal.fire({
         title: 'Success!',
         text: 'Our executive will call you or revert you back in 24 hours.',
         icon: 'success',
         confirmButtonText: 'OK',
       });
-  
+
       // Reset form after successful submission
       setFormValues({
         fName: '',
@@ -262,201 +237,255 @@ const ApplyNow = () => {
       });
     }
   };
-  
-  
+
+
 
 
 
   return (
-    <div>
-     <Box 
-      sx={{ 
-        background: '#f9f9f9',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        minHeight: '100vh', // Adjust height as needed
-        padding: '30px',
-      }}
-    >
+    <>
+    {openModal && <MobileOtpModal open={openModal} mobile={mobile} setIsMobileVerified={setIsMobileVerified} onClose={() => setOpenModal()} />}
+      
+      <form>
+      <Container maxWidth="xl" sx={{ padding:5,       background: '#f9f9f9',
+}}>
+          <Box
+            component="form"
+            id="loanForm"
+            onSubmit={handleSubmit}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 3,
+              padding: 4,
+              background: '#f9f9f9',
+              borderRadius: 20,
+              border: '2px solid gray',
+              boxShadow: 3,
+              width: '100%',
+            }}
+          >
+            <Typography variant="h4" gutterBottom sx={{textAlign:'center', color:'#fc8403'}}>
+              Personal Information
+            </Typography>
+            <Grid container spacing={3}>
+              {[
+                { label: 'First Name', name: 'fName', icon: <Person /> },
+                { label: 'Last Name', name: 'lName', icon: <Person /> },
+                {
+                  label: 'Gender',
+                  name: 'gender',
+                  icon: <Person />,
+                  type: 'select',
+                  options: ['M', 'F', 'Others'],
+                },
+                { label: 'PAN', name: 'pan', icon: <Public /> },
+                { label: 'Aadhaar', name: 'aadhaar', icon: <Public /> },
+                // { label: 'Mobile', name: 'mobile', icon: <Phone /> },
+                { label: 'DOB', name: 'dob', icon: <CalendarToday />, type: 'date' },
+                { label: 'Personal Email', name: 'personalEmail', icon: <Email /> },
+                { label: 'Office Email', name: 'officeEmail', icon: <Email /> },
+                { label: 'Monthly Salary', name: 'salary', icon: <CurrencyRupee /> },
+                { label: 'Loan Amount Required', name: 'loanAmount', icon: <CurrencyRupee /> },
+              ]?.map((field, index) => (
+                <Grid item xs={12} md={6} key={index}>
+                  <TextField
+                    fullWidth
+                    required
+                    name={field.name}
+                    label={field.label}
+                    value={formValues[field.name]}
+                    onChange={handleInputChange}
+                    type={field.type || 'text'}
+                    select={field.type === 'select'}
+                    error={!!formErrors[field.name]}
+                    helperText={formErrors[field.name] || ''}
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">{field.icon}</InputAdornment>,
+                    }}
+                  >
+                    {field.options &&
+                      field.options.map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option === 'M' ? 'Male' : option === 'F' ? 'Female' : 'Others'}
+                        </MenuItem>
+                      ))}
+                  </TextField>
+                </Grid>
+              ))}
 
-          <form>
-          <Container maxWidth="xl" sx={{ mt: 5 ,mb:0}}>
-        <Box
-          component="form"
-          id="loanForm"
-          onSubmit={handleSubmit}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 3,
-            padding: {xs:1,md:10},
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)', // Gray shadow effect
+              {/* Mobile OTP Section */}
+              <Grid item xs={12} md={6}>
+                <Box display="flex" alignItems="center" gap={2}>
+                  <TextField
+                    fullWidth
+                    required
+                    label="Mobile Number"
+                    value={mobile}
+                    disabled={isMobileVerified}
+                    onChange={handleMobileChange}
+                    error={!!formErrors.mobile}
+                    helperText={formErrors.mobile || ''}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Phone />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: 'lightgray', // Set border color to gray
+                        },
+                        '&:hover fieldset': {
+                          borderColor: 'darkgray', // Dark gray on hover
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: 'gray', // Gray color when focused
+                        },
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: 'gray', // Label color
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: 'darkgray', // Darker label color when focused
+                      },
+                    }}
+                  />
+                  {isMobileVerified ?
+                  
+                  <VerifiedIcon fontSize="large" color="success" sx={{ marginLeft: 1 }} />
+                  :
+                  <Button
+                    variant="contained"
+                    onClick={() => sendOtp()}
+                    disabled={loading || isOtpSent}
+                    sx={{
+                      backgroundColor: '#fc8403', // Custom gray background color
+                      color:'black',
+                         '&:hover': {
+                        backgroundColor: 'darkgray', // Darker gray on hover
+                      },
+                      '&.Mui-disabled': {
+                        backgroundColor: '#d3d3d3', // Lighter gray when disabled
+                      },
+                    }}
+                  >
+                    { 'Get OTP'}
+                  </Button>
+                  
+                  }
+                </Box>
+              </Grid>
+              {isOtpSent && (
+                <Grid item xs={12} md={6}>
+                  {/* <Box display="flex" alignItems="center" gap={2}>
+                  <TextField
+                    fullWidth
+                    required
+                    label="Enter OTP"
+                    value={otp}
+                    onChange={handleOtpChange} 
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: 'gray', // Set border color to gray
+                        },
+                        '&:hover fieldset': {
+                          borderColor: 'darkgray', // Dark gray on hover
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: 'gray', // Gray color when focused
+                        },
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: 'gray', // Label color
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: 'gray', // Darker label color when focused
+                      },
+                    }}
+                  />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={verifyOtp}
+                    disabled={loading || isVerified}
+                  >
+                    {isVerified ? 'Verified' : 'Verify OTP'}
+                  </Button>
+                </Box> */}
+                </Grid>
+              )}
 
-            backgroundColor: 'rgba(240, 240, 240, 0.5)',
-            borderRadius: '50px',
-            border:{xs:'none',md: '2px solid white '},
-            boxShadow: 3,
-            width: '100%',
-          }}
-        ><Typography variant="h3" gutterBottom align="center" style={{ fontWeight: 'bold' }}>
-        Apply For Loan
-    </Typography>
-    
-          <Grid container spacing={3}>
-                              {[
-                    { label: 'First Name', name: 'fName', icon: <Person /> },
-                    { label: 'Last Name', name: 'lName', icon: <Person /> },
 
-                    { label: 'Gender', name: 'gender', icon: <Person />, type: 'select', options: ['M', 'F', 'Others'] ,isInput: true},
-                    { label: 'PAN', name: 'pan', icon: <Public /> , type: 'text' },
-                    { label: 'Aadhaar', name: 'aadhaar', icon: <Public /> },
-                    { label: 'Mobile', name: 'mobile', icon: <Phone /> },
-                    { label: 'DOB', name: 'dob', icon: <CalendarToday />, type: 'date' },
-                    { label: 'Personal Email', name: 'personalEmail', icon: <Email /> },
-                    { label: 'Office Email', name: 'officeEmail', icon: <Email /> },
-                    { label: 'Monthly Salary', name: 'salary', icon: <CurrencyRupee /> },
-                    { label: 'Loan Amount Required', name: 'loanAmount', icon: <CurrencyRupee /> },
-                  ]
-                ?.map((field, index) => (
-              <Grid
-                key={index}
-                item
-                xs={12}
-                md={6}
-                
-              >
+              {/* Pincode Section */}
+              <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
                   required
-                  name={field.name}
-                  label={field.label}
-                  value={formValues[field.name]}
-                  onChange={handleInputChange}
-                  type={field.type || 'text'}
-                  select={field.type === 'select'}
-                  error={!!formErrors[field.name]}
-                  helperText={formErrors[field.name] || ''}
+                  label="Pincode"
+                  name="pinCode"
+                  value={formValues.pinCode}
+                  onChange={handlePincodeChange}
+                  error={!!formErrors.pinCode}
+                  helperText={formErrors.pinCode || ''}
                   InputProps={{
-                    startAdornment: <InputAdornment position="start">{field.icon}</InputAdornment>,
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PinDrop />
+                      </InputAdornment>
+                    ),
                   }}
-                >
-                  {field.options &&
-                    field.options.map((option) => (
-                      <MenuItem key={option} value={option}>
-            {option === "M" ? "Male" : option === "F" ? "Female" : "Other"}
-          </MenuItem>
-                    ))}
-                </TextField>
-                
+                />
               </Grid>
-            ))}
-            
-
-        <Grid
-          item
-          xs={12}
-          md={6}
-          sx={{
-           
-          }}
-        >
-          <TextField
-            fullWidth
-            required
-            name='pinCode'
-            label="Pincode"
-            value={formValues.pinCode}
-            onChange={handlePincodeChange}
-            error={!!formErrors.pinCode}
-            helperText={formErrors.pinCode || ''}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PinDrop sx={{ color: '#1976d2' }} />
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              backgroundColor: '#f0f4ff',
-              borderRadius: '4px',
-            }}
-          />
-        </Grid>
-        <Grid
-              item
-              xs={12}
-              md={6}
-              sx={{
-              
-              }}
-            >
-              <TextField
-                fullWidth
-                required
-                name='city'
-                label="City"
-                value={city}
-                error={!!formErrors.city}
-                helperText={formErrors.city || ''}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LocationOn />
-                    </InputAdornment>
-                  ),
-                }}
-              >
-            
-                  
-              </TextField>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="City"
+                  value={city}
+                  disabled
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LocationOn />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="State"
+                  value={state}
+                  disabled
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LocationOn />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
             </Grid>
-
-          <Grid
-            item
-            xs={12}
-            md={6}
-            sx={{
-            
-            }}
-          >
-            <TextField
-              fullWidth
-              required
-              name='state'
-              label="State"
-              value={state}
-              error={!!formErrors.state}
-              helperText={formErrors.state || ''}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <LocationOn sx={{ color: '#1976d2' }} />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                backgroundColor: '#f0f4ff',
-                borderRadius: '4px',
-              }}
-            >
-              
-            </TextField>
-          </Grid>
-           
-
+            {(termsAccepted  && !isMobileVerified) && <Typography variant="body1" color="#ed0e33" align="left">
+            Verify mobile first
+          </Typography>}
 
             <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox checked={termsAccepted} onChange={handleCheckboxChange} />}
                 label={
-                  <Typography variant="body2">
+                  <Typography variant="body2" >
                     I accept the{' '}
-                    <Link href="terms-condition" target="_blank" rel="noopener">
+                    <Link href="terms-condition" target="_blank" rel="noopener" style={{color:'#fc8403'}}>
                       Terms & Conditions
                     </Link>{' '}
                     and{' '}
-                    <Link href="privacy-policy" target="_blank" rel="noopener">
+                    <Link href="privacy-policy" target="_blank" rel="noopener" style={{color:'#fc8403'}}>
                       Privacy Policy
                     </Link>
                   </Typography>
@@ -468,35 +497,29 @@ const ApplyNow = () => {
                 </Typography>
               )}
             </Grid>
-          </Grid>
 
-              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: { xs: 2, md: 0 } }}> 
-              <Button
-                variant="contained"
-                type="submit"
-                onClick={handleSubmit}
-                sx={{ 
-                  backgroundColor: '#444', // Light black color
-                  padding: '4px', 
-                  width: '50%',
-                  textAlign: 'center',
-                  fontSize: '0.875rem', // Smaller font size
-                  borderRadius: '8px', // Set border radius for button
-                  '&:hover': {
-                    backgroundColor: '#333', // Darker shade on hover
-                  },
-                }}
-              >
-                Submit
-              </Button>
-            </Box>
+            <Button
+              variant="contained"
+              type="submit"
+              onClick={handleSubmit}
+              disabled={!termsAccepted || !isMobileVerified}
+              sx={{
+                mt: 2,
+                bgcolor: 'orange', // Set the background color to orange
+                color: '#fff',
+                '&:hover': {
+                  bgcolor: 'darkgray', // Set the hover background color to dark gray
+                },
+              }}
+            >
+              Submit
+            </Button>
+          </Box>
+        </Container>
+      </form>
+      {/* <LeadForm /> */}
+    </>
 
-
-        </Box>
-      </Container>
-          </form>
-      </Box>
-    </div>
   );
 };
 

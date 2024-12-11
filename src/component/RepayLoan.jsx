@@ -44,6 +44,46 @@ const RepayLoan = () => {
         />
 
       </Box>
+        {/* Marquee Section */}
+        <Box 
+        sx={{ 
+          overflow: 'hidden', 
+          whiteSpace: 'nowrap', 
+          width: '100%', 
+          backgroundColor: '#f9f9f9', 
+          border: 'none !important',
+          py: 1, 
+        }}
+      >
+        <Typography
+          variant="body1"
+          sx={{
+            display: 'inline-block',
+            animation: 'scroll-text 20s linear infinite',
+            fontSize: { xs: '14px', sm: '18px' },
+            color: '#B22222',
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          "Beware of fraud! Always use our secure Repayment Website Link for loan payments. Qua Loan is not responsible for payments made to other accounts."
+        </Typography>
+
+        {/* Keyframe animation using Material-UI */}
+        <style>
+          {`
+            @keyframes scroll-text {
+              from {
+                transform: translateX(100%);
+              }
+              to {
+                transform: translateX(-100%);
+              }
+            }
+          `}
+        </style>
+      </Box>
+
 
       {/* Warning Message */}
       <Box 
@@ -69,7 +109,7 @@ const RepayLoan = () => {
             mb: 2,
           }}
         >
-          <strong style={{fontSize:'30px', color:'danger'}}>Warning:</strong> We are not liable for any payments made in <br />
+          <strong style={{fontSize:'30px', color:'#fc8403'}}>Warning:</strong> We are not liable for any payments made in <br />
           personal accounts of employees. Please make all <br />
           payments in the company’s account only.
         </Typography>
@@ -89,6 +129,7 @@ const RepayLoan = () => {
           variant="body2" 
           sx={{ 
             mt: 1, 
+            color:'#fc8403',
             fontFamily: 'Inter',
             fontSize: { xs: '16px', sm: '25px' }, // Adjust font size for small screens
             lineHeight: '36px',
@@ -122,7 +163,7 @@ const RepayLoan = () => {
       >
           Please share a screenshot of your transfer <br />
                     from your bank/Google Pay to <br />
-                    <strong>recovery@qualoan.com</strong>.
+                    <strong style={{color:'#fc8403'}}>recovery@qualoan.com</strong>.
 
       </Typography>
     </Grid>

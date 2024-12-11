@@ -29,6 +29,7 @@ const LoanCalculate = () => {
                     fontWeight: 'bold',
                     mb: 4,
                     mt: 10,
+                    color:'#fc8403',
                     fontSize: '3rem',
                     '&:hover': {
                         color: 'orange',
@@ -53,8 +54,8 @@ const LoanCalculate = () => {
                             mb: 4,
                             mx: 2,
                             borderRadius: '40px',
-                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                            color: '#000',
+                            backgroundColor: 'rgb(47, 47, 47)',
+                            color: 'white',
                             minHeight: '250px', // Set a minimum height for the box
                             height: 'auto', // Auto height to allow for flexibility
                             border: '2px solid white',
@@ -65,9 +66,7 @@ const LoanCalculate = () => {
                             animation: inView ? 'slideIn 0.5s forwards' : 'none',
                             '&:hover': {
                                 transform: 'scale(1.05)',
-                                backgroundColor: 'transparent',
                                 boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.2)',
-                                color: 'black',
                             },
                             '@media (max-width: 600px)': {
                                 height: 'auto', // Adjust height for small screens
@@ -76,7 +75,7 @@ const LoanCalculate = () => {
                             },
                         }}
                     >
-                        <Typography variant="h5" fontWeight={550} component="strong" color="inherit" sx={{ mt: 4 }}>
+                        <Typography variant="h5" fontWeight={550} component="strong" color="white" sx={{ mt: 4 ,'&:hover': {color:'#fc8403',}, }}>
                         Facing Health Concerns ? No Worries Anymore!
                         </Typography>
                         <Typography variant="h6" color="inherit" sx={{ mt: 1 }}>
@@ -93,10 +92,10 @@ const LoanCalculate = () => {
                             mb: 4,
                             mx: 2,
                             borderRadius: '40px',
-                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                            color: '#000',
-                            minHeight: '250px',
-                            height: 'auto',
+                            backgroundColor: 'rgb(47, 47, 47)',
+                            color: 'white',
+                            minHeight: '250px', // Set a minimum height for the box
+                            height: 'auto', // Auto height to allow for flexibility
                             border: '2px solid white',
                             position: 'relative',
                             transition: 'transform 0.3s ease, box-shadow 0.3s ease',
@@ -105,29 +104,26 @@ const LoanCalculate = () => {
                             animation: inView ? 'slideIn 0.5s forwards' : 'none',
                             '&:hover': {
                                 transform: 'scale(1.05)',
-                                backgroundColor: 'transparent',
                                 boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.2)',
-                                color: 'black',
                             },
                             '@media (max-width: 600px)': {
-                                height: 'auto',
-                                paddingX: 3,
-                                marginBottom: 2,
+                                height: 'auto', // Adjust height for small screens
+                                paddingX: 3, // Decrease padding on small screens
+                                marginBottom: 2, // Reduce margin on small screens
                             },
                         }}
                     >
-                        <Typography variant="h5" fontWeight={550} component="strong" color="inherit" sx={{ mt: 4 }}>
-                            Easy-Peasy Credit Card Payments
-                        </Typography>
+                         <Typography variant="h5" fontWeight={550} component="strong" color="inherit" sx={{ mt: 4 ,'&:hover': {color:'#fc8403',}, }}>
+                         Easy-to-Pay Card Payments          
+                                       </Typography>
                         <Typography variant="h6" color="inherit" sx={{ mt: 1 }}>
-                            Tired of juggling high-interest credit card payments? Combine them into one easy loan with fixed rates and a clear payback plan. Simplify your payments and pay off faster!
-                        </Typography>
+                        Tired of juggling between multiple credit card payments? No worries, combine them into one easy loan with fixed rates and a clear payback plan. Simplify your payments and pay off faster!                        </Typography>
                     </Paper>
                 </Grid>
 
                 {/* Second Column */}
                 <Grid item xs={12} md={6}>
-                    <Paper
+                <Paper
                         elevation={3}
                         sx={{
                             paddingY: 3,
@@ -136,10 +132,10 @@ const LoanCalculate = () => {
                             mb: 4,
                             mx: 2,
                             borderRadius: '40px',
-                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                            color: '#000',
-                            minHeight: '250px',
-                            height: 'auto',
+                            backgroundColor: 'rgb(47, 47, 47)',
+                            color: 'white',
+                            minHeight: '250px', // Set a minimum height for the box
+                            height: 'auto', // Auto height to allow for flexibility
                             border: '2px solid white',
                             position: 'relative',
                             transition: 'transform 0.3s ease, box-shadow 0.3s ease',
@@ -148,19 +144,17 @@ const LoanCalculate = () => {
                             animation: inView ? 'slideIn 0.5s forwards' : 'none',
                             '&:hover': {
                                 transform: 'scale(1.05)',
-                                backgroundColor: 'transparent',
                                 boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.2)',
-                                color: 'black',
                             },
                             '@media (max-width: 600px)': {
-                                height: 'auto',
-                                paddingX: 3,
-                                marginBottom: 2,
+                                height: 'auto', // Adjust height for small screens
+                                paddingX: 3, // Decrease padding on small screens
+                                marginBottom: 2, // Reduce margin on small screens
                             },
                         }}
                     >
-                        <Typography variant="h5" fontWeight={550} component="strong" color="inherit" sx={{ mt: 4 }}>
-                            Enjoy Your D-Day With Zero Stress
+                         <Typography variant="h5" fontWeight={550} component="strong" color="inherit" sx={{ mt: 4 ,'&:hover': {color:'#fc8403',}, }}>
+                        Enjoy Your D-Day With Zero Stress
                         </Typography>
                         <Typography variant="h6" color="inherit" sx={{ mt: 1 }}>
                             Your big day should be the most magical experience ever. That’s why we offer quick loans to make sure your wedding is a stress-free experience for you and your loved ones.
@@ -176,10 +170,10 @@ const LoanCalculate = () => {
                             mb: 4,
                             mx: 2,
                             borderRadius: '40px',
-                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                            color: '#000',
-                            minHeight: '250px',
-                            height: 'auto',
+                            backgroundColor: 'rgb(47, 47, 47)',
+                            color: 'white',
+                            minHeight: '250px', // Set a minimum height for the box
+                            height: 'auto', // Auto height to allow for flexibility
                             border: '2px solid white',
                             position: 'relative',
                             transition: 'transform 0.3s ease, box-shadow 0.3s ease',
@@ -188,22 +182,20 @@ const LoanCalculate = () => {
                             animation: inView ? 'slideIn 0.5s forwards' : 'none',
                             '&:hover': {
                                 transform: 'scale(1.05)',
-                                backgroundColor: 'transparent',
                                 boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.2)',
-                                color: 'black',
                             },
                             '@media (max-width: 600px)': {
-                                height: 'auto',
-                                paddingX: 3,
-                                marginBottom: 2,
+                                height: 'auto', // Adjust height for small screens
+                                paddingX: 3, // Decrease padding on small screens
+                                marginBottom: 2, // Reduce margin on small screens
                             },
                         }}
                     >
-                        <Typography variant="h5" fontWeight={550} component="strong" color="inherit" sx={{ mt: 4 }}>
-                            Consolidate Your Debt. Boost Your Score
+                        <Typography variant="h5" fontWeight={550} component="strong" color="inherit" sx={{ mt: 4 ,'&:hover': {color:'#fc8403',}, }}>
+                        Consolidate Your Debt. Boost Your Score
                         </Typography>
                         <Typography variant="h6" color="inherit" sx={{ mt: 1 }}>
-                            Say goodbye to mounting debts. Consolidate your loans into one manageable payment with low-interest rates to enhance your credit score.
+                            Say goodbye to mounting debts. Consolidate your loans into one manageable payment  to enhance your credit score.
                         </Typography>
                     </Paper>
                 </Grid>

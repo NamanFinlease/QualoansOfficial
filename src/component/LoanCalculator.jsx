@@ -97,7 +97,8 @@ const LoanCalculator = () => {
               
             }}
         >
-            <Box sx={{ marginTop: 0,  paddingBottom:10, backgroundColor: 'black', // Dark overlay for readability
+            <Box sx={{ marginTop: 0,  paddingBottom:10, backgroundColor: 'rgb(47, 47, 47)', // Dark overlay for readability
+ // Dark overlay for readability
            marginBottom: 10,border:'2px solid gray',borderRadius:'50px',marginLeft:'20px',marginRight:'20px' }}>
                 <Container style={{marginTop:50}}>
                     <Typography  align="center" gutterBottom sx={{fontWeight:'bold', color: 'white',fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } // Adjust font size based on screen size
@@ -301,7 +302,10 @@ const LoanCalculator = () => {
                                 component={Link}
                                 href="/apply-now"
                                 variant="contained"
-                                sx={{ marginTop: 2, backgroundColor: 'black', borderRadius: '16px', padding: 2 }} 
+                                sx={{ marginTop: 2, backgroundColor: 'rgb(47, 47, 47)',fontWeight:'700', borderRadius: '16px', padding: 2 ,'&:hover': {
+                                    background: 'orange',
+                                    color:'white'
+                                },}} 
                             >
                                 <Typography>₹{totalAmount}</Typography>
                             </Button>
@@ -381,7 +385,10 @@ const LoanCalculator = () => {
                             component={Link}
                             href="/apply-now" // Change this to your actual "Apply Now" URL
                             variant="contained"
-                            sx={{ marginTop: 16, backgroundColor: 'black', borderRadius: '16px', padding: 2, textDecoration: 'none' }}
+                            sx={{ marginTop: 16, backgroundColor: 'black', fontWeight:'700', borderRadius: '16px', padding: 2, textDecoration: 'none' ,'&:hover': {
+                                background: 'orange',
+                                color:'white',
+                            }, }}
                             >
                             Apply Now
                             </Button>

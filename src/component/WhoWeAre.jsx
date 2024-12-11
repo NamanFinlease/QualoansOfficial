@@ -60,11 +60,12 @@ const WhoWeAre = () => {
         <Typography
           variant="h2"
           fontWeight="bold"
-          color="black"
+          color="#fc8403"
           mb={1}
           sx={{
             marginLeft:{xs:2,sm:10},
             fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' }, // Adjust font size based on screen size
+           
           }}
         >
           Who Are We?
@@ -106,14 +107,15 @@ const WhoWeAre = () => {
           variant="contained"
           href="/about-us" // Add your 'About Us' page link here
           sx={{
-            backgroundColor: 'black',
+            backgroundColor: 'rgb(47, 47, 47)',
             color: 'white',
             borderRadius:'80px',
             fontWeight: 'bold',
             fontSize: { xs: '14px', sm: '16px' },
             padding: { xs: "8px 16px", sm: "6px 30px" },
             '&:hover': {
-              backgroundColor: '#FFAA00',
+              backgroundColor: '#fc8403',
+              color:'black'
             },
             
           }}

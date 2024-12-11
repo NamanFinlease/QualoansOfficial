@@ -1,7 +1,9 @@
 import React from 'react';
 import { Email, Phone, LocationOn, Facebook, Twitter, LinkedIn, Instagram, YouTube } from '@mui/icons-material';
 import { Container, Grid, Typography, Link, Box } from '@mui/material';
-import logo from '../assets/image/Group 26.png';
+import logo from '../assets/image/White.webp';
+import TwitterIcon from '../assets/image/'; // Replace with the correct path to your image
+
 
 const linkStyle = {
   display: 'flex',
@@ -26,7 +28,7 @@ const Footer = () => {
 <Box sx={{
   margin: 5,
   borderRadius: 10,
-  backgroundColor: '#000',
+  backgroundColor: 'rgb(47, 47, 47)',
   padding: {
     xs: '40px 20px', // padding for extra small screens (mobile)
     sm: '60px 30px', // padding for small screens (tablet)
@@ -42,10 +44,25 @@ const Footer = () => {
           <Grid container spacing={3} alignItems="center">
             {/* Left Section (Logo and Social Icons) */}
             <Grid item xs={12} md={4} container spacing={3} direction="column" justifyContent="center" alignItems="center">
-              <img src={logo} alt="Logo" style={{ width: '50%', height: 'auto',mb:5 }} /> {/* Logo */}
+              <img src={logo} alt="Logo" style={{ width: '60%', height: 'auto',mb:5 }} />
               <Box display="flex" gap={2} justifyContent="center" mt={5}> {/* Social Media Icons */}
                 <Link href="/" sx={{ ...iconStyle, backgroundColor: '#4267B2' }}><Facebook /></Link>
-                <Link href="/" sx={{ ...iconStyle, backgroundColor: '#1DA1F2' }}><Twitter /></Link>
+                              <Link 
+                href="/" 
+                sx={{ 
+                  ...iconStyle, 
+                  backgroundColor: '#1DA1F2',
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  alignItems: 'center',
+                }}
+              >
+                <img 
+                  src={TwitterIcon} 
+                  alt="Twitter" 
+                  style={{ width: '24px', height: '24px' }} // Adjust size as needed
+                />
+              </Link>
                 <Link href="/" target="_blank" sx={{ ...iconStyle, backgroundColor: '#0077B5' }}><LinkedIn /></Link>
                 <Link href="/" target="_blank" sx={{ ...iconStyle, backgroundColor: '#C13584' }}><Instagram /></Link>
                 <Link href="/" target="_blank" sx={{ ...iconStyle, backgroundColor: '#FF0000' }}><YouTube /></Link>
