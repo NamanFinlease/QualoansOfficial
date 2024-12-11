@@ -2,7 +2,7 @@ import React from 'react';
 import { Email, Phone, LocationOn, Facebook, Twitter, LinkedIn, Instagram, YouTube } from '@mui/icons-material';
 import { Container, Grid, Typography, Link, Box } from '@mui/material';
 import logo from '../assets/image/White.webp';
-import TwitterIcon from '../assets/image/'; // Replace with the correct path to your image
+import TwitterIcon from '../assets/image/x.jpg'; // Replace with the correct path to your image
 
 
 const linkStyle = {
