@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, Button, Grid, Typography, Box } from '@mui/material';
 import Swal from 'sweetalert2';
-import aboutImage from '../assets/image/contact us qua (1).webp';
+import aboutImage from '../assets/image/Untitled-1.jpg';
 
 const AboutUs = () => {
   const handleSubmit = (event) => {
@@ -113,8 +113,8 @@ const AboutUs = () => {
             >
               Location
             </Typography>
-            <Typography>S-370, Panchsheel Park,</Typography>
-            <Typography>New Delhi 110017, India</Typography>
+            <Typography>229, 2nd floor, vipul Agora mall,</Typography>
+            <Typography>mg road Gurugram, haryana -122001</Typography>
           </Grid>
 
           {/* Right Section: Form */}
@@ -243,7 +243,7 @@ const AboutUs = () => {
       >
         <Box
           component="iframe"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d114174.517324222!2d77.2132906!3d28.5569781!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d2f079fc24f91%3A0xa2e5fa2d2a14c4fc!2sPanchsheel%20Park%2C%20New%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1633464537289!5m2!1sen!2sin" 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3504.357975184487!2d77.07157531508!3d28.481119982466515!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d19c8019f5d07%3A0x605afbc6573e6d6c!2sVipul%20Agora%20Mall%2C%20MG%20Road%2C%20Gurugram%2C%20Haryana%20122001!5e0!3m2!1sen!2sin!4v1697209452257!5m2!1sen!2sin"
           allowFullScreen
           loading="lazy"
           sx={{

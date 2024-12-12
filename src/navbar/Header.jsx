@@ -12,7 +12,7 @@ import {
 import Menu from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
-import ContactMailIcon from '@mui/icons-material/ContactMail';
+import ContactPageIcon from '@mui/icons-material/ContactPage';
 import ApplyNowIcon from '@mui/icons-material/Assignment';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import CalculateIcon from '@mui/icons-material/Calculate';
@@ -109,7 +109,7 @@ const Header = () => {
             </MenuItem>
             <MenuItem onClick={handleClose}>
               <Link to="/contact-us" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
-                <ContactMailIcon sx={{ mr: 1 }} /> Contact Us
+                <ContactPageIcon sx={{ mr: 1 }} /> Contact Us
               </Link>
             </MenuItem>
             <MenuItem onClick={handleClose}>
@@ -203,7 +203,7 @@ const Header = () => {
         fontFamily: 'Roboto, sans-serif',
       }}
     >
-      <ContactMailIcon sx={{ mr: 1 }} /> Contact Us
+      <ContactPageIcon sx={{ mr: 1 }} /> Contact Us
     </Link>
     <Link
       to="/repay-now"
