@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, Button, Grid, Typography, Box } from '@mui/material';
 import Swal from 'sweetalert2';
-import aboutImage from '../assets/image/Untitled-1.jpg';
+import aboutImage from '../assets/image/Contact-Us.jpg';
 
 const AboutUs = () => {
   const handleSubmit = (event) => {
@@ -112,9 +112,10 @@ const AboutUs = () => {
               }}
             >
               Location
+            </Typography>   
+            <Typography>229, 2nd Floor, Vipul Agora Mall,</Typography>
+            <Typography>MG Road, Gurugram, Haryana - 122001
             </Typography>
-            <Typography>229, 2nd floor, vipul Agora mall,</Typography>
-            <Typography>mg road Gurugram, haryana -122001</Typography>
           </Grid>
 
           {/* Right Section: Form */}
@@ -238,7 +239,7 @@ const AboutUs = () => {
           paddingX:1,
           display: 'flex',
           mb: { xs: -5, md: 0}, // Add margin-bottom for small screens only
-          mt:{xs:5,md:-1}
+          mt:{xs:5,md:5}
         }}
       >
         <Box

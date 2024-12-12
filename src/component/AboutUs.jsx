@@ -2,11 +2,11 @@ import React, { useEffect, useRef,useState } from 'react';
 import { Typography, Box ,Paper, Accordion,
   AccordionSummary,
   AccordionDetails, } from '@mui/material';
-import VisionImage from '../assets/image/image.png'; // Import your vision image here
+import VisionImage from '../assets/image/Our-Visson.jpg'; // Import your vision image here
 import aboutImage from '../assets/image/About-Us-QUA.jpg'; // Correct image path for about us
 import WhyChooseUs from './WhyChooseUs';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MissionImage from '../assets/image/image1.png'; // Import your mission image here
+import MissionImage from '../assets/image/Our-Mission.jpg'; // Import your mission image here
 import technologyGif from '../assets/image/Repayment (2).gif'; // Importing the GIF
 
 

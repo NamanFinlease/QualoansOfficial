@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Typography, Container, Paper, Divider, Slide, Fade } from '@mui/material';
-import privacyImage from '../assets/image/Privacy Policy (1).webp';
-import backgroundImg from '../assets/image/Contact Us Frame 1.png';
+import privacyImage from '../assets/image/Untitled-1.jpg';
 
 const PrivacyPolicy = () => {
     const sections = [
@@ -87,7 +86,7 @@ const PrivacyPolicy = () => {
                 "If you have any questions, please contact us at:",
                 "• Email: info@qualoan.com",
                 "• Phone: +91 9999999341",
-                "• Address: 229, 2nd floor, vipul Agora mall, mg road Gurugram, haryana -122001",
+                "• Address: 229, 2nd Floor, Vipul Agora Mall, MG Road Gurugram, Haryana -122001",
                
             ]
         }

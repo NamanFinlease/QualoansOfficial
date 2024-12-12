@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import WarningIcon from '@mui/icons-material/Warning'; // Import Warning icon
 import AXIS from '../assets/image/axis (1).png'; 
-import backgroundImg from '../assets/image/Contact Us Frame 1.png'; // Import the background image
 import repayaImage from '../assets/image/Repay Now qua (1).webp';
 import { Grid, Box, Typography, Button, Divider } from '@mui/material';
 

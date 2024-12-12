@@ -140,106 +140,111 @@ const Header = () => {
     textAlign: 'center',
   }}
 >
-  {/* Navigation Links */}
-  <Box
+<Box
   sx={{
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     gap: '1rem',
     flexGrow: 1, // To allow centering
-    '&:hover *': { // Apply hover effect to all child elements
-      color: 'orange',
-    },
   }}
 >
+  <Link
+    to="/"
+    onClick={scrollToTop}
+    style={{
+      color: '#0b2747',
+      display: 'flex',
+      alignItems: 'center',
+      textDecoration: 'none',
+      padding: '8px',
+      fontWeight: '700',
+      fontFamily: 'Roboto, sans-serif',
+      transition: 'color 0.3s ease',
+    }}
+    onMouseEnter={(e) => (e.currentTarget.style.color = 'orange')}
+    onMouseLeave={(e) => (e.currentTarget.style.color = '#0b2747')}
+  >
+    <HomeIcon sx={{ mr: 1 }} /> Home
+  </Link>
 
-    <Link
-      to="/"
-      onClick={scrollToTop}
-      style={{
-        color: '#0b2747',
-        display: 'flex',
-        alignItems: 'center',
-        textDecoration: 'none',
-        padding: '8px',
-        fontWeight:'700',
-        transition: 'color 0.3s ease',
-        fontFamily: 'Roboto, sans-serif',
-        
-      }}
-    >
-      <HomeIcon sx={{ mr: 1 }} /> Home
-    </Link>
-    <Link
-      to="/about-us"
-      onClick={scrollToTop}
-      style={{
-        color: '#0b2747',
-        display: 'flex',
-        alignItems: 'center',
-        textDecoration: 'none',
-        padding: '8px',
-        fontWeight:'700',
+  <Link
+    to="/about-us"
+    onClick={scrollToTop}
+    style={{
+      color: '#0b2747',
+      display: 'flex',
+      alignItems: 'center',
+      textDecoration: 'none',
+      padding: '8px',
+      fontWeight: '700',
+      fontFamily: 'Roboto, sans-serif',
+      transition: 'color 0.3s ease',
+    }}
+    onMouseEnter={(e) => (e.currentTarget.style.color = 'orange')}
+    onMouseLeave={(e) => (e.currentTarget.style.color = '#0b2747')}
+  >
+    <InfoIcon sx={{ mr: 1 }} /> About Us
+  </Link>
 
-        transition: 'color 0.3s ease',
-        fontFamily: 'Roboto, sans-serif',
-      }}
-    >
-      <InfoIcon sx={{ mr: 1 }} /> About Us
-    </Link>
-    <Link
-      to="/contact-us"
-      onClick={scrollToTop}
-      style={{
-        color: '#0b2747',
-        display: 'flex',
-        alignItems: 'center',
-        textDecoration: 'none',
-        padding: '8px',
-        fontWeight:'700',
+  <Link
+    to="/contact-us"
+    onClick={scrollToTop}
+    style={{
+      color: '#0b2747',
+      display: 'flex',
+      alignItems: 'center',
+      textDecoration: 'none',
+      padding: '8px',
+      fontWeight: '700',
+      fontFamily: 'Roboto, sans-serif',
+      transition: 'color 0.3s ease',
+    }}
+    onMouseEnter={(e) => (e.currentTarget.style.color = 'orange')}
+    onMouseLeave={(e) => (e.currentTarget.style.color = '#0b2747')}
+  >
+    <ContactPageIcon sx={{ mr: 1 }} /> Contact Us
+  </Link>
 
-        transition: 'color 0.3s ease',
-        fontFamily: 'Roboto, sans-serif',
-      }}
-    >
-      <ContactPageIcon sx={{ mr: 1 }} /> Contact Us
-    </Link>
-    <Link
-      to="/repay-now"
-      onClick={scrollToTop}
-      style={{
-        color: '#0b2747',
-        display: 'flex',
-        alignItems: 'center',
-        textDecoration: 'none',
-        padding: '8px',
-        fontWeight:'700',
+  <Link
+    to="/repay-now"
+    onClick={scrollToTop}
+    style={{
+      color: '#0b2747',
+      display: 'flex',
+      alignItems: 'center',
+      textDecoration: 'none',
+      padding: '8px',
+      fontWeight: '700',
+      fontFamily: 'Roboto, sans-serif',
+      transition: 'color 0.3s ease',
+    }}
+    onMouseEnter={(e) => (e.currentTarget.style.color = 'orange')}
+    onMouseLeave={(e) => (e.currentTarget.style.color = '#0b2747')}
+  >
+    <ApplyNowIcon sx={{ mr: 1 }} /> Repay Now
+  </Link>
 
-        transition: 'color 0.3s ease',
-        fontFamily: 'Roboto, sans-serif',
-      }}
-    >
-      <ApplyNowIcon sx={{ mr: 1 }} /> Repay Now
-    </Link>
-    <Link
-      to="/calculator"
-      onClick={scrollToTop}
-      style={{
-        color: '#0b2747',
-        display: 'flex',
-        alignItems: 'center',
-        textDecoration: 'none',
-        padding: '8px',
-        fontWeight:'700',
+  <Link
+    to="/calculator"
+    onClick={scrollToTop}
+    style={{
+      color: '#0b2747',
+      display: 'flex',
+      alignItems: 'center',
+      textDecoration: 'none',
+      padding: '8px',
+      fontWeight: '700',
+      fontFamily: 'Roboto, sans-serif',
+      transition: 'color 0.3s ease',
+    }}
+    onMouseEnter={(e) => (e.currentTarget.style.color = 'orange')}
+    onMouseLeave={(e) => (e.currentTarget.style.color = '#0b2747')}
+  >
+    <CalculateIcon sx={{ mr: 1 }} /> Loan Calculator
+  </Link>
+</Box>
 
-        transition: 'color 0.3s ease',
-        fontFamily: 'Roboto, sans-serif',
-      }}
-    >
-      <CalculateIcon sx={{ mr: 1 }} /> Loan Calculator
-    </Link>
-  </Box>
 
   {/* "Apply Now" Button */}
   <Button
