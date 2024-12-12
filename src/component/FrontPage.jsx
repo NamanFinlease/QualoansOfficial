@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import bannerImage from "../assets/image/banner qua.webp"; // Adjust the path as needed
+import bannerImage from "../assets/image/Home-Page-QUA.jpg"; // Adjust the path as needed
 
 const FrontPage = () => {
   const theme = useTheme();
@@ -99,6 +99,7 @@ const FrontPage = () => {
           width: '100%',
           textAlign: 'center',
           mx:'90px',
+          maxHeight: '320px',
 
           backgroundColor: 'rgba(255, 255, 255, 0)',
           borderRadius: '80px', // Parent border radius
@@ -110,7 +111,7 @@ const FrontPage = () => {
         src={bannerImage}
         alt="Banner"
         sx={{
-          marginTop: '-10px',
+          marginTop: '10px',
           width: '100%',
           maxHeight: '320px',
           objectFit: 'cover',

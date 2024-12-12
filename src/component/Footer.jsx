@@ -46,9 +46,9 @@ const Footer = () => {
             <Grid item xs={12} md={4} container spacing={3} direction="column" justifyContent="center" alignItems="center">
               <img src={logo} alt="Logo" style={{ width: '60%', height: 'auto',mb:5 }} />
               <Box display="flex" gap={2} justifyContent="center" mt={5}> {/* Social Media Icons */}
-                <Link href="/" sx={{ ...iconStyle, backgroundColor: '#4267B2' }}><Facebook /></Link>
+                <Link href="https://www.facebook.com/profile.php?id=61570006966590" sx={{ ...iconStyle, backgroundColor: '#4267B2' }}><Facebook /></Link>
                               <Link 
-                href="/" 
+                href="https://x.com/info826568" 
                 sx={{ 
                   ...iconStyle, 
                   backgroundColor: '#1DA1F2',
@@ -63,9 +63,9 @@ const Footer = () => {
                   style={{ width: '24px', height: '24px' }} // Adjust size as needed
                 />
               </Link>
-                <Link href="/" target="_blank" sx={{ ...iconStyle, backgroundColor: '#0077B5' }}><LinkedIn /></Link>
-                <Link href="/" target="_blank" sx={{ ...iconStyle, backgroundColor: '#C13584' }}><Instagram /></Link>
-                <Link href="/" target="_blank" sx={{ ...iconStyle, backgroundColor: '#FF0000' }}><YouTube /></Link>
+                <Link href="https://www.linkedin.com/company/qualoan/about/?viewAsMember=true" target="_blank" sx={{ ...iconStyle, backgroundColor: '#0077B5' }}><LinkedIn /></Link>
+                <Link href="https://www.instagram.com/qualoan/" target="_blank" sx={{ ...iconStyle, backgroundColor: '#C13584' }}><Instagram /></Link>
+                <Link href="https://www.youtube.com/channel/UCH4UYltubKJPkE4RkrE3cjA" target="_blank" sx={{ ...iconStyle, backgroundColor: '#FF0000' }}><YouTube /></Link>
               </Box>
             </Grid>
 
