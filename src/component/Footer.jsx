@@ -51,7 +51,7 @@ const Footer = () => {
                 href="https://x.com/info826568" 
                 sx={{ 
                   ...iconStyle, 
-                  backgroundColor: '#1DA1F2',
+                  backgroundColor: '#1DA1F2', 
                   display: 'flex', 
                   justifyContent: 'center', 
                   alignItems: 'center',
