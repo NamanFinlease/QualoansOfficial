@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import bannerImage from "../assets/image/Home-Page-QUA.jpg"; // Adjust the path as needed
+import bannerImage from "../assets/image/Qua-Loan-banner-Home-Image.jpg"; // Adjust the path as needed
 
 const FrontPage = () => {
   const theme = useTheme();
