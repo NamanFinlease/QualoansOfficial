@@ -47,7 +47,7 @@ const FrontPage = () => {
             },
           }}
         >
-          Instant loans, endless possibilities
+          Quick, Urgent, Assured Loans
         </Typography>
         <Typography sx={{
 
@@ -62,7 +62,7 @@ const FrontPage = () => {
             [theme.breakpoints.up("md")]: {
               fontSize: "2rem",
             },
-          }}> approved in just 5 minutes!</Typography>
+          }}> Your Emergency, Our Priority</Typography>
 
         {/* Button */}
         <Button
