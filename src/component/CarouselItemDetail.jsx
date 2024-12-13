@@ -13,7 +13,7 @@ const cardDetails = [
   {
     icon: <AccountBalance fontSize="80px" />,
     title: "Easy Repayment",
-    description: `Pay back your loan your way. Use UPI or bank transfer With no prepayment charges.`,
+    description: `Pay back your loan your way. Use UPI or bank transfer with no prepayment charges.`,
   },
   {
     icon: <MonetizationOn fontSize="80px" />,

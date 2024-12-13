@@ -25,22 +25,22 @@ const cardDetails = [
   {
     icon: <Security fontSize="large" />,
     title: "Secure Transactions",
-    description: `We prioritize your data privacy,\nemploying top-notch security measures\nto safeguard your personal information.`,
+    description: `We prioritize your data privacy,\nemploying top-notch security \nmeasures to safeguard your personal information.`,
   },
   {
     icon: <LiveHelp fontSize="large" />,
     title: "24/7 Support",
-    description: `Our dedicated customer support team\nis available around the clock\nto assist you with your loan inquiries.`,
+    description: `Our dedicated customer support \nteam is available around the clock\nto assist you with your loan inquiries.`,
   },
   {
     icon: <Payment fontSize="large" />,
     title: "Flexible Options",
-    description: `We provide flexible repayment options\nthat fit within your budget,\nensuring that you have the best possible experience.`,
+    description: `We provide flexible repayment \noptions that fit within your budget,\nensuring that you have the best possible experience.`,
   },
   {
     icon: <RateReview fontSize="large" />,
     title: "Transparent Rates",
-    description: `Our interest rates are competitive\nand transparent, so you’ll always know\nexactly what you’re signing up for.`,
+    description: `Our interest rates are competitive\nand transparent, so you’ll always \nknow exactly what you’re signing up for.`,
   },
 ];
 

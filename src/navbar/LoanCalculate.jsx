@@ -157,7 +157,7 @@ const LoanCalculate = () => {
                         Enjoy Your D-Day With Zero Stress
                         </Typography>
                         <Typography variant="h6" color="inherit" sx={{ mt: 1 }}>
-                            Your big day should be the most magical experience ever. That’s why we offer quick loans to make sure your wedding is a stress-free experience for you and your loved ones.
+                            Your big day should be the most magical experience ever. That’s why we offer quick loans to make sure your event is a stress-free experience for you and your loved ones.
                         </Typography>
                     </Paper>
 
