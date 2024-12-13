@@ -1,3 +1,3 @@
 export const BASE_URL = 
-`https://api.fintechbasket.com`
+`https://api.qualoan.com/api/leads`
 // `http://localhost:3000`
