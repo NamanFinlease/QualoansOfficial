@@ -85,7 +85,7 @@ const PrivacyPolicy = () => {
             content: [
                 "If you have any questions, please contact us at:",
                 "• Email: info@qualoan.com",
-                "• Phone: +91 9999999341",
+                "• Phone: +917338437609",
                 "• Address: 229, 2nd Floor, Vipul Agora Mall, MG Road Gurugram, Haryana -122001",
                
             ]

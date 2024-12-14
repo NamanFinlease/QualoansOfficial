@@ -98,7 +98,7 @@ const Footer = () => {
                 <Typography variant="h6" sx={{ color: '#fff', fontWeight: 500, mb: 2 }}>Contact Us</Typography>
                 <Box component="ul" sx={{ listStyleType: 'none', padding: 0, margin: 0 }}>
                   <li><Link href="contact-us" sx={{ ...linkStyle, display: 'flex', alignItems: 'center' }}><Email sx={{ mr: 1 }} /> info@qualoan.com</Link></li>
-                  <li><Link href="contact-us" sx={{ ...linkStyle, display: 'flex', alignItems: 'center' }}><Phone sx={{ mr: 1 }} /> +91 9999999341</Link></li>
+                  <li><Link href="contact-us" sx={{ ...linkStyle, display: 'flex', alignItems: 'center' }}><Phone sx={{ mr: 1 }} /> +917338437609</Link></li>
                   <li><Link href="contact-us" sx={{ ...linkStyle, display: 'flex', alignItems: 'center' }}><LocationOn sx={{ mr: 1,mt:{xs:-5,md:-5} }} />229, 2nd Floor, Vipul Agora Mall, MG Road, Gurugram, Haryana - 122001</Link></li>
                 </Box>
               </Grid>

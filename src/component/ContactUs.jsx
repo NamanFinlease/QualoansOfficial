@@ -90,7 +90,7 @@ const AboutUs = () => {
             >
               Call Center
             </Typography>
-            <Typography sx={{ mb: 1 }}>+91 9999999341</Typography>
+            <Typography sx={{ mb: 1 }}>+917338437609</Typography>
            
             <Typography
               sx={{
