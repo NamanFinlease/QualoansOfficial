@@ -12,6 +12,7 @@ import {
   FormControlLabel,
   MenuItem,
   Link,
+  CircularProgress,
 } from '@mui/material';
 import {
   Person,
@@ -34,6 +35,7 @@ const ApplyNow = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [state, setState] = useState('');
   const [city, setCity] = useState('')
+  const [otpLoader, setOtpLoader] = useState(false)
   const [isMobileVerified, setIsMobileVerified] = useState(false)
   const [formValues, setFormValues] = useState({
     fName: '',
@@ -54,7 +56,7 @@ const ApplyNow = () => {
   const [animationState, setAnimationState] = useState([]);
   const [mobile, setMobile] = useState("");
   const [otp, setOtp] = useState("");
-  const [openModal,setOpenModal] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -64,6 +66,7 @@ const ApplyNow = () => {
   };
 
   const sendOtp = async () => {
+    setOtpLoader(true)
     try {
       const response = await axios.post(`${BASE_URL}/api/verify/mobile/get-otp`, {
         mobile: mobile,
@@ -73,10 +76,12 @@ const ApplyNow = () => {
 
       if (response.data.success) {
         setOpenModal(true)
+        setOtpLoader(false)
       } else {
         throw new Error(response.data.message || 'Failed to send OTP');
-      } 
+      }
     } catch (error) {
+      setOtpLoader(false)
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -244,11 +249,12 @@ const ApplyNow = () => {
 
   return (
     <>
-    {openModal && <MobileOtpModal open={openModal} mobile={mobile} setIsMobileVerified={setIsMobileVerified} onClose={() => setOpenModal()} />}
-      
+      {openModal && <MobileOtpModal open={openModal} mobile={mobile} setIsMobileVerified={setIsMobileVerified} onClose={() => setOpenModal()} />}
+
       <form>
-      <Container maxWidth="xl" sx={{ padding:5,       background: '#f9f9f9',
-}}>
+        <Container maxWidth="xl" sx={{
+          padding: 5, background: '#f9f9f9',
+        }}>
           <Box
             component="form"
             id="loanForm"
@@ -265,7 +271,7 @@ const ApplyNow = () => {
               width: '100%',
             }}
           >
-            <Typography variant="h4" gutterBottom sx={{textAlign:'center', color:'#fc8403'}}>
+            <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', color: '#fc8403' }}>
               Personal Information
             </Typography>
             <Grid container spacing={3}>
@@ -316,7 +322,7 @@ const ApplyNow = () => {
 
               {/* Mobile OTP Section */}
               <Grid item xs={12} md={6}>
-                <Box display="flex" alignItems="center" gap={2}>
+                <Box display="flex" alignItems="center" gap={1}>
                   <TextField
                     fullWidth
                     required
@@ -332,9 +338,43 @@ const ApplyNow = () => {
                           <Phone />
                         </InputAdornment>
                       ),
+                      endAdornment: isMobileVerified ? (
+                        <VerifiedIcon fontSize="large" color="success" />
+                      ) : (
+                        <Button
+                          onClick={() => sendOtp()}
+                          disabled={loading}
+                          sx={{
+                            minWidth: '100px', // Ensure consistent width
+                            borderRadius: '6px', // Rounded corners on the right
+                            backgroundColor: '#fc8403', // Vibrant orange
+                            color: '#fff', // White text
+                            fontWeight: 600, // Bold text
+                            textTransform: 'none', // Preserve case
+                            padding: '8px 12px', // Button padding
+                            boxShadow: 'none', // No shadow for a flat design
+                            transition: 'all 0.3s ease',
+                            '&:hover': {
+                              backgroundColor: '#e57203', // Slightly darker orange on hover
+                            },
+                            '&:disabled': {
+                              backgroundColor: '#f0f0f0', // Light gray for disabled state
+                              color: '#b0b0b0', // Muted text for disabled
+                            },
+                          }}
+                        >
+                          {otpLoader ? (
+                            <CircularProgress size={20} color="inherit" />
+                          ) : (
+                            `Get OTP`
+                          )}
+                        </Button>
+                      ),
                     }}
                     sx={{
                       '& .MuiOutlinedInput-root': {
+                        borderRadius: '6px', // Match rounded corners for input
+                        overflow: 'hidden', // Prevent overlap
                         '& fieldset': {
                           borderColor: 'lightgray', // Set border color to gray
                         },
@@ -353,71 +393,11 @@ const ApplyNow = () => {
                       },
                     }}
                   />
-                  {isMobileVerified ?
-                  
-                  <VerifiedIcon fontSize="large" color="success" sx={{ marginLeft: 1 }} />
-                  :
-                  <Button
-                    variant="contained"
-                    onClick={() => sendOtp()}
-                    disabled={loading || isOtpSent}
-                    sx={{
-                      backgroundColor: '#fc8403', // Custom gray background color
-                      color:'black',
-                         '&:hover': {
-                        backgroundColor: 'darkgray', // Darker gray on hover
-                      },
-                      '&.Mui-disabled': {
-                        backgroundColor: '#d3d3d3', // Lighter gray when disabled
-                      },
-                    }}
-                  >
-                    { 'Get OTP'}
-                  </Button>
-                  
-                  }
                 </Box>
               </Grid>
-              {isOtpSent && (
-                <Grid item xs={12} md={6}>
-                  {/* <Box display="flex" alignItems="center" gap={2}>
-                  <TextField
-                    fullWidth
-                    required
-                    label="Enter OTP"
-                    value={otp}
-                    onChange={handleOtpChange} 
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                          borderColor: 'gray', // Set border color to gray
-                        },
-                        '&:hover fieldset': {
-                          borderColor: 'darkgray', // Dark gray on hover
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: 'gray', // Gray color when focused
-                        },
-                      },
-                      '& .MuiInputLabel-root': {
-                        color: 'gray', // Label color
-                      },
-                      '& .MuiInputLabel-root.Mui-focused': {
-                        color: 'gray', // Darker label color when focused
-                      },
-                    }}
-                  />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={verifyOtp}
-                    disabled={loading || isVerified}
-                  >
-                    {isVerified ? 'Verified' : 'Verify OTP'}
-                  </Button>
-                </Box> */}
-                </Grid>
-              )}
+
+
+
 
 
               {/* Pincode Section */}
@@ -471,9 +451,9 @@ const ApplyNow = () => {
                 />
               </Grid>
             </Grid>
-            {(termsAccepted  && !isMobileVerified) && <Typography variant="body1" color="#ed0e33" align="left">
-            Verify mobile first
-          </Typography>}
+            {(termsAccepted && !isMobileVerified) && <Typography variant="body1" color="#ed0e33" align="left">
+              Verify mobile first
+            </Typography>}
 
             <Grid item xs={12}>
               <FormControlLabel
@@ -481,11 +461,11 @@ const ApplyNow = () => {
                 label={
                   <Typography variant="body2" >
                     I accept the{' '}
-                    <Link href="terms-condition" target="_blank" rel="noopener" style={{color:'#fc8403'}}>
+                    <Link href="terms-condition" target="_blank" rel="noopener" style={{ color: '#fc8403' }}>
                       Terms & Conditions
                     </Link>{' '}
                     and{' '}
-                    <Link href="privacy-policy" target="_blank" rel="noopener" style={{color:'#fc8403'}}>
+                    <Link href="privacy-policy" target="_blank" rel="noopener" style={{ color: '#fc8403' }}>
                       Privacy Policy
                     </Link>
                   </Typography>
