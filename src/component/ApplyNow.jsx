@@ -62,9 +62,14 @@ const ApplyNow = () => {
   const [loading, setLoading] = useState(false);
 
   const handleMobileChange = (e) => {
-    setMobile(e.target.value);
+    const value = e.target.value;
+  
+    // Allow only numeric values and ensure the length is not more than 10 digits
+    if (/^\d{0,10}$/.test(value)) {
+      setMobile(value);
+    }
   };
-
+  
   const sendOtp = async () => {
     setOtpLoader(true)
     try {
@@ -98,20 +103,87 @@ const ApplyNow = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-
-    // Validation for input fields
-    if (name === 'mobile' && !/^\d*$/.test(value)) return;
+    console.log("the pan value is 1", value);
+  
+    // Validation for input fields (only block if invalid input is entered)
+  
+    // Mobile: Only digits and max 10 characters
+    // if (name === 'mobile') {
+    //   // Allow only numbers and prevent input longer than 10 characters
+    //   if (!/^\d*$/.test(value) || value.length > 10) return;
+    // }
+  
+    // Other input validations (for fName, lName, salary, etc.)
+    if (name === 'fName' && !/^[A-Za-z\s]*$/.test(value)) return;
+    if (name === 'lName' && !/^[A-Za-z\s]*$/.test(value)) return;
+  
+    // Salary and Loan Amount: Only digits
     if ((name === 'salary' || name === 'loanAmount') && !/^\d*$/.test(value)) return;
+  
+    // PinCode: Only digits and max 6 characters
     if (name === 'pinCode' && (!/^\d*$/.test(value) || value.length > 6)) return;
+  
+    // Aadhaar: Only digits and max 12 characters
     if (name === 'aadhaar' && (!/^\d*$/.test(value) || value.length > 12)) return;
-
+  
+    // PAN validation
+    if (name === 'pan') {
+      const panInput = value.toUpperCase();
+  
+      if (panInput.length <= 10) {
+        if (
+          /^[A-Z]{0,5}$/.test(panInput) || // First 5 characters must be letters
+          /^[A-Z]{5}\d{0,4}$/.test(panInput) || // Next 4 characters must be digits
+          /^[A-Z]{5}\d{4}[A-Z]?$/.test(panInput) // Last character must be a letter
+        ) {
+          setFormValues({ ...formValues, [name]: panInput });
+          setFormErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+        } else {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: 'PAN format should be 5 letters, 4 digits, and 1 letter (e.g., ABCDE1234F).',
+          }));
+        }
+      }
+      return;
+    }
+  
+    // Validation for dob
+    if (name === 'dob') {
+      const birthDate = new Date(value); 
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+  
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+  
+      if (age < 18) {
+        setFormErrors((prevErrors) => ({
+          ...prevErrors,
+          dob: 'You must be at least 18 years old.',
+        }));
+        return;
+      }
+  
+      if (age > 60) {
+        setFormErrors((prevErrors) => ({
+          ...prevErrors,
+          dob: 'You cannot be older than 60 years.',
+        }));
+        return;
+      }
+    }
+  
+    // Update form values and reset errors for the specific field
     setFormValues({ ...formValues, [name]: value });
     setFormErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
   };
 
   const validateForm = () => {
     const errors = {};
-    const mobileValid = /^\d{10}$/.test(mobile);
+    // const mobileValid = /^\d{10}$/.test(mobile);
     const panValid = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(formValues.pan);
     const aadhaarValid = /^\d{12}$/.test(formValues.aadhaar);
     const emailValid = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formValues.personalEmail);
@@ -124,7 +196,7 @@ const ApplyNow = () => {
       }
     });
 
-    if (!mobileValid) errors.mobile = 'Mobile number must be a 10-digit number';
+    // if (!mobileValid) errors.mobile = 'Mobile number must be a 10-digit number';
     if (!aadhaarValid) errors.aadhaar = 'Aadhaar number must be a 12-digit number';
     if (!panValid) errors.pan = 'Invalid PAN format (e.g., ABCDE1234F)';
     if (!emailValid) errors.personalEmail = 'Invalid email format';
@@ -141,38 +213,52 @@ const ApplyNow = () => {
 
   const handlePincodeChange = async (e) => {
     const value = e.target.value;
-    setFormValues({ ...formValues, pinCode: value });
-
-    // Fetch city and state based on pincode
-    if (value.length === 6) {
-      try {
-        const response = await fetch(`https://api.postalpincode.in/pincode/${value}`);
-        const data = await response.json();
-
-        if (data[0].Status === "Success") {
-          const { Block, State } = data[0].PostOffice[0];
-          setCity(Block);
-          setState(State);
-
-        } else {
-          // Handle invalid pin code case
-          setCity('');
-          setState('');
+  
+    // Only allow numeric input and ensure the pincode has no more than 6 digits
+    if (/^\d{0,6}$/.test(value)) {
+      setFormValues({ ...formValues, pinCode: value });
+  
+      // If the pincode has exactly 6 digits, fetch city and state
+      if (value.length === 6) {
+        try {
+          const response = await fetch(`https://api.postalpincode.in/pincode/${value}`);
+          const data = await response.json();
+  
+          if (data[0].Status === "Success") {
+            const { Block, State } = data[0].PostOffice[0];
+            setCity(Block);
+            setState(State);
+            console.log('City:', Block, 'State:', State);
+          } else {
+            // Handle invalid pin code case
+            setCity('');
+            setState('');
+            Swal.fire({
+              icon: 'error',
+              title: 'Invalid Pincode',
+              text: 'Please enter a valid pincode.',
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching pincode data:', error);
           Swal.fire({
             icon: 'error',
-            title: 'Invalid Pincode',
-            text: 'Please enter a valid pincode.',
+            title: 'Error',
+            text: 'An error occurred while fetching data. Please try again later.',
           });
         }
-      } catch (error) {
-        console.error('Error fetching pincode data:', error);
+      } else {
+        // Reset city and state if pincode is incomplete
+        setCity('');
+        setState('');
       }
     } else {
+      // Clear the pincode and reset city/state if input is invalid
+      setFormValues({ ...formValues, pinCode: '' });
       setCity('');
       setState('');
     }
   };
-
 
 
 
