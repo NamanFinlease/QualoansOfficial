@@ -438,7 +438,7 @@ const LoanCalculator = () => {
                                     cursor: 'pointer',
                                 }}
                             >
-                                * T & C Apply *
+                                * T & C Apply 
                             </Typography>
                         </Tooltip>
 
