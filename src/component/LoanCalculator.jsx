@@ -14,6 +14,7 @@ import {
     TableContainer,
     TableRow,
     TextField,
+    Tooltip
    
 } from '@mui/material';
 import { useInView } from 'react-intersection-observer';
@@ -135,30 +136,36 @@ const LoanCalculator = () => {
                                 value={loanAmount || ''}
                                 onChange={(e) => {
                                     const value = Number(e.target.value);
-                                    if (value <= 100000) {
-                                        setLoanAmount(value);  // Update only if within the valid range
+                                    if (value > 100000) {
+                                        setLoanAmount(5000); // Set to minimum if below range
                                     } else if (value > 100000) {
-                                        setLoanAmount(100000); // If above max, set it to max
-                                    } else if (value < 5000) {
-                                        setLoanAmount(5000); // If below min, set it to min
+                                        setLoanAmount(100000); // Set to maximum if above range
                                     } else {
-                                        setLoanAmount(value); // Allow any value within the valid range
+                                        setLoanAmount(value); // Set value if within range
                                     }
                                 }}
                                 variant="outlined"
                                 fullWidth
                                 sx={{
-                                    marginBottom: 2, // margin at the bottom
+                                    marginBottom: 2,
                                     background: 'transparent',
-                                    borderRadius: '16px', // Rounded border
+                                    borderRadius: '16px',
                                     '& .MuiOutlinedInput-root': {
-                                        borderRadius: '16px', // Ensure the border radius applies to the input field
+                                        borderRadius: '16px',
                                     },
                                     '& .MuiOutlinedInput-notchedOutline': {
                                         borderColor: 'rgba(0, 0, 0, 0.23)', // Default border color
                                     },
                                     '&:hover .MuiOutlinedInput-notchedOutline': {
                                         borderColor: '#1976d2', // Border color on hover
+                                    },
+                                    // Remove spinner arrows
+                                    '& input[type=number]': {
+                                        MozAppearance: 'textfield', // For Firefox
+                                    },
+                                    '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                                        WebkitAppearance: 'none', // For Chrome, Safari, Edge
+                                        margin: 0,
                                     },
                                 }}
                             />
@@ -168,7 +175,10 @@ const LoanCalculator = () => {
                                 max={100000}
                                 onChange={handleLoanAmountChange}
                                 valueLabelDisplay="auto"
-                                marks={[{ value: 5000, label: '5K' }, { value: 100000, label: '100K' }]}
+                                marks={[
+                                    { value: 5000, label: '5K' },
+                                    { value: 100000, label: '100K' },
+                                ]}
                                 sx={{
                                     color: 'black',
                                     height: 8,
@@ -181,6 +191,7 @@ const LoanCalculator = () => {
                                     },
                                 }}
                             />
+
 
                             <Typography variant="h6" sx={{ marginBottom: 1, textAlign: 'left' }}>
                                 Loan Tenure (Days)
@@ -216,6 +227,14 @@ const LoanCalculator = () => {
                                     },
                                     '&:hover .MuiOutlinedInput-notchedOutline': {
                                         borderColor: '#1976d2',  // Border color on hover
+                                    },
+                                     // Remove spinner arrows
+                                     '& input[type=number]': {
+                                        MozAppearance: 'textfield', // For Firefox
+                                    },
+                                    '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                                        WebkitAppearance: 'none', // For Chrome, Safari, Edge
+                                        margin: 0,
                                     },
                                 }} 
                             />
@@ -275,6 +294,14 @@ const LoanCalculator = () => {
                                     '&:hover .MuiOutlinedInput-notchedOutline': {
                                         borderColor: '#1976d2',  // Border color on hover
                                     },
+                                     // Remove spinner arrows
+                                     '& input[type=number]': {
+                                        MozAppearance: 'textfield', // For Firefox
+                                    },
+                                    '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                                        WebkitAppearance: 'none', // For Chrome, Safari, Edge
+                                        margin: 0,
+                                    },
                                 }} 
                             />
 
@@ -299,8 +326,8 @@ const LoanCalculator = () => {
                                 }}
                             />
                             <Button
-                                component={Link}
-                                href="/apply-now"
+                                // component={Link}
+                                // href="/apply-now"
                                 variant="contained"
                                 sx={{ marginTop: 2, backgroundColor: 'rgb(47, 47, 47)',fontWeight:'700', borderRadius: '16px', padding: 2 ,'&:hover': {
                                     background: 'orange',
@@ -313,35 +340,42 @@ const LoanCalculator = () => {
                     </Grid>
 
 
-                        <Grid item xs={12} md={6}>
-                            <Paper
-                                elevation={6}
-                                sx={{
-                                    mt:4,
-                                    padding: 3,
-                                    borderRadius: '30px',
-                                    textAlign: 'center',
-                                    background: 'white', // Transparent background to see blur effect
-                                    color: 'black',
-                                    minHeight: '400px',
-                                    animation: detailsInView ? `${slideInRight} 0.5s ease` : 'none',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'space-between',
-                                }}
-                                ref={detailsRef}
-                            >
-                                <Typography variant="h4" gutterBottom style={{fontWeight:'bold', color: 'black',fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' }}}> 
-                                    Clarity in Lending                    
-                                </Typography>
-                                <Typography variant="h6">Detailed information to help you understand your financial commitment.</Typography>
-                                <Typography style={{ marginTop: '50px',fontSize:'25px',font:"bold" }}>
-                                    You have to pay
-                                </Typography>
+                    <Grid item xs={12} md={6}>
+                    <Paper
+                        elevation={6}
+                        sx={{
+                            mt: 4,
+                            padding: 3,
+                            borderRadius: '30px',
+                            textAlign: 'center',
+                            background: 'white',
+                            color: 'black',
+                            minHeight: '400px',
+                            animation: detailsInView ? `${slideInRight} 0.5s ease` : 'none',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            position: 'relative', // Enables absolute positioning within the Paper
+                        }}
+                        ref={detailsRef}
+                    >
+                        <Typography
+                            variant="h4"
+                            gutterBottom
+                            style={{ fontWeight: 'bold', color: 'black', fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}
+                        >
+                            Clarity in Lending
+                        </Typography>
+                        <Typography variant="h6">
+                            Detailed information to help you understand your financial commitment.
+                        </Typography>
+                        <Typography style={{ marginTop: '50px', fontSize: '25px', font: 'bold' }}>
+                            You have to pay
+                        </Typography>
 
-                                <Typography style={{ fontSize:'25px',font:'bold' }}>₹{totalAmount}</Typography>
+                        <Typography style={{ fontSize: '25px', font: 'bold' }}>₹{totalAmount}</Typography>
 
-                                <TableContainer>
+                        <TableContainer>
                             <Table>
                                 <TableBody>
                                     <TableRow
@@ -349,29 +383,36 @@ const LoanCalculator = () => {
                                             display: 'flex',
                                             justifyContent: 'center',
                                             alignItems: 'center',
-                                            gap: '40px', // Adds spacing between the columns
+                                            gap: '40px',
                                             padding: '16px 0',
                                         }}
                                     >
-                                                    <TableCell
-                                                        align="center"
-                                                        style={{
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
-                                                            alignItems: 'center',
-                                                            borderBottom: 'none',
-                                                            fontFamily: 'Inter, sans-serif', // Corrected font family
-                                                            fontWeight: 500, // Corrected font weight
-                                                        }}
-                                                    >
-                                                       <Typography variant="subtitle1">Interest Rate:</Typography>
+                                        <TableCell
+                                            align="center"
+                                            style={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                borderBottom: 'none',
+                                                fontFamily: 'Inter, sans-serif',
+                                                fontWeight: 500,
+                                            }}
+                                        >
+                                            <Typography variant="subtitle1">Interest Rate:</Typography>
                                             <Typography variant="h6">{interestRate}%</Typography>
                                         </TableCell>
 
-                                        {/* Divider line */}
                                         <div style={{ borderLeft: '2px solid black', height: '50px', margin: '0 16px' }}></div>
 
-                                        <TableCell align="center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', borderBottom: 'none' }}>
+                                        <TableCell
+                                            align="center"
+                                            style={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                borderBottom: 'none',
+                                            }}
+                                        >
                                             <Typography variant="subtitle1">Loan Tenure:</Typography>
                                             <Typography variant="h6">{loanTenure} days</Typography>
                                         </TableCell>
@@ -380,20 +421,49 @@ const LoanCalculator = () => {
                             </Table>
                         </TableContainer>
 
+                        {/* T&C Apply positioned above Apply Now button */}
+                        <Tooltip title="Terms and Conditions apply. Please read carefully." arrow>
+                            <Typography
+                            component={Link}
+                            href="/terms-condition"
+                            variant="contained"
+                                sx={{
+                                    position: 'absolute',
+                                    bottom: '80px', // Position it just above the Apply Now button
+                                    right: '26px', // Align it to the right
+                                    fontSize: '12px',
+                                    padding: '4px 8px',
+                                    background: 'rgba(0, 0, 0, 0.1)',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                * T & C Apply *
+                            </Typography>
+                        </Tooltip>
 
                         <Button
                             component={Link}
-                            href="/apply-now" // Change this to your actual "Apply Now" URL
+                            href="/apply-now"
                             variant="contained"
-                            sx={{ marginTop: 16, backgroundColor: 'black', fontWeight:'700', borderRadius: '16px', padding: 2, textDecoration: 'none' ,'&:hover': {
-                                background: 'orange',
-                                color:'white',
-                            }, }}
-                            >
+                            sx={{
+                                marginTop: 16,
+                                backgroundColor: 'black',
+                                fontWeight: '700',
+                                borderRadius: '16px',
+                                padding: 2,
+                                textDecoration: 'none',
+                                '&:hover': {
+                                    background: 'orange',
+                                    color: 'white',
+                                },
+                            }}
+                        >
                             Apply Now
-                            </Button>
-                            </Paper>
-                        </Grid>
+                        </Button>
+                    </Paper>
+                    </Grid>
+
                     </Grid>
                 </Container>
             </Box>
