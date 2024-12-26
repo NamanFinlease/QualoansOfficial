@@ -361,50 +361,50 @@ const ApplyNow = () => {
               Personal Information
             </Typography>
             <Grid container spacing={3}>
-              {[
-                { label: 'First Name', name: 'fName', icon: <Person /> },
-                { label: 'Last Name', name: 'lName', icon: <Person /> },
-                {
-                  label: 'Gender',
-                  name: 'gender',
-                  icon: <Person />,
-                  type: 'select',
-                  options: ['M', 'F', 'Others'],
-                },
-                { label: 'PAN', name: 'pan', icon: <Public /> },
-                { label: 'Aadhaar', name: 'aadhaar', icon: <Public /> },
-                // { label: 'Mobile', name: 'mobile', icon: <Phone /> },
-                { label: 'DOB', name: 'dob', icon: <CalendarToday />, type: 'date' },
-                { label: 'Personal Email', name: 'personalEmail', icon: <Email /> },
-                { label: 'Office Email', name: 'officeEmail', icon: <Email /> },
-                { label: 'Monthly Salary', name: 'salary', icon: <CurrencyRupee /> },
-                { label: 'Loan Amount Required', name: 'loanAmount', icon: <CurrencyRupee /> },
-              ]?.map((field, index) => (
-                <Grid item xs={12} md={6} key={index}>
-                  <TextField
-                    fullWidth
-                    required
-                    name={field.name}
-                    label={field.label}
-                    value={formValues[field.name]}
-                    onChange={handleInputChange}
-                    type={field.type || 'text'}
-                    select={field.type === 'select'}
-                    error={!!formErrors[field.name]}
-                    helperText={formErrors[field.name] || ''}
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">{field.icon}</InputAdornment>,
-                    }}
-                  >
-                    {field.options &&
-                      field.options.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option === 'M' ? 'Male' : option === 'F' ? 'Female' : 'Others'}
-                        </MenuItem>
-                      ))}
-                  </TextField>
-                </Grid>
-              ))}
+            {[
+              { label: 'First Name', name: 'fName', icon: <Person />, required: true },
+              { label: 'Last Name', name: 'lName', icon: <Person />, required: false },
+              {
+                label: 'Gender',
+                name: 'gender',
+                icon: <Person />,
+                type: 'select',
+                options: ['M', 'F', 'Others'],
+                required: true,
+              },
+              { label: 'PAN', name: 'pan', icon: <Public />, required: true },
+              { label: 'Aadhaar', name: 'aadhaar', icon: <Public />, required: true },
+              { label: 'DOB', name: 'dob', icon: <CalendarToday />, type: 'date', required: true },
+              { label: 'Personal Email', name: 'personalEmail', icon: <Email />, required: true },
+              { label: 'Office Email', name: 'officeEmail', icon: <Email />, required: true },
+              { label: 'Monthly Salary', name: 'salary', icon: <CurrencyRupee />, required: true },
+              { label: 'Loan Amount Required', name: 'loanAmount', icon: <CurrencyRupee />, required: true },
+            ]?.map((field, index) => (
+              <Grid item xs={12} md={6} key={index}>
+                <TextField
+                  fullWidth
+                  required={field.required}
+                  name={field.name}
+                  label={field.label}
+                  value={formValues[field.name]}
+                  onChange={handleInputChange}
+                  type={field.type || 'text'}
+                  select={field.type === 'select'}
+                  error={!!formErrors[field.name]}
+                  helperText={formErrors[field.name] || ''}
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">{field.icon}</InputAdornment>,
+                  }}
+                >
+                  {field.options &&
+                    field.options.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option === 'M' ? 'Male' : option === 'F' ? 'Female' : 'Others'}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              </Grid>
+            ))}
 
               {/* Mobile OTP Section */}
               <Grid item xs={12} md={6}>
