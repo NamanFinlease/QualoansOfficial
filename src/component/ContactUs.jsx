@@ -242,7 +242,7 @@ const AboutUs = () => {
       >
         <Box
           component="iframe"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3504.357975184487!2d77.07157531508!3d28.481119982466515!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d19c8019f5d07%3A0x605afbc6573e6d6c!2sVipul%20Agora%20Mall%2C%20MG%20Road%2C%20Gurugram%2C%20Haryana%20122001!5e0!3m2!1sen!2sin!4v1697209452257!5m2!1sen!2sin"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19678.719478847277!2d77.18276234589072!3d28.54183482360843!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce37ec98c1aa7%3A0x2ebe60805720953!2sJurist%20International%20Law%20firm!5e1!3m2!1sen!2sin!4v1735283145093!5m2!1sen!2sin"
           allowFullScreen
           loading="lazy"
           sx={{
