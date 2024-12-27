@@ -113,9 +113,7 @@ const AboutUs = () => {
             >
               Location
             </Typography>   
-            <Typography>229, 2nd Floor, Vipul Agora Mall,</Typography>
-            <Typography>MG Road, Gurugram, Haryana - 122001
-            </Typography>
+            <Typography>S-370, Panchsheel Park,Delhi-110017, India</Typography>
           </Grid>
 
           {/* Right Section: Form */}
