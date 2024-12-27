@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import WarningIcon from '@mui/icons-material/Warning'; // Import Warning icon
 import AXIS from '../assets/image/axis (1).png'; 
-import repayaImage from '../assets/image/Repay Now qua (1).webp';
+import repayaImage from '../assets/image/Qua-Repayment.jpg';
 import { Grid, Box, Typography, Button, Divider } from '@mui/material';
 
 const RepayLoan = () => {

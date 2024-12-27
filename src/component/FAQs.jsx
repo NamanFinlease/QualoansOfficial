@@ -101,7 +101,7 @@ const FAQs = () => {
         {
             id: 'faq6',
             question: '6. How long does it take to get the loan approved and disbursed?',
-            answer: `Once you submit your application and documents, our team processes your request quickly. Loan approval usually takes a few minutes, and funds are disbursed within 30 minutes upon approval.`,
+            answer: `Once you submit your application and documents, our team processes your request quickly. Loan approval usually takes a few minutes, and funds are disbursed within 5 minutes upon approval.`,
         },
         {
             id: 'faq7',
