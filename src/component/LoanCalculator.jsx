@@ -132,43 +132,55 @@ const LoanCalculator = () => {
                                 Loan Amount (₹)
                             </Typography>
                             <TextField
-                                type="number"
-                                value={loanAmount || ''}
-                                onChange={(e) => {
-                                    const value = Number(e.target.value);
-                                    if (value > 100000) {
-                                        setLoanAmount(5000); // Set to minimum if below range
-                                    } else if (value > 100000) {
-                                        setLoanAmount(100000); // Set to maximum if above range
+                            type="text" // Set to "text" to prevent the browser's number input behavior
+                            value={loanAmount || ''} // Ensure loanAmount is a valid number or empty string
+                            onChange={(e) => {
+                                const value = e.target.value;
+
+                                // Allow the input to be empty
+                                if (value === '') {
+                                    setLoanAmount(''); // Allow the input to be cleared
+                                } else if (/^\d+$/.test(value)) { // Check if the input contains only digits (no decimals)
+                                    const numericValue = Number(value); // Convert the value to a number
+
+                                    // Ensure the value is within the range (5000 to 100000)
+                                    if (numericValue > 100000) {
+                                        setLoanAmount(100000); // Set to minimum if below range
+                                    
                                     } else {
-                                        setLoanAmount(value); // Set value if within range
+                                        setLoanAmount(numericValue); // Set value if within range
                                     }
-                                }}
-                                variant="outlined"
-                                fullWidth
-                                sx={{
-                                    marginBottom: 2,
-                                    background: 'transparent',
+                                }
+                            }}
+                            variant="outlined"
+                            fullWidth
+                            sx={{
+                                marginBottom: 2,
+                                background: 'transparent',
+                                borderRadius: '16px',
+                                '& .MuiOutlinedInput-root': {
                                     borderRadius: '16px',
-                                    '& .MuiOutlinedInput-root': {
-                                        borderRadius: '16px',
-                                    },
-                                    '& .MuiOutlinedInput-notchedOutline': {
-                                        borderColor: 'rgba(0, 0, 0, 0.23)', // Default border color
-                                    },
-                                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                                        borderColor: '#1976d2', // Border color on hover
-                                    },
-                                    // Remove spinner arrows
-                                    '& input[type=number]': {
-                                        MozAppearance: 'textfield', // For Firefox
-                                    },
-                                    '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-                                        WebkitAppearance: 'none', // For Chrome, Safari, Edge
-                                        margin: 0,
-                                    },
-                                }}
-                            />
+                                },
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: 'rgba(0, 0, 0, 0.23)', // Default border color
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: '#1976d2', // Border color on hover
+                                },
+                                // Remove spinner arrows
+                                '& input[type="text"]': {
+                                    MozAppearance: 'textfield', // For Firefox
+                                },
+                                '& input[type="text"]::-webkit-outer-spin-button, & input[type="text"]::-webkit-inner-spin-button': {
+                                    WebkitAppearance: 'none', // For Chrome, Safari, Edge
+                                    margin: 0,
+                                },
+                            }}
+                        />
+
+
+
+
                             <Slider
                                 value={loanAmount}
                                 min={5000}
@@ -197,26 +209,31 @@ const LoanCalculator = () => {
                                 Loan Tenure (Days)
                             </Typography>
                             <TextField
+                                type="text"  // Change to "text" to allow full flexibility and prevent number input behavior (like spinners)
+                                value={loanTenure || ''} // Ensure loanTenure is a valid number or empty string
+                                onChange={(e) => {
+                                    const value = e.target.value;
 
-                        type="number"
-                        value={loanTenure || ''}
-                        onChange={(e) => {
-                            const value = Number(e.target.value);
-                            if (value <= 90) {
-                                setLoanTenure(value);  // Update only if within the valid range (1 to 4 months)
-                            } else if (value > 1) {
-                                setLoanTenure(1); // If above max, set it to max
-                            } else if (value < 90) {
-                                setLoanAmount(90); // If below min, set it to min
-                            } else {
-                                setLoanTenure(value); // Allow any value within the valid range
-                            }
-                        }}
-    
+                                    // Allow the input to be cleared
+                                    if (value === '') {
+                                        setLoanTenure('');  // Allow the input to be cleared
+                                    } else if (/^\d+$/.test(value)) { // Check if the input contains only digits
+                                        const numericValue = Number(value); // Convert the value to a number
+
+                                        // Ensure the value is within the range (1 to 90)
+                                        if (numericValue < 1) {
+                                            setLoanTenure(1);  // Set to minimum (1) if below range
+                                        } else if (numericValue > 90) {
+                                            setLoanTenure(90);  // Set to maximum (90) if above range
+                                        } else {
+                                            setLoanTenure(numericValue);  // Set value if within range
+                                        }
+                                    }
+                                }}
                                 variant="outlined"
                                 fullWidth
                                 sx={{
-                                    marginBottom: 2,   // margin at the bottom
+                                    marginBottom: 2,  // margin at the bottom
                                     background: 'transparent',
                                     borderRadius: '16px',  // Rounded border
                                     '& .MuiOutlinedInput-root': {
@@ -228,16 +245,17 @@ const LoanCalculator = () => {
                                     '&:hover .MuiOutlinedInput-notchedOutline': {
                                         borderColor: '#1976d2',  // Border color on hover
                                     },
-                                     // Remove spinner arrows
-                                     '& input[type=number]': {
+                                    // Remove spinner arrows
+                                    '& input[type="text"]': {
                                         MozAppearance: 'textfield', // For Firefox
                                     },
-                                    '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                                    '& input[type="text"]::-webkit-outer-spin-button, & input[type="text"]::-webkit-inner-spin-button': {
                                         WebkitAppearance: 'none', // For Chrome, Safari, Edge
                                         margin: 0,
                                     },
-                                }} 
+                                }}
                             />
+
 
                             <Slider
                                 value={loanTenure}
@@ -263,47 +281,61 @@ const LoanCalculator = () => {
                                 Interest Rate (%)
                             </Typography>
                             <TextField
-                                type="number"
+    type="text" // Use 'text' for fine-grained control
+    value={interestRate || ''} // Allow the value to be empty
+    onChange={(e) => {
+        const value = e.target.value;
 
-                                value={interestRate || ''}
-                                onChange={(e) => {
-                                    const value = Number(e.target.value);
-                                    if (value <= 2.75) {
-                                        setInterestRate(value);  // Update only if within the valid range (1 to 4 months)
-                                    } else if (value < 0.5) {
-                                        setInterestRate(0.5); // If above max, set it to max
-                                    } else if (value >2.75) {
-                                        setInterestRate(2.75); // If below min, set it to min
-                                    } else {
-                                        setInterestRate(value); // Allow any value within the valid range
-                                    }
-                                }}
-                               
-                                variant="outlined"
-                                fullWidth
-                                sx={{
-                                    marginBottom: 1,   // margin at the bottom
-                                    background: 'transparent',
-                                    borderRadius: '16px',  // Rounded border
-                                    '& .MuiOutlinedInput-root': {
-                                        borderRadius: '16px',  // Ensure the border radius applies to the input field
-                                    },
-                                    '& .MuiOutlinedInput-notchedOutline': {
-                                        borderColor: 'rgba(0, 0, 0, 0.23)',  // Default border color
-                                    },
-                                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                                        borderColor: '#1976d2',  // Border color on hover
-                                    },
-                                     // Remove spinner arrows
-                                     '& input[type=number]': {
-                                        MozAppearance: 'textfield', // For Firefox
-                                    },
-                                    '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-                                        WebkitAppearance: 'none', // For Chrome, Safari, Edge
-                                        margin: 0,
-                                    },
-                                }} 
-                            />
+        // Allow clearing the input
+        if (value === '') {
+            setInterestRate(''); // Clear the state
+        } else if (/^\d*\.?\d*$/.test(value)) { // Allow only valid numeric input
+            const numericValue = parseFloat(value);
+
+            // Update the state for valid numeric input
+            if (!isNaN(numericValue)) {
+                setInterestRate(value); // Temporarily set the value to allow typing
+            }
+        }
+    }}
+    onBlur={() => {
+        // Final validation on blur
+        if (interestRate === '' || parseFloat(interestRate) < 0.5) {
+            setInterestRate(0.5); // Set to minimum if below range or empty
+        } else if (parseFloat(interestRate) > 2.75) {
+            setInterestRate(2.75); // Set to maximum if above range
+        } else {
+            setInterestRate(parseFloat(interestRate)); // Ensure the value is parsed as a number
+        }
+    }}
+    variant="outlined"
+    fullWidth
+    sx={{
+        marginBottom: 1, // Margin at the bottom
+        background: 'transparent',
+        borderRadius: '16px', // Rounded border
+        '& .MuiOutlinedInput-root': {
+            borderRadius: '16px', // Ensure the border radius applies to the input field
+        },
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'rgba(0, 0, 0, 0.23)', // Default border color
+        },
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#1976d2', // Border color on hover
+        },
+        // Remove spinner arrows
+        '& input[type=text]': {
+            MozAppearance: 'textfield', // For Firefox
+        },
+        '& input[type=text]::-webkit-outer-spin-button, & input[type=text]::-webkit-inner-spin-button': {
+            WebkitAppearance: 'none', // For Chrome, Safari, Edge
+            margin: 0,
+        },
+    }}
+/>
+
+
+
 
                             <Slider
                                 value={interestRate}
