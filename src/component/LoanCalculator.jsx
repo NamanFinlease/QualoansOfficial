@@ -281,58 +281,65 @@ const LoanCalculator = () => {
                                 Interest Rate (%)
                             </Typography>
                             <TextField
-    type="text" // Use 'text' for fine-grained control
-    value={interestRate || ''} // Allow the value to be empty
-    onChange={(e) => {
-        const value = e.target.value;
+                            type="text" // Use 'text' for fine-grained control
+                            value={interestRate || ''} // Allow the value to be empty
+                            onChange={(e) => {
+                                let value = e.target.value;
 
-        // Allow clearing the input
-        if (value === '') {
-            setInterestRate(''); // Clear the state
-        } else if (/^\d*\.?\d*$/.test(value)) { // Allow only valid numeric input
-            const numericValue = parseFloat(value);
+                                // Allow clearing the input
+                                if (value === '') {
+                                    setInterestRate(''); // Clear the state
+                                } else if (/^\d*\.?\d*$/.test(value)) { // Allow only valid numeric input
+                                    const numericValue = parseFloat(value);
 
-            // Update the state for valid numeric input
-            if (!isNaN(numericValue)) {
-                setInterestRate(value); // Temporarily set the value to allow typing
-            }
-        }
-    }}
-    onBlur={() => {
-        // Final validation on blur
-        if (interestRate === '' || parseFloat(interestRate) < 0.5) {
-            setInterestRate(0.5); // Set to minimum if below range or empty
-        } else if (parseFloat(interestRate) > 2.75) {
-            setInterestRate(2.75); // Set to maximum if above range
-        } else {
-            setInterestRate(parseFloat(interestRate)); // Ensure the value is parsed as a number
-        }
-    }}
-    variant="outlined"
-    fullWidth
-    sx={{
-        marginBottom: 1, // Margin at the bottom
-        background: 'transparent',
-        borderRadius: '16px', // Rounded border
-        '& .MuiOutlinedInput-root': {
-            borderRadius: '16px', // Ensure the border radius applies to the input field
-        },
-        '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'rgba(0, 0, 0, 0.23)', // Default border color
-        },
-        '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#1976d2', // Border color on hover
-        },
-        // Remove spinner arrows
-        '& input[type=text]': {
-            MozAppearance: 'textfield', // For Firefox
-        },
-        '& input[type=text]::-webkit-outer-spin-button, & input[type=text]::-webkit-inner-spin-button': {
-            WebkitAppearance: 'none', // For Chrome, Safari, Edge
-            margin: 0,
-        },
-    }}
-/>
+                                    // If the value is greater than 2.75, set it to 2.75
+                                    if (numericValue > 2.75) {
+                                        setInterestRate(2.75); // Set to maximum value
+                                    } else {
+                                        setInterestRate(value); // Temporarily set the value to allow typing
+                                    }
+                                }
+                            }}
+                            onBlur={() => {
+                                // Final validation on blur
+                                const numericValue = parseFloat(interestRate);
+
+                                // Apply range restrictions after typing is done
+                                if (interestRate === '' || numericValue < 0.5) {
+                                    setInterestRate(0.5); // Set to minimum if below range or empty
+                                } else if (numericValue > 2.75) {
+                                    setInterestRate(2.75); // Set to maximum if above range
+                                } else {
+                                    setInterestRate(numericValue); // Ensure the value is within the valid range
+                                }
+                            }}
+                            variant="outlined"
+                            fullWidth
+                            sx={{
+                                marginBottom: 1, // Margin at the bottom
+                                background: 'transparent',
+                                borderRadius: '16px', // Rounded border
+                                '& .MuiOutlinedInput-root': {
+                                    borderRadius: '16px', // Ensure the border radius applies to the input field
+                                },
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: 'rgba(0, 0, 0, 0.23)', // Default border color
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: '#1976d2', // Border color on hover
+                                },
+                                // Remove spinner arrows
+                                '& input[type=text]': {
+                                    MozAppearance: 'textfield', // For Firefox
+                                },
+                                '& input[type=text]::-webkit-outer-spin-button, & input[type=text]::-webkit-inner-spin-button': {
+                                    WebkitAppearance: 'none', // For Chrome, Safari, Edge
+                                    margin: 0,
+                                },
+                            }}
+                        />
+
+
 
 
 
