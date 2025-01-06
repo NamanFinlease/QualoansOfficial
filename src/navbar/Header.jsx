@@ -226,7 +226,7 @@ const Header = () => {
   </Link>
 
   <Link
-    to="/calculator"
+    to="/login-form"
     onClick={scrollToTop}
     style={{
       color: '#0b2747',

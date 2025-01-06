@@ -10,6 +10,7 @@ import {
   Select,
   FormControl,
   InputLabel,
+  Button
 } from "@mui/material";
 import { keyframes } from "@mui/system";
 import loanImage from "../assets/image/Repay Now qua (1).webp"; // Example image import
@@ -45,6 +46,11 @@ const LoanCalculator = () => {
     const totalInterest = (loanAmount * interestRate * loanTenure) / 100;
     const total = loanAmount + totalInterest;
     setTotalAmount(total);
+    setDailyPayment((total / loanTenure).toFixed(2));
+  };
+  const calculateDailyPayment = () => {
+    const totalInterest = (loanAmount * interestRate * loanTenure) / 100;
+    const total = loanAmount + totalInterest;
     setDailyPayment((total / loanTenure).toFixed(2));
   };
 
@@ -132,8 +138,27 @@ const LoanCalculator = () => {
               Loan Calculator
             </Typography>
 
-            {/* Loan Amount Slider */}
-            <Typography sx={{ marginBottom: 1 }}>Loan Amount (₹)</Typography>
+            {/* Loan Amount Section */}
+            <Box
+              sx={{
+                backgroundColor: "#FFA500", // Orange box
+                padding: "10px 20px",
+                borderRadius: "10px",
+                width: "fit-content",
+                marginBottom: 2,
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "1.1rem",
+                }}
+              >
+                Loan Amount (₹)
+              </Typography>
+            </Box>
             <Slider
               value={loanAmount}
               min={5000}
@@ -149,12 +174,36 @@ const LoanCalculator = () => {
                 height: "8px",
                 color: "#4D4D4E",
                 borderRadius: "5px",
-                ...threeDEffect,
+                "& .MuiSlider-thumb": {
+                  boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2)", // Adding 3D shadow to thumb
+                },
+                "&:hover": {
+                  animation: `${popIn} 0.3s forwards`, // 3D effect on hover
+                },
               }}
             />
 
-            {/* Loan Tenure Slider */}
-            <Typography sx={{ marginBottom: 1 }}>Loan Tenure (Days)</Typography>
+            {/* Loan Tenure Section */}
+            <Box
+              sx={{
+                backgroundColor: "#FFA500", // Orange box
+                padding: "10px 20px",
+                borderRadius: "10px",
+                width: "fit-content",
+                marginBottom: 2,
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "1.1rem",
+                }}
+              >
+                Loan Tenure (Days)
+              </Typography>
+            </Box>
             <Slider
               value={loanTenure}
               min={1}
@@ -170,12 +219,36 @@ const LoanCalculator = () => {
                 height: "8px",
                 color: "#4D4D4E",
                 borderRadius: "5px",
-                ...threeDEffect,
+                "& .MuiSlider-thumb": {
+                  boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2)", // Adding 3D shadow to thumb
+                },
+                "&:hover": {
+                  animation: `${popIn} 0.3s forwards`, // 3D effect on hover
+                },
               }}
             />
 
-            {/* Interest Rate Slider */}
-            <Typography sx={{ marginBottom: 1 }}>Interest Rate (%)</Typography>
+            {/* Interest Rate Section */}
+            <Box
+              sx={{
+                backgroundColor: "#FFA500", // Orange box
+                padding: "10px 20px",
+                borderRadius: "10px",
+                width: "fit-content",
+                marginBottom: 2,
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "1.1rem",
+                }}
+              >
+                Interest Rate (%)
+              </Typography>
+            </Box>
             <Slider
               value={interestRate}
               min={0.5}
@@ -192,70 +265,55 @@ const LoanCalculator = () => {
                 height: "8px",
                 color: "#4D4D4E",
                 borderRadius: "5px",
-                ...threeDEffect,
+                "& .MuiSlider-thumb": {
+                  boxShadow: "0 5px 15px rgba(0, 0, 0, 0.2)", // Adding 3D shadow to thumb
+                },
+                "&:hover": {
+                  animation: `${popIn} 0.3s forwards`, // 3D effect on hover
+                },
               }}
             />
-            {/* Orange Top-Left Corner Styling */}
-            <Box
-              sx={{
-                position: "absolute",
-                top: "-10px",
-                left: "-10px",
-                width: "20px",
-                height: "20px",
-                backgroundColor: "#FFA500", // Orange color
-                clipPath: "polygon(0 0, 100% 0, 0 100%)", // Triangle shape
-              }}
-            ></Box>
-          </Paper>
-        </Grid>
 
-        {/* Right Side - Results */}
-        <Grid item xs={12} md={4}>
-          <Paper
-            elevation={4}
-            sx={{
-              padding: 4,
-              borderRadius: "20px",
-              textAlign: "center",
-              background: "#ffffff",
-              boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <Typography
-              variant="h5"
-              align="center"
-              gutterBottom
-              sx={{ fontWeight: "bold", color: "#444" }}
-            >
-              Total Loan Details
-            </Typography>
+            {/* Calculation Buttons */}
+            <Grid container spacing={3} sx={{ textAlign: "center", marginTop: 3 }}>
+              <Grid item xs={12} sm={6}>
+                <Box sx={{ textAlign: "center", border: "1px solid #ddd", padding: 2, borderRadius: "8px" }}>
+                  <Typography variant="subtitle2" sx={{ marginBottom: 1 }}>Total Loan</Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                      padding: "12px 24px",
+                      fontSize: "1rem",
+                      textTransform: "capitalize",
+                      borderRadius: "20px",
+                    }}
+                    onClick={calculateTotalAmount}
+                  >
+                    ₹{totalAmount.toFixed(2)}
+                  </Button>
+                </Box>
+              </Grid>
 
-            <Box
-              sx={{
-                marginTop: 2,
-                padding: 3,
-                borderRadius: "20px",
-                backgroundColor: "#f8f9fa",
-                boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              <Typography
-                variant="h6"
-                align="center"
-                gutterBottom
-                sx={{ color: "#555" }}
-              >
-                Total Amount Payable: ₹{totalAmount}
-              </Typography>
-              <Typography
-                variant="h6"
-                align="center"
-                sx={{ color: "#555" }}
-              >
-                Daily Payment: ₹{dailyPayment}
-              </Typography>
-            </Box>
+              <Grid item xs={12} sm={6}>
+                <Box sx={{ textAlign: "center", border: "1px solid #ddd", padding: 2, borderRadius: "8px" }}>
+                  <Typography variant="subtitle2" sx={{ marginBottom: 1 }}>Daily Payment</Typography>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    sx={{
+                      padding: "12px 24px",
+                      fontSize: "1rem",
+                      textTransform: "capitalize",
+                      borderRadius: "20px",
+                    }}
+                    onClick={calculateDailyPayment}
+                  >
+                    ₹{dailyPayment}
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
           </Paper>
         </Grid>
       </Grid>

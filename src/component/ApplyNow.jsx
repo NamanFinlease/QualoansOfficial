@@ -295,7 +295,7 @@ const ApplyNow = () => {
 
       Swal.fire({
         title: 'Success!',
-        text: 'Our executive will call you or revert you shortly .111111',
+        text: 'Our executive will call you or revert you shortly.',
         icon: 'success',
         confirmButtonText: 'OK',
       });

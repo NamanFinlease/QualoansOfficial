@@ -5,9 +5,32 @@ import {
   Typography,
   Box,
   CircularProgress,
+  keyframes,
 } from "@mui/material";
 import axios from "axios";
-import loginImage from "../assets/image/Home-Page-QUA.jpg"; // Adjust the path based on your project structure
+import loginImage from "../assets/image/Our-Mission.jpg"; // Adjust the path based on your project structure
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
 
 const LoginForm = () => {
   const [aadhaar, setAadhaar] = useState("");
@@ -44,12 +67,16 @@ const LoginForm = () => {
       const response = await axios.post(`${apiBaseUrl}/send-otp`, { aadhaar });
       if (response.data.success) {
         setOtpSent(true);
-        setSuccessMessage("OTP sent successfully to your Aadhaar-linked mobile number.");
+        setSuccessMessage(
+          "OTP sent successfully to your Aadhaar-linked mobile number."
+        );
       } else {
         setErrorMessage(response.data.message || "Failed to send OTP.");
       }
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || "An error occurred while sending OTP.");
+      setErrorMessage(
+        error.response?.data?.message || "An error occurred while sending OTP."
+      );
     }
     setLoading(false);
   };
@@ -65,7 +92,9 @@ const LoginForm = () => {
         setErrorMessage(response.data.message || "Failed to resend OTP.");
       }
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || "An error occurred while resending OTP.");
+      setErrorMessage(
+        error.response?.data?.message || "An error occurred while resending OTP."
+      );
     }
     setLoading(false);
   };
@@ -74,14 +103,19 @@ const LoginForm = () => {
     setLoading(true);
     setErrorMessage("");
     try {
-      const response = await axios.post(`${apiBaseUrl}/verify-otp`, { aadhaar, otp });
+      const response = await axios.post(`${apiBaseUrl}/verify-otp`, {
+        aadhaar,
+        otp,
+      });
       if (response.data.success) {
         setSuccessMessage("OTP verified successfully. You are logged in!");
       } else {
         setErrorMessage(response.data.message || "Invalid OTP. Please try again.");
       }
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || "An error occurred while verifying OTP.");
+      setErrorMessage(
+        error.response?.data?.message || "An error occurred while verifying OTP."
+      );
     }
     setLoading(false);
   };
@@ -96,11 +130,12 @@ const LoginForm = () => {
         boxShadow: 4,
         borderRadius: 3,
         padding: 4,
-        backgroundColor: '#f9f9f9',
+        backgroundColor: "#ffffff",
         maxWidth: "900px",
         margin: "auto",
         mt: 8,
-        mb:8
+        mb: 8,
+        animation: `${fadeIn} 0.8s ease-in-out`,
       }}
     >
       <Box
@@ -108,23 +143,31 @@ const LoginForm = () => {
         src={loginImage}
         alt="Login Illustration"
         sx={{
-            
           width: { xs: "100%", md: "50%" },
           borderRadius: 2,
           boxShadow: 3,
           marginBottom: { xs: 3, md: 0 },
+          animation: `${slideIn} 1s ease-in-out`,
         }}
       />
       <Box
         sx={{
-          padding: 3,
+          padding: 5,
           borderRadius: 2,
           textAlign: "center",
           backgroundColor: "#f9f9f9",
           width: { xs: "100%", md: "50%" },
+          animation: `${fadeIn} 1.2s ease-in-out`,
         }}
       >
-        <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold", color: "#1976d2" }}>
+        <Typography
+          variant="h5"
+          sx={{
+            mb: 3,
+            fontWeight: "bold",
+            color: "#4D4D4E",
+          }}
+        >
           Login with Aadhaar
         </Typography>
         {!otpSent ? (
@@ -145,7 +188,13 @@ const LoginForm = () => {
               fullWidth
               onClick={sendOtp}
               disabled={!aadhaar || loading}
-              sx={{ py: 1.5 }}
+              sx={{
+                py: 1.5,
+                transition: "all 0.3s ease-in-out",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                },
+              }}
             >
               {loading ? <CircularProgress size={24} /> : "Send OTP"}
             </Button>
@@ -165,7 +214,13 @@ const LoginForm = () => {
               fullWidth
               onClick={verifyOtp}
               disabled={!otp || loading}
-              sx={{ py: 1.5 }}
+              sx={{
+                py: 1.5,
+                transition: "all 0.3s ease-in-out",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                },
+              }}
             >
               {loading ? <CircularProgress size={24} /> : "Verify OTP"}
             </Button>
@@ -174,7 +229,13 @@ const LoginForm = () => {
               color="secondary"
               fullWidth
               onClick={resendOtp}
-              sx={{ mt: 1 }}
+              sx={{
+                mt: 1,
+                transition: "all 0.3s ease-in-out",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                },
+              }}
               disabled={loading}
             >
               Resend OTP
@@ -182,12 +243,24 @@ const LoginForm = () => {
           </>
         )}
         {errorMessage && (
-          <Typography color="error" sx={{ mt: 2 }}>
+          <Typography
+            color="error"
+            sx={{
+              mt: 2,
+              animation: `${fadeIn} 0.5s ease-in-out`,
+            }}
+          >
             {errorMessage}
           </Typography>
         )}
         {successMessage && (
-          <Typography color="primary" sx={{ mt: 2 }}>
+          <Typography
+            color="primary"
+            sx={{
+              mt: 2,
+              animation: `${fadeIn} 0.5s ease-in-out`,
+            }}
+          >
             {successMessage}
           </Typography>
         )}

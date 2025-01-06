@@ -15,12 +15,19 @@ import RepayLoan from './component/RepayLoan';
 import Footer from './component/Footer';
 import FAQs from './component/FAQs';
 import LoanCalculator from './component/LoanCalculator';
+import LoginForm from './component/LoginForm';
+import Dashboard from './component/Dashboard';
+import RegistrationSteps from './component/RegistrationSteps';
+import PersonalInfoPage from './component/PersonalInfoPage';
+import Navbar from './navbar/Navbar';
+import LoanApplication from './component/LoanApplication';
+import Calculator from './component/Calculator';
+import OurJourney from './component/OurJourney';
 // import Navbar from "./navbar/NavBar"
 
 function App() {
   return (
     <Router>
-      <Header /> {/* If you want Header to be shown on all pages */}
       {/* <Navbar /> */}
       
       <Routes>
@@ -34,11 +41,21 @@ function App() {
         <Route path='/repay-now' element={<RepayLoan/>}/>
         <Route path='/fqa' element={<FAQs/>}/>
         <Route path='/calculator' element={<LoanCalculator/>}/>
+        <Route path='/login-form' element={<LoginForm/>}/>
+        <Route path='/navbar' element={<Navbar/>}/>
+        <Route path='/dashboard' element={<Dashboard/>}/>
+       
+        <Route path='/registration' element={<RegistrationSteps/>}/>
+        <Route path='/personal-info' element={<PersonalInfoPage/>}/>
+        <Route path='/laon-application' element={<LoanApplication/>}/>
+        <Route path='/calculator-loan' element={<Calculator/>}/>
+        <Route path='/ourjourney' element={<OurJourney/>}/>
       </Routes>
       <Footer />
     </Router>
 
   );
 }
+
 
 export default App;

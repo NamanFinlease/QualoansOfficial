@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { keyframes } from '@mui/system';
+import Header from '../navbar/Header';
 
 const FAQs = () => {
     // Animation for lines coming in one by one
@@ -25,6 +26,8 @@ const FAQs = () => {
     `;
 
     return (
+        <>
+        <Header/>
         <Box
             sx={{
                 padding: 4,
@@ -193,6 +196,7 @@ const FAQs = () => {
                 </Paper>
             </Box>
         </Box>
+        </>
     );
 };
 
