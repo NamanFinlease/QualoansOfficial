@@ -440,7 +440,6 @@ const LoanApplication = () => {
       </Grid>
     </Grid>
   
-    {/* Steps Section */}
    {/* Steps Section */}
 <Box sx={{ padding: 2 }}>
   <Grid container spacing={3}>

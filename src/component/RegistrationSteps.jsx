@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import {
-    Grid,
+  Grid,
   Box,
   Typography,
   LinearProgress,
   IconButton,
   Modal,
-  TextField,    
+  TextField,
   Button,
   useTheme,
 } from "@mui/material";
@@ -21,16 +21,17 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { address } from "framer-motion/client";
-import { BASE_URL } from '../baseURL';
+import { BASE_URL } from "../baseURL";
 import Dashboard from "./Dashboard";
+import DashboardProgress from "./DashboardProgress";
 
 const MySwal = withReactContent(Swal);
 
 const RegistrationSteps = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-const [sidebarOpen, setSidebarOpen] = useState(true);
-  
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
   const [progress, setProgress] = useState(0);
   const [completedSteps, setCompletedSteps] = useState({
     pan: false,
@@ -40,17 +41,42 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
     selfie: false,
     mobile: false,
   });
+
   const [openModal, setOpenModal] = useState(false);
   const [formValues, setFormValues] = useState({ pan: "", mobile: "" });
   const [error, setError] = useState("");
   const [isFetching, setIsFetching] = useState(false);
+  const [registrationStatus, setRegistrationStatus] = useState("");
+
+  useEffect(() => {
+    const fetchDashboardDetails = async () => {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/api/user/getDashboardDetails`
+        );
+        const data = await response.json();
+        if (data.success) {
+          setRegistrationStatus(data.registrationStatus);
+        }
+      } catch (error) {
+        console.error("Error fetching dashboard details:", error);
+      }
+    };
+
+    fetchDashboardDetails();
+  }, []);
 
   const handleCompleteStep = (step) => {
     if (step === "pan") {
       setOpenModal(true);
     } else if (!completedSteps[step]) {
+      // Mark the step as completed
       setCompletedSteps((prev) => ({ ...prev, [step]: true }));
-      setProgress((prev) => (prev === 100 ? 100 : prev + 20));
+
+      // Update the progress
+      const completedCount =
+        Object.values(completedSteps).filter(Boolean).length;
+      setProgress((completedCount + 1) * (100 / 6)); // Update progress percentage
     }
     if (step === "personal") {
       showPersonalInfoForm(); // Trigger the personal info modal
@@ -67,6 +93,8 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
   };
 
   const handleSubmitPan = async () => {
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZiYTg5N2EyOGYwMWE2YjM1MjdjYyIsImlhdCI6MTczNjI1Mjc4MSwiZXhwIjoxNzM4ODQ0NzgxfQ.BC5jt4Whb5S8jBQwDr0gPYV3SjtPuUw6QDjzTDz02h0";
     const panFormat = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
     if (!panFormat.test(formValues.pan)) {
       setError("Invalid PAN card format.");
@@ -77,23 +105,45 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
     setError("");
 
     try {
-      const response = await fetch("https://api.example.com/validate-pan", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ pan: formValues.pan }),
-      });
+      console.log("PAN:", formValues.pan);
 
+      const response = await fetch(
+        `http://localhost:8081/api/verify/verifyPAN/${formValues.pan}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ pan: formValues.pan }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("API Error:", errorData);
+        setError(errorData.message || "Error validating PAN.");
+        return;
+      }
+
+      // Await the resolved JSON data
       const data = await response.json();
-      if (response.ok && data.valid) {
+
+      console.log("Resolved Data:", data);
+
+      // Properly handle resolved `data`
+      if (data || data.pan || data.pan.length >= 1) {
+        console.log("Data passed the condition:", data);
         setCompletedSteps((prev) => ({ ...prev, pan: true }));
-        setProgress((prev) => (prev === 100 ? 100 : prev + 20));
+        setProgress((prev) => (prev === 100 ? 100 : prev + 16.67)); // 16.67% per step
         handleCloseModal();
       } else {
-        setError(data.message || "Invalid PAN card number.");
+        console.log("data <<<>>>", data);
+
+        setError("PAN data is incomplete or invalid.");
       }
     } catch (err) {
+      console.error("Request Error:", err);
       setError("Error validating PAN. Please try again.");
     } finally {
       setIsFetching(false);
@@ -143,51 +193,60 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
         const email = Swal.getPopup().querySelector("#email").value;
         const dob = Swal.getPopup().querySelector("#dob").value;
         const gender = Swal.getPopup().querySelector("#gender").value;
-        const maritalStatus = Swal.getPopup().querySelector("#maritalStatus").value;
+        const maritalStatus =
+          Swal.getPopup().querySelector("#maritalStatus").value;
         const spouseName = Swal.getPopup().querySelector("#spouseName").value;
-  
+
         // Validation
         if (!fullName || !email || !dob || !gender || !maritalStatus) {
           Swal.showValidationMessage("Please fill out all fields.");
           return false;
         }
-  
+
         // Name validation (letters only)
         if (!/^[a-zA-Z\s]+$/.test(fullName)) {
-          Swal.showValidationMessage("Please enter a valid name with letters only.");
+          Swal.showValidationMessage(
+            "Please enter a valid name with letters only."
+          );
           return false;
         }
-  
+
         // DOB validation: Age between 18 and 60
         const today = new Date();
         const birthDate = new Date(dob);
         const age = today.getFullYear() - birthDate.getFullYear();
         const m = today.getMonth() - birthDate.getMonth();
-        if (age < 18 || age > 60 || (age === 18 && m < 0) || (age === 60 && m > 0)) {
+        if (
+          age < 18 ||
+          age > 60 ||
+          (age === 18 && m < 0) ||
+          (age === 60 && m > 0)
+        ) {
           Swal.showValidationMessage("Age must be between 18 and 60.");
           return false;
         }
-  
+
         // Email validation (proper format)
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
         if (!emailRegex.test(email)) {
           Swal.showValidationMessage("Please enter a valid email.");
           return false;
         }
-  
+
         // If married, spouse name is required
         if (maritalStatus === "married" && !spouseName) {
           Swal.showValidationMessage("Please enter your spouse's name.");
           return false;
         }
-  
+
         // Return the form data
         return { fullName, email, dob, gender, maritalStatus, spouseName };
       },
       didOpen: () => {
-        const maritalStatusSelect = Swal.getPopup().querySelector("#maritalStatus");
+        const maritalStatusSelect =
+          Swal.getPopup().querySelector("#maritalStatus");
         const spouseNameField = Swal.getPopup().querySelector("#spouseName");
-  
+
         // Show spouse name field if marital status is "married"
         maritalStatusSelect.addEventListener("change", () => {
           if (maritalStatusSelect.value === "married") {
@@ -196,16 +255,16 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
             spouseNameField.style.display = "none";
           }
         });
-  
+
         // Adjust the popup size and prevent overflow
         Swal.getPopup().style.overflow = "hidden";
-        Swal.getPopup().style.maxHeight = "100%";  // Make sure the height is constrained to fit content
+        Swal.getPopup().style.maxHeight = "100%"; // Make sure the height is constrained to fit content
       },
     }).then((result) => {
       if (result.isConfirmed) {
         setCompletedSteps((prev) => ({ ...prev, personal: true }));
         setProgress((prev) => (prev === 100 ? 100 : prev + 20));
-  
+
         // Example API call on form submission
         const apiData = {
           fullName: result.value.fullName,
@@ -215,7 +274,7 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
           maritalStatus: result.value.maritalStatus,
           spouseName: result.value.spouseName || "",
         };
-  
+
         // API call (replace with your actual API call)
         fetch(`${BASE_URL}/api/verify/mobile/get-otp`, {
           method: "POST",
@@ -227,18 +286,20 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
           .then((response) => response.json())
           .then((data) => {
             console.log("API Response: ", data);
-            handleMobileVerification();  // Proceed to next step
+            handleMobileVerification(); // Proceed to next step
           })
           .catch((error) => {
             console.error("Error submitting data:", error);
-            Swal.fire("Error", "There was an error submitting your details. Please try again.", "error");
+            Swal.fire(
+              "Error",
+              "There was an error submitting your details. Please try again.",
+              "error"
+            );
           });
       }
     });
   };
-  
 
-  
   const showAddressInfoForm = () => {
     MySwal.fire({
       title: "Current Resident Address",
@@ -266,20 +327,20 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
         const pincode = Swal.getPopup().querySelector("#pincode").value;
         const city = Swal.getPopup().querySelector("#city").value;
         const state = Swal.getPopup().querySelector("#state").value;
-  
+
         // Validation
         if (!address || !landmark || !pincode || !city || !state) {
           Swal.showValidationMessage("Please fill out all fields.");
           return false;
         }
-  
+
         // Return the form data
         return { address, landmark, pincode, city, state };
       },
     }).then((result) => {
       if (result.isConfirmed) {
         const { address, landmark, pincode, city, state } = result.value;
-  
+
         setFormValues((prev) => ({
           ...prev,
           address,
@@ -288,13 +349,13 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
           city,
           state,
         }));
-  
+
         setCompletedSteps((prev) => ({ ...prev, address: true }));
         setProgress((prev) => (prev === 100 ? 100 : prev + 20));
-  
+
         // Example API call on form submission
         const apiData = { address, landmark, pincode, city, state };
-  
+
         // API call (replace with your actual API call)
         fetch("/api/submitAddressInfo", {
           method: "POST",
@@ -310,12 +371,16 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
           })
           .catch((error) => {
             console.error("Error submitting address data:", error);
-            Swal.fire("Error", "There was an error submitting your address details. Please try again.", "error");
+            Swal.fire(
+              "Error",
+              "There was an error submitting your address details. Please try again.",
+              "error"
+            );
           });
       }
     });
   };
-  
+
   const showIncomeInfoForm = () => {
     MySwal.fire({
       title: "<h2 style='color: #FFA500;'>Income Information</h2>", // Orange title
@@ -495,32 +560,51 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
       confirmButtonText: "Submit",
       confirmButtonColor: "#FFA500", // Orange button
       preConfirm: () => {
-        const employeeType = Swal.getPopup().querySelector("#employeeType").value;
+        const employeeType =
+          Swal.getPopup().querySelector("#employeeType").value;
         const netIncome = Swal.getPopup().querySelector("#netIncome").value;
         const loanAmount = Swal.getPopup().querySelector("#loanAmount").value;
-        const nextSalaryDate = Swal.getPopup().querySelector("#nextSalaryDate").value;
-        const incomeMode = Swal.getPopup().querySelector('input[name="incomeMode"]:checked')?.value;
-  
-        if (!employeeType || !netIncome || !loanAmount || !nextSalaryDate || !incomeMode) {
+        const nextSalaryDate =
+          Swal.getPopup().querySelector("#nextSalaryDate").value;
+        const incomeMode = Swal.getPopup().querySelector(
+          'input[name="incomeMode"]:checked'
+        )?.value;
+
+        if (
+          !employeeType ||
+          !netIncome ||
+          !loanAmount ||
+          !nextSalaryDate ||
+          !incomeMode
+        ) {
           Swal.showValidationMessage("Please fill out all fields.");
           return false;
         }
-        return { employeeType, netIncome, loanAmount, nextSalaryDate, incomeMode };
+        return {
+          employeeType,
+          netIncome,
+          loanAmount,
+          nextSalaryDate,
+          incomeMode,
+        };
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        const { employeeType, netIncome, loanAmount, nextSalaryDate, incomeMode } = result.value;
+        const {
+          employeeType,
+          netIncome,
+          loanAmount,
+          nextSalaryDate,
+          incomeMode,
+        } = result.value;
         // Submit logic
       }
     });
   };
-  
-  
-  
+
   const allStepsCompleted = Object.values(completedSteps).every(
     (step) => step === true
   );
-
 
   const [selfie, setSelfie] = useState(null);
 
@@ -538,9 +622,13 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
 
     try {
       setIsFetching(true);
-      const response = await axios.post("http://localhost:5000/upload-selfie", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.post(
+        "http://localhost:5000/upload-selfie",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       setIsFetching(false);
 
       if (response.data.success) {
@@ -550,11 +638,13 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
       }
     } catch (error) {
       setIsFetching(false);
-      Swal.fire("Error", "An error occurred while uploading the selfie.", "error");
+      Swal.fire(
+        "Error",
+        "An error occurred while uploading the selfie.",
+        "error"
+      );
     }
   };
-
-  
 
   // Function to trigger file selection or open camera for selfie capture
   const handleSelfieCapture = () => {
@@ -573,7 +663,6 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
 
     inputFile.click(); // Open file chooser or camera
   };
-
 
   const handleMobileVerification = () => {
     MySwal.fire({
@@ -603,22 +692,28 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
       preConfirm: (mobile) => {
         const mobileRegex = /^[6-9]\d{9}$/;
         if (!mobile || !mobileRegex.test(mobile)) {
-          Swal.showValidationMessage("Please enter a valid 10-digit mobile number.");
+          Swal.showValidationMessage(
+            "Please enter a valid 10-digit mobile number."
+          );
           return false;
         }
+        
         return mobile; // Return the mobile number for the next step
       },
     }).then((result) => {
       if (result.isConfirmed) {
         const mobile = result.value;
+
+        const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZiYTg5N2EyOGYwMWE2YjM1MjdjYyIsImlhdCI6MTczNjI1Mjc4MSwiZXhwIjoxNzM4ODQ0NzgxfQ.BC5jt4Whb5S8jBQwDr0gPYV3SjtPuUw6QDjzTDz02h0"
   
         // Send OTP API Call
-        fetch("/api/sendOtp", {
+        fetch(`${BASE_URL}/api/verify/mobile/get-otp/${mobile}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+
           },
-          body: JSON.stringify({ mobile }),
         })
           .then((response) => response.json())
           .then((data) => {
@@ -650,7 +745,9 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
                 cancelButtonText: "Resend OTP",
                 preConfirm: (otp) => {
                   if (!otp || otp.length !== 6) {
-                    Swal.showValidationMessage("Please enter a valid 6-digit OTP.");
+                    Swal.showValidationMessage(
+                      "Please enter a valid 6-digit OTP."
+                    );
                     return false;
                   }
                   return otp; // Return OTP for verification
@@ -660,7 +757,7 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
                   const otp = otpResult.value;
   
                   // Verify OTP API Call
-                  fetch("/api/verifyOtp", {
+                  fetch("http://localhost:8081/api/verify/mobile/verify-otp", {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
@@ -670,22 +767,37 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
                     .then((response) => response.json())
                     .then((verifyData) => {
                       if (verifyData.success) {
-                        Swal.fire("Success", "Mobile number verified successfully.", "success");
+                        Swal.fire(
+                          "Success",
+                          "Mobile number verified successfully.",
+                          "success"
+                        );
                         // Update state and progress
                         setFormValues((prev) => ({ ...prev, mobile }));
-                        setCompletedSteps((prev) => ({ ...prev, mobile: true }));
-                        setProgress((prev) => (prev === 100 ? 100 : prev + 20));
+                        setCompletedSteps((prev) => ({
+                          ...prev,
+                          mobile: true,
+                        }));
+                        setProgress((prev) => (prev === 100 ? 100 : prev + 16.67));
                       } else {
-                        Swal.fire("Error", "Invalid OTP. Please try again.", "error");
+                        Swal.fire(
+                          "Error",
+                          "Invalid OTP. Please try again.",
+                          "error"
+                        );
                       }
                     })
                     .catch((error) => {
                       console.error("Error verifying OTP:", error);
-                      Swal.fire("Error", "Failed to verify OTP. Please try again.", "error");
+                      Swal.fire(
+                        "Error",
+                        "Failed to verify OTP. Please try again.",
+                        "error"
+                      );
                     });
                 } else if (otpResult.dismiss === Swal.DismissReason.cancel) {
                   // Resend OTP logic
-                  fetch("/api/sendOtp", {
+                  fetch(`http://localhost:8081/api/verify/mobile/get-otp/${mobile}`, {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
@@ -695,30 +807,49 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
                     .then((response) => response.json())
                     .then((resendData) => {
                       if (resendData.success) {
-                        Swal.fire("Resent", "OTP has been resent to your mobile number.", "info");
+                        Swal.fire(
+                          "Resent",
+                          "OTP has been resent to your mobile number.",
+                          "info"
+                        );
                       } else {
-                        Swal.fire("Error", "Failed to resend OTP. Please try again.", "error");
+                        Swal.fire(
+                          "Error",
+                          "Failed to resend OTP. Please try again.",
+                          "error"
+                        );
                       }
                     })
                     .catch((error) => {
                       console.error("Error resending OTP:", error);
-                      Swal.fire("Error", "Failed to resend OTP. Please try again.", "error");
+                      Swal.fire(
+                        "Error",
+                        "Failed to resend OTP. Please try again.",
+                        "error"
+                      );
                     });
                 }
               });
             } else {
-              Swal.fire("Error", "Failed to send OTP. Please try again.", "error");
+              Swal.fire(
+                "Error",
+                "Failed to send OTP. Please try again.",
+                "error"
+              );
             }
           })
           .catch((error) => {
             console.error("Error sending OTP:", error);
-            Swal.fire("Error", "Failed to send OTP. Please try again.", "error");
+            Swal.fire(
+              "Error",
+              "Failed to send OTP. Please try again.",
+              "error"
+            );
           });
       }
     });
   };
   
-
   const renderStepBox = (icon, title, description, stepKey, onClick) => (
     <Box
       sx={{
@@ -731,13 +862,12 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
         borderColor: completedSteps[stepKey] ? "green" : "#ccc",
         borderRadius: 3,
         margin: 1,
-        width: "30%",
+        width: "30%", // Adjust width for larger screens
         minWidth: 200,
         cursor: "pointer",
         textAlign: "left", // Left align text
-        color: 'white',
+        color: "white",
         backgroundColor: "#4D4D4E",
-  
         boxShadow: completedSteps[stepKey]
           ? "0 4px 8px rgba(0, 128, 0, 0.4)"
           : "0 4px 8px rgba(0, 0, 0, 0.1)",
@@ -746,6 +876,11 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
           backgroundColor: completedSteps[stepKey] ? "#d4f7db" : "#ffcc00",
           transform: "scale(1.05)",
           boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2)",
+        },
+        "@media (max-width: 600px)": {
+          // For mobile responsiveness
+          width: "80%", // Make the step box larger on smaller screens
+          margin: "auto", // Center the boxes
         },
       }}
       onClick={onClick}
@@ -763,81 +898,78 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
           icon
         )}
       </IconButton>
-  
+
       {/* Title below the icon with white color */}
-      <Typography variant="h6" sx={{ fontWeight: 600, marginBottom: 1, color: 'white' }} gutterBottom>
+      <Typography
+        variant="h6"
+        sx={{ fontWeight: 600, marginBottom: 1, color: "white" }}
+        gutterBottom
+      >
         {title}
       </Typography>
-      
+
       {/* Description text */}
       <Typography variant="body2" sx={{ color: "white" }}>
         {description}
       </Typography>
     </Box>
   );
-  
 
   return (
     <>
-    <Dashboard/>
-   
-    <Box
-  sx={{
-    paddingTop: 20,
-    marginLeft: sidebarOpen ? "280px" : "20px",
-    padding: 4,
-    maxWidth: sidebarOpen ? 1000 : 300,
-    margin: "auto",
-    textAlign: "center",
-    border: "2px solid #ccc",
-    borderRadius: 3,
-    boxShadow: 4,
-    background: "linear-gradient(135deg, #f0f4ff, #ffffff)",
-    marginTop: "80px", // Increased value to move the box further down
-    "@media (max-width: 768px)": { // For tablets and mobile devices
-      marginLeft: "20px",
-      padding: 2,
-      maxWidth: "100%",
-    },
-  }}
->
-  <Grid
-    container
-    alignItems="center"
-    justifyContent="space-between"
-    sx={{
-      flexDirection: { xs: "column", sm: "row" }, // Stack vertically on smaller screens
-    }}
-  >
-    <Grid item xs={12} sm={6}>
-      <Typography
-        variant="h4"
+      <Dashboard />
+
+      <Box
         sx={{
-          fontWeight: 700,
-          color: "#4D4D4E",
-          marginBottom: 2,
+          paddingTop: 20,
+          marginLeft: sidebarOpen ? "360px" : "20px", // Adjust margin dynamically based on sidebar state
+          padding: 4,
+          maxWidth: sidebarOpen ? 1000 : 300, // Adjust max width dynamically based on sidebar state
+          margin: "auto",
+          textAlign: "center",
+          border: "2px solid #ccc",
+          borderRadius: 3,
+          boxShadow: 4,
+          background: "linear-gradient(135deg, #f0f4ff, #ffffff)",
+          marginTop: "80px", // Increased value to move the box further down
+          "@media (max-width: 768px)": {
+            // For tablets and mobile devices
+            marginLeft: "20px",
+            padding: 2,
+            maxWidth: "100%", // Full width on smaller devices
+          },
         }}
       >
-        Complete Your Profile Registration
-      </Typography>
-    </Grid>
-    <Grid item xs={12} sm={6}>
-      <Typography
-        variant="body1"
-        sx={{
-          marginBottom: 3,
-          fontStyle: "italic",
-          color: "#555",
-        }}
-      >
-        Your progress: {progress}% completed.
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{
+            flexDirection: { xs: "column", sm: "row" }, // Stack vertically on smaller screens
+          }}
+        >
+          <Grid item xs={12} sm={6}>
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: 700,
+                color: "#4D4D4E",
+                marginBottom: 2,
+              }}
+            >
+              Complete Your Profile Registration
+            </Typography>
+          </Grid>
+          {/* <Grid item xs={12} sm={6}>
+    <Typography variant="body1" sx={{ marginBottom: 3, fontStyle: "italic", color: "#555" }}>
+        Your progress: {Math.floor(progress)}% completed.
       </Typography>
       <LinearProgress
         variant="determinate"
         value={progress}
         sx={{
           marginBottom: 4,
-          height: 10,
+          height: 20,
           borderRadius: 5,
           backgroundColor: "#e0e0e0",
           "& .MuiLinearProgress-bar": {
@@ -845,150 +977,157 @@ const [sidebarOpen, setSidebarOpen] = useState(true);
           },
         }}
       />
-    </Grid>
-  </Grid>
+    </Grid> */}
+          <DashboardProgress registrationStatus={registrationStatus} />
+        </Grid>
 
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "space-around",
-      flexWrap: "wrap",
-      gap: 2, // Adding gap between boxes
-      "@media (max-width: 600px)": { // Stack step boxes on small screens
-        flexDirection: "column",
-        alignItems: "center",
-      },
-    }}
-  >
-    {renderStepBox(
-      <CreditCardIcon />,
-      "PAN Validation",
-      "Enter your PAN number to proceed",
-      "pan",
-      () => handleCompleteStep("pan")
-    )}
-    {renderStepBox(
-      <PersonIcon />,
-      "Personal Info",
-      "Provide your personal information",
-      "personal",
-      () => handleCompleteStep("personal")
-    )}
-    {renderStepBox(
-      <LocationOnIcon />,
-      "Address Info",
-      "Complete your address details",
-      "address",
-      () => showAddressInfoForm("address")
-    )}
-    {renderStepBox(
-      <AccountBalanceWalletIcon />,
-      "Income Info",
-      "Enter your income information",
-      "income",
-      () => showIncomeInfoForm("income")
-    )}
-    {renderStepBox(
-      <CameraAltIcon />,
-      "Selfie Verification",
-      "Upload your selfie",
-      "selfie",
-      () => handleSelfieCapture()
-    )}
-    {renderStepBox(
-      <PhoneIcon />,
-      "Mobile Verification",
-      "Verify your mobile number",
-      "mobile",
-      () => handleCompleteStep("mobile")
-    )}
-  </Box>
-
-  {allStepsCompleted && (
-    <Box
-      sx={{
-        padding: 4,
-        textAlign: "center",
-        backgroundColor: "#e6f9e9",
-        borderRadius: 3,
-        marginTop: 4,
-        boxShadow: "0 4px 8px rgba(0, 128, 0, 0.4)",
-        "@media (max-width: 600px)": {
-          padding: 2,
-        },
-      }}
-    >
-      <Typography variant="h5" sx={{ fontWeight: 600, marginBottom: 2 }}>
-        Congratulations! You've completed all the steps.
-      </Typography>
-      <img
-        src="congratulation-image-url.jpg"
-        alt="Congratulations"
-        style={{
-          maxWidth: "100%",
-          height: "auto",
-          marginBottom: 2,
-        }}
-      />
-      <Button
-        variant="contained"
-        sx={{
-          backgroundColor: theme.palette.primary.main,
-          color: "white",
-        }}
-        onClick={() => navigate("/next-page")}
-      >
-        Continue to Next Page
-      </Button>
-    </Box>
-  )}
-
-  <Modal open={openModal} onClose={handleCloseModal}>
-    <Box
-      sx={{
-        backgroundColor: "white",
-        borderRadius: 4,
-        boxShadow: 24,
-        padding: 3,
-        maxWidth: 400,
-        margin: "auto",
-        marginTop: "20%",
-      }}
-    >
-      <Typography variant="h6" sx={{ marginBottom: 2 }}>
-        Enter your PAN Number
-      </Typography>
-      <TextField
-        label="PAN Number"
-        variant="outlined"
-        fullWidth
-        value={formValues.pan}
-        onChange={handlePanChange}
-        sx={{ marginBottom: 2 }}
-      />
-      {error && (
-        <Typography variant="body2" color="error" sx={{ marginBottom: 2 }}>
-          {error}
-        </Typography>
-      )}
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Button variant="outlined" color="secondary" onClick={handleCloseModal}>
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          onClick={handleSubmitPan}
-          disabled={isFetching}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            flexWrap: "wrap",
+            gap: 2, // Adding gap between boxes
+            "@media (max-width: 600px)": {
+              // Stack step boxes on small screens
+              flexDirection: "column",
+              alignItems: "center",
+            },
+          }}
         >
-          {isFetching ? "Validating..." : "Submit"}
-        </Button>
+          {renderStepBox(
+            <PhoneIcon />,
+            "Mobile Verification",
+            "Verify your mobile number",
+            "mobile",
+            () => handleCompleteStep("mobile")
+          )}
+          {renderStepBox(
+            <CreditCardIcon />,
+            "PAN Validation",
+            "Enter your PAN number to proceed",
+            "pan",
+            () => handleCompleteStep("pan")
+          )}
+          {renderStepBox(
+            <PersonIcon />,
+            "Personal Info",
+            "Provide your personal information",
+            "personal",
+            () => handleCompleteStep("personal")
+          )}
+          {renderStepBox(
+            <LocationOnIcon />,
+            "Address Info",
+            "Complete your address details",
+            "address",
+            () => showAddressInfoForm("address")
+          )}
+          {renderStepBox(
+            <AccountBalanceWalletIcon />,
+            "Income Info",
+            "Enter your income information",
+            "income",
+            () => showIncomeInfoForm("income")
+          )}
+          {renderStepBox(
+            <CameraAltIcon />,
+            "Selfie Verification",
+            "Upload your selfie",
+            "selfie",
+            () => handleSelfieCapture()
+          )}
+        </Box>
+
+        {allStepsCompleted && (
+          <Box
+            sx={{
+              padding: 4,
+              textAlign: "center",
+              backgroundColor: "#e6f9e9",
+              borderRadius: 3,
+              marginTop: 4,
+              boxShadow: "0 4px 8px rgba(0, 128, 0, 0.4)",
+              "@media (max-width: 600px)": {
+                padding: 2,
+              },
+            }}
+          >
+            <Typography variant="h5" sx={{ fontWeight: 600, marginBottom: 2 }}>
+              Congratulations! You've completed all the steps.
+            </Typography>
+            <img
+              src="congratulation-image-url.jpg"
+              alt="Congratulations"
+              style={{
+                maxWidth: "100%",
+                height: "auto",
+                marginBottom: 2,
+              }}
+            />
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                color: "white",
+              }}
+              onClick={() => navigate("/next-page")}
+            >
+              Continue to Next Page
+            </Button>
+          </Box>
+        )}
+
+        <Modal open={openModal} onClose={handleCloseModal}>
+          <Box
+            sx={{
+              backgroundColor: "white",
+              borderRadius: 4,
+              boxShadow: 24,
+              padding: 3,
+              maxWidth: 400,
+              margin: "auto",
+              marginTop: "20%",
+            }}
+          >
+            <Typography variant="h6" sx={{ marginBottom: 2 }}>
+              Enter your PAN Number
+            </Typography>
+            <TextField
+              label="PAN Number"
+              variant="outlined"
+              fullWidth
+              value={formValues.pan}
+              onChange={handlePanChange}
+              sx={{ marginBottom: 2 }}
+            />
+            {error && (
+              <Typography
+                variant="body2"
+                color="error"
+                sx={{ marginBottom: 2 }}
+              >
+                {error}
+              </Typography>
+            )}
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={handleCloseModal}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleSubmitPan}
+                disabled={isFetching}
+              >
+                {isFetching ? "Validating..." : "Submit"}
+              </Button>
+            </Box>
+          </Box>
+        </Modal>
       </Box>
-    </Box>
-  </Modal>
-</Box>
-
-
-
     </>
   );
 };

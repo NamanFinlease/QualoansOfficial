@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link for navigation
+import { Link, useLocation } from "react-router-dom"; // Import useLocation for active route handling
 
 import {
   Box,
@@ -21,10 +21,11 @@ import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import logo from "../assets/image/White.webp"; // Adjust the path to your logo image
 
 const Dashboard = ({ profileImageUrl, name }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [selectedOption, setSelectedOption] = useState("Dashboard");
+  const location = useLocation(); // Get the current location
 
   const options = [
     { text: "Dashboard", icon: <DashboardIcon />, link: "/ourjourney" },
@@ -34,19 +35,16 @@ const Dashboard = ({ profileImageUrl, name }) => {
     { text: "Logout", icon: <LogoutIcon />, link: "/logout" },
   ];
 
-  const handleOptionClick = (option) => {
-    setSelectedOption(option);
-  };
-
   return (
-    <Box sx={{ display: "flex", overflow: "hidden", flexDirection: "column", backgroundColor: '#f9f9f9' }}>
+    <Box sx={{ display: "flex", overflow: "hidden", flexDirection: "column", backgroundColor: "#f9f9f9" }}>
       {/* Navbar */}
       <AppBar position="fixed" sx={{ backgroundColor: "#4D4D4E", color: "#fff", boxShadow: "none", height: "64px", zIndex: 1201 }}>
         <Toolbar>
           <IconButton onClick={() => setSidebarOpen(!sidebarOpen)} sx={{ color: "white", marginRight: 2 }}>
             {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
           </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>Dashboard</Typography>
+          {/* Logo */}
+          <img src={logo} alt="Logo" style={{ height: 40, marginRight: 16 }} /> {/* Adjust height as needed */}
           <Typography variant="h6" sx={{ marginRight: 2, flexGrow: 1 }}>{name}</Typography>
           <Typography>Hi!!</Typography>
           <Avatar src={profileImageUrl} sx={{ width: 40, height: 40, borderRadius: "50%", marginLeft: "auto" }} />
@@ -60,15 +58,30 @@ const Dashboard = ({ profileImageUrl, name }) => {
           <List>
             {options.map((option, index) => (
               <Link key={index} to={option.link} style={{ textDecoration: "none", color: "inherit" }}>
-                <ListItem button sx={{ "&:hover": { backgroundColor: "#e0e0e0" } }} onClick={() => handleOptionClick(option.text)}>
-                  <ListItemIcon sx={{ color: "#fff" }}>{option.icon}</ListItemIcon>
-                  <ListItemText primary={option.text} sx={{ color: "#fff" }} />
+                <ListItem
+                  button
+                  sx={{
+                    backgroundColor: location.pathname === option.link ? "#e0e0e0" : "transparent",
+                    "&:hover": { backgroundColor: "#d6d6d6" },
+                  }}
+                >
+                  <ListItemIcon sx={{ color: location.pathname === option.link ? "#000" : "#fff" }}>{option.icon}</ListItemIcon>
+                  <ListItemText primary={option.text} sx={{ color: location.pathname === option.link ? "#000" : "#fff" }} />
                 </ListItem>
               </Link>
             ))}
           </List>
         </Box>
       )}
+
+      {/* Main Content */}
+      <Box sx={{ flexGrow: 1, marginTop: "64px", padding: "20px" }}>
+        {location.pathname === "/ourjourney" && (
+          <Typography variant="h4" sx={{ color: "#4D4D4E", textAlign: "center" }}>
+            Welcome to the Dashboard!
+          </Typography>
+        )}
+      </Box>
     </Box>
   );
 };
