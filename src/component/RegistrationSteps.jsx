@@ -13,8 +13,6 @@ import {
   Button,
   useTheme,
 } from "@mui/material";
-import axios from "axios"; // Import axios
-
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PersonIcon from "@mui/icons-material/Person";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -36,13 +34,12 @@ const RegistrationSteps = () => {
 
   const [progress, setProgress] = useState(0);
   const [completedSteps, setCompletedSteps] = useState({
-    mobile: false,
-
     pan: false,
     personal: false,
     address: false,
     income: false,
     selfie: false,
+    mobile: false,
   });
 
   const [openModal, setOpenModal] = useState(false);
@@ -108,7 +105,6 @@ const RegistrationSteps = () => {
     setError("");
 
     try {
-      console.log("PAN:", formValues.pan);
 
       const response = await fetch(
         `${BASE_URL}/api/verify/verifyPAN/${formValues.pan}`,
@@ -132,17 +128,12 @@ const RegistrationSteps = () => {
       // Await the resolved JSON data
       const data = await response.json();
 
-      console.log("Resolved Data:", data);
-
       // Properly handle resolved `data`
       if (data || data.pan || data.pan.length >= 1) {
-        console.log("Data passed the condition:", data);
         setCompletedSteps((prev) => ({ ...prev, pan: true }));
         setProgress((prev) => (prev === 100 ? 100 : prev + 16.67)); // 16.67% per step
         handleCloseModal();
       } else {
-        console.log("data <<<>>>", data);
-
         setError("PAN data is incomplete or invalid.");
       }
     } catch (err) {
@@ -159,127 +150,190 @@ const RegistrationSteps = () => {
   };
 
   const showPersonalInfoForm = () => {
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+
+    fetch(`${BASE_URL}/api/user/getProfileDetails`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch profile details.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data?.success && data?.data?.personalDetails) {
+          const personalDetails = data?.data?.personalDetails;
+          const formattedDob = personalDetails?.dob
+            ?.split("-")
+            .reverse()
+            .join("-");
+
+          MySwal.fire({
+            title: "Share Your Details",
+            html: `
+              <form id="personal-info-form" style="max-height: 400px; overflow: hidden; margin-top: 20px;">
+                <input type="text" id="fullName" class="swal2-input" placeholder="Full Name" value="${
+                  personalDetails?.fullName || ""
+                }" required style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;" readonly/>
+                <input type="email" id="email" class="swal2-input" placeholder="Email ID" value="${
+                  personalDetails?.personalEmail || ""
+                }" required style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;" readonly/>
+                <input type="text" id="dob" class="swal2-input" value="${
+                  personalDetails?.dob || ""
+                }" required style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;" readonly/>
+                <select id="gender" class="swal2-input" required style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;" disabled>
+                  <option value="" disabled ${
+                    !personalDetails?.gender ? "selected" : ""
+                  }>Gender</option>
+                  <option value="M" ${
+                    personalDetails?.gender === "M" ? "selected" : ""
+                  }>Male</option>
+                  <option value="F" ${
+                    personalDetails?.gender === "F" ? "selected" : ""
+                  }>Female</option>
+                  <option value="O" ${
+                    personalDetails?.gender === "O" ? "selected" : ""
+                  }>Other</option>
+                </select>
+                <input type="text" id="spouseName" class="swal2-input" placeholder="Spouse's Name" value="${
+                  personalDetails?.spouseName || ""
+                }" style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;"/>
+              </form>
+            `,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: "Submit",
+            cancelButtonText: "Cancel",
+            background: "#4D4D4E",
+            color: "white",
+            confirmButtonColor: "#FF5733",
+            cancelButtonColor: "#FF6347",
+            preConfirm: () => {
+              const spouseName =
+                Swal.getPopup().querySelector("#spouseName").value;
+
+              return { spouseName };
+            },
+          }).then((result) => {
+            if (result.isConfirmed) {
+              const updatedDetails = {
+                fullName: personalDetails?.fullName,
+                gender: personalDetails?.gender,
+                dob: personalDetails?.dob,
+                personalEmail: personalDetails?.personalEmail,
+                spouseName: result?.value?.spouseName,
+              };
+
+              // Send updated data to the API
+              fetch(`${BASE_URL}/api/user/personalInfo`, {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(updatedDetails),
+              })
+                .then((response) => {
+                  if (!response.ok) {
+                    throw new Error("Failed to update personal details.");
+                  }
+                  return response.json();
+                })
+                .then((responseData) => {
+                  Swal.fire(
+                    "Success",
+                    responseData.message || "Details updated successfully!",
+                    "success"
+                  );
+                })
+                .catch((error) => {
+                  console.error("Error updating personal details:", error);
+                  Swal.fire(
+                    "Error",
+                    "Unable to update your details. Please try again.",
+                    "error"
+                  );
+                });
+            }
+          });
+        } else {
+          throw new Error("Failed to fetch personal details.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching personal details:", error);
+        Swal.fire(
+          "Error",
+          "Unable to fetch your personal details. Please try again.",
+          "error"
+        );
+      });
+  };
+
+  const showAddressInfoForm = () => {
     MySwal.fire({
-      title: "Share Your Details",
+      title: "Current Resident Address",
       html: `
-  <form id="personal-info-form" style="max-height: 400px; overflow: hidden; margin-top: 20px;">
-    <input type="text" id="fullName" class="swal2-input" placeholder="Full Name" required style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;"/>
-    <input type="email" id="email" class="swal2-input" placeholder="Email ID" required style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;"/>
-    <input type="date" id="dob" class="swal2-input" required style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;"/>
-    <select id="gender" class="swal2-input" required style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;">
-      <option value="" disabled selected>Gender</option>
-      <option value="male">Male</option>
-      <option value="female">Female</option>
-      <option value="other">Other</option>
-    </select>
-    <select id="maritalStatus" class="swal2-input" required style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;">
-      <option value="" disabled selected>Marital Status</option>
-      <option value="single">Single</option>
-      <option value="married">Married</option>
-      <option value="divorced">Divorced</option>
-    </select>
-    <input type="text" id="spouseName" class="swal2-input" placeholder="Spouse's Name" style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white; display: none;" />
-  </form>
+        <form id="address-info-form" style="max-height: none; overflow: hidden;">
+          <input type="text" id="address" class="swal2-input" placeholder="Address" required style="width: 90%;" />
+          <input type="text" id="landmark" class="swal2-input" placeholder="Landmark" style="width: 90%;" />
+          <input type="text" id="pincode" class="swal2-input" placeholder="Pincode" style="width: 90%;" />
+          <input type="text" id="city" class="swal2-input" placeholder="City" required style="width: 90%;" />
+          <input type="text" id="state" class="swal2-input" placeholder="State" required style="width: 90%;" />
+        </form>
       `,
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Submit",
       cancelButtonText: "Cancel",
-      background: "#4D4D4E", // Set the background color for the popup
-      color: "white", // Set the text color to white for readability
-      confirmButtonColor: "#FF5733", // Orange color for submit button
-      cancelButtonColor: "#FF6347", // Tomato color for cancel button
-      confirmButtonText: `<span style="color: white;">Submit</span>`,
-      cancelButtonText: `<span style="color: white;">Cancel</span>`,
+      // Customizing the button and background colors
+      background: "#4D4D4E", // Dark background for the modal
+      color: "white", // Text color
+      confirmButtonColor: "#FFA500", // Orange color for the submit button
+      cancelButtonColor: "#FF6347", // Red color for the cancel button
       preConfirm: () => {
-        const fullName = Swal.getPopup().querySelector("#fullName").value;
-        const email = Swal.getPopup().querySelector("#email").value;
-        const dob = Swal.getPopup().querySelector("#dob").value;
-        const gender = Swal.getPopup().querySelector("#gender").value;
-        const maritalStatus =
-          Swal.getPopup().querySelector("#maritalStatus").value;
-        const spouseName = Swal.getPopup().querySelector("#spouseName").value;
+        const address = Swal.getPopup().querySelector("#address").value;
+        const landmark = Swal.getPopup().querySelector("#landmark").value;
+        const pincode = Swal.getPopup().querySelector("#pincode").value;
+        const city = Swal.getPopup().querySelector("#city").value;
+        const state = Swal.getPopup().querySelector("#state").value;
 
         // Validation
-        if (!fullName || !email || !dob || !gender || !maritalStatus) {
+        if (!address || !landmark || !pincode || !city || !state) {
           Swal.showValidationMessage("Please fill out all fields.");
           return false;
         }
 
-        // Name validation (letters only)
-        if (!/^[a-zA-Z\s]+$/.test(fullName)) {
-          Swal.showValidationMessage(
-            "Please enter a valid name with letters only."
-          );
-          return false;
-        }
-
-        // DOB validation: Age between 18 and 60
-        const today = new Date();
-        const birthDate = new Date(dob);
-        const age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (
-          age < 18 ||
-          age > 60 ||
-          (age === 18 && m < 0) ||
-          (age === 60 && m > 0)
-        ) {
-          Swal.showValidationMessage("Age must be between 18 and 60.");
-          return false;
-        }
-
-        // Email validation (proper format)
-        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        if (!emailRegex.test(email)) {
-          Swal.showValidationMessage("Please enter a valid email.");
-          return false;
-        }
-
-        // If married, spouse name is required
-        if (maritalStatus === "married" && !spouseName) {
-          Swal.showValidationMessage("Please enter your spouse's name.");
-          return false;
-        }
-
         // Return the form data
-        return { fullName, email, dob, gender, maritalStatus, spouseName };
-      },
-      didOpen: () => {
-        const maritalStatusSelect =
-          Swal.getPopup().querySelector("#maritalStatus");
-        const spouseNameField = Swal.getPopup().querySelector("#spouseName");
-
-        // Show spouse name field if marital status is "married"
-        maritalStatusSelect.addEventListener("change", () => {
-          if (maritalStatusSelect.value === "married") {
-            spouseNameField.style.display = "block";
-          } else {
-            spouseNameField.style.display = "none";
-          }
-        });
-
-        // Adjust the popup size and prevent overflow
-        Swal.getPopup().style.overflow = "hidden";
-        Swal.getPopup().style.maxHeight = "100%"; // Make sure the height is constrained to fit content
+        return { address, landmark, pincode, city, state };
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        setCompletedSteps((prev) => ({ ...prev, personal: true }));
+        const { address, landmark, pincode, city, state } = result.value;
+
+        setFormValues((prev) => ({
+          ...prev,
+          address,
+          landmark,
+          pincode,
+          city,
+          state,
+        }));
+
+        setCompletedSteps((prev) => ({ ...prev, address: true }));
         setProgress((prev) => (prev === 100 ? 100 : prev + 20));
 
         // Example API call on form submission
-        const apiData = {
-          fullName: result.value.fullName,
-          email: result.value.email,
-          dob: result.value.dob,
-          gender: result.value.gender,
-          maritalStatus: result.value.maritalStatus,
-          spouseName: result.value.spouseName || "",
-        };
+        const apiData = { address, landmark, pincode, city, state };
 
         // API call (replace with your actual API call)
-        fetch(`${BASE_URL}/api/verify/mobile/get-otp`, {
+        fetch("/api/submitAddressInfo", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -288,141 +342,19 @@ const RegistrationSteps = () => {
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log("API Response: ", data);
-            handleMobileVerification(); // Proceed to next step
+            // Proceed to next step
           })
           .catch((error) => {
-            console.error("Error submitting data:", error);
+            console.error("Error submitting address data:", error);
             Swal.fire(
               "Error",
-              "There was an error submitting your details. Please try again.",
+              "There was an error submitting your address details. Please try again.",
               "error"
             );
           });
       }
     });
   };
-
-  const showAddressInfoForm = () => {
-    MySwal.fire({
-      title: "Current Resident Address",
-      html: `
-      <form id="address-info-form" style="max-height: none; overflow: hidden; width: 80%; margin: 0 auto;">
-        <input type="text" id="address" class="swal2-input" placeholder="Address" required style="width: 100%; padding: 5px; height: 30px; border: 1px solid #FFA500; border-radius: 5px;" />
-        <input type="text" id="landmark" class="swal2-input" placeholder="Landmark" style="width: 100%; padding: 5px; height: 30px; border: 1px solid #FFA500; border-radius: 5px;" />
-        <input type="text" id="pincode" class="swal2-input" placeholder="Pincode" style="width: 100%; padding: 5px; height: 30px; border: 1px solid #FFA500; border-radius: 5px;" />
-        <input type="text" id="city" class="swal2-input" placeholder="City" required style="width: 100%; padding: 5px; height: 30px; border: 1px solid #FFA500; border-radius: 5px;" />
-        <input type="text" id="state" class="swal2-input" placeholder="State" required style="width: 100%; padding: 5px; height: 30px; border: 1px solid #FFA500; border-radius: 5px;" />
-        <select id="residenceType" class="swal2-input" required style="width: 100%; padding: 8px; height: 35px; background-color: #4D4D4E; color: white; border: 1px solid #FFA500; border-radius: 5px; font-size: 16px; font-weight: bold;">
-          <option value="" disabled selected>Select Residence Type</option>
-          <option value="OWNED" style="background-color: #4D4D4E;">OWNED</option>
-          <option value="RENTED" style="background-color: #4D4D4E;">RENTED</option>
-          <option value="PARENTAL" style="background-color: #4D4D4E;">PARENTAL</option>
-          <option value="COMPANY PROVIDED" style="background-color: #4D4D4E;">COMPANY PROVIDED</option>
-          <option value="OTHERS" style="background-color: #4D4D4E;">OTHERS</option>
-        </select>
-      </form>`,
-      focusConfirm: false,
-      showCancelButton: true,
-      confirmButtonText: "Submit",
-      cancelButtonText: "Cancel",
-      background: "#4D4D4E",
-      color: "white",
-      confirmButtonColor: "#FFA500",
-      cancelButtonColor: "gray",
-      preConfirm: () => {
-        const address = Swal.getPopup().querySelector("#address").value;
-        const landmark = Swal.getPopup().querySelector("#landmark").value;
-        const pincode = Swal.getPopup().querySelector("#pincode").value;
-        const city = Swal.getPopup().querySelector("#city").value;
-        const state = Swal.getPopup().querySelector("#state").value;
-        const residenceType = Swal.getPopup().querySelector("#residenceType").value;
-  
-        // Validation
-        if (!address || !landmark || !pincode || !city || !state || !residenceType) {
-          Swal.showValidationMessage("Please fill out all fields.");
-          return false;
-        }
-  
-        return { address, landmark, pincode, city, state, residenceType };
-      },
-      customClass: {
-        popup: 'custom-popup',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const { address, landmark, pincode, city, state, residenceType } = result.value;
-  
-        setFormValues((prev) => ({
-          ...prev,
-          address,
-          landmark,
-          pincode,
-          city,
-          state,
-          residenceType,
-        }));
-  
-        setCompletedSteps((prev) => ({ ...prev, address: true }));
-        setProgress((prev) => (prev === 100 ? 100 : prev + 16.67));
-  
-        // Example API call on form submission
-        const apiData = {
-          address,
-          landmark,
-          pincode,
-          city,
-          state,
-          residenceType,
-        };
-  
-        // Ensure BASE_URL and token are defined
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";  // Make sure to get this from the session or state
-  
-        if (!token) {
-          Swal.fire("Error", "Authorization token is missing.", "error");
-          return;
-        }
-
-        // API call with the new endpoint
-        fetch(`${BASE_URL}/api/user/currentResidence`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          
-          body: JSON.stringify({
-            address,
-            landmark,
-            pincode,
-            state,
-            city,
-            residenceType
-          }),
-          
-        } )
-          .then((response) => response.json())
-          .then((data) => {
-
-            
-            if (data && data) {
-              console.log("API Response: ", data);
-              // Proceed to next step or show success message
-              Swal.fire("Success", "Your address has been updated successfully!", "success");
-            } else {
-              Swal.fire("Error", "There was an error submitting your address details. Please try again.", "error");
-            }
-          })
-          .catch((error) => {
-            console.error("Error submitting address data:", error);
-            Swal.fire("Error", "There was an error submitting your address details. Please try again.", "error");
-          });
-      }
-    });
-  };
-  
-  
 
   const showIncomeInfoForm = () => {
     MySwal.fire({
@@ -505,25 +437,23 @@ const RegistrationSteps = () => {
             " 
           />
   
-                <input 
-          type="date" 
-          id="nextSalaryDate" 
-          class="swal2-input" 
-          style="
-            width: 90%; 
-            padding: 10px; 
-            font-size: 16px; 
-            border-radius: 8px; 
-            border: 1px solid #555; 
-            margin-bottom: 20px; 
-            background-color: #3B3E44; 
-            color: #A9A9A9; /* Placeholder effect */
-          " 
-          placeholder="Next Salary Date" 
-          onfocus="this.style.color='white'" 
-          onblur="if(!this.value) this.style.color='#A9A9A9';"
-        />
-
+          <input 
+            type="date" 
+            id="nextSalaryDate" 
+            class="swal2-input" 
+            placeholder="Next Salary Date" 
+            required 
+            style="
+              width: 90%; 
+              padding: 10px; 
+              font-size: 16px; 
+              border-radius: 8px; 
+              border: 1px solid #555; 
+              margin-bottom: 20px; 
+              background-color: #3B3E44; 
+              color: white;
+            " 
+          />
   
           <label 
             style="
@@ -605,10 +535,10 @@ const RegistrationSteps = () => {
       confirmButtonText: "Submit",
       confirmButtonColor: "#FFA500", // Orange button
       preConfirm: () => {
-        const employementType =
+        const employeeType =
           Swal.getPopup().querySelector("#employeeType").value;
-        const monthlyIncome = Swal.getPopup().querySelector("#netIncome").value;
-        const obligations = Swal.getPopup().querySelector("#loanAmount").value;
+        const netIncome = Swal.getPopup().querySelector("#netIncome").value;
+        const loanAmount = Swal.getPopup().querySelector("#loanAmount").value;
         const nextSalaryDate =
           Swal.getPopup().querySelector("#nextSalaryDate").value;
         const incomeMode = Swal.getPopup().querySelector(
@@ -616,9 +546,9 @@ const RegistrationSteps = () => {
         )?.value;
 
         if (
-          !employementType ||
-          !monthlyIncome ||
-          !obligations ||
+          !employeeType ||
+          !netIncome ||
+          !loanAmount ||
           !nextSalaryDate ||
           !incomeMode
         ) {
@@ -626,9 +556,9 @@ const RegistrationSteps = () => {
           return false;
         }
         return {
-          employementType,
-          monthlyIncome,
-          obligations,
+          employeeType,
+          netIncome,
+          loanAmount,
           nextSalaryDate,
           incomeMode,
         };
@@ -636,57 +566,13 @@ const RegistrationSteps = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         const {
-          employementType,
-          monthlyIncome,
-          obligations,
+          employeeType,
+          netIncome,
+          loanAmount,
           nextSalaryDate,
           incomeMode,
         } = result.value;
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
-        // Make the PATCH API call
-        fetch(`${BASE_URL}/api/user/addIncomeDetails`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-
-          body: JSON.stringify({
-            employementType,
-            monthlyIncome,
-            obligations,
-            nextSalaryDate,
-            incomeMode,
-          }),
-        })
-          .then((response) => {
-            console.log(response);
-
-            if (!response.ok) {
-              throw new Error("Failed to submit income details.");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            // Handle successful response
-            MySwal.fire({
-              icon: "success",
-              title: "Success",
-              text: "Income details added successfully!",
-            });
-            setCompletedSteps((prev) => ({ ...prev, income: true }));
-            setProgress((prev) => (prev === 100 ? 100 : prev + 16.67));
-          })
-
-          .catch((error) => {
-            // Handle error response
-            MySwal.fire({
-              icon: "error",
-              title: "Error",
-              text: error.message,
-            });
-          });
+        // Submit logic
       }
     });
   };
@@ -694,30 +580,10 @@ const RegistrationSteps = () => {
   const allStepsCompleted = Object.values(completedSteps).every(
     (step) => step === true
   );
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI"; // Use a dynamic token if needed
 
-  const [profileImage, setProfileImage] = useState(null);
+  const [selfie, setSelfie] = useState(null);
 
   // Function to handle the selfie upload
-  const handleSelfieCapture = () => {
-    const inputFile = document.createElement("input");
-    inputFile.type = "file";
-    inputFile.accept = "image/*";
-    inputFile.capture = "camera";
-
-    inputFile.onchange = (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        setProfileImage(file);
-        handleSelfieUpload(file);
-      }
-    };
-
-    inputFile.click();
-  };
-
-  // Handle selfie upload to the backend
   const handleSelfieUpload = (fileData) => {
     if (fileData) {
       uploadSelfieToBackend(fileData);
@@ -727,51 +593,52 @@ const RegistrationSteps = () => {
   // Function to upload the selfie to the backend
   const uploadSelfieToBackend = async (fileData) => {
     const formData = new FormData();
-    formData.append("profilePicture", fileData);
+    formData.append("selfie", fileData);
 
     try {
       setIsFetching(true);
-      const response = await axios.patch(
-        `${BASE_URL}/api/user/uploadProfile`,
+      const response = await axios.post(
+        "http://localhost:5000/upload-selfie",
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      console.log(response);
-
       setIsFetching(false);
 
-      if (response.data) {
-        Swal.fire(
-          "Success",
-          response.data.message || "Profile picture uploaded successfully!",
-          "success"
-        );
-
-        // Update completed steps and progress
-        setCompletedSteps((prev) => ({ ...prev, selfie: true }));
-        setProgress((prev) => (prev === 100 ? 100 : prev + 16.67));
+      if (response.data.success) {
+        Swal.fire("Success", "Selfie uploaded successfully!", "success");
       } else {
-        Swal.fire(
-          "Error",
-          response.data.message || "An error occurred!",
-          "error"
-        );
+        Swal.fire("Error", response.data.message, "error");
       }
     } catch (error) {
       setIsFetching(false);
-      console.error("Error uploading profile picture:", error);
       Swal.fire(
         "Error",
-        "An error occurred while uploading the profile picture.",
+        "An error occurred while uploading the selfie.",
         "error"
       );
     }
   };
+
+  // Function to trigger file selection or open camera for selfie capture
+  const handleSelfieCapture = () => {
+    const inputFile = document.createElement("input");
+    inputFile.type = "file";
+    inputFile.accept = "image/*"; // This allows both camera and image files
+    inputFile.capture = "camera"; // This will trigger the camera if available
+
+    inputFile.onchange = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        setSelfie(file);
+        handleSelfieUpload(file);
+      }
+    };
+
+    inputFile.click(); // Open file chooser or camera
+  };
+
   const handleMobileVerification = () => {
     MySwal.fire({
       title: "Enter Mobile Number",
@@ -865,7 +732,7 @@ const RegistrationSteps = () => {
                   const otp = otpResult.value;
 
                   // Verify OTP API Call
-                  fetch("http://localhost:8081/api/verify/mobile/verify-otp", {
+                  fetch(`${BASE_URL}/api/verify/mobile/verify-otp`, {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
@@ -907,16 +774,13 @@ const RegistrationSteps = () => {
                     });
                 } else if (otpResult.dismiss === Swal.DismissReason.cancel) {
                   // Resend OTP logic
-                  fetch(
-                    `http://localhost:8081/api/verify/mobile/get-otp/${mobile}`,
-                    {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({ mobile }),
-                    }
-                  )
+                  fetch(`${BASE_URL}/api/verify/mobile/get-otp/${mobile}`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ mobile }),
+                  })
                     .then((response) => response.json())
                     .then((resendData) => {
                       if (resendData.success) {
