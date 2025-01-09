@@ -13,6 +13,8 @@ import {
   Button,
   useTheme,
 } from "@mui/material";
+import axios from "axios"; // Import axios
+
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PersonIcon from "@mui/icons-material/Person";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -34,12 +36,13 @@ const RegistrationSteps = () => {
 
   const [progress, setProgress] = useState(0);
   const [completedSteps, setCompletedSteps] = useState({
+    mobile: false,
+
     pan: false,
     personal: false,
     address: false,
     income: false,
     selfie: false,
-    mobile: false,
   });
 
   const [openModal, setOpenModal] = useState(false);
@@ -108,7 +111,7 @@ const RegistrationSteps = () => {
       console.log("PAN:", formValues.pan);
 
       const response = await fetch(
-        `http://localhost:8081/api/verify/verifyPAN/${formValues.pan}`,
+        `${BASE_URL}/api/verify/verifyPAN/${formValues.pan}`,
         {
           method: "POST",
           headers: {
@@ -304,43 +307,52 @@ const RegistrationSteps = () => {
     MySwal.fire({
       title: "Current Resident Address",
       html: `
-        <form id="address-info-form" style="max-height: none; overflow: hidden;">
-          <input type="text" id="address" class="swal2-input" placeholder="Address" required style="width: 90%;" />
-          <input type="text" id="landmark" class="swal2-input" placeholder="Landmark" style="width: 90%;" />
-          <input type="text" id="pincode" class="swal2-input" placeholder="Pincode" style="width: 90%;" />
-          <input type="text" id="city" class="swal2-input" placeholder="City" required style="width: 90%;" />
-          <input type="text" id="state" class="swal2-input" placeholder="State" required style="width: 90%;" />
-        </form>
-      `,
+      <form id="address-info-form" style="max-height: none; overflow: hidden; width: 80%; margin: 0 auto;">
+        <input type="text" id="address" class="swal2-input" placeholder="Address" required style="width: 100%; padding: 5px; height: 30px; border: 1px solid #FFA500; border-radius: 5px;" />
+        <input type="text" id="landmark" class="swal2-input" placeholder="Landmark" style="width: 100%; padding: 5px; height: 30px; border: 1px solid #FFA500; border-radius: 5px;" />
+        <input type="text" id="pincode" class="swal2-input" placeholder="Pincode" style="width: 100%; padding: 5px; height: 30px; border: 1px solid #FFA500; border-radius: 5px;" />
+        <input type="text" id="city" class="swal2-input" placeholder="City" required style="width: 100%; padding: 5px; height: 30px; border: 1px solid #FFA500; border-radius: 5px;" />
+        <input type="text" id="state" class="swal2-input" placeholder="State" required style="width: 100%; padding: 5px; height: 30px; border: 1px solid #FFA500; border-radius: 5px;" />
+        <select id="residenceType" class="swal2-input" required style="width: 100%; padding: 8px; height: 35px; background-color: #4D4D4E; color: white; border: 1px solid #FFA500; border-radius: 5px; font-size: 16px; font-weight: bold;">
+          <option value="" disabled selected>Select Residence Type</option>
+          <option value="OWNED" style="background-color: #4D4D4E;">OWNED</option>
+          <option value="RENTED" style="background-color: #4D4D4E;">RENTED</option>
+          <option value="PARENTAL" style="background-color: #4D4D4E;">PARENTAL</option>
+          <option value="COMPANY PROVIDED" style="background-color: #4D4D4E;">COMPANY PROVIDED</option>
+          <option value="OTHERS" style="background-color: #4D4D4E;">OTHERS</option>
+        </select>
+      </form>`,
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Submit",
       cancelButtonText: "Cancel",
-      // Customizing the button and background colors
-      background: "#4D4D4E", // Dark background for the modal
-      color: "white", // Text color
-      confirmButtonColor: "#FFA500", // Orange color for the submit button
-      cancelButtonColor: "#FF6347", // Red color for the cancel button
+      background: "#4D4D4E",
+      color: "white",
+      confirmButtonColor: "#FFA500",
+      cancelButtonColor: "gray",
       preConfirm: () => {
         const address = Swal.getPopup().querySelector("#address").value;
         const landmark = Swal.getPopup().querySelector("#landmark").value;
         const pincode = Swal.getPopup().querySelector("#pincode").value;
         const city = Swal.getPopup().querySelector("#city").value;
         const state = Swal.getPopup().querySelector("#state").value;
-
+        const residenceType = Swal.getPopup().querySelector("#residenceType").value;
+  
         // Validation
-        if (!address || !landmark || !pincode || !city || !state) {
+        if (!address || !landmark || !pincode || !city || !state || !residenceType) {
           Swal.showValidationMessage("Please fill out all fields.");
           return false;
         }
-
-        // Return the form data
-        return { address, landmark, pincode, city, state };
+  
+        return { address, landmark, pincode, city, state, residenceType };
+      },
+      customClass: {
+        popup: 'custom-popup',
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        const { address, landmark, pincode, city, state } = result.value;
-
+        const { address, landmark, pincode, city, state, residenceType } = result.value;
+  
         setFormValues((prev) => ({
           ...prev,
           address,
@@ -348,38 +360,69 @@ const RegistrationSteps = () => {
           pincode,
           city,
           state,
+          residenceType,
         }));
-
+  
         setCompletedSteps((prev) => ({ ...prev, address: true }));
-        setProgress((prev) => (prev === 100 ? 100 : prev + 20));
-
+        setProgress((prev) => (prev === 100 ? 100 : prev + 16.67));
+  
         // Example API call on form submission
-        const apiData = { address, landmark, pincode, city, state };
+        const apiData = {
+          address,
+          landmark,
+          pincode,
+          city,
+          state,
+          residenceType,
+        };
+  
+        // Ensure BASE_URL and token are defined
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";  // Make sure to get this from the session or state
+  
+        if (!token) {
+          Swal.fire("Error", "Authorization token is missing.", "error");
+          return;
+        }
 
-        // API call (replace with your actual API call)
-        fetch("/api/submitAddressInfo", {
-          method: "POST",
+        // API call with the new endpoint
+        fetch(`${BASE_URL}/api/user/currentResidence`, {
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(apiData),
-        })
+          
+          body: JSON.stringify({
+            address,
+            landmark,
+            pincode,
+            state,
+            city,
+            residenceType
+          }),
+          
+        } )
           .then((response) => response.json())
           .then((data) => {
-            console.log("API Response: ", data);
-            // Proceed to next step
+
+            
+            if (data && data) {
+              console.log("API Response: ", data);
+              // Proceed to next step or show success message
+              Swal.fire("Success", "Your address has been updated successfully!", "success");
+            } else {
+              Swal.fire("Error", "There was an error submitting your address details. Please try again.", "error");
+            }
           })
           .catch((error) => {
             console.error("Error submitting address data:", error);
-            Swal.fire(
-              "Error",
-              "There was an error submitting your address details. Please try again.",
-              "error"
-            );
+            Swal.fire("Error", "There was an error submitting your address details. Please try again.", "error");
           });
       }
     });
   };
+  
+  
 
   const showIncomeInfoForm = () => {
     MySwal.fire({
@@ -462,23 +505,25 @@ const RegistrationSteps = () => {
             " 
           />
   
-          <input 
-            type="date" 
-            id="nextSalaryDate" 
-            class="swal2-input" 
-            placeholder="Next Salary Date" 
-            required 
-            style="
-              width: 90%; 
-              padding: 10px; 
-              font-size: 16px; 
-              border-radius: 8px; 
-              border: 1px solid #555; 
-              margin-bottom: 20px; 
-              background-color: #3B3E44; 
-              color: white;
-            " 
-          />
+                <input 
+          type="date" 
+          id="nextSalaryDate" 
+          class="swal2-input" 
+          style="
+            width: 90%; 
+            padding: 10px; 
+            font-size: 16px; 
+            border-radius: 8px; 
+            border: 1px solid #555; 
+            margin-bottom: 20px; 
+            background-color: #3B3E44; 
+            color: #A9A9A9; /* Placeholder effect */
+          " 
+          placeholder="Next Salary Date" 
+          onfocus="this.style.color='white'" 
+          onblur="if(!this.value) this.style.color='#A9A9A9';"
+        />
+
   
           <label 
             style="
@@ -560,10 +605,10 @@ const RegistrationSteps = () => {
       confirmButtonText: "Submit",
       confirmButtonColor: "#FFA500", // Orange button
       preConfirm: () => {
-        const employeeType =
+        const employementType =
           Swal.getPopup().querySelector("#employeeType").value;
-        const netIncome = Swal.getPopup().querySelector("#netIncome").value;
-        const loanAmount = Swal.getPopup().querySelector("#loanAmount").value;
+        const monthlyIncome = Swal.getPopup().querySelector("#netIncome").value;
+        const obligations = Swal.getPopup().querySelector("#loanAmount").value;
         const nextSalaryDate =
           Swal.getPopup().querySelector("#nextSalaryDate").value;
         const incomeMode = Swal.getPopup().querySelector(
@@ -571,9 +616,9 @@ const RegistrationSteps = () => {
         )?.value;
 
         if (
-          !employeeType ||
-          !netIncome ||
-          !loanAmount ||
+          !employementType ||
+          !monthlyIncome ||
+          !obligations ||
           !nextSalaryDate ||
           !incomeMode
         ) {
@@ -581,9 +626,9 @@ const RegistrationSteps = () => {
           return false;
         }
         return {
-          employeeType,
-          netIncome,
-          loanAmount,
+          employementType,
+          monthlyIncome,
+          obligations,
           nextSalaryDate,
           incomeMode,
         };
@@ -591,13 +636,57 @@ const RegistrationSteps = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         const {
-          employeeType,
-          netIncome,
-          loanAmount,
+          employementType,
+          monthlyIncome,
+          obligations,
           nextSalaryDate,
           incomeMode,
         } = result.value;
-        // Submit logic
+        const token =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+        // Make the PATCH API call
+        fetch(`${BASE_URL}/api/user/addIncomeDetails`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+
+          body: JSON.stringify({
+            employementType,
+            monthlyIncome,
+            obligations,
+            nextSalaryDate,
+            incomeMode,
+          }),
+        })
+          .then((response) => {
+            console.log(response);
+
+            if (!response.ok) {
+              throw new Error("Failed to submit income details.");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // Handle successful response
+            MySwal.fire({
+              icon: "success",
+              title: "Success",
+              text: "Income details added successfully!",
+            });
+            setCompletedSteps((prev) => ({ ...prev, income: true }));
+            setProgress((prev) => (prev === 100 ? 100 : prev + 16.67));
+          })
+
+          .catch((error) => {
+            // Handle error response
+            MySwal.fire({
+              icon: "error",
+              title: "Error",
+              text: error.message,
+            });
+          });
       }
     });
   };
@@ -605,10 +694,30 @@ const RegistrationSteps = () => {
   const allStepsCompleted = Object.values(completedSteps).every(
     (step) => step === true
   );
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI"; // Use a dynamic token if needed
 
-  const [selfie, setSelfie] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
 
   // Function to handle the selfie upload
+  const handleSelfieCapture = () => {
+    const inputFile = document.createElement("input");
+    inputFile.type = "file";
+    inputFile.accept = "image/*";
+    inputFile.capture = "camera";
+
+    inputFile.onchange = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        setProfileImage(file);
+        handleSelfieUpload(file);
+      }
+    };
+
+    inputFile.click();
+  };
+
+  // Handle selfie upload to the backend
   const handleSelfieUpload = (fileData) => {
     if (fileData) {
       uploadSelfieToBackend(fileData);
@@ -618,52 +727,51 @@ const RegistrationSteps = () => {
   // Function to upload the selfie to the backend
   const uploadSelfieToBackend = async (fileData) => {
     const formData = new FormData();
-    formData.append("selfie", fileData);
+    formData.append("profilePicture", fileData);
 
     try {
       setIsFetching(true);
-      const response = await axios.post(
-        "http://localhost:5000/upload-selfie",
+      const response = await axios.patch(
+        `${BASE_URL}/api/user/uploadProfile`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
+      console.log(response);
+
       setIsFetching(false);
 
-      if (response.data.success) {
-        Swal.fire("Success", "Selfie uploaded successfully!", "success");
+      if (response.data) {
+        Swal.fire(
+          "Success",
+          response.data.message || "Profile picture uploaded successfully!",
+          "success"
+        );
+
+        // Update completed steps and progress
+        setCompletedSteps((prev) => ({ ...prev, selfie: true }));
+        setProgress((prev) => (prev === 100 ? 100 : prev + 16.67));
       } else {
-        Swal.fire("Error", response.data.message, "error");
+        Swal.fire(
+          "Error",
+          response.data.message || "An error occurred!",
+          "error"
+        );
       }
     } catch (error) {
       setIsFetching(false);
+      console.error("Error uploading profile picture:", error);
       Swal.fire(
         "Error",
-        "An error occurred while uploading the selfie.",
+        "An error occurred while uploading the profile picture.",
         "error"
       );
     }
   };
-
-  // Function to trigger file selection or open camera for selfie capture
-  const handleSelfieCapture = () => {
-    const inputFile = document.createElement("input");
-    inputFile.type = "file";
-    inputFile.accept = "image/*"; // This allows both camera and image files
-    inputFile.capture = "camera"; // This will trigger the camera if available
-
-    inputFile.onchange = (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        setSelfie(file);
-        handleSelfieUpload(file);
-      }
-    };
-
-    inputFile.click(); // Open file chooser or camera
-  };
-
   const handleMobileVerification = () => {
     MySwal.fire({
       title: "Enter Mobile Number",
@@ -697,22 +805,22 @@ const RegistrationSteps = () => {
           );
           return false;
         }
-        
+
         return mobile; // Return the mobile number for the next step
       },
     }).then((result) => {
       if (result.isConfirmed) {
         const mobile = result.value;
 
-        const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZiYTg5N2EyOGYwMWE2YjM1MjdjYyIsImlhdCI6MTczNjI1Mjc4MSwiZXhwIjoxNzM4ODQ0NzgxfQ.BC5jt4Whb5S8jBQwDr0gPYV3SjtPuUw6QDjzTDz02h0"
-  
+        const token =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZiYTg5N2EyOGYwMWE2YjM1MjdjYyIsImlhdCI6MTczNjI1Mjc4MSwiZXhwIjoxNzM4ODQ0NzgxfQ.BC5jt4Whb5S8jBQwDr0gPYV3SjtPuUw6QDjzTDz02h0";
+
         // Send OTP API Call
         fetch(`${BASE_URL}/api/verify/mobile/get-otp/${mobile}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-
           },
         })
           .then((response) => response.json())
@@ -755,7 +863,7 @@ const RegistrationSteps = () => {
               }).then((otpResult) => {
                 if (otpResult.isConfirmed) {
                   const otp = otpResult.value;
-  
+
                   // Verify OTP API Call
                   fetch("http://localhost:8081/api/verify/mobile/verify-otp", {
                     method: "POST",
@@ -778,7 +886,9 @@ const RegistrationSteps = () => {
                           ...prev,
                           mobile: true,
                         }));
-                        setProgress((prev) => (prev === 100 ? 100 : prev + 16.67));
+                        setProgress((prev) =>
+                          prev === 100 ? 100 : prev + 16.67
+                        );
                       } else {
                         Swal.fire(
                           "Error",
@@ -797,13 +907,16 @@ const RegistrationSteps = () => {
                     });
                 } else if (otpResult.dismiss === Swal.DismissReason.cancel) {
                   // Resend OTP logic
-                  fetch(`http://localhost:8081/api/verify/mobile/get-otp/${mobile}`, {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ mobile }),
-                  })
+                  fetch(
+                    `http://localhost:8081/api/verify/mobile/get-otp/${mobile}`,
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ mobile }),
+                    }
+                  )
                     .then((response) => response.json())
                     .then((resendData) => {
                       if (resendData.success) {
@@ -849,7 +962,7 @@ const RegistrationSteps = () => {
       }
     });
   };
-  
+
   const renderStepBox = (icon, title, description, stepKey, onClick) => (
     <Box
       sx={{

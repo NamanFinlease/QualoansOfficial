@@ -7,8 +7,12 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import SweetAlert from "sweetalert2"; // Import SweetAlert2
 import { useNavigate } from "react-router-dom";
+import Dashboard from "./Dashboard";
+import { BASE_URL } from "../baseURL";
+import axios from "axios";
 
 const LoanApplication = () => {
+  const [bankStatement, setBankStatement] = useState(null); // Add state for the bank statement
 
     const navigate = useNavigate(); // React Router hook for navigation
 
@@ -17,7 +21,7 @@ const LoanApplication = () => {
   const [step3, setStep3] = useState(false);
   const [step4, setStep4] = useState(false);
   const [step5, setStep5] = useState(false);
-  const [step6, setStep6] = useState(false);
+  // const [step6, setStep6] = useState(false);
 
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
@@ -30,8 +34,8 @@ const LoanApplication = () => {
     if (step3) completedSteps++;
     if (step4) completedSteps++;
     if (step5) completedSteps++;
-    if (step6) completedSteps++;
-    return (completedSteps / 6) * 100;
+    // if (step6) completedSteps++;
+    return (completedSteps / 5) * 100;
   };
 
   const steps = [
@@ -78,14 +82,7 @@ const LoanApplication = () => {
       action: () => handleDisbursalbankdetails()
 
     },
-    {
-      step: step6,
-      setStep: setStep6,
-      title: "Complete Application",
-      icon: AccountBalanceWalletIcon,
-      description: "Submit your loan application",
-      link: "/complete-application",
-    },
+   
   ];
 
   const handleDisbursalbankdetails = async () => {
@@ -98,18 +95,22 @@ const LoanApplication = () => {
           <input id="confirmAccountNo" class="swal2-input" placeholder="Confirm Account Number" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
           <input id="ifcCode" class="swal2-input" placeholder="IFC Code" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
           <input id="bankName" class="swal2-input" placeholder="Bank Name" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
-          <input id="accountType" class="swal2-input" placeholder="Account Type" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
+          <select id="accountType" class="swal2-input" style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;">
+            <option value="" disabled selected>Select Account Type</option>
+            <option value="Saving">Saving</option>
+            <option value="Current">Current</option>
+          </select>
         </div>
       `,
       preConfirm: () => {
-        const accountNo = document.getElementById("accountNo").value;
+        const accountNumber = document.getElementById("accountNo").value;
         const confirmAccountNo = document.getElementById("confirmAccountNo").value;
-        const ifcCode = document.getElementById("ifcCode").value;
+        const ifscCode = document.getElementById("ifcCode").value;
         const bankName = document.getElementById("bankName").value;
         const accountType = document.getElementById("accountType").value;
   
         // Validation
-        if (!accountNo || !confirmAccountNo || !ifcCode || !bankName || !accountType) {
+        if (!accountNumber || !confirmAccountNo || !ifscCode || !bankName || !accountType) {
           SweetAlert.fire({
             icon: 'error',
             title: 'Oops!',
@@ -117,7 +118,7 @@ const LoanApplication = () => {
           });
           return false;
         }
-        if (accountNo !== confirmAccountNo) {
+        if (accountNumber !== confirmAccountNo) {
           SweetAlert.fire({
             icon: 'error',
             title: 'Oops!',
@@ -126,7 +127,7 @@ const LoanApplication = () => {
           return false;
         }
   
-        return { accountNo, confirmAccountNo, ifcCode, bankName, accountType };
+        return { accountNumber, confirmAccountNo, ifscCode, bankName, accountType };
       },
       showCancelButton: true,
       confirmButtonText: "Submit",
@@ -138,25 +139,37 @@ const LoanApplication = () => {
       },
     });
   
+
+    const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI"
+
     if (formValues) {
-      // Handle form submission (e.g., save to state or API)
       try {
-        const response = await fetch("https://your-backend-api.com/disbursal-bank-details", {
-          method: "POST",
+        const response = await fetch(`${BASE_URL}/api/loanApplication/disbursalBankDetails`, {
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(formValues),
         });
   
-        const result = await response.json();
-        console.log(result);
-  
-        SweetAlert.fire({
-          icon: "success",
-          title: "Success",
-          text: "Bank details saved successfully!",
-        });
+        if (response.status===200) {
+          console.log(response.status);
+          
+          const result = await response.json();
+          SweetAlert.fire({
+            icon: "success",
+            title: "Success",
+            text: "Bank details saved successfully!",
+          });
+          console.log(result);
+        } else {
+          SweetAlert.fire({
+            icon: "error",
+            title: "Error!",
+            text: "There was an issue submitting your bank details.",
+          });
+        }
       } catch (error) {
         console.error("Error saving data:", error);
         SweetAlert.fire({
@@ -168,76 +181,60 @@ const LoanApplication = () => {
     }
   };
   
+  
+  
   const handleBankStatementUpload = () => {
     const inputFile = document.createElement("input");
     inputFile.type = "file";
     inputFile.accept = ".pdf,.jpg,.png"; // Accept specific formats for bank statements
     inputFile.onchange = async (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        setBankStatement(file);
-        await uploadBankStatementToServer(file);
-      }
-    };
-    inputFile.click();
-  };
-
-  // Function to upload the bank statement to the server
-  const uploadBankStatementToServer = async (file) => {
-    const formData = new FormData();
-    formData.append("bankStatement", file);
-
-    try {
-      const response = await axios.post("http://localhost:5000/upload-bank-statement", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      if (response.data.success) {
-        Swal.fire("Success", "Bank statement uploaded successfully!", "success");
-      } else {
-        Swal.fire("Error", response.data.message, "error");
-      }
-    } catch (error) {
-      Swal.fire("Error", "An error occurred while uploading the bank statement.", "error");
-    }
-  };
-
-  const handleDocumentationUpload = () => {
-    const inputFile = document.createElement("input");
-    inputFile.type = "file";
-    inputFile.accept = ".pdf,.jpg,.png"; // Accept formats for documents
-    inputFile.multiple = true; // Allow multiple files for document upload
-  
-    inputFile.onchange = async (event) => {
-      const files = Array.from(event.target.files);
-      if (files.length > 0) {
-        await uploadDocumentsToServer(files);
+      const bankStatement = event.target.files[0];
+      if (bankStatement) {
+        setBankStatement(bankStatement); // Save the uploaded file for later use
+        await uploadBankStatementToServer("bankStatement");
       }
     };
     inputFile.click();
   };
   
-  // Function to upload the documents to the server
-  const uploadDocumentsToServer = async (files) => {
+  const uploadBankStatementToServer = async (bankStatement) => {
     const formData = new FormData();
-    files.forEach((file, index) => {
-      formData.append(`document-${index + 1}`, file);
-    });
+    formData.append("bankStatement", bankStatement); // Key "bankStatement"
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
   
     try {
-      const response = await axios.post("http://localhost:5000/upload-documents", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const response = await fetch(`${BASE_URL}/api/loanApplication/uploadDocuments`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`, // Add Bearer token
+        },
+        body: formData, // Include the FormData object
       });
-  
-      if (response.data.success) {
-        Swal.fire("Success", "Documents uploaded successfully!", "success");
+        console.log(response);
+        
+      // Check if the response is OK (status 200-299)
+      if (response.ok) {
+        console.log(response.status);
+        
+        const responseData = await response.json(); // Parse JSON response
+        SweetAlert.fire("Success", "Bank statement uploaded successfully!", "success");
       } else {
-        Swal.fire("Error", response.data.message, "error");
+        const errorData = await response.json(); // Parse error details
+        SweetAlert.fire("Error", errorData.message || "Unexpected error occurred.", "error");
       }
     } catch (error) {
-      Swal.fire("Error", "An error occurred while uploading the documents.", "error");
+      console.error("Upload Error:", error); // Log error for debugging
+      SweetAlert.fire(
+        "Error",
+        error.message || "An error occurred while uploading the bank statement.",
+        "error"
+      );
     }
   };
+  
+
+ 
 
 
   
@@ -247,33 +244,37 @@ const LoanApplication = () => {
       title: "Information about the Company",
       html: `
         <div style="text-align: left; padding: 10px;">
-          <input id="office" class="swal2-input" placeholder="Are you working from office or home?" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
+          <select id="workMode" class="swal2-input" style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;">
+            <option value="" disabled selected>Are you working from Office or Home?</option>
+            <option value="Office">Office</option>
+            <option value="Home">Home</option>
+          </select>
           <input id="company" class="swal2-input" placeholder="Company Name" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
           <input id="companyType" class="swal2-input" placeholder="Company Type" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
           <input id="designation" class="swal2-input" placeholder="Your Designation" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
+          <input id="officeEmail" class="swal2-input" placeholder="Office Email" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
         </div>
       `,
       preConfirm: () => {
         return {
-          office: document.getElementById("office").value,
-          company: document.getElementById("company").value,
+          workFrom: document.getElementById("workMode").value,
+          companyName: document.getElementById("company").value,
           companyType: document.getElementById("companyType").value,
           designation: document.getElementById("designation").value,
+          officeEmail: document.getElementById("officeEmail").value,
         };
       },
       showCancelButton: true,
-      confirmButtonText: 'Submit',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#007bff',
-      cancelButtonColor: '#f44336',
+      confirmButtonText: 'Next',
+      confirmButtonColor: 'orange',
       customClass: {
-        popup: 'swal-custom-popup', // Custom class for the popup
+        popup: 'swal-custom-popup',
       },
     });
   
     if (formValues) {
       // Validation for mandatory fields
-      if (!formValues.office || !formValues.company || !formValues.companyType || !formValues.designation) {
+      if (!formValues.workFrom || !formValues.companyName || !formValues.companyType || !formValues.designation || !formValues.officeEmail) {
         SweetAlert.fire({
           icon: 'error',
           title: 'Oops!',
@@ -282,80 +283,108 @@ const LoanApplication = () => {
         return;
       }
   
-      // Handle form submission (e.g., save to state or API)
-      try {
-        const response = await fetch('https://your-backend-api.com/employment-info', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formValues),
-        });
-        const result = await response.json();
-        console.log(result);
-      } catch (error) {
-        console.error('Error saving data:', error);
-      }
-    }
+      // Proceed to the second SweetAlert for Address Info
+      const { value: addressValues } = await SweetAlert.fire({
+        title: "Your Office Address",
+        html: `
+         <div style="text-align: left; padding: 10px;">
+      <input id="officeAddress" class="swal2-input" placeholder="Office Address" style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
+      <input id="landmark" class="swal2-input" placeholder="Landmark" style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
+      <input id="pincode" class="swal2-input" placeholder="Pincode" oninput="handlePincodeChange()" style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
+      <input id="city" class="swal2-input" placeholder="City" style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
+      <input id="state" class="swal2-input" placeholder="State" style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
+    </div>
+
+        `,
+        preConfirm: () => {
+          return {
+            officeAddrress: document.getElementById("officeAddress").value,
+            landmark: document.getElementById("landmark").value,
+            pincode: document.getElementById("pincode").value,
+            city: document.getElementById("city").value,
+            state: document.getElementById("state").value,
+          };
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Submit',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#007bff',
+        cancelButtonColor: '#f44336',
+        customClass: {
+          popup: 'swal-custom-popup',
+        },
+      });
   
-    // Second SweetAlert with Office Info and Pincode Auto-Fill
-    const { value: addressValues } = await SweetAlert.fire({
-      title: "Your Office Address",
-      html: `
-        <div style="text-align: left; padding: 10px;">
-          <input id="officeAddress" class="swal2-input" placeholder="Office Address" style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
-          <input id="landmark" class="swal2-input" placeholder="Landmark" style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
-          <input id="pincode" class="swal2-input" placeholder="Pincode" oninput="handlePincodeChange()" style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
-          <input id="city" class="swal2-input" placeholder="City" value="${city}" disabled style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
-          <input id="state" class="swal2-input" placeholder="State" value="${state}" disabled style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
-        </div>
-      `,
-      preConfirm: () => {
-        return {
-          officeAddress: document.getElementById("officeAddress").value,
-          landmark: document.getElementById("landmark").value,
-          pincode: document.getElementById("pincode").value,
-          city: document.getElementById("city").value,
-          state: document.getElementById("state").value,
+      if (addressValues) {
+        // Validation for mandatory fields
+        if (!addressValues.officeAddrress || !addressValues.landmark || !addressValues.pincode||!addressValues.state||!addressValues.city) {
+          SweetAlert.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'All fields are required.',
+          });
+          return;
+        }
+  
+        // Prepare API data
+        const apiData = {
+          workFrom: formValues.workFrom,
+          companyName: formValues.companyName,
+          companyType: formValues.companyType,
+          designation: formValues.designation,
+          officeEmail: formValues.officeEmail,
+          officeAddrress: addressValues.officeAddrress,
+          landmark: addressValues.landmark,
+          pincode: addressValues.pincode,
+          city: addressValues.city,
+          state: addressValues.state,
         };
-      },
-      showCancelButton: true,
-      confirmButtonText: 'Submit',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#007bff',
-      cancelButtonColor: '#f44336',
-      customClass: {
-        popup: 'swal-custom-popup', // Custom class for the popup
-      },
-    });
-  
-    if (addressValues) {
-      // Validation for mandatory fields
-      if (!addressValues.officeAddress || !addressValues.landmark || !addressValues.pincode) {
-        SweetAlert.fire({
-          icon: 'error',
-          title: 'Oops!',
-          text: 'All fields are required.',
-        });
-        return;
-      }
-  
-      // Handle address form submission (e.g., save to state or API)
-      try {
-        const response = await fetch('https://your-backend-api.com/office-address', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(addressValues),
-        });
-        const result = await response.json();
-        console.log(result);
-      } catch (error) {
-        console.error('Error saving data:', error);
+       const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI"
+        // API call to submit employment info
+        try {
+          const response = await fetch(`${BASE_URL}/api/loanApplication/addEmploymentInfo`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,  // Ensure token is valid
+            },
+            body: JSON.stringify(apiData), // Ensure data is structured correctly
+          });
+          
+          
+          
+          
+          if (response.status===200) {
+            const result = await response.json();
+            console.log('result <>> ',result)
+            
+            SweetAlert.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: 'Your employment information has been updated successfully.',
+            });
+          } else {
+            SweetAlert.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'There was an issue submitting your employment information.',
+            });
+          }
+        } catch (error) {
+          console.log("after>>>", result.status);
+          console.error('Error submitting data:', error);
+          SweetAlert.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'There was an issue submitting your employment information.',
+          });
+        }
       }
     }
   };
+
+  
+
   
   // Add CSS to style SweetAlert dialog
   const style = document.createElement('style');
@@ -382,7 +411,8 @@ const LoanApplication = () => {
 
 
   return (
-    <Box
+    <><Dashboard/>
+        <Box
     sx={{
       padding: 4,
       border: "2px solid #ddd",
@@ -515,9 +545,8 @@ const LoanApplication = () => {
 </Box>
 
   </Box>
-  
+  </>
 
-  
   );
 };
 
