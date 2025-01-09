@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -10,284 +12,291 @@ import {
   Select,
   FormControl,
   InputLabel,
+  Button,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
 import loanImage from "../assets/image/Repay Now qua (1).webp";
-
-// Keyframes for 3D hover effects
-const popIn = keyframes`
-  from {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-  }
-  to {
-    transform: scale(1);
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-// Styling for 3D effect on sliders and inputs
-const threeDEffect = {
-  "&:hover": {
-    animation: `${popIn} 0.3s forwards`,
-  },
-};
+import axios from "axios"; // Import axios for API calls
+import { BASE_URL } from "../baseURL";
+import Dashboard from "./Dashboard";
 
 const LoanCalculator = () => {
   const [loanAmount, setLoanAmount] = useState(5000);
   const [loanTenure, setLoanTenure] = useState(1);
   const [interestRate, setInterestRate] = useState(0.5);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [dailyPayment, setDailyPayment] = useState(0);
   const [purpose, setPurpose] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // Loading state for API call
+  const [responseMessage, setResponseMessage] = useState(""); // To store API response message
+
+  const navigate = useNavigate();
 
   const calculateTotalAmount = () => {
     const totalInterest = (loanAmount * interestRate * loanTenure) / 100;
     const total = loanAmount + totalInterest;
     setTotalAmount(total);
-    setDailyPayment((total / loanTenure).toFixed(2));
   };
 
   useEffect(() => {
     calculateTotalAmount();
   }, [loanAmount, loanTenure, interestRate]);
 
+  const handleSubmit = async () => {
+    if (!purpose) {
+      Swal.fire({
+        icon: "warning",
+        title: "Missing Information",
+        text: "Please select a loan purpose!",
+      });
+      return;
+    }
+
+    const payload = {
+      principal: loanAmount,
+      totalPayble: totalAmount.toFixed(2),
+      intrestPerMonth: interestRate,
+      tenureMonth: loanTenure,
+      loanPurpose: purpose.toUpperCase(),
+    };
+
+    try {
+      setIsLoading(true);
+      const token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+
+      const response = await axios.post(
+        `${BASE_URL}/api/loanApplication/applyLoan`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add Authorization header
+            "Content-Type": "application/json", // Optional: Specify Content-Type
+          },
+        }
+      );
+
+      setResponseMessage(response.data.message);
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: response.data.message,
+      }).then(() => {
+        navigate("/laon-application");
+      });
+    } catch (error) {
+      console.error("Error applying for loan:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Application Failed",
+        text: "Failed to apply for loan. Please try again later.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <Container maxWidth="lg">
-      <Typography
-        variant="h3"
-        align="center"
-        gutterBottom
-        sx={{ fontWeight: "bold", color: "#444", marginBottom: 4 }}
-      >
-        Loan Calculator
-      </Typography>
+    <>
+      <Dashboard />
+      <Container maxWidth="lg">
+        <Typography
+          variant="h4"
+          align="center"
+          gutterBottom
+          sx={{ fontWeight: "bold", color: "#444", marginBottom: 1 }}
+        >
+          Loan Calculator
+        </Typography>
 
-      <Box
-  sx={{
-    display: "flex",
-    flexDirection: { xs: "column", md: "row" },
-    gap: 4,
-    alignItems: "stretch",
-    padding: 4,
-    borderRadius: "20px",
-    background: "#4D4D4E",
-    boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.1)",
-  }}
->
-  {/* Left Box - Image and Information */}
-  <Box
-  component={Paper}
-  elevation={4}
-  sx={{
-    flex: 1,
-    padding: 3, // Reduced padding
-    borderRadius: "20px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "#ffffff",
-    boxShadow: "0px 10px 20px rgba(255, 255, 255, 0.7)", // White shadow
-  }}
->
-  <img
-    src={loanImage}
-    alt="Loan"
-    style={{
-      width: "100%",
-      height: "auto",
-      borderRadius: "15px",
-      boxShadow: "0px 5px 20px rgba(0, 0, 0, 0.2)",
-      marginBottom: "12px", // Reduced margin
-    }}
-  />
-  <Typography
-    sx={{ fontWeight: "bold", fontSize: "1.2rem", color: "#333", marginBottom: 2 }}
-  >
-    Get quick loans with transparent processes.
-  </Typography>
-
-  {/* Interest Rate Display */}
-  <Box
-    sx={{
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 2,
-      background: "#f0f0f0",
-      borderRadius: "10px",
-      boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.1)",
-      marginBottom: 2,
-      minWidth: "150px",
-    }}
-  >
-    <Typography sx={{ fontWeight: "bold", fontSize: "1rem", color: "#333" }}>
-      Interest Rate: {interestRate.toFixed(1)}%
-    </Typography>
-  </Box>
-
-  {/* Processing Fee Display */}
-  <Box
-    sx={{
-      padding: 1,
-      background: "#ff5722",
-      borderRadius: "20px",
-      color: "#fff",
-      fontWeight: "bold",
-      fontSize: "0.9rem",
-      textAlign: "center",
-      boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
-    }}
-  >
-    Processing Fee: 10%
-  </Box>
-
-  <Typography sx={{ marginTop: 2, color: "#555", textAlign: "center" }}>
-    Experience fast approvals and easy repayments with flexible terms.
-  </Typography>
-</Box>
-
-  {/* Right Box - Loan Calculator */}
-  <Box
-    component={Paper}
-    elevation={4}
-    sx={{
-      flex: 1,
-      padding: 3, // Reduced padding
-      borderRadius: "20px",
-      background: "#f8f9fa",
-      boxShadow: "0px 10px 20px rgba(255, 255, 255, 0.7)", // White shadow
-      minHeight: "300px", // Set a lower minimum height
-    }}
-  >
-    {/* Purpose of Loan */}
-    <FormControl fullWidth sx={{ marginBottom: 2 }}>
-      <InputLabel>Purpose of Loan</InputLabel>
-      <Select
-        value={purpose}
-        onChange={(e) => setPurpose(e.target.value)}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            borderRadius: "15px",
-          },
-          "& .MuiSelect-select": {
-            padding: "10px",
-          },
-        }}
-      >
-        <MenuItem value="Education">Education</MenuItem>
-        <MenuItem value="Medical">Medical</MenuItem>
-        <MenuItem value="Business">Business</MenuItem>
-        <MenuItem value="Personal">Personal</MenuItem>
-      </Select>
-    </FormControl>
-
-    <Typography
-      variant="h4"
-      align="center"
-      gutterBottom
-      sx={{ fontWeight: "bold", color: "#444" }}
-    >
-      Customize Your Loan
-    </Typography>
-
-    {/* Loan Amount Section */}
-    <Box sx={{ marginBottom: 3 }}>
-      <Typography variant="subtitle1" gutterBottom>
-        Loan Amount (₹)
-      </Typography>
-      <Slider
-        value={loanAmount}
-        min={5000}
-        max={100000}
-        onChange={(e, newValue) => setLoanAmount(newValue)}
-        valueLabelDisplay="auto"
-        marks={[
-          { value: 5000, label: "5K" },
-          { value: 100000, label: "100K" },
-        ]}
-        sx={threeDEffect}
-      />
-    </Box>
-
-    {/* Loan Tenure Section */}
-    <Box sx={{ marginBottom: 3 }}>
-      <Typography variant="subtitle1" gutterBottom>
-        Loan Tenure (Days)
-      </Typography>
-      <Slider
-        value={loanTenure}
-        min={1}
-        max={90}
-        onChange={(e, newValue) => setLoanTenure(newValue)}
-        valueLabelDisplay="auto"
-        marks={[
-          { value: 1, label: "1 Day" },
-          { value: 90, label: "90 Days" },
-        ]}
-        sx={threeDEffect}
-      />
-    </Box>
-
-    {/* Interest Rate Section */}
-    <Box sx={{ marginBottom: 3 }}>
-      <Typography variant="subtitle1" gutterBottom>
-        Interest Rate (%)
-      </Typography>
-      <Slider
-        value={interestRate}
-        min={0.5}
-        max={2}
-        step={0.1}
-        onChange={(e, newValue) => setInterestRate(newValue)}
-        valueLabelDisplay="auto"
-        marks={[
-          { value: 0.5, label: "0.5%" },
-          { value: 2, label: "2%" },
-        ]}
-        sx={threeDEffect}
-      />
-    </Box>
-
-    <Grid container spacing={3} sx={{ marginTop: 2 }}>
-      <Grid item xs={12} sm={6}>
-        <Paper
-          elevation={2}
+        <Box
           sx={{
-            padding: 2,
-            borderRadius: "10px",
-            textAlign: "center",
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            gap: 1,
+            alignItems: "stretch",
+            padding: 1,
+            borderRadius: "5px",
+            background: "#4D4D4E",
+            boxShadow: "0px 2px 2px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <Typography>Total Loan</Typography>
-          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            ₹{totalAmount.toFixed(2)}
-          </Typography>
-        </Paper>
-      </Grid>
+          <Box
+            component={Paper}
+            elevation={4}
+            sx={{
+              flex: 1,
+              padding: 3,
+              borderRadius: "4px",
+              background: "#ffffff",
+              boxShadow: "0px 0px 0px rgba(255, 255, 255, 0.7)",
+            }}
+          >
+            <img
+              src={loanImage}
+              alt="Loan"
+              style={{
+                width: "100%",
+                height: "auto",
+                borderRadius: "15px",
+                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
+                marginBottom: "12px",
+              }}
+            />
+            <Typography
+              sx={{
+                fontWeight: "bold",
+                fontSize: "1.2rem",
+                color: "#333",
+                marginBottom: 2,
+              }}
+            >
+              Get quick loans with transparent processes.
+            </Typography>
 
-      <Grid item xs={12} sm={6}>
-        <Paper
-          elevation={2}
-          sx={{
-            padding: 2,
-            borderRadius: "10px",
-            textAlign: "center",
-          }}
-        >
-          <Typography>Daily Payment</Typography>
-          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            ₹{dailyPayment}
-          </Typography>
-        </Paper>
-      </Grid>
-    </Grid>
-  </Box>
-</Box>
+            <Box
+              sx={{
+                padding: 1,
+                background: "#ff5722",
+                borderRadius: "3px",
+                color: "#fff",
+                fontWeight: "bold",
+                fontSize: "0.9rem",
+                textAlign: "center",
+                boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.2)",
+              }}
+            >
+              Processing Fee: 10%
+            </Box>
 
-    </Container>
+            <Typography
+              sx={{ marginTop: 2, color: "#555", textAlign: "center" }}
+            >
+              Experience fast approvals and easy repayments with flexible terms.
+            </Typography>
+          </Box>
+
+          <Box
+            component={Paper}
+            elevation={4}
+            sx={{
+              flex: 1,
+              padding: 3,
+              borderRadius: "4px",
+              background: "#f8f9fa",
+              minHeight: "300px",
+            }}
+          >
+            <FormControl required fullWidth sx={{ marginBottom: 3 }}>
+              <InputLabel>Purpose of Loan</InputLabel>
+              <Select
+                value={purpose}
+                label="Purpose of Loan"
+                onChange={(e) => setPurpose(e.target.value)}
+              >
+                <MenuItem value="TRAVEL">TRAVEL</MenuItem>
+                <MenuItem value="MEDICAL">MEDICAL</MenuItem>
+                <MenuItem value="ACADEMICS">ACADEMICS</MenuItem>
+                <MenuItem value="OBLIGATIONS">OBLIGATIONS</MenuItem>
+                <MenuItem value="FESTIVAL">FESTIVAL</MenuItem>
+                <MenuItem value="PURCHASE">PURCHASE</MenuItem>
+                <MenuItem value="OTHERS">OTHERS</MenuItem>
+              </Select>
+            </FormControl>
+
+            <Box sx={{ marginBottom: 3 }}>
+              <Typography variant="subtitle1" gutterBottom>
+                Loan Amount (₹)
+              </Typography>
+              <Slider
+                value={loanAmount}
+                min={5000}
+                max={100000}
+                onChange={(e, newValue) => setLoanAmount(newValue)}
+                valueLabelDisplay="auto"
+                sx={{ color: "#fc8403" }}
+              />
+            </Box>
+
+            <Box sx={{ marginBottom: 3 }}>
+              <Typography variant="subtitle1" gutterBottom>
+                Loan Tenure (Days)
+              </Typography>
+              <Slider
+                value={loanTenure}
+                min={1}
+                max={90}
+                onChange={(e, newValue) => setLoanTenure(newValue)}
+                valueLabelDisplay="auto"
+                sx={{ color: "#fc8403" }}
+              />
+            </Box>
+
+            <Box sx={{ marginBottom: 3 }}>
+              <Typography variant="subtitle1" gutterBottom>
+                Interest Rate (%)
+              </Typography>
+              <Slider
+                value={interestRate}
+                min={0.5}
+                max={2}
+                step={0.1}
+                onChange={(e, newValue) => setInterestRate(newValue)}
+                valueLabelDisplay="auto"
+                sx={{ color: "#fc8403" }}
+              />
+            </Box>
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "2rem",
+              }}
+            >
+              <Grid item xs={12} sm={6}>
+                <Paper
+                  elevation={2}
+                  sx={{
+                    padding: 2,
+                    borderRadius: "10px",
+                    textAlign: "center",
+                    backgroundColor: "#fcf8e3",
+                  }}
+                >
+                  <Typography>Total Loan</Typography>
+                  <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                    ₹{totalAmount.toFixed(2)}
+                  </Typography>
+                </Paper>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    borderRadius: "80px",
+                    backgroundColor: "#fc8403",
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: { xs: "14px", sm: "16px" },
+                    padding: { xs: "8px 16px", sm: "6px 30px" },
+                    "&:hover": {
+                      backgroundColor: "black",
+                    },
+                  }}
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Processing..." : "Submit"}
+                </Button>
+              </Grid>
+            </div>
+          </Box>
+        </Box>
+      </Container>
+    </>
   );
 };
 
