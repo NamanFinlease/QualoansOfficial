@@ -13,6 +13,7 @@ import {
   Button,
   useTheme,
 } from "@mui/material";
+import { getToken } from "../../tokenManager";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PersonIcon from "@mui/icons-material/Person";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -28,6 +29,8 @@ import DashboardProgress from "./DashboardProgress";
 const MySwal = withReactContent(Swal);
 
 const RegistrationSteps = () => {
+  const token = getToken();
+  console.log("token >>><<< ", token);
   const theme = useTheme();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -93,8 +96,8 @@ const RegistrationSteps = () => {
   };
 
   const handleSubmitPan = async () => {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZiYTg5N2EyOGYwMWE2YjM1MjdjYyIsImlhdCI6MTczNjI1Mjc4MSwiZXhwIjoxNzM4ODQ0NzgxfQ.BC5jt4Whb5S8jBQwDr0gPYV3SjtPuUw6QDjzTDz02h0";
+    // const token =
+    //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZiYTg5N2EyOGYwMWE2YjM1MjdjYyIsImlhdCI6MTczNjI1Mjc4MSwiZXhwIjoxNzM4ODQ0NzgxfQ.BC5jt4Whb5S8jBQwDr0gPYV3SjtPuUw6QDjzTDz02h0";
     const panFormat = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
     if (!panFormat.test(formValues.pan)) {
       setError("Invalid PAN card format.");
@@ -147,10 +150,6 @@ const RegistrationSteps = () => {
     const pan = event.target.value.toUpperCase();
     setFormValues({ pan });
   };
-
-  //      <input type="text" id="spouseName" class="swal2-input" placeholder="Spouse's Name" value="${
-  //   personalDetails?.spouseName || ""
-  // }" style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;"/>
 
   const showPersonalInfoForm = () => {
     const token =
@@ -976,24 +975,6 @@ const RegistrationSteps = () => {
               Complete Your Profile Registration
             </Typography>
           </Grid>
-          {/* <Grid item xs={12} sm={6}>
-    <Typography variant="body1" sx={{ marginBottom: 3, fontStyle: "italic", color: "#555" }}>
-        Your progress: {Math.floor(progress)}% completed.
-      </Typography>
-      <LinearProgress
-        variant="determinate"
-        value={progress}
-        sx={{
-          marginBottom: 4,
-          height: 20,
-          borderRadius: 5,
-          backgroundColor: "#e0e0e0",
-          "& .MuiLinearProgress-bar": {
-            background: "linear-gradient(90deg, #00aaff, #0077cc)",
-          },
-        }}
-      />
-    </Grid> */}
           <DashboardProgress registrationStatus={registrationStatus} />
         </Grid>
 
