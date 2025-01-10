@@ -81,7 +81,7 @@ const LoanCalculator = () => {
         title: "Success",
         text: response.data.message,
       }).then(() => {
-        navigate("/laon-application");
+        navigate("/loan-application");
       });
     } catch (error) {
       console.error("Error applying for loan:", error);
