@@ -105,7 +105,6 @@ const RegistrationSteps = () => {
     setError("");
 
     try {
-
       const response = await fetch(
         `${BASE_URL}/api/verify/verifyPAN/${formValues.pan}`,
         {
@@ -149,6 +148,10 @@ const RegistrationSteps = () => {
     setFormValues({ pan });
   };
 
+  //      <input type="text" id="spouseName" class="swal2-input" placeholder="Spouse's Name" value="${
+  //   personalDetails?.spouseName || ""
+  // }" style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;"/>
+
   const showPersonalInfoForm = () => {
     const token =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
@@ -177,7 +180,7 @@ const RegistrationSteps = () => {
           MySwal.fire({
             title: "Share Your Details",
             html: `
-              <form id="personal-info-form" style="max-height: 400px; overflow: hidden; margin-top: 20px;">
+              <form id="personal-info-form" style=" overflow: hidden; margin-top: 20px; overflow-y: auto;">
                 <input type="text" id="fullName" class="swal2-input" placeholder="Full Name" value="${
                   personalDetails?.fullName || ""
                 }" required style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;" readonly/>
@@ -201,10 +204,28 @@ const RegistrationSteps = () => {
                     personalDetails?.gender === "O" ? "selected" : ""
                   }>Other</option>
                 </select>
-                <input type="text" id="spouseName" class="swal2-input" placeholder="Spouse's Name" value="${
-                  personalDetails?.spouseName || ""
-                }" style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;"/>
-              </form>
+
+                  <select id="maritalStatus" class="swal2-input" required style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;">
+                <option value="" disabled ${
+                  !personalDetails?.maritalStatus ? "selected" : ""
+                }>Select Marital Status</option>
+                <option value="Single" ${
+                  personalDetails?.maritalStatus === "Single" ? "selected" : ""
+                }>Single</option>
+                <option value="Married" ${
+                  personalDetails?.maritalStatus === "Married" ? "selected" : ""
+                }>Married</option>
+                <option value="Divorced" ${
+                  personalDetails?.maritalStatus === "Divorced"
+                    ? "selected"
+                    : ""
+                }>Divorced</option>
+              </select>
+              
+              <input type="text" id="spouseName" class="swal2-input" placeholder="Spouse's Name" value="${""}" style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white; display: ${
+              personalDetails?.maritalStatus !== "Married" && "none"
+            };"/>
+             </form>
             `,
             focusConfirm: false,
             showCancelButton: true,
@@ -214,11 +235,28 @@ const RegistrationSteps = () => {
             color: "white",
             confirmButtonColor: "#FF5733",
             cancelButtonColor: "#FF6347",
+            didOpen: () => {
+              const maritalStatusElement =
+                Swal.getPopup().querySelector("#maritalStatus");
+              const spouseNameElement =
+                Swal.getPopup().querySelector("#spouseName");
+
+              maritalStatusElement.addEventListener("change", (e) => {
+                if (e.target.value === "Married") {
+                  spouseNameElement.style.display = "block";
+                } else {
+                  spouseNameElement.style.display = "none";
+                  spouseNameElement.value = ""; // Clear spouse name if not married
+                }
+              });
+            },
             preConfirm: () => {
+              const maritalStatus =
+                Swal.getPopup().querySelector("#maritalStatus").value;
               const spouseName =
                 Swal.getPopup().querySelector("#spouseName").value;
 
-              return { spouseName };
+              return { maritalStatus, spouseName };
             },
           }).then((result) => {
             if (result.isConfirmed) {
@@ -227,6 +265,7 @@ const RegistrationSteps = () => {
                 gender: personalDetails?.gender,
                 dob: personalDetails?.dob,
                 personalEmail: personalDetails?.personalEmail,
+                maritalStatus: result?.value?.maritalStatus,
                 spouseName: result?.value?.spouseName,
               };
 

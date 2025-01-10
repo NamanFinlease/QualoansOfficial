@@ -30,9 +30,8 @@ function App() {
   return (
     <Router>
       {/* <Navbar /> */}
-      
-      <Routes>
 
+      <Routes>
         <Route path="/" element={<MainContent />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/contact-us" element={<ContactUs />} />
@@ -55,9 +54,7 @@ function App() {
       </Routes>
       <Footer />
     </Router>
-
   );
 }
-
 
 export default App;
