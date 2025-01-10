@@ -93,7 +93,7 @@ const LoanApplication = () => {
         <div style="text-align: left; padding: 10px;">
           <input id="accountNo" class="swal2-input" placeholder="Account Number" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
           <input id="confirmAccountNo" class="swal2-input" placeholder="Confirm Account Number" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
-          <input id="ifcCode" class="swal2-input" placeholder="IFC Code" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
+          <input id="ifscCode" class="swal2-input" placeholder="IFC Code" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
           <input id="bankName" class="swal2-input" placeholder="Bank Name" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
           <select id="accountType" class="swal2-input" style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;">
             <option value="" disabled selected>Select Account Type</option>

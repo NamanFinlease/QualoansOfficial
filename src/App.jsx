@@ -23,6 +23,7 @@ import Navbar from './navbar/Navbar';
 import LoanApplication from './component/LoanApplication';
 import Calculator from './component/Calculator';
 import OurJourney from './component/OurJourney';
+import UserPreview from './component/UserPreview';
 // import Navbar from "./navbar/NavBar"
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
         <Route path='/laon-application' element={<LoanApplication/>}/>
         <Route path='/calculator-loan' element={<Calculator/>}/>
         <Route path='/ourjourney' element={<OurJourney/>}/>
+        <Route path='/user-preview' element={<UserPreview/>}/>
       </Routes>
       <Footer />
     </Router>
