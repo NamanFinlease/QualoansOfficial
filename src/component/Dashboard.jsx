@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom"; // Import useLocation for active route handling
-
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -21,11 +20,49 @@ import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import logo from "../assets/image/White.webp"; // Adjust the path to your logo image
+import logo from "../assets/image/White.webp";
+import { BASE_URL } from "../baseURL";
 
-const Dashboard = ({ profileImageUrl, name }) => {
+const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const location = useLocation(); // Get the current location
+  const [profileData, setProfileData] = useState({ name: "", profileImageUrl: "" });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const location = useLocation();
+
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+  
+        const response = await fetch(`${BASE_URL}/api/user/getProfileDetails`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+
+        const data = await response.json();
+        setProfileData({
+          name: data?.data?.personalDetails?.fullName || "User",
+          profileImageUrl: data?.data?.profileImage || "",
+        });
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const options = [
     { text: "Dashboard", icon: <DashboardIcon />, link: "/ourjourney" },
@@ -37,18 +74,27 @@ const Dashboard = ({ profileImageUrl, name }) => {
 
   return (
     <Box sx={{ display: "flex", overflow: "hidden", flexDirection: "column", backgroundColor: "#f9f9f9" }}>
-      {/* Navbar */}
       <AppBar position="fixed" sx={{ backgroundColor: "#4D4D4E", color: "#fff", boxShadow: "none", height: "64px", zIndex: 1201 }}>
-        <Toolbar>
-          <IconButton onClick={() => setSidebarOpen(!sidebarOpen)} sx={{ color: "white", marginRight: 2 }}>
-            {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
-          </IconButton>
-          {/* Logo */}
-          <img src={logo} alt="Logo" style={{ height: 40, marginRight: 16 }} /> {/* Adjust height as needed */}
-          <Typography variant="h6" sx={{ marginRight: 2, flexGrow: 1 }}>{name}</Typography>
-          <Typography>Hi!!</Typography>
-          <Avatar src={profileImageUrl} sx={{ width: 40, height: 40, borderRadius: "50%", marginLeft: "auto" }} />
-        </Toolbar>
+       <Toolbar>
+        <IconButton onClick={() => setSidebarOpen(!sidebarOpen)} sx={{ color: "white", marginRight: 2 }}>
+          {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
+        </IconButton>
+        <img src={logo} alt="Logo" style={{ height: 40, marginRight: 16 }} />
+        
+        {/* Right-aligned content */}
+        <Box sx={{ display: "flex", alignItems: "center", marginLeft: "auto" }}>
+          <Typography sx={{ marginRight: 2 }}>Hi!!</Typography>
+          <Typography variant="h6" sx={{ marginRight: 2 }}>
+            {loading ? "Loading..." : profileData.name}
+          </Typography>
+          <Avatar
+            src={profileData.profileImageUrl}
+            sx={{ width: 40, height: 40, borderRadius: "50%" }}
+            alt="Profile"
+          />
+        </Box>
+      </Toolbar>
+
       </AppBar>
 
       {/* Sidebar */}

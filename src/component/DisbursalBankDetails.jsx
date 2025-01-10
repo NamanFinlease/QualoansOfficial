@@ -1,89 +1,87 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Grid, Divider } from "@mui/material";
+import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
 import { BASE_URL } from "../baseURL";
 
-// Define the income Profile component
-const IncomeInformation = () => {
-  // State to store income data
-  const [income, setIncome] = useState({
-    employementType:'',
-    monthlyIncome:'',
-    obligations: '',
-    nextSalaryDate:'',
-    incomeMode:'',
+// Define the UserProfile component
+const DisbursalBankDetails = () => {
+  // State to store user data
+  const [disbursal, setDisbursal] = useState({
+        bankName:'',
+        accountNumber:'',
+        ifscCode:'',
+        accountType:''
+
+    
     
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch income details from the backend API
+  // Fetch disbursal details from the backend API
   useEffect(() => {
     
     
-    const fetchIncomeData = async () => {
+    const fetchDisbursalData = async () => {
         try {
           const token =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
-      
-          const response = await fetch(`${BASE_URL}/api/user/getProfileDetails`, {
+
+          const response = await fetch(`${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=disbursalBankDetails`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           });
-
+            console.log("bnjnnn",response);
+            
           // Check if the response status is OK
           if (!response.ok) {
-            throw new Error("Failed to fetch income data");
+            throw new Error("Failed to fetch user data");
           }
       
           // Parse the JSON data from the response
           const data = await response.json();
-          console.log(data);
 
-          console.log(data); // Log the fetched data after it's assigned
       
-        //   setIncome(data); // Set the fetched data to the state
-        setIncome({
-
+        setDisbursal({
+           
+            bankName: data?.data?.bankName,
+            accountNumber: data?.data?.accountNumber,
+            ifscCode: data?.data?.ifscCode,  
+            accountType: data?.data?.accountType,
             
-            employementType: data?.data?.incomeDetails?.employementType,
-            monthlyIncome: data?.data?.incomeDetails?.monthlyIncome,
-            obligations: data?.data?.incomeDetails?.obligations,  // Fixed field for Date of Birth
-            nextSalaryDate: data?.data?.incomeDetails?.nextSalaryDate,
-            incomeMode: data?.data?.incomeDetails?.incomeMode,  // Corrected syntax issue
-            incomeMode: data?.data?.incomeDetails?.incomeMode,
+          });
           
-        });
           
         } catch (err) {
-          setError(err.message); // Handle any errors
+            setError(err.message); // Handle any errors
         } finally {
-          setLoading(false); // Set loading to false once the API request is complete
+            setLoading(false); // Set loading to false once the API request is complete
         }
-      };
-      
-    fetchIncomeData(); // Call the fetch function
-  }, []); // Empty dependency array to fetch data only once when the component mounts
+    };
+    
+    
+    fetchDisbursalData(); // Call the fetch function
+}, []); // Empty dependency array to fetch data only once when the component mounts
 
-  // Show loading state while fetching data
+// Show loading state while fetching data
 
-  if (loading) {
+if (loading) {
     return <Typography variant="h6" align="center">Loading...</Typography>;
-  }
+}
 
-  // Show error if there's an issue with the API request
-  if (error) {
+// Show error if there's an issue with the API request
+if (error) {
     return <Typography variant="h6" align="center" color="error">{error}</Typography>;
-  }
+}
 
-  // If no user data, show a message
-  if (!income) {
-    return <Typography variant="h6" align="center">No income data found.</Typography>;
-  }
+// If no disbursal data, show a message
+if (!disbursal) {
+    return <Typography variant="h6" align="center">No disbursal data found.</Typography>;
+}
 
-  return (
+return (
     <Box
     sx={{
       padding: 3,
@@ -103,46 +101,42 @@ const IncomeInformation = () => {
       align="center"
       sx={{ mb: 3, color: "white" }} // Set text color to white
     >
-      Income Information
+        Disbursal Bank Details
     </Typography>
   
-   
-   
+    {/* Profile Picture */}
+    
+  
     <Divider sx={{ marginBottom: 2 }} />
   
     {/* Profile Details (Stacked in a column) */}
     <Grid container direction="column" spacing={2}>
-
+   
     <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>EmployementType:</strong> {income.employementType}
+          <strong>BankName:</strong> {disbursal.bankName}
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>MonthlyIncome:</strong> {income.monthlyIncome}
+          <strong>AccountNumber:</strong> {disbursal.accountNumber}
         </Typography>
       </Grid>
       {/* PAN Number */}
       <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>Loan Amount:</strong> {income.obligations}
+          <strong>IfscCode:</strong> {disbursal.ifscCode}
         </Typography>
       </Grid>
   
       {/* Aadhaar Number */}
       <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> NextSalaryDate:</strong> {income.nextSalaryDate}
+          <strong> AccountType:</strong> {disbursal.accountType}
         </Typography>
       </Grid>
-      <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> IncomeMode:</strong> {income.incomeMode}
-        </Typography>
-      </Grid>
-      
-     
+
+
     </Grid>
   </Box>
   
@@ -150,5 +144,4 @@ const IncomeInformation = () => {
 );
 };
 
-export default IncomeInformation;
-
+export default DisbursalBankDetails;

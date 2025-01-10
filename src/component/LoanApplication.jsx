@@ -81,6 +81,8 @@ const LoanApplication = () => {
       html: container,
       showConfirmButton: false,
       width: "800px",
+      margin: "0px",
+      padding: 0,
       willClose: () => {
         // Clean up React rendering when SweetAlert closes
         ReactDOM.unmountComponentAtNode(container);

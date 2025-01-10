@@ -1,62 +1,58 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Grid, Divider } from "@mui/material";
+import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
 import { BASE_URL } from "../baseURL";
 
-// Define the income Profile component
-const IncomeInformation = () => {
-  // State to store income data
-  const [income, setIncome] = useState({
-    employementType:'',
-    monthlyIncome:'',
-    obligations: '',
-    nextSalaryDate:'',
-    incomeMode:'',
+// Define loan the  component
+const LoanDetails = () => {
+  // State to store loan data
+  const [loan, setLoan] = useState({
+    principal: '',
+    totalPayble:'',
+    intrestPerMonth:'',
+    tenureMonth: '',
+    loanPurpose:'',
     
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch income details from the backend API
+  // Fetch loan details from the backend API
   useEffect(() => {
     
     
-    const fetchIncomeData = async () => {
+    const fetchLoanData = async () => {
         try {
           const token =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
-      
-          const response = await fetch(`${BASE_URL}/api/user/getProfileDetails`, {
+
+          const response = await fetch(`${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=loanDetails`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           });
-
+            console.log(response);
+            
           // Check if the response status is OK
           if (!response.ok) {
-            throw new Error("Failed to fetch income data");
+            throw new Error("Failed to fetch loan data");
           }
       
           // Parse the JSON data from the response
           const data = await response.json();
-          console.log(data);
 
-          console.log(data); // Log the fetched data after it's assigned
       
-        //   setIncome(data); // Set the fetched data to the state
-        setIncome({
+        setLoan({
 
-            
-            employementType: data?.data?.incomeDetails?.employementType,
-            monthlyIncome: data?.data?.incomeDetails?.monthlyIncome,
-            obligations: data?.data?.incomeDetails?.obligations,  // Fixed field for Date of Birth
-            nextSalaryDate: data?.data?.incomeDetails?.nextSalaryDate,
-            incomeMode: data?.data?.incomeDetails?.incomeMode,  // Corrected syntax issue
-            incomeMode: data?.data?.incomeDetails?.incomeMode,
-          
-        });
-          
+           
+            principal: data?.data?.principal,
+            totalPayble: data?.data?.totalPayble,
+            intrestPerMonth: data?.data?.intrestPerMonth,  // Fixed field for Date of Birth
+            tenureMonth: data?.data?.tenureMonth,
+            loanPurpose: data?.data?.loanPurpose,  // Corrected syntax issue
+          });
+
         } catch (err) {
           setError(err.message); // Handle any errors
         } finally {
@@ -64,7 +60,8 @@ const IncomeInformation = () => {
         }
       };
       
-    fetchIncomeData(); // Call the fetch function
+      
+    fetchLoanData(); // Call the fetch function
   }, []); // Empty dependency array to fetch data only once when the component mounts
 
   // Show loading state while fetching data
@@ -78,9 +75,9 @@ const IncomeInformation = () => {
     return <Typography variant="h6" align="center" color="error">{error}</Typography>;
   }
 
-  // If no user data, show a message
-  if (!income) {
-    return <Typography variant="h6" align="center">No income data found.</Typography>;
+  // If no loan data, show a message
+  if (!loan) {
+    return <Typography variant="h6" align="center">No user data found.</Typography>;
   }
 
   return (
@@ -103,11 +100,12 @@ const IncomeInformation = () => {
       align="center"
       sx={{ mb: 3, color: "white" }} // Set text color to white
     >
-      Income Information
+      Loan Information
     </Typography>
   
-   
-   
+    {/* Profile Picture */}
+    
+  
     <Divider sx={{ marginBottom: 2 }} />
   
     {/* Profile Details (Stacked in a column) */}
@@ -115,34 +113,28 @@ const IncomeInformation = () => {
 
     <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>EmployementType:</strong> {income.employementType}
+          <strong>Principal:</strong> {loan.principal}
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>MonthlyIncome:</strong> {income.monthlyIncome}
+          <strong>IntrestPerMonth:</strong> {loan.intrestPerMonth}
         </Typography>
       </Grid>
       {/* PAN Number */}
       <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>Loan Amount:</strong> {income.obligations}
+          <strong>TenureMonth:</strong> {loan.tenureMonth}
         </Typography>
       </Grid>
   
       {/* Aadhaar Number */}
       <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> NextSalaryDate:</strong> {income.nextSalaryDate}
+          <strong> LoanPurpose:</strong> {loan.loanPurpose}
         </Typography>
       </Grid>
-      <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> IncomeMode:</strong> {income.incomeMode}
-        </Typography>
-      </Grid>
-      
-     
+
     </Grid>
   </Box>
   
@@ -150,5 +142,4 @@ const IncomeInformation = () => {
 );
 };
 
-export default IncomeInformation;
-
+export default LoanDetails;
