@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
 import { BASE_URL } from "../baseURL";
-
+import { getToken } from "../../tokenManager";
 // Define the UserProfile component
 const BaasicInformation = () => {
+        const token=getToken();
+    
   // State to store user data
   const [user, setUser] = useState({
     
@@ -23,8 +25,8 @@ const BaasicInformation = () => {
     
     const fetchUserData = async () => {
         try {
-          const token =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+        //   const token =
+        //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
       
           const response = await fetch(`${BASE_URL}/api/user/getProfileDetails`, {
             method: "GET",

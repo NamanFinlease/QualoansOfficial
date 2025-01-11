@@ -1,50 +1,54 @@
 import React, { useState } from "react";
 import { Box, Typography, Button, LinearProgress } from "@mui/material";
-import { useNavigate } from "react-router-dom"; // Correct import for navigate hook
-import creditExecutiveImage from "../assets/image/image1.png"; // Add the actual image path
+import { useNavigate } from "react-router-dom";
+import creditExecutiveImage from "../assets/image/image1.png";
 import Dashboard from "./Dashboard";
 
 const OurJourney = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false); // State to control sidebar open/close
-  const [selectedOption, setSelectedOption] = useState("Dashboard"); // Sample state for selected option
-  const [isVideoPage, setIsVideoPage] = useState(false); // Sample state for video page
-  const navigate = useNavigate(); // Hook for navigation
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("Dashboard");
+  const [isVideoPage, setIsVideoPage] = useState(false);
+  const [processType, setProcessType] = useState("registration"); // Track the current process
+  const navigate = useNavigate();
 
-  // Handle video redirection
   const handleRedirectToVideo = () => {
     setIsVideoPage(true);
   };
 
-  // Handle back button
   const handleBackButton = () => {
     setIsVideoPage(false);
   };
 
   const handleContinue = () => {
-    navigate("/registration"); // Navigate to the registration page
+    if (processType === "registration") {
+      setProcessType("loanApplication"); // Switch to loan application progress after registration
+    } else {
+      navigate("/registration");
+    }
   };
 
-  // Toggle the sidebar
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
   const calculateProgress = () => {
-    return 70; // You can replace this with the actual progress calculation logic
+    if (processType === "registration") {
+      return 50; // Example progress for registration
+    } else if (processType === "loanApplication") {
+      return 80; // Example progress for loan application
+    }
+    return 0;
   };
 
   return (
     <div>
       <Dashboard />
 
-      
-
-      {/* Main Content Area */}
       <Box
         sx={{
-          marginLeft: "200px" , // Dynamically adjust margin based on sidebar state
+          marginLeft: { xs: 0, sm: "200px" }, // Adjust margin for mobile
           transition: "margin-left 0.3s ease",
-          padding: 2,
+          padding: { xs: 1, sm: 2 },
           mt: 2,
         }}
       >
@@ -55,9 +59,10 @@ const OurJourney = () => {
               borderTop: "none",
               borderRight: "none",
               display: "flex",
+              flexDirection: { xs: "column", sm: "row" }, // Stack columns on small screens
               justifyContent: "space-between",
               alignItems: "flex-start",
-              backgroundColor: "#f5f5f5",
+              background: "linear-gradient(45deg, #4D4D4E, orange)",
               borderRadius: 5,
               boxShadow: 3,
               padding: 2,
@@ -69,14 +74,15 @@ const OurJourney = () => {
             {/* Left Content Box */}
             <Box
               sx={{
-                flexDirection: "column",
+                flex: 1,
                 alignItems: "flex-start",
                 backgroundColor: "#f5f5f5",
                 borderRadius: 2,
                 boxShadow: 3,
                 padding: 2,
-                maxWidth: 400,
                 width: "100%",
+                maxWidth: 400,
+                mb: { xs: 3, sm: 0 }, // Margin-bottom on small screens
               }}
             >
               <Box
@@ -92,16 +98,16 @@ const OurJourney = () => {
                 }}
               >
                 <Typography variant="h6" gutterBottom>
-                  Loan Application Progress
+                  {processType === "registration" ? "Registration Process" : "Loan Application Progress"}
                 </Typography>
                 <LinearProgress
                   variant="determinate"
-                  value={calculateProgress()} // Assuming calculateProgress() function is defined
+                  value={calculateProgress()}
                   sx={{
                     height: 30,
                     borderRadius: 5,
                     "& .MuiLinearProgress-bar": {
-                      backgroundColor: "#4D4D4E", // Custom progress bar color
+                      backgroundColor: "#4D4D4E",
                     },
                     marginBottom: 2,
                   }}
@@ -110,29 +116,34 @@ const OurJourney = () => {
                   Progress: {calculateProgress()}% completed.
                 </Typography>
               </Box>
-              <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+              <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
                 <Button
                   variant="contained"
                   sx={{
-                    background:"#4D4D4E",
-                    width: "25%",
+                    background: "#4D4D4E",
+                    width: "100%",
+                    maxWidth: "150px",
                     borderRadius: "30px",
                     fontWeight: "bold",
                     textTransform: "none",
                   }}
-                  onClick={handleContinue} // Use the handleContinue function here
+                  onClick={handleContinue}
                 >
-                  Continue
+                  {processType === "registration" ? "Continue" : "Finish"}
                 </Button>
                 <Button
                   variant="contained"
                   onClick={handleRedirectToVideo}
                   sx={{
-                    background:"orange",
-                    width: "45%",
+                    width: "100%",
+                    maxWidth: "200px",
                     borderRadius: "30px",
                     fontWeight: "bold",
                     textTransform: "none",
+                    background: "linear-gradient(45deg, #00A5E5, orange)",
+                    "&:hover": {
+                      background: "orange",
+                    },
                   }}
                 >
                   Loan Journey
@@ -143,12 +154,14 @@ const OurJourney = () => {
             {/* Right Image Box */}
             <Box
               sx={{
-                marginLeft: 2,
+                marginLeft: { sm: 2, xs: 0 },
                 borderTopLeftRadius: 2,
                 borderBottomRightRadius: 2,
                 overflow: "hidden",
-                width: 250,
+                width: { xs: "100%", sm: 250 },
                 height: "auto",
+                display: "flex",
+                justifyContent: "center",
               }}
             >
               <img
@@ -165,58 +178,56 @@ const OurJourney = () => {
           </Box>
         )}
 
+        {/* Description Box */}
         <Box
           sx={{
-            marginLeft: "108px",
+            marginLeft: { xs: 0, md: "108px" },
             transition: "margin-left 0.3s ease",
             mt: 5,
             fontWeight: "800",
-            fontSize: { xs: "16px", sm: "18px", md: "20px" }, // Responsive font size
+            fontSize: { xs: "16px", sm: "18px", md: "20px" },
             lineHeight: 1.5,
-            color: "text.primary",
-            backgroundColor: "#f5f5f5", // Light background for contrast
+            color: "white",
+            background: "linear-gradient(45deg, #4D4D4E, orange)",
             borderRadius: "10px",
-            padding: { xs: "16px", sm: "30px" }, // Padding for content spacing
-            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Subtle shadow
-            maxWidth: "800px", // Reduced max-width
-            width: "90%", // Reduced width to 90% for responsiveness
+            padding: { xs: "16px", sm: "30px" },
+            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+            maxWidth: "800px",
+            width: "90%",
             mb: 5,
-            textAlign: "center", // Center-align the text
-            "& p": {
-              margin: 0, // Remove default margin from <p> tag
-            },
+            textAlign: "center",
           }}
         >
           <Typography>
-          Experience a smarter way to borrow with our instant personal loans. No collateral, no credit score worries—just a seamless 100% online process with minimal documentation. Achieve your goals effortlessly and step into a world of financial ease today!
-                    </Typography>
+            Experience a smarter way to borrow with our instant personal loans. No collateral, no credit score worries—just a seamless 100% online process with minimal documentation. Achieve your goals effortlessly and step into a world of financial ease today!
+          </Typography>
         </Box>
 
-        {/* Credit Executive Section - Positioned Below the Loan Application Progress Box */}
+        {/* Credit Executive Section */}
         <Box
           sx={{
+            
             border: "5px solid #4D4D4E",
             borderTop: "none",
             borderRight: "none",
             display: "flex",
+            flexDirection: { xs: "column", sm: "row" }, // Stack on small screens
             justifyContent: "space-between",
             alignItems: "flex-start",
-            backgroundColor: "#f5f5f5",
+            background: "linear-gradient(45deg, #4D4D4E, orange)",
             borderRadius: 5,
             boxShadow: 3,
             padding: 2,
             margin: "auto",
             maxWidth: 810,
+            mt: 5,
           }}
         >
           <Box sx={{ flex: 1, paddingRight: 2 }}>
             <Typography
               variant="h6"
               gutterBottom
-              sx={{
-                fontWeight: "bold",
-                color: "#333",
-              }}
+              sx={{ fontWeight: "bold", color: "white" }}
             >
               Credit Executive
             </Typography>
@@ -227,18 +238,18 @@ const OurJourney = () => {
                 fontWeight: "bold",
                 marginBottom: 1,
                 fontStyle: "italic",
-                color: "orange",
+                color: "white",
               }}
             >
               Stuck in application at any point? Feel free to call your credit executive.
             </Typography>
-            <Typography variant="body2" sx={{ fontWeight: "bold", color: "#333", mt: 2 }}>
+            <Typography variant="body2" sx={{ fontWeight: "bold", color: "white", mt: 2 }}>
               Name: John Doe
             </Typography>
-            <Typography variant="body2" sx={{ color: "#333", mt: 2 }}>
+            <Typography variant="body2" sx={{ color: "white", mt: 2 }}>
               Email: johndoe@example.com
             </Typography>
-            <Typography variant="body2" sx={{ color: "#333", mt: 2 }}>
+            <Typography variant="body2" sx={{ color: "white", mt: 2 }}>
               Mobile: +91 9876543210
             </Typography>
 
@@ -247,12 +258,14 @@ const OurJourney = () => {
                 variant="contained"
                 color="primary"
                 sx={{
+                  paddingX:4,
+
                   borderRadius: "30px",
                   fontWeight: "bold",
                   textTransform: "none",
-                  background: "linear-gradient(45deg, #00A5E5, #0077B6)",
+                  background: "linear-gradient(45deg, #00A5E5, orange)",
                   "&:hover": {
-                    background: "linear-gradient(45deg, #0077B6, #00A5E5)",
+                    background: "orange",
                   },
                 }}
                 onClick={() => window.location.href = "tel:+919876543210"}
@@ -263,15 +276,12 @@ const OurJourney = () => {
                 variant="outlined"
                 color="primary"
                 sx={{
+                  paddingX:4,
                   borderRadius: "30px",
                   fontWeight: "bold",
                   textTransform: "none",
-                  borderColor: "#00A5E5",
-                  color: "#00A5E5",
-                  "&:hover": {
-                    borderColor: "#0077B6",
-                    color: "#0077B6",
-                  },
+                  border: "2px solid #4D4D4E",
+                  color: "white",
                 }}
                 onClick={() => window.location.href = "mailto:johndoe@example.com"}
               >
@@ -280,14 +290,17 @@ const OurJourney = () => {
             </Box>
           </Box>
 
+          {/* Right Image Box */}
           <Box
             sx={{
-              marginLeft: 2,
+              marginLeft: { sm: 2, xs: 0 },
               borderTopLeftRadius: 2,
               borderBottomRightRadius: 2,
               overflow: "hidden",
-              width: 250,
+              width: { xs: "100%", sm: 250 },
               height: "auto",
+              display: "flex",
+              justifyContent: "center",
             }}
           >
             <img

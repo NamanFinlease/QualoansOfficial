@@ -9,8 +9,10 @@ import {
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { BASE_URL } from "../baseURL";
+import { getToken } from "../../tokenManager";
 
 const DocumentUploadDetails = () => {
+    const token= getToken();
   // State to manage document upload status
   const [documentStatus, setDocumentStatus] = useState({
     bankStatement: false,
@@ -25,8 +27,8 @@ const DocumentUploadDetails = () => {
   useEffect(() => {
     const fetchDocumentStatus = async () => {
       try {
-        const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+        // const token =
+        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
         const response = await fetch(
           `${BASE_URL}/api/loanApplication/getDocumentStatus`,
           {

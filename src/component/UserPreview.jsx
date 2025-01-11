@@ -83,12 +83,11 @@ export default function UserPreview() {
             margin: "20px",
             padding: 2,
             ml:30,
-            backgroundColor: "#4D4D4E",
-            borderRadius: 3,
+            background: "linear-gradient(90deg, #4D4D4E, orange)",             borderRadius: 3,
             boxShadow: 3,
           }}
         >
-          <Typography variant="h4" gutterBottom align="center" sx={{ color: "#f5f5f5", mb: 2 }}>
+          <Typography variant="h4" gutterBottom align="center" sx={{ color: "#f5f5f5", mb: 2 ,bgcolor:"black"}}>
             User Preview
           </Typography>
           <List>

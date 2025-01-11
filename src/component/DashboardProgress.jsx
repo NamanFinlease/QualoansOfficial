@@ -46,6 +46,7 @@ const DashboardProgress = ({ registrationStatus }) => {
       const newProgress = calculateProgress(registrationStatus);
       setProgress(newProgress);
     }
+    
   }, [registrationStatus]);
 
   return (

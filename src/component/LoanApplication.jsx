@@ -21,8 +21,10 @@ import { BASE_URL } from "../baseURL";
 import axios from "axios";
 import DocumentUploadModal from "./DocumentUploadModal";
 import Swal from "sweetalert2";
+import { getToken } from "../../tokenManager";
 
 const LoanApplication = () => {
+  const token=getToken();
   const [bankStatement, setBankStatement] = useState(null); // Add state for the bank statement
 
   const navigate = useNavigate(); // React Router hook for navigation
@@ -200,8 +202,8 @@ const LoanApplication = () => {
       },
     });
 
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+    // const token =
+    //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
 
     if (formValues) {
       try {
@@ -262,8 +264,8 @@ const LoanApplication = () => {
   const uploadBankStatementToServer = async (bankStatement) => {
     const formData = new FormData();
     formData.append("bankStatement", bankStatement); // Key "bankStatement"
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+    // const token =
+    //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
 
     try {
       const response = await fetch(
@@ -276,7 +278,7 @@ const LoanApplication = () => {
           body: formData, // Include the FormData object
         }
       );
-      console.log(response);
+      // console.log(response);
 
       // Check if the response is OK (status 200-299)
       if (response.ok) {
@@ -420,8 +422,8 @@ const LoanApplication = () => {
           city: addressValues.city,
           state: addressValues.state,
         };
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+        // const token =
+        //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
         // API call to submit employment info
         try {
           const response = await fetch(
@@ -566,7 +568,7 @@ const LoanApplication = () => {
                     padding: 3,
                     border: "1px solid #ddd",
                     borderRadius: 3,
-                    backgroundColor: "#4D4D4E",
+                    background: "linear-gradient(45deg, #4D4D4E, orange)",
                     cursor: "pointer",
                     height: 180,
                     width: "100%",

@@ -8,7 +8,7 @@ import {
   Typography,
   Box,
   CircularProgress,
-  keyframes,
+  keyframes,Grid
 } from "@mui/material";
 import axios from "axios";
 import loginImage from "../assets/image/Our-Mission.jpg"; // Adjust the path based on your project structure
@@ -85,7 +85,6 @@ const LoginForm = ({ setLoginCompleted }) => {
     try {
       const response = await axios.get(
         `http://localhost:8081/api/user/aadhaar-login/${aadhaar}`
-        // { withCredentials: true }
       );
 
       console.log("API Full Response:", response.data); // Debugging Step
@@ -160,7 +159,7 @@ const LoginForm = ({ setLoginCompleted }) => {
             icon: "success",
             confirmButtonText: "OK",
           }).then(() => {
-            navigate("/dashboard");
+            navigate("/ourjourney");
           });
         } else {
           setErrorMessage(mobileOtpResponse.data.message || "Invalid OTP.");
@@ -187,11 +186,8 @@ const LoginForm = ({ setLoginCompleted }) => {
           { withCredentials: true }
         );
 
-        console.log("res aadhaar >>>  ", response?.data?.token);
         const token = response?.data?.token;
         setToken(token);
-
-        console.log("Token stored globally:", token);
 
         if (response.data?.success) {
           setSuccessMessage("OTP verified successfully!");
@@ -220,23 +216,34 @@ const LoginForm = ({ setLoginCompleted }) => {
   };
 
   const handleOtpChange = (e, index) => {
+    const newOtp = [...otp];
     const value = e.target.value;
-    if (/^\d$/.test(value)) {
-      // Only allow numbers
-      const newOtp = [...otp];
-      newOtp[index] = value;
-      setOtp(newOtp);
-
-      // Move focus to the next field automatically
-      if (value && index < 5) {
-        document.getElementById(`otp-input-${index + 1}`).focus();
-      }
+  
+    if (/[^0-9]/.test(value)) {
+      return; // Only allow digits
+    }
+  
+    newOtp[index] = value;
+  
+    // If the user presses backspace, clear the digit at the current index
+    if (value === "") {
+      newOtp[index] = ""; 
+    }
+  
+    setOtp(newOtp);
+  
+    // Automatically move focus to the next field if the OTP field is filled
+    if (value && index < otp.length - 1) {
+      document.getElementById(`otp-input-${index + 1}`).focus();
     }
   };
-
+  
   const handleKeyDown = (e, index) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      document.getElementById(`otp-input-${index - 1}`).focus();
+    if (e.key === "Backspace" && otp[index] === "") {
+      // Move focus to the previous field when backspace is pressed on an empty input
+      if (index > 0) {
+        document.getElementById(`otp-input-${index - 1}`).focus();
+      }
     }
   };
 
@@ -282,58 +289,80 @@ const LoginForm = ({ setLoginCompleted }) => {
           sx={{
             padding: 5,
             borderRadius: 2,
-            textAlign: "center",
-            backgroundColor: "#f9f9f9",
-            width: { xs: "100%", md: "50%" },
-            animation: `${rotateIn} 1.2s ease-in-out`,
+            boxShadow: 3,
+            maxWidth: "400px",
+            width: "100%",
+            animation: `${fadeIn} 1s ease-in-out`,
           }}
         >
           <Typography
-            variant="h5"
-            sx={{
-              mb: 3,
-              fontWeight: "bold",
-              color: "#4D4D4E",
-            }}
+            variant="h4"
+            align="center"
+            sx={{ marginBottom: 3, fontWeight: "bold" }}
           >
-            Login with Aadhaar
+            Aadhaar Login
           </Typography>
+
+          {errorMessage && (
+            <Typography
+              color="error"
+              variant="body2"
+              sx={{
+                marginBottom: 2,
+                backgroundColor: "#f44336",
+                color: "#fff",
+                padding: 1,
+                borderRadius: 1,
+              }}
+            >
+              {errorMessage}
+            </Typography>
+          )}
+          {successMessage && (
+            <Typography
+              color="success"
+              variant="body2"
+              sx={{
+                marginBottom: 2,
+                backgroundColor: "#4caf50",
+                color: "#fff",
+                padding: 1,
+                borderRadius: 1,
+              }}
+            >
+              {successMessage}
+            </Typography>
+          )}
+
           {!otpSent ? (
             <>
               <TextField
-                fullWidth
                 label="Aadhaar Number"
+                variant="outlined"
+                fullWidth
                 value={aadhaar}
                 onChange={handleAadhaarChange}
-                inputProps={{ maxLength: 12 }}
                 error={aadhaarError}
-                helperText={
-                  aadhaarError ? "Aadhaar number must be 12 digits." : ""
-                }
-                sx={{ mb: 3 }} // Increased margin for better spacing
+                helperText={aadhaarError ? "Enter a valid 12-digit Aadhaar number" : ""}
+                sx={{ marginBottom: 2 }}
               />
               <Button
                 variant="contained"
+               
                 fullWidth
                 onClick={sendOtp}
-                disabled={!aadhaar || loading}
-                sx={{
-                  background: "orange",
-                  py: 1.5,
-                  transition: "all 0.3s ease-in-out",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                  },
-                }}
+                sx={{ marginBottom: 2,bgcolor :'orange' }}
+                disabled={loading}
               >
                 {loading ? <CircularProgress size={24} /> : "Send OTP"}
               </Button>
             </>
           ) : (
             <>
-              <Box
-                sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}
-              >
+              <Typography variant="h6" sx={{ marginBottom: 2 }}>
+                Enter OTP sent to your mobile
+              </Typography>
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 {otp.map((digit, index) => (
                   <TextField
                     key={index}
@@ -342,75 +371,48 @@ const LoginForm = ({ setLoginCompleted }) => {
                     onChange={(e) => handleOtpChange(e, index)}
                     onKeyDown={(e) => handleKeyDown(e, index)}
                     onFocus={() => handleFocus(index)}
-                    inputProps={{
-                      maxLength: 1,
-                      style: {
-                        textAlign: "center",
-                        fontSize: "1rem", // Smaller font size for OTP box
-                        width: "40px", // Reduced width
-                        height: "40px", // Reduced height
-                        backgroundColor: "#f4f4f4",
-                        boxShadow: "0 4px 6px rgba(255, 165, 0, 0.5)", // Orange shadow effect
-                        borderRadius: "8px",
-                      },
-                    }}
                     variant="outlined"
-                    size="small"
+                    inputProps={{ maxLength: 1 }}
                     sx={{
-                      mr: 1, // Add space between OTP boxes
+                      width: "40px",
+                      textAlign: "center",
+                      marginRight: 1,
                     }}
                   />
                 ))}
               </Box>
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Button
-                  variant="contained"
-                  onClick={sendOtp}
-                  disabled={loadingOtp}
-                  sx={{
-                    background: "#4D4D4E",
-                    py: 1.5,
-                    width: "48%",
-                    transition: "all 0.3s ease-in-out",
-                    "&:hover": {
-                      transform: "scale(1.05)",
-                    },
-                  }}
-                >
-                  {loadingOtp ? <CircularProgress size={24} /> : "Resend OTP"}
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={verifyOtp}
-                  disabled={otp.some((digit) => !digit) || loadingVerify}
-                  sx={{
-                    background: "orange",
-                    py: 1.5,
-                    width: "48%",
-                    transition: "all 0.3s ease-in-out",
-                    "&:hover": {
-                      transform: "scale(1.05)",
-                    },
-                  }}
-                >
-                  {loadingVerify ? (
-                    <CircularProgress size={24} />
-                  ) : (
-                    "Verify OTP"
-                  )}
-                </Button>
-              </Box>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Grid container spacing={2} sx={{ marginTop: 2 }}>
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                color="orange"
+                fullWidth
+                onClick={verifyOtp}
+                sx={{ backgroundColor: "#FFA500", "&:hover": { backgroundColor: "#FF8C00" } }}
+                disabled={loading}
+              >
+                {loading ? <CircularProgress size={24} /> : "Verify OTP"}
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={sendOtp}
+                sx={{
+                  borderColor: "#4D4D4E",
+                  color: "#4D4D4E",
+                  "&:hover": { borderColor: "#4D4D4E", backgroundColor: "#f1f1f1" },
+                }}
+                disabled={loadingOtp}
+              >
+                {loadingOtp ? <CircularProgress size={24} /> : "Resend OTP"}
+              </Button>
+            </Grid>
+          </Grid>
+</Box>
             </>
-          )}
-          {errorMessage && (
-            <Typography variant="body2" color="error" sx={{ mt: 3 }}>
-              {errorMessage}
-            </Typography>
-          )}
-          {successMessage && (
-            <Typography variant="body2" color="success" sx={{ mt: 3 }}>
-              {successMessage}
-            </Typography>
           )}
         </Box>
       </Box>

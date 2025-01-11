@@ -19,7 +19,6 @@ import LoginForm from "./component/LoginForm";
 import Dashboard from "./component/Dashboard";
 import RegistrationSteps from "./component/RegistrationSteps";
 import PersonalInfoPage from "./component/PersonalInfoPage";
-import Navbar from "./navbar/Navbar";
 import LoanApplication from "./component/LoanApplication";
 import Calculator from "./component/Calculator";
 import OurJourney from "./component/OurJourney";

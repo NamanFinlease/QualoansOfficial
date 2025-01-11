@@ -30,7 +30,6 @@ const MySwal = withReactContent(Swal);
 
 const RegistrationSteps = () => {
   const token = getToken();
-  console.log("token >>><<< ", token);
   const theme = useTheme();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -152,8 +151,8 @@ const RegistrationSteps = () => {
   };
 
   const showPersonalInfoForm = () => {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+    // const token =
+    //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
 
     fetch(`${BASE_URL}/api/user/getProfileDetails`, {
       method: "GET",
@@ -636,7 +635,7 @@ const RegistrationSteps = () => {
     try {
       setIsFetching(true);
       const response = await axios.post(
-        "http://localhost:5000/upload-selfie",
+        "http://localhost:8081/api/user/uploadProfile",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -717,8 +716,8 @@ const RegistrationSteps = () => {
       if (result.isConfirmed) {
         const mobile = result.value;
 
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZiYTg5N2EyOGYwMWE2YjM1MjdjYyIsImlhdCI6MTczNjI1Mjc4MSwiZXhwIjoxNzM4ODQ0NzgxfQ.BC5jt4Whb5S8jBQwDr0gPYV3SjtPuUw6QDjzTDz02h0";
+        // const token =
+        //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZiYTg5N2EyOGYwMWE2YjM1MjdjYyIsImlhdCI6MTczNjI1Mjc4MSwiZXhwIjoxNzM4ODQ0NzgxfQ.BC5jt4Whb5S8jBQwDr0gPYV3SjtPuUw6QDjzTDz02h0";
 
         // Send OTP API Call
         fetch(`${BASE_URL}/api/verify/mobile/get-otp/${mobile}`, {
@@ -882,7 +881,7 @@ const RegistrationSteps = () => {
         cursor: "pointer",
         textAlign: "left", // Left align text
         color: "white",
-        backgroundColor: "#4D4D4E",
+        background: "linear-gradient(45deg, #4D4D4E, orange)",
         boxShadow: completedSteps[stepKey]
           ? "0 4px 8px rgba(0, 128, 0, 0.4)"
           : "0 4px 8px rgba(0, 0, 0, 0.1)",
@@ -955,6 +954,39 @@ const RegistrationSteps = () => {
           },
         }}
       >
+
+
+
+      {/* Steps UI and Completion Message */}
+      {allStepsCompleted && (
+        <Box
+          sx={{
+            padding: 4,
+            textAlign: "center",
+            backgroundColor: "#e6f9e9",
+            borderRadius: 3,
+            marginTop: 4,
+            boxShadow: "0 4px 8px rgba(0, 128, 0, 0.4)",
+          }}
+        >
+          <Typography variant="h5" sx={{ fontWeight: 600, marginBottom: 2 }}>
+            Congratulations! You've completed all the steps.
+          </Typography>
+          <img
+            src="congratulation-image-url.jpg"
+            alt="Congratulations"
+            style={{ maxWidth: "100%", height: "auto", marginBottom: 2 }}
+          />
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: "#FF6600", color: "white" }}
+            onClick={() => navigate("/loan-application")}
+          >
+            Continue to Next Page
+          </Button>
+        </Box>
+      )}
+ 
         <Grid
           container
           alignItems="center"

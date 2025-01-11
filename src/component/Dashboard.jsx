@@ -22,20 +22,21 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import logo from "../assets/image/White.webp";
 import { BASE_URL } from "../baseURL";
+import { getToken } from "../../tokenManager";
 
 const Dashboard = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false  );
   const [profileData, setProfileData] = useState({ name: "", profileImageUrl: "" });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const location = useLocation();
-
+  const token = getToken()
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+        // const token =
+        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
   
         const response = await fetch(`${BASE_URL}/api/user/getProfileDetails`, {
           method: "GET",
@@ -74,7 +75,8 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ display: "flex", overflow: "hidden", flexDirection: "column", backgroundColor: "#f9f9f9" }}>
-      <AppBar position="fixed" sx={{ backgroundColor: "#4D4D4E", color: "#fff", boxShadow: "none", height: "64px", zIndex: 1201 }}>
+      <AppBar position="fixed" sx={{  background: "linear-gradient(45deg, #4D4D4E, orange)",
+ color: "#fff", boxShadow: "none", height: "64px", zIndex: 1201 }}>
        <Toolbar>
         <IconButton onClick={() => setSidebarOpen(!sidebarOpen)} sx={{ color: "white", marginRight: 2 }}>
           {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
@@ -99,7 +101,8 @@ const Dashboard = () => {
 
       {/* Sidebar */}
       {sidebarOpen && (
-        <Box sx={{ width: 240, height: "100vh", backgroundColor: "#4D4D4E", position: "fixed", top: "64px", left: 0, bottom: 0, zIndex: 1200, boxShadow: 3, color: "#fff" }}>
+        <Box sx={{ width: 240, height: "100vh",            background: "linear-gradient(90deg, #4D4D4E, orange)", // Left to right gradient
+           position: "fixed", top: "55px", left: 0, bottom: 0, zIndex: 1200, boxShadow: 3, color: "#fff" }}>
           <Divider />
           <List>
             {options.map((option, index) => (

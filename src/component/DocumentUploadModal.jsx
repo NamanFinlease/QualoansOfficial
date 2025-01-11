@@ -12,11 +12,14 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
+import { getToken } from "../../tokenManager";
 
 // Initialize SweetAlert with React content
 const MySwal = withReactContent(Swal);
 
+
 const DocumentUploadModal = () => {
+  const token = getToken();
   const [formValues, setFormValues] = useState({
     salarySlip: null,
     aadhaarFront: null,
@@ -64,8 +67,8 @@ const DocumentUploadModal = () => {
     setLoading(true);
 
     try {
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+      // const token =
+      //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
 
       // Fetch the API using axios
       const response = await axios.patch(

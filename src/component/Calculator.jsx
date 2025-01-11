@@ -19,6 +19,7 @@ import loanImage from "../assets/image/Repay Now qua (1).webp";
 import axios from "axios"; // Import axios for API calls
 import { BASE_URL } from "../baseURL";
 import Dashboard from "./Dashboard";
+import { getToken } from "../../tokenManager";
 
 const LoanCalculator = () => {
   const [loanAmount, setLoanAmount] = useState(5000);
@@ -28,7 +29,7 @@ const LoanCalculator = () => {
   const [purpose, setPurpose] = useState("");
   const [isLoading, setIsLoading] = useState(false); // Loading state for API call
   const [responseMessage, setResponseMessage] = useState(""); // To store API response message
-
+  const token = getToken();
   const navigate = useNavigate();
 
   const calculateTotalAmount = () => {
@@ -61,8 +62,8 @@ const LoanCalculator = () => {
 
     try {
       setIsLoading(true);
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+      // const token =
+      //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
 
       const response = await axios.post(
         `${BASE_URL}/api/loanApplication/applyLoan`,
