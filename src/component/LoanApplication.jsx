@@ -130,7 +130,7 @@ const LoanApplication = () => {
       setStep: setStep5,
       title: "Disbursal Bank Details",
       icon: AccountBalanceWalletIcon,
-      description: "Share your disbursal bank details",
+      description: "Share your dis.bank details",
       action: () => handleDisbursalbankdetails(),
     },
   ];

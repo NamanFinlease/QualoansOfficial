@@ -314,7 +314,7 @@ const Header = () => {
               Apply Now
             </Button>
    
-</Box>
+            </Box>
 
         </Toolbar>
       </AppBar>

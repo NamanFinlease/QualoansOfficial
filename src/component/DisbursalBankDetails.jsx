@@ -87,7 +87,7 @@ return (
     <Box
     sx={{
       padding: 3,
-      backgroundColor: "#4D4D4E", // Updated background color
+      background: "linear-gradient(90deg, #4D4D4E, orange)",
       boxShadow: 3,
       borderRadius: 3,
 
@@ -101,7 +101,7 @@ return (
       variant="h4"
       gutterBottom
       align="center"
-      sx={{ mb: 3, color: "white" }} // Set text color to white
+      sx={{ mb: 3, color: "white",bgcolor:'black' }} // Set text color to white
     >
         Disbursal Bank Details
     </Typography>

@@ -41,7 +41,7 @@ function App() {
         <Route path="/fqa" element={<FAQs />} />
         <Route path="/calculator" element={<LoanCalculator />} />
         <Route path="/login-form" element={<LoginForm />} />
-        <Route path="/navbar" element={<Navbar />} />
+        {/* <Route path="/navbar" element={<Navbar />} /> */}
         <Route path="/dashboard" element={<Dashboard />} />
 
         <Route path="/registration" element={<RegistrationSteps />} />

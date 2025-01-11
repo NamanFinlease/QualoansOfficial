@@ -11,7 +11,7 @@ import {
   keyframes,Grid
 } from "@mui/material";
 import axios from "axios";
-import loginImage from "../assets/image/Our-Mission.jpg"; // Adjust the path based on your project structure
+import loginGif from "../assets/image/Untitled design (2) (1).gif"; // Adjust the path based on your project structure
 import Header from "../navbar/Header";
 
 const fadeIn = keyframes`
@@ -258,164 +258,179 @@ const LoginForm = ({ setLoginCompleted }) => {
     <>
       <Header />
       <Box
+  sx={{
+    display: "flex",
+    flexDirection: { xs: "column", md: "row" },
+    justifyContent: "space-between",
+    alignItems: "center",
+    boxShadow: 4,
+    borderRadius: 3,
+    padding: 4,
+    backgroundColor: "#ffffff",
+    maxWidth: "900px",
+    margin: "auto",
+    mt: 8,
+    mb: 8,
+    gap: { xs: 2, md: 4 },
+  }}
+>
+  {/* GIF Box */}
+<Box
+  component="img"
+  src={loginGif}  // Ensure loginGif points to your GIF file
+  alt="Login Illustration"
+  sx={{
+    width: { xs: "100%", md: "40%" },
+    height: "auto",
+    borderRadius: 2,
+    boxShadow: 5,
+    animation: `${rotateIn} 1s ease-in-out`,
+    objectFit: "cover",
+  }}
+/>
+
+
+  {/* Form Box */}
+  <Box
+    sx={{
+      padding: { xs: 3, md: 5 },
+      borderRadius: 2,
+      boxShadow: 5,
+      maxWidth: "400px",
+      width: "100%",
+      animation: `${fadeIn} 1s ease-in-out`,
+      backgroundColor: "#f9f9f9",
+    }}
+  >
+    <Typography
+      variant="h4"
+      align="center"
+      sx={{ marginBottom: 3, fontWeight: "bold", color: "#4D4D4E" }}
+    >
+      Aadhaar Login
+    </Typography>
+
+    {/* Error & Success Messages */}
+    {errorMessage && (
+      <Typography
+        color="error"
+        variant="body2"
         sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          alignItems: "center",
-          justifyContent: "space-between",
-          boxShadow: 4,
-          borderRadius: 3,
-          padding: 4,
-          backgroundColor: "#ffffff",
-          maxWidth: "900px",
-          margin: "auto",
-          mt: 8,
-          mb: 8,
+          marginBottom: 2,
+          backgroundColor: "#f44336",
+          color: "#fff",
+          padding: 1,
+          borderRadius: 1,
         }}
       >
-        <Box
-          component="img"
-          src={loginImage}
-          alt="Login Illustration"
-          sx={{
-            width: { xs: "100%", md: "50%" },
-            borderRadius: 2,
-            boxShadow: 3,
-            marginBottom: { xs: 3, md: 0 },
-            animation: `${rotateIn} 1s ease-in-out`,
-          }}
+        {errorMessage}
+      </Typography>
+    )}
+    {successMessage && (
+      <Typography
+        color="success"
+        variant="body2"
+        sx={{
+          marginBottom: 2,
+          backgroundColor: "#4caf50",
+          color: "#fff",
+          padding: 1,
+          borderRadius: 1,
+        }}
+      >
+        {successMessage}
+      </Typography>
+    )}
+
+    {/* OTP Section */}
+    {!otpSent ? (
+      <>
+        <TextField
+          label="Aadhaar Number"
+          variant="outlined"
+          fullWidth
+          value={aadhaar}
+          onChange={handleAadhaarChange}
+          error={aadhaarError}
+          helperText={aadhaarError ? "Enter a valid 12-digit Aadhaar number" : ""}
+          sx={{ marginBottom: 2 }}
         />
-        <Box
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={sendOtp}
           sx={{
-            padding: 5,
-            borderRadius: 2,
-            boxShadow: 3,
-            maxWidth: "400px",
-            width: "100%",
-            animation: `${fadeIn} 1s ease-in-out`,
+            marginBottom: 2,
+            backgroundColor: "orange",
+            "&:hover": { backgroundColor: "darkorange" },
+            fontWeight: "bold",
           }}
+          disabled={loading}
         >
-          <Typography
-            variant="h4"
-            align="center"
-            sx={{ marginBottom: 3, fontWeight: "bold" }}
-          >
-            Aadhaar Login
-          </Typography>
-
-          {errorMessage && (
-            <Typography
-              color="error"
-              variant="body2"
+          {loading ? <CircularProgress size={24} /> : "Send OTP"}
+        </Button>
+      </>
+    ) : (
+      <>
+        <Typography variant="h6" sx={{ marginBottom: 2, color: "#4D4D4E" }}>
+          Enter OTP sent to your mobile
+        </Typography>
+        <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
+          {otp.map((digit, index) => (
+            <TextField
+              key={index}
+              id={`otp-input-${index}`}
+              value={digit}
+              onChange={(e) => handleOtpChange(e, index)}
+              onKeyDown={(e) => handleKeyDown(e, index)}
+              onFocus={() => handleFocus(index)}
+              variant="outlined"
+              inputProps={{ maxLength: 1 }}
               sx={{
-                marginBottom: 2,
-                backgroundColor: "#f44336",
-                color: "#fff",
-                padding: 1,
-                borderRadius: 1,
+                width: "40px",
+                textAlign: "center",
               }}
-            >
-              {errorMessage}
-            </Typography>
-          )}
-          {successMessage && (
-            <Typography
-              color="success"
-              variant="body2"
-              sx={{
-                marginBottom: 2,
-                backgroundColor: "#4caf50",
-                color: "#fff",
-                padding: 1,
-                borderRadius: 1,
-              }}
-            >
-              {successMessage}
-            </Typography>
-          )}
-
-          {!otpSent ? (
-            <>
-              <TextField
-                label="Aadhaar Number"
-                variant="outlined"
-                fullWidth
-                value={aadhaar}
-                onChange={handleAadhaarChange}
-                error={aadhaarError}
-                helperText={aadhaarError ? "Enter a valid 12-digit Aadhaar number" : ""}
-                sx={{ marginBottom: 2 }}
-              />
-              <Button
-                variant="contained"
-               
-                fullWidth
-                onClick={sendOtp}
-                sx={{ marginBottom: 2,bgcolor :'orange' }}
-                disabled={loading}
-              >
-                {loading ? <CircularProgress size={24} /> : "Send OTP"}
-              </Button>
-            </>
-          ) : (
-            <>
-              <Typography variant="h6" sx={{ marginBottom: 2 }}>
-                Enter OTP sent to your mobile
-              </Typography>
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                {otp.map((digit, index) => (
-                  <TextField
-                    key={index}
-                    id={`otp-input-${index}`}
-                    value={digit}
-                    onChange={(e) => handleOtpChange(e, index)}
-                    onKeyDown={(e) => handleKeyDown(e, index)}
-                    onFocus={() => handleFocus(index)}
-                    variant="outlined"
-                    inputProps={{ maxLength: 1 }}
-                    sx={{
-                      width: "40px",
-                      textAlign: "center",
-                      marginRight: 1,
-                    }}
-                  />
-                ))}
-              </Box>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <Grid container spacing={2} sx={{ marginTop: 2 }}>
-            <Grid item xs={6}>
-              <Button
-                variant="contained"
-                color="orange"
-                fullWidth
-                onClick={verifyOtp}
-                sx={{ backgroundColor: "#FFA500", "&:hover": { backgroundColor: "#FF8C00" } }}
-                disabled={loading}
-              >
-                {loading ? <CircularProgress size={24} /> : "Verify OTP"}
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button
-                variant="outlined"
-                fullWidth
-                onClick={sendOtp}
-                sx={{
-                  borderColor: "#4D4D4E",
-                  color: "#4D4D4E",
-                  "&:hover": { borderColor: "#4D4D4E", backgroundColor: "#f1f1f1" },
-                }}
-                disabled={loadingOtp}
-              >
-                {loadingOtp ? <CircularProgress size={24} /> : "Resend OTP"}
-              </Button>
-            </Grid>
-          </Grid>
-</Box>
-            </>
-          )}
+            />
+          ))}
         </Box>
-      </Box>
+        <Grid container spacing={2} sx={{ marginTop: 2 }}>
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={verifyOtp}
+              sx={{
+                backgroundColor: "#FFA500",
+                fontWeight: "bold",
+                "&:hover": { backgroundColor: "#FF8C00" },
+              }}
+              disabled={loading}
+            >
+              {loading ? <CircularProgress size={24} /> : "Verify OTP"}
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={sendOtp}
+              sx={{
+                borderColor: "#4D4D4E",
+                color: "#4D4D4E",
+                fontWeight: "bold",
+                "&:hover": { backgroundColor: "#f1f1f1" },
+              }}
+              disabled={loadingOtp}
+            >
+              {loadingOtp ? <CircularProgress size={24} /> : "Resend OTP"}
+            </Button>
+          </Grid>
+        </Grid>
+      </>
+    )}
+  </Box>
+</Box>
+
     </>
   );
 };

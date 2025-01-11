@@ -67,74 +67,91 @@ export default function UserPreview() {
       <Dashboard />
 
       <div
-        style={{
-          padding: "20px",
-          backgroundColor: "#f4f6f9",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "row", // Align items in a row
-        }}
-      >
-        {/* Left Side: User Preview */}
-        <Box
+  style={{
+    padding: "20px",
+    backgroundColor: "#f4f6f9",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "row", // Align items in a row
+    flexWrap: "wrap", // Allow wrapping for smaller screens
+  }}
+>
+  {/* Left Side: User Preview */}
+  <Box
+    sx={{
+      flex: 1,
+      maxWidth: 320,
+      margin: "20px",
+      padding: 2,
+      ml: { xs: 0, sm: 30 }, // Margin left 0 on smaller screens and 30 on larger ones
+      background: "linear-gradient(90deg, #4D4D4E, orange)",
+      borderRadius: 3,
+      boxShadow: 3,
+      '@media (max-width: 600px)': {
+        maxWidth: '100%', // On mobile, it takes full width
+      },
+    }}
+  >
+    <Typography
+      variant="h4"
+      gutterBottom
+      align="center"
+      sx={{
+        color: "#f5f5f5",
+        mb: 2,
+        bgcolor: "black",
+      }}
+    >
+      User Preview
+    </Typography>
+    <List>
+      {items.map((item, index) => (
+        <ListItem
+          key={index}
+          disablePadding
           sx={{
-            flex: 1,
-            maxWidth: 320,
-            margin: "20px",
-            padding: 2,
-            ml:30,
-            background: "linear-gradient(90deg, #4D4D4E, orange)",             borderRadius: 3,
-            boxShadow: 3,
+            "&:hover": { backgroundColor: "#5c5c5e" },
           }}
         >
-          <Typography variant="h4" gutterBottom align="center" sx={{ color: "#f5f5f5", mb: 2 ,bgcolor:"black"}}>
-            User Preview
-          </Typography>
-          <List>
-            {items.map((item, index) => (
-              <ListItem
-                key={index}
-                disablePadding
-                sx={{
-                  "&:hover": { backgroundColor: "#5c5c5e" },
-                }}
-              >
-                <ListItemButton
-                  onClick={() => setActiveComponent(item.value)} // Set active component
-                  sx={{
-                    textDecoration: "none",
-                    color: activeComponent === item.value ? "#FFA500" : "#f5f5f5",
-                    backgroundColor: activeComponent === item.value ? "#5c5c5e" : "transparent",
-                    "&:hover": {
-                      color: "#ffffff",
-                    },
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      color: activeComponent === item.value ? "#FFA500" : "#f5f5f5",
-                    }}
-                  >
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={item.label} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
+          <ListItemButton
+            onClick={() => setActiveComponent(item.value)} // Set active component
+            sx={{
+              textDecoration: "none",
+              color: activeComponent === item.value ? "#FFA500" : "#f5f5f5",
+              backgroundColor: activeComponent === item.value ? "#5c5c5e" : "transparent",
+              "&:hover": {
+                color: "#ffffff",
+              },
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                color: activeComponent === item.value ? "#FFA500" : "#f5f5f5",
+              }}
+            >
+              {item.icon}
+            </ListItemIcon>
+            <ListItemText primary={item.label} />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
+  </Box>
 
-        {/* Right Side: Active Component */}
-        <Box
-          sx={{
-            flex: 1, // Take up more space
-            marginTop: 3,
-          }}
-        >
-          {renderComponent()} {/* This will render the selected component */}
-        </Box>
-      </div>
-
+  {/* Right Side: Active Component */}
+  <Box
+    sx={{
+      flex: 1, // Take up more space
+      marginTop: 3,
+      '@media (max-width: 600px)': {
+        flex: 'none', // Allow the right side to take full width on mobile
+        marginTop: 2,
+      },
+    }}
+  >
+    {renderComponent()} {/* This will render the selected component */}
+  </Box>
+</div>
     </>
   );
 }

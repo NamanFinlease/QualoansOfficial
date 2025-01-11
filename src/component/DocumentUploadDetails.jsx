@@ -81,7 +81,7 @@ const DocumentUploadDetails = () => {
     <Box
       sx={{
         padding: 3,
-        backgroundColor: "#4D4D4E",
+        background: "linear-gradient(90deg, #4D4D4E, orange)",
         boxShadow: 3,
         borderRadius: 3,
         width: "60%",
@@ -93,7 +93,7 @@ const DocumentUploadDetails = () => {
         variant="h4"
         gutterBottom
         align="center"
-        sx={{ mb: 3, color: "white" }}
+        sx={{ mb: 3, color: "white" ,bgcolor:'black'}}
       >
         Document Upload Status
       </Typography>
