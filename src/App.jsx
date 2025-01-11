@@ -26,18 +26,7 @@ import OurJourney from "./component/OurJourney";
 import UserPreview from "./component/UserPreview";
 // import Navbar from "./navbar/NavBar"
 
-const ProtectedRoute = ({
-  isAllowed,
-  redirectPath = "/login-form",
-  children,
-}) => {
-  return isAllowed ? children : <Navigate to={redirectPath} replace />;
-};
-
 function App() {
-  // For Development Purpose we are setting it to true
-  const [isLoginCompleted, setIsLoginCompleted] = useState(true);
-
   return (
     <Router>
       {/* <Navbar /> */}
@@ -52,36 +41,16 @@ function App() {
         <Route path="/repay-now" element={<RepayLoan />} />
         <Route path="/fqa" element={<FAQs />} />
         <Route path="/calculator" element={<LoanCalculator />} />
-        <Route
-          path="/login-form"
-          element={<LoginForm setLoginCompleted={setIsLoginCompleted} />}
-        />
+        <Route path="/login-form" element={<LoginForm />} />
+        <Route path="/navbar" element={<Navbar />} />
+        <Route path="/dashboard" element={<Dashboard />} />
 
-        {/* Protected Routes */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute isAllowed={isLoginCompleted}>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/registration"
-          element={
-            <ProtectedRoute isAllowed={isLoginCompleted}>
-              <RegistrationSteps />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/ourjourney"
-          element={
-            <ProtectedRoute isAllowed={isLoginCompleted}>
-              <OurJourney />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/registration" element={<RegistrationSteps />} />
+        <Route path="/personal-info" element={<PersonalInfoPage />} />
+        <Route path="/loan-application" element={<LoanApplication />} />
+        <Route path="/calculator-loan" element={<Calculator />} />
+        <Route path="/ourjourney" element={<OurJourney />} />
+        <Route path="/user-preview" element={<UserPreview />} />
       </Routes>
       <Footer />
     </Router>
