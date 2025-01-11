@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2';
+import { setToken } from "../../tokenManager";
+import Swal from "sweetalert2";
 import {
   Button,
   TextField,
@@ -35,7 +36,7 @@ const rotateIn = keyframes`
   }
 `;
 
-const LoginForm = () => {
+const LoginForm = ({ setLoginCompleted }) => {
   const navigate = useNavigate(); // Initialize the navigate function
   const [aadhaar, setAadhaar] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]); // Changed to an array of 6 characters
@@ -44,16 +45,16 @@ const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [aadhaarError, setAadhaarError] = useState(false);
-  const [loadingOtp, setLoadingOtp] = useState(false);  // Track loading for Resend OTP
-  const [loadingVerify, setLoadingVerify] = useState(false);  // Track loading for Verify OTP
-  
+  const [loadingOtp, setLoadingOtp] = useState(false); // Track loading for Resend OTP
+  const [loadingVerify, setLoadingVerify] = useState(false); // Track loading for Verify OTP
+
   const [transactionId, setTransactionId] = useState("");
   const [fwdp, setFwdp] = useState("");
   const [codeVerifier, setCodeVerifier] = useState("");
-  
+
   // Add the missing state variables for mobile and user registration status
-  const [mobileNumber, setMobileNumber] = useState("");  // For storing mobile number
-  const [userAlreadyRegistered, setUserAlreadyRegistered] = useState(false);  // For tracking if the user is registered
+  const [mobileNumber, setMobileNumber] = useState(""); // For storing mobile number
+  const [userAlreadyRegistered, setUserAlreadyRegistered] = useState(false); // For tracking if the user is registered
 
   const handleAadhaarChange = (e) => {
     const value = e.target.value;
@@ -76,76 +77,81 @@ const LoginForm = () => {
       setErrorMessage("Please enter your Aadhaar number.");
       return;
     }
-  
+
     setLoading(true);
     setErrorMessage("");
     console.log("Sending OTP...");
-  
+
     try {
       const response = await axios.get(
         `http://localhost:8081/api/user/aadhaar-login/${aadhaar}`
         // { withCredentials: true }
       );
-  
+
       console.log("API Full Response:", response.data); // Debugging Step
-  
+
       if (response.data.success) {
         setOtpSent(true);
-        setSuccessMessage("OTP sent successfully to your Aadhaar-linked mobile number.");
+        setSuccessMessage(
+          "OTP sent successfully to your Aadhaar-linked mobile number."
+        );
         setTransactionId(response.data.transactionId);
         setFwdp(response.data.fwdp);
         setCodeVerifier(response.data.codeVerifier);
         setMobileNumber(response.data.mobileNumber || "Unknown"); // Handle missing mobile gracefully
         setUserAlreadyRegistered(response.data.isAlreadyRegisterdUser);
-  
-        console.log("Mobile captured:", response.data.mobileNumber || "Unknown"); // Debugging Step
+
+        console.log(
+          "Mobile captured:",
+          response.data.mobileNumber || "Unknown"
+        ); // Debugging Step
       } else {
         setErrorMessage(response.data.message || "Failed to send OTP.");
       }
     } catch (error) {
       console.error("Error sending OTP:", error.response || error); // Detailed Error
-      setErrorMessage(error.response?.data?.message || "An error occurred while sending OTP.");
+      setErrorMessage(
+        error.response?.data?.message || "An error occurred while sending OTP."
+      );
     } finally {
       setLoading(false);
     }
   };
-  
-  
-  
-  
+
   const verifyOtp = async () => {
-    
     if (!otp.every((digit) => digit)) {
       setErrorMessage("Please enter the OTP.");
       return;
     }
-  
+
     if (!mobileNumber) {
       setErrorMessage("Mobile number is missing. Please resend the OTP.");
       return;
     }
-  
+
     setLoading(true);
     setErrorMessage("");
     setSuccessMessage("");
-  
+
     try {
       if (userAlreadyRegistered) {
         // Create the request body for mobile OTP verification
         const mobileOtpRequest = {
-          mobile:mobileNumber,
+          mobile: mobileNumber,
           otp: otp.join(""), // Join the OTP array into a single string
           isAlreadyRegisterdUser: true,
         };
-    
+
         console.log("Mobile OTP Request:", mobileOtpRequest);
-    
+
         const mobileOtpResponse = await axios.post(
-          "http://localhost:8081/api/verify/mobile/verify-otp", mobileOtpRequest, { withCredentials: true }
+          "http://localhost:8081/api/verify/mobile/verify-otp",
+          mobileOtpRequest,
+          { withCredentials: true }
         );
-    
-        console.log("new ",mobileOtpResponse);
-    
+
+        console.log("new ", mobileOtpResponse);
+
         if (mobileOtpResponse.data?.success) {
           setSuccessMessage("OTP verified successfully!");
           Swal.fire({
@@ -164,7 +170,7 @@ const LoginForm = () => {
           setErrorMessage("Missing necessary data for OTP verification.");
           return;
         }
-    
+
         // Create the request body for Aadhaar OTP verification
         const requestBody = {
           otp: otp.join(""),
@@ -172,15 +178,21 @@ const LoginForm = () => {
           fwdp,
           codeVerifier,
         };
-    
+
         console.log("Aadhaar OTP Request Body:", requestBody);
-    
+
         const response = await axios.post(
           "http://localhost:8081/api/user/submit-aadhaar-otp",
           requestBody,
           { withCredentials: true }
         );
-    
+
+        console.log("res aadhaar >>>  ", response?.data?.token);
+        const token = response?.data?.token;
+        setToken(token);
+
+        console.log("Token stored globally:", token);
+
         if (response.data?.success) {
           setSuccessMessage("OTP verified successfully!");
           Swal.fire({
@@ -189,6 +201,7 @@ const LoginForm = () => {
             icon: "success",
             confirmButtonText: "OK",
           }).then(() => {
+            setLoginCompleted(true);
             navigate("/dashboard");
           });
         } else {
@@ -197,17 +210,19 @@ const LoginForm = () => {
       }
     } catch (error) {
       console.error("Error verifying OTP:", error);
-      setErrorMessage(error.response?.data?.message || "An error occurred while verifying OTP.");
+      setErrorMessage(
+        error.response?.data?.message ||
+          "An error occurred while verifying OTP."
+      );
     } finally {
       setLoading(false);
     }
-  };    
-  
+  };
 
-  
   const handleOtpChange = (e, index) => {
     const value = e.target.value;
-    if (/^\d$/.test(value)) { // Only allow numbers
+    if (/^\d$/.test(value)) {
+      // Only allow numbers
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
@@ -220,7 +235,7 @@ const LoginForm = () => {
   };
 
   const handleKeyDown = (e, index) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       document.getElementById(`otp-input-${index - 1}`).focus();
     }
   };
@@ -228,10 +243,9 @@ const LoginForm = () => {
   const handleFocus = (index) => {
     // Ensure that the box is not selected after focus
     if (!otp[index]) {
-      document.getElementById(`otp-input-${index}`).value = '';
+      document.getElementById(`otp-input-${index}`).value = "";
     }
   };
-
 
   return (
     <>
@@ -293,7 +307,9 @@ const LoginForm = () => {
                 onChange={handleAadhaarChange}
                 inputProps={{ maxLength: 12 }}
                 error={aadhaarError}
-                helperText={aadhaarError ? "Aadhaar number must be 12 digits." : ""}
+                helperText={
+                  aadhaarError ? "Aadhaar number must be 12 digits." : ""
+                }
                 sx={{ mb: 3 }} // Increased margin for better spacing
               />
               <Button
@@ -315,7 +331,9 @@ const LoginForm = () => {
             </>
           ) : (
             <>
-              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
+              <Box
+                sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}
+              >
                 {otp.map((digit, index) => (
                   <TextField
                     key={index}
@@ -327,13 +345,13 @@ const LoginForm = () => {
                     inputProps={{
                       maxLength: 1,
                       style: {
-                        textAlign: 'center',
-                        fontSize: '1rem', // Smaller font size for OTP box
-                        width: '40px', // Reduced width
-                        height: '40px', // Reduced height
+                        textAlign: "center",
+                        fontSize: "1rem", // Smaller font size for OTP box
+                        width: "40px", // Reduced width
+                        height: "40px", // Reduced height
                         backgroundColor: "#f4f4f4",
                         boxShadow: "0 4px 6px rgba(255, 165, 0, 0.5)", // Orange shadow effect
-                        borderRadius: '8px',
+                        borderRadius: "8px",
                       },
                     }}
                     variant="outlined"
@@ -345,40 +363,44 @@ const LoginForm = () => {
                 ))}
               </Box>
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-    <Button
-      variant="contained"
-      onClick={sendOtp}
-      disabled={loadingOtp}
-      sx={{
-        background: "#4D4D4E",
-        py: 1.5,
-        width: "48%",
-        transition: "all 0.3s ease-in-out",
-        "&:hover": {
-          transform: "scale(1.05)",
-        },
-      }}
-    >
-      {loadingOtp ? <CircularProgress size={24} /> : "Resend OTP"}
-    </Button>
-    <Button
-      variant="contained"
-      onClick={verifyOtp}
-      disabled={otp.some((digit) => !digit) || loadingVerify}
-      sx={{
-        background: "orange",
-        py: 1.5,
-        width: "48%",
-        transition: "all 0.3s ease-in-out",
-        "&:hover": {
-          transform: "scale(1.05)",
-        },
-      }}
-    >
-      {loadingVerify ? <CircularProgress size={24} /> : "Verify OTP"}
-    </Button>
-  </Box>
-              </>
+                <Button
+                  variant="contained"
+                  onClick={sendOtp}
+                  disabled={loadingOtp}
+                  sx={{
+                    background: "#4D4D4E",
+                    py: 1.5,
+                    width: "48%",
+                    transition: "all 0.3s ease-in-out",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                    },
+                  }}
+                >
+                  {loadingOtp ? <CircularProgress size={24} /> : "Resend OTP"}
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={verifyOtp}
+                  disabled={otp.some((digit) => !digit) || loadingVerify}
+                  sx={{
+                    background: "orange",
+                    py: 1.5,
+                    width: "48%",
+                    transition: "all 0.3s ease-in-out",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                    },
+                  }}
+                >
+                  {loadingVerify ? (
+                    <CircularProgress size={24} />
+                  ) : (
+                    "Verify OTP"
+                  )}
+                </Button>
+              </Box>
+            </>
           )}
           {errorMessage && (
             <Typography variant="body2" color="error" sx={{ mt: 3 }}>
