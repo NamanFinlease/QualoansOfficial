@@ -21,7 +21,10 @@ import UserProfile from "./UserProfile";
 import BasicInformation from "./BasicInformation";
 import RecidencialAddress from "./RecidencialAddress";
 import IncomeInformation from "./IncomeInformation";
-
+import LoanDetails from "./LoanDetails";
+import EmploymentInformation from './EmploymentInformation'
+import DisbursalBankDetails from "./DisbursalBankDetails";
+import DocumentUploadDetails from "./DocumentUploadDetails";
 const items = [
   { label: "User Profile", value: "user-profile", icon: <AccountCircleIcon /> },
   { label: "Basic Information", value: "basic-information", icon: <InfoIcon /> },
@@ -47,13 +50,13 @@ export default function UserPreview() {
       case "income-details":
         return <IncomeInformation/>;
       case "loan-details":
-        return <div>Loan Details Content</div>;
+        return <LoanDetails/>;
       case "employment-information":
-        return <div>Employment Information Content</div>;
+        return <EmploymentInformation/>;
       case "disbursal-bank-details":
-        return <div>Disbursal Bank Details Content</div>;
+        return <DisbursalBankDetails/>;
       case "documents":
-        return <div>Documents Content</div>;
+        return <DocumentUploadDetails/>;
     //   default:
     //     return <div>Select an option to view details</div>;
     }

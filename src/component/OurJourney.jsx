@@ -188,8 +188,8 @@ const OurJourney = () => {
           }}
         >
           <Typography>
-            Dive into Financial Freedom! Apply now for our instant personal loan - unlock a world of collateral-free ease, no credit score hassles, a seamless 100% online application process, and the simplicity of minimal documentation. Your journey to hassle-free finances starts here!
-          </Typography>
+          Experience a smarter way to borrow with our instant personal loans. No collateral, no credit score worries—just a seamless 100% online process with minimal documentation. Achieve your goals effortlessly and step into a world of financial ease today!
+                    </Typography>
         </Box>
 
         {/* Credit Executive Section - Positioned Below the Loan Application Progress Box */}

@@ -5,7 +5,7 @@ import { BASE_URL } from "../baseURL";
 // Define the UserProfile component
 const RecidencialAddress = () => {
   // State to store user data
-  const [user, setUser] = useState({
+  const [recidential, setRecidential] = useState({
     
     address:'',
     landmark:'',
@@ -17,11 +17,11 @@ const RecidencialAddress = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch user details from the backend API
+  // Fetch recidential details from the backend API
   useEffect(() => {
     
     
-    const fetchUserData = async () => {
+    const fetchRecidentialData = async () => {
         try {
           const token =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
@@ -36,17 +36,15 @@ const RecidencialAddress = () => {
 
           // Check if the response status is OK
           if (!response.ok) {
-            throw new Error("Failed to fetch user data");
+            throw new Error("Failed to fetch recidential data");
           }
       
           // Parse the JSON data from the response
           const data = await response.json();
-          console.log(data);
 
-          console.log(data); // Log the fetched data after it's assigned
       
-        //   setUser(data); // Set the fetched data to the state
-        setUser({
+        //   setRecidential(data); // Set the fetched data to the state
+        setRecidential({
 
       
             address: data?.data?.residence?.address,
@@ -64,7 +62,7 @@ const RecidencialAddress = () => {
         }
       };
       
-    fetchUserData(); // Call the fetch function
+    fetchRecidentialData(); // Call the fetch function
   }, []); // Empty dependency array to fetch data only once when the component mounts
 
   // Show loading state while fetching data
@@ -78,9 +76,9 @@ const RecidencialAddress = () => {
     return <Typography variant="h6" align="center" color="error">{error}</Typography>;
   }
 
-  // If no user data, show a message
-  if (!user) {
-    return <Typography variant="h6" align="center">No user data found.</Typography>;
+  // If no recidential data, show a message
+  if (!recidential) {
+    return <Typography variant="h6" align="center">No recidential data found.</Typography>;
   }
 
   return (
@@ -115,30 +113,30 @@ const RecidencialAddress = () => {
 
     <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>Address:</strong> {user.address}
+          <strong>Address:</strong> {recidential.address}
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>Landmark:</strong> {user.landmark}
+          <strong>Landmark:</strong> {recidential.landmark}
         </Typography>
       </Grid>
       {/* PAN Number */}
       <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>City:</strong> {user.city}
+          <strong>City:</strong> {recidential.city}
         </Typography>
       </Grid>
   
       {/* Aadhaar Number */}
       <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> State:</strong> {user.state}
+          <strong> State:</strong> {recidential.state}
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> ResidenceType:</strong> {user.residenceType}
+          <strong> ResidenceType:</strong> {recidential.residenceType}
         </Typography>
       </Grid>
       
