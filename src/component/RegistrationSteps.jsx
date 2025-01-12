@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Cookies from "js-cookie";
 import {
   Grid,
   Box,
@@ -28,21 +30,30 @@ import DashboardProgress from "./DashboardProgress";
 
 const MySwal = withReactContent(Swal);
 
+const getCookieValue = (name) => {
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? match[2] : null;
+};
+
 const RegistrationSteps = () => {
-  const token = getToken();
-  console.log("token >>><<< ", token);
+  // const token = getToken();
+  // console.log("token >>><<< ", token);
+  // console.log("Token Registration form <<<:", Cookies.get("jwt"));
+
+  const token = getCookieValue("jwt");
+  console.log("REGEX Token from cookies:", token);
   const theme = useTheme();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const [progress, setProgress] = useState(0);
   const [completedSteps, setCompletedSteps] = useState({
+    mobile: false,
     pan: false,
     personal: false,
     address: false,
     income: false,
     selfie: false,
-    mobile: false,
   });
 
   const [openModal, setOpenModal] = useState(false);
@@ -152,20 +163,16 @@ const RegistrationSteps = () => {
   };
 
   const showPersonalInfoForm = () => {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+    console.log("document.cookie", document);
+    // const token =
+    //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
 
-    fetch(`${BASE_URL}/api/user/getProfileDetails`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    axios
+      .get(`${BASE_URL}/api/user/getProfileDetails`, {
+        withCredentials: true, // Ensures cookies are sent along with the request
+      })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch profile details.");
-        }
+        console.log("Profile details response:", response.data);
         return response.json();
       })
       .then((data) => {
@@ -717,16 +724,17 @@ const RegistrationSteps = () => {
       if (result.isConfirmed) {
         const mobile = result.value;
 
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZiYTg5N2EyOGYwMWE2YjM1MjdjYyIsImlhdCI6MTczNjI1Mjc4MSwiZXhwIjoxNzM4ODQ0NzgxfQ.BC5jt4Whb5S8jBQwDr0gPYV3SjtPuUw6QDjzTDz02h0";
+        // const token =
+        //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZiYTg5N2EyOGYwMWE2YjM1MjdjYyIsImlhdCI6MTczNjI1Mjc4MSwiZXhwIjoxNzM4ODQ0NzgxfQ.BC5jt4Whb5S8jBQwDr0gPYV3SjtPuUw6QDjzTDz02h0";
 
         // Send OTP API Call
         fetch(`${BASE_URL}/api/verify/mobile/get-otp/${mobile}`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          // headers: {
+          //   "Content-Type": "application/json",
+          //   Authorization: `Bearer ${token}`,
+          // },
+          credentials: "include",
         })
           .then((response) => response.json())
           .then((data) => {
@@ -897,6 +905,25 @@ const RegistrationSteps = () => {
           width: "80%", // Make the step box larger on smaller screens
           margin: "auto", // Center the boxes
         },
+
+        // display: "flex",
+        // flexDirection: "column",
+        // alignItems: "flex-start",
+        // padding: 2,
+        // border: "2px solid",
+        // borderColor: completedSteps[stepKey] ? "green" : "#ccc",
+        // borderRadius: 3,
+        // margin: 1,
+        // width: "30%",
+        // cursor:
+        //   completedSteps[stepKey] || stepKey === "mobile"
+        //     ? "pointer"
+        //     : "not-allowed",
+        // backgroundColor: completedSteps[stepKey] ? "#d4f7db" : "#4D4D4E",
+        // pointerEvents:
+        //   stepKey === "mobile" || completedSteps[stepKey] ? "auto" : "none",
+        // textAlign: "left",
+        // color: completedSteps[stepKey] ? "green" : "white",
       }}
       onClick={onClick}
     >

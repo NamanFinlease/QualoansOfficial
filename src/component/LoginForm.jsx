@@ -1,6 +1,7 @@
+import Cookies from "js-cookie";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { setToken } from "../../tokenManager";
+import { setToken, getToken } from "../../tokenManager";
 import Swal from "sweetalert2";
 import {
   Button,
@@ -36,6 +37,7 @@ const rotateIn = keyframes`
   }
 `;
 
+// this is for protected routes : setLoginCompleted
 const LoginForm = ({ setLoginCompleted }) => {
   const navigate = useNavigate(); // Initialize the navigate function
   const [aadhaar, setAadhaar] = useState("");
@@ -153,6 +155,14 @@ const LoginForm = ({ setLoginCompleted }) => {
         console.log("new ", mobileOtpResponse);
 
         if (mobileOtpResponse.data?.success) {
+          // const token = getToken(); // Retrieve from cookies
+          // console.log(
+          //   " mobileOtpResponse Token LoginForm <<<:",
+          //   Cookies.get("jwt")
+          // );
+          // if (token) {
+          //   setToken(token); // Sync globally
+          // }
           setSuccessMessage("OTP verified successfully!");
           Swal.fire({
             title: "OTP Verified!",
@@ -160,7 +170,7 @@ const LoginForm = ({ setLoginCompleted }) => {
             icon: "success",
             confirmButtonText: "OK",
           }).then(() => {
-            navigate("/dashboard");
+            navigate("/ourjourney");
           });
         } else {
           setErrorMessage(mobileOtpResponse.data.message || "Invalid OTP.");
@@ -187,23 +197,30 @@ const LoginForm = ({ setLoginCompleted }) => {
           { withCredentials: true }
         );
 
-        console.log("res aadhaar >>>  ", response?.data?.token);
-        const token = response?.data?.token;
-        setToken(token);
+        // console.log("res aadhaar >>>  ", response?.data?.token);
+        // const token = response?.data?.token;
+        // setToken(token);
 
-        console.log("Token stored globally:", token);
+        // console.log("Token stored globally:", token);
 
         if (response.data?.success) {
+          // console.log(
+          //   "submit aadhaar otp Token LoginForm <<<:",
+          //   Cookies.get("jwt")
+          // );
+
           setSuccessMessage("OTP verified successfully!");
           Swal.fire({
             title: "OTP Verified!",
             text: "You will now be redirected to your dashboard.",
             icon: "success",
             confirmButtonText: "OK",
-          }).then(() => {
-            setLoginCompleted(true);
-            navigate("/dashboard");
           });
+          // .then(() => {
+          //   // this is for protected routes
+          //   // setLoginCompleted(true);
+          //   navigate("/ourjourney");
+          // });
         } else {
           setErrorMessage(response.data.message || "Invalid OTP.");
         }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -25,8 +25,14 @@ import Calculator from "./component/Calculator";
 import OurJourney from "./component/OurJourney";
 import UserPreview from "./component/UserPreview";
 // import Navbar from "./navbar/NavBar"
+import { getToken } from "../tokenManager";
 
 function App() {
+  // useEffect(() => {
+  //   const token = getToken(); // Retrieve token from cookies and set globally
+  //   console.log("Token synced on page load:", token);
+  // }, []);
+
   return (
     <Router>
       {/* <Navbar /> */}
