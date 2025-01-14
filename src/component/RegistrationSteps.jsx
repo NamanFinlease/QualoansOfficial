@@ -51,25 +51,21 @@ const RegistrationSteps = () => {
   const [error, setError] = useState("");
   const [isFetching, setIsFetching] = useState(false);
   const [registrationStatus, setRegistrationStatus] = useState("");
- 
- 
-  // const fetchDashboardDetails = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `${BASE_URL}/api/user/getDashboardDetails`
-  //     );
-  //     const data = await response.json();
-  //     if (data.success) {
-  //       setRegistrationStatus(data.registrationStatus);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching dashboard details:", error);
-  //   }
-  // };
+
+  const fetchDashboardDetails = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/user/getDashboardDetails`);
+      const data = await response.json();
+      if (data.success) {
+        setRegistrationStatus(data.registrationStatus);
+      }
+    } catch (error) {
+      console.error("Error fetching dashboard details:", error);
+    }
+  };
 
   // fetchDashboardDetails();
 
-  
   const handleCompleteStep = (step) => {
     if (step === "pan") {
       setOpenModal(true);
@@ -97,7 +93,6 @@ const RegistrationSteps = () => {
   };
 
   const handleSubmitPan = async () => {
-    
     // const token =
     //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZiYTg5N2EyOGYwMWE2YjM1MjdjYyIsImlhdCI6MTczNjI1Mjc4MSwiZXhwIjoxNzM4ODQ0NzgxfQ.BC5jt4Whb5S8jBQwDr0gPYV3SjtPuUw6QDjzTDz02h0";
     const panFormat = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
@@ -115,15 +110,14 @@ const RegistrationSteps = () => {
         {
           method: "POST",
           credentials: "include",
-        });
-
-        console.log("response>>>>",response);
-
-        if (response.status !== 200) {
-            throw new Error("Failed to fetch profile details.");
         }
+      );
 
-       
+      console.log("response>>>>", response);
+
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch profile details.");
+      }
 
       // if (!response.ok) {
       //   const errorData = await response.json();
@@ -134,12 +128,13 @@ const RegistrationSteps = () => {
 
       // Await the resolved JSON data
       const data = await response.json();
-      
+
       // Properly handle resolved `data`
       if (data || data.pan || data.pan.length >= 1) {
         setCompletedSteps((prev) => ({ ...prev, pan: true }));
         setProgress((prev) => (prev === 100 ? 100 : prev + 16.67)); // 16.67% per step
         handleCloseModal();
+        Swal.fire("Success", "Pan card updated successfully!", "success");
       } else {
         setError("PAN data is incomplete or invalid.");
       }
@@ -158,23 +153,29 @@ const RegistrationSteps = () => {
 
   const showPersonalInfoForm = async () => {
     try {
-        const response = await axios.get(`${BASE_URL}/api/user/getProfileDetails`, {
-            withCredentials: true,
-        });
-
-        if (response.status !== 200) {
-            throw new Error("Failed to fetch profile details.");
+      const response = await axios.get(
+        `${BASE_URL}/api/user/getProfileDetails`,
+        {
+          withCredentials: true,
         }
+      );
 
-        const { success, data } = response.data;
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch profile details.");
+      }
 
-        if (success && data?.personalDetails) {
-            const personalDetails = data.personalDetails;
-            const formattedDob = personalDetails?.dob?.split("-").reverse().join("-");
+      const { success, data } = response.data;
 
-            const result = await MySwal.fire({
-                title: "Share Your Details",
-                html: `
+      if (success && data?.personalDetails) {
+        const personalDetails = data.personalDetails;
+        const formattedDob = personalDetails?.dob
+          ?.split("-")
+          .reverse()
+          .join("-");
+
+        const result = await MySwal.fire({
+          title: "Share Your Details",
+          html: `
                     <form id="personal-info-form" style="overflow: hidden; margin-top: 20px; overflow-y: auto;">
                         <input type="text" id="fullName" class="swal2-input" placeholder="Full Name" 
                             value="${personalDetails?.fullName || ""}" required 
@@ -185,26 +186,50 @@ const RegistrationSteps = () => {
                             style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; 
                             border: 1px solid white; background-color: #4D4D4E; color: white;"/>
                         
-                        <input type="text" id="dob" class="swal2-input" value="${formattedDob || ""}" required 
+                        <input type="text" id="dob" class="swal2-input" value="${
+                          formattedDob || ""
+                        }" required 
                             style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; 
                             border: 1px solid white; background-color: #4D4D4E; color: white;" readonly/>
                         
                         <select id="gender" class="swal2-input" required 
                             style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; 
                             border: 1px solid white; background-color: #4D4D4E; color: white;" disabled>
-                            <option value="" disabled ${!personalDetails?.gender ? "selected" : ""}>Gender</option>
-                            <option value="M" ${personalDetails?.gender === "M" ? "selected" : ""}>Male</option>
-                            <option value="F" ${personalDetails?.gender === "F" ? "selected" : ""}>Female</option>
-                            <option value="O" ${personalDetails?.gender === "O" ? "selected" : ""}>Other</option>
+                            <option value="" disabled ${
+                              !personalDetails?.gender ? "selected" : ""
+                            }>Gender</option>
+                            <option value="M" ${
+                              personalDetails?.gender === "M" ? "selected" : ""
+                            }>Male</option>
+                            <option value="F" ${
+                              personalDetails?.gender === "F" ? "selected" : ""
+                            }>Female</option>
+                            <option value="O" ${
+                              personalDetails?.gender === "O" ? "selected" : ""
+                            }>Other</option>
                         </select>
                         
                         <select id="maritalStatus" class="swal2-input" required 
                             style="width: 90%; margin: 10px 0 10px 0; padding: 10px; border-radius: 8px; 
                             border: 1px solid white; background-color: #4D4D4E; color: white;">
-                            <option value="" disabled ${!personalDetails?.maritalStatus ? "selected" : ""}>Select Marital Status</option>
-                            <option value="Single" ${personalDetails?.maritalStatus === "Single" ? "selected" : ""}>Single</option>
-                            <option value="Married" ${personalDetails?.maritalStatus === "Married" ? "selected" : ""}>Married</option>
-                            <option value="Divorced" ${personalDetails?.maritalStatus === "Divorced" ? "selected" : ""}>Divorced</option>
+                            <option value="" disabled ${
+                              !personalDetails?.maritalStatus ? "selected" : ""
+                            }>Select Marital Status</option>
+                            <option value="Single" ${
+                              personalDetails?.maritalStatus === "Single"
+                                ? "selected"
+                                : ""
+                            }>Single</option>
+                            <option value="Married" ${
+                              personalDetails?.maritalStatus === "Married"
+                                ? "selected"
+                                : ""
+                            }>Married</option>
+                            <option value="Divorced" ${
+                              personalDetails?.maritalStatus === "Divorced"
+                                ? "selected"
+                                : ""
+                            }>Divorced</option>
                         </select>
                         
                         <input type="text" id="spouseName" class="swal2-input" placeholder="Spouse Name" 
@@ -212,63 +237,68 @@ const RegistrationSteps = () => {
                             border-radius: 8px; border: 1px solid white; background-color: #4D4D4E; color: white;"/>
                     </form>
                 `,
-                focusConfirm: false,
-                showCancelButton: true,
-                confirmButtonText: "Submit",
-                cancelButtonText: "Cancel",
-                background: "#4D4D4E",
-                color: "white",
-                confirmButtonColor: "#FF5733",
-                cancelButtonColor: "#FF6347",
-                didOpen: () => {
-                    const maritalStatusSelect = document.getElementById("maritalStatus");
-                    const spouseNameInput = document.getElementById("spouseName");
+          focusConfirm: false,
+          showCancelButton: true,
+          confirmButtonText: "Submit",
+          cancelButtonText: "Cancel",
+          background: "#4D4D4E",
+          color: "white",
+          confirmButtonColor: "#FF5733",
+          cancelButtonColor: "#FF6347",
+          didOpen: () => {
+            const maritalStatusSelect =
+              document.getElementById("maritalStatus");
+            const spouseNameInput = document.getElementById("spouseName");
 
-                    maritalStatusSelect.addEventListener("change", (event) => {
-                        spouseNameInput.style.display = event.target.value === "Married" ? "block" : "none";
-                    });
-                },
-                preConfirm: () => {
-                    const email = Swal.getPopup().querySelector("#email").value;
-                    const maritalStatus = Swal.getPopup().querySelector("#maritalStatus").value;
-                    const spouseName = Swal.getPopup().querySelector("#spouseName").value;
-
-                    if (!email.includes("@")) {
-                        Swal.showValidationMessage("Please enter a valid email address.");
-                        return;
-                    }
-
-                    return { email, maritalStatus, spouseName: maritalStatus === "Married" ? spouseName : null };
-                },
+            maritalStatusSelect.addEventListener("change", (event) => {
+              spouseNameInput.style.display =
+                event.target.value === "Married" ? "block" : "none";
             });
+          },
+          preConfirm: () => {
+            const email = Swal.getPopup().querySelector("#email").value;
+            const maritalStatus =
+              Swal.getPopup().querySelector("#maritalStatus").value;
+            const spouseName =
+              Swal.getPopup().querySelector("#spouseName").value;
 
-            if (result.isConfirmed) {
-                const updatedDetails = {
-                    fullName: personalDetails?.fullName,
-                    gender: personalDetails?.gender,
-                    dob: personalDetails?.dob,
-                    personalEmail: result.value.email,
-                    maritalStatus: result.value.maritalStatus,
-                    spouseName: result.value.spouseName,
-                };
-
-                await fetch(`${BASE_URL}/api/user/personalInfo`, {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(updatedDetails),
-                });
-
-                Swal.fire("Success", "Details updated successfully!", "success");
+            if (!email.includes("@")) {
+              Swal.showValidationMessage("Please enter a valid email address.");
+              return;
             }
+
+            return {
+              email,
+              maritalStatus,
+              spouseName: maritalStatus === "Married" ? spouseName : null,
+            };
+          },
+        });
+
+        if (result.isConfirmed) {
+          const updatedDetails = {
+            fullName: personalDetails?.fullName,
+            gender: personalDetails?.gender,
+            dob: personalDetails?.dob,
+            personalEmail: result.value.email,
+            maritalStatus: result.value.maritalStatus,
+            spouseName: result.value.spouseName,
+          };
+
+          await fetch(`${BASE_URL}/api/user/personalInfo`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedDetails),
+          });
+
+          Swal.fire("Success", "Details updated successfully!", "success");
         }
+      }
     } catch (error) {
-        console.error("Error:", error);
-        Swal.fire("Error", "Unable to fetch or update your details.", "error");
+      console.error("Error:", error);
+      Swal.fire("Error", "Unable to fetch or update your details.", "error");
     }
-    
-};
-
-
+  };
 
   const showAddressInfoForm = () => {
     MySwal.fire({
@@ -280,6 +310,28 @@ const RegistrationSteps = () => {
           <input type="text" id="pincode" class="swal2-input" placeholder="Pincode" style="width: 90%;" />
           <input type="text" id="city" class="swal2-input" placeholder="City" required style="width: 90%;" />
           <input type="text" id="state" class="swal2-input" placeholder="State" required style="width: 90%;" />
+           <select 
+            type="string"
+            id="residenceType" 
+            class="swal2-input" 
+            required 
+            style="
+              width: 90%; 
+              padding: 10px; 
+              font-size: 16px; 
+              border-radius: 8px; 
+              border: 1px solid #555; 
+              margin-bottom: 20px; 
+              background-color: #4D4D4E; 
+              color: white;
+            "
+          >
+            <option value="OWNED" disabled selected style="color: white;">Owned</option>
+            <option value="RENTED">Rented</option>
+            <option value="PARENTAL">Parental</option>
+            <option value="COMPANY PROVIDED">Company Provided</option>
+            <option value="OTHERS">Others</option>
+          </select>
         </form>
       `,
       focusConfirm: false,
@@ -297,6 +349,8 @@ const RegistrationSteps = () => {
         const pincode = Swal.getPopup().querySelector("#pincode").value;
         const city = Swal.getPopup().querySelector("#city").value;
         const state = Swal.getPopup().querySelector("#state").value;
+        const residenceType =
+          Swal.getPopup().querySelector("#residenceType").value;
 
         // Validation
         if (!address || !landmark || !pincode || !city || !state) {
@@ -318,6 +372,7 @@ const RegistrationSteps = () => {
           pincode,
           city,
           state,
+          residenceType,
         }));
 
         setCompletedSteps((prev) => ({ ...prev, address: true }));
@@ -333,7 +388,7 @@ const RegistrationSteps = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(apiData),
-          credentials:"include"
+          credentials: "include",
         })
           .then((response) => response.json())
           .then((data) => {
@@ -371,13 +426,14 @@ const RegistrationSteps = () => {
           "
         >
           <label 
-            for="employeeType" 
+            for="employementType" 
             style="font-size: 16px; font-weight: bold; margin-bottom: 8px; display: block;"
           >
             Select Employee Type
           </label>
           <select 
-            id="employeeType" 
+            type="string"
+            id="employementType" 
             class="swal2-input" 
             required 
             style="
@@ -398,9 +454,9 @@ const RegistrationSteps = () => {
   
           <input 
             type="number" 
-            id="netIncome" 
+            id="monthlyIncome" 
             class="swal2-input" 
-            placeholder="Net Monthly Income" 
+            placeholder="Monthly Income" 
             required 
             style="
               width: 90%; 
@@ -416,10 +472,9 @@ const RegistrationSteps = () => {
   
           <input 
             type="number" 
-            id="loanAmount" 
+            id="obligations" 
             class="swal2-input" 
-            placeholder="Loan Amount" 
-            required 
+            placeholder="Obligations" 
             style="
               width: 90%; 
               padding: 10px; 
@@ -436,6 +491,7 @@ const RegistrationSteps = () => {
             type="date" 
             id="nextSalaryDate" 
             class="swal2-input" 
+            placeholder="Next Salary Date"
             required 
             style="
               width: 90%; 
@@ -450,6 +506,7 @@ const RegistrationSteps = () => {
           />
   
           <label 
+            id="incomeMode"
             style="
               font-size: 16px; 
               font-weight: bold; 
@@ -457,20 +514,21 @@ const RegistrationSteps = () => {
               display: block; 
               text-align: center;
             "
+            required
           >
             Mode of Income Received
           </label>
           <div style="display: flex; gap: 20px; margin-bottom: 20px; justify-content: center; align-items: center;">
             <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-              <input type="radio" id="modeBank" name="incomeMode" value="bank" required />
+              <input type="radio" id="modeBank" name="incomeMode" value="BANK" required />
               <label for="modeBank" style="font-size: 14px; color: white;">Bank</label>
             </div>
             <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-              <input type="radio" id="modeCheck" name="incomeMode" value="check" />
+              <input type="radio" id="modeCheck" name="incomeMode" value="CHECK" />
               <label for="modeCheck" style="font-size: 14px; color: white;">Check</label>
             </div>
             <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-              <input type="radio" id="modeCash" name="incomeMode" value="cash" />
+              <input type="radio" id="modeCash" name="incomeMode" value="CASH" />
               <label for="modeCash" style="font-size: 14px; color: white;">Cash</label>
             </div>
           </div>
@@ -481,62 +539,98 @@ const RegistrationSteps = () => {
       confirmButtonText: "Submit",
       confirmButtonColor: "#FFA500",
       preConfirm: () => {
-        const employeeType = Swal.getPopup().querySelector("#employeeType").value;
-        const netIncome = Swal.getPopup().querySelector("#netIncome").value;
-        const loanAmount = Swal.getPopup().querySelector("#loanAmount").value;
-        const nextSalaryDate = Swal.getPopup().querySelector("#nextSalaryDate").value;
-        const incomeMode = Swal.getPopup().querySelector('input[name="incomeMode"]:checked')?.value;
-  
-        if (!employeeType || !netIncome || !loanAmount || !nextSalaryDate || !incomeMode) {
+        const employementType =
+          Swal.getPopup().querySelector("#employementType").value.toUpperCase;
+        const monthlyIncome =
+          Swal.getPopup().querySelector("#monthlyIncome").value;
+        const obligations = Swal.getPopup().querySelector("#obligations").value;
+        const nextSalaryDate =
+          Swal.getPopup().querySelector("#nextSalaryDate").value;
+        const incomeMode = Swal.getPopup().querySelector(
+          'input[name="incomeMode"]:checked'
+        )?.value;
+
+        if (
+          !employementType ||
+          !monthlyIncome ||
+          !obligations ||
+          !nextSalaryDate ||
+          !incomeMode
+        ) {
           Swal.showValidationMessage("Please fill out all fields.");
           return false;
         }
-  
+
         return {
-          employeeType,
-          netIncome,
-          loanAmount,
+          employementType,
+          monthlyIncome,
+          obligations,
           nextSalaryDate,
           incomeMode,
         };
       },
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const { employeeType, netIncome, loanAmount, nextSalaryDate, incomeMode } = result.value;
+        console.log("result>>> ", result.value);
+        const {
+          employementType,
+          monthlyIncome,
+          obligations,
+          nextSalaryDate,
+          incomeMode,
+        } = result.value;
         try {
           const response = await axios.patch(
             "http://localhost:8081/api/user/addIncomeDetails",
-            { employeeType, netIncome, loanAmount, nextSalaryDate, incomeMode },
-            { headers: { "Content-Type": "application/json" }, withCredentials: true }
+            {
+              employementType,
+              monthlyIncome,
+              obligations,
+              nextSalaryDate,
+              incomeMode,
+            },
+            {
+              headers: { "Content-Type": "application/json" },
+              withCredentials: true,
+            }
           );
-        console.log("response",response);
-        
-          if (response.status===200) {
-            Swal.fire("Success", "Income details added successfully!", "success");
+          console.log("response", response);
+
+          if (response.status === 200) {
+            Swal.fire(
+              "Success",
+              "Income details added successfully!",
+              "success"
+            );
           } else {
-            throw new Error(response?.data?.message || "Failed to add income details.");
+            throw new Error(
+              response?.data?.message || "Failed to add income details."
+            );
           }
         } catch (error) {
-          Swal.fire("Error", error.message || "An error occurred while adding income details.", "error");
+          Swal.fire(
+            "Error",
+            error.message || "An error occurred while adding income details.",
+            "error"
+          );
         }
-        
       }
     });
   };
-  
+
   const allStepsCompleted = Object.values(completedSteps).every(
     (step) => step === true
   );
 
   const [selfie, setSelfie] = useState(null);
-  
+
   // Function to handle selfie upload
   const handleSelfieCapture = () => {
     const inputFile = document.createElement("input");
     inputFile.type = "file";
     inputFile.accept = "image/*";
     inputFile.capture = "environment";
-  
+
     inputFile.onchange = (event) => {
       const file = event.target.files[0];
       if (file) {
@@ -544,15 +638,15 @@ const RegistrationSteps = () => {
         uploadSelfieToBackend(file); // Trigger upload after capturing
       }
     };
-  
+
     inputFile.click();
   };
-  
+
   // Upload selfie to backend
   const uploadSelfieToBackend = async (fileData) => {
     const formData = new FormData();
     formData.append("profilePicture", fileData); // Ensure backend key matches
-  
+
     try {
       setIsFetching(true);
       const response = await axios.patch(
@@ -563,11 +657,11 @@ const RegistrationSteps = () => {
           withCredentials: true, // Maintain user session
         }
       );
-  console.log(response);
-  
+      console.log(response);
+
       setIsFetching(false);
-  
-      if (response.status===200) {
+
+      if (response.status === 200) {
         Swal.fire("Success", "Selfie uploaded successfully!", "success");
       } else {
         Swal.fire("Error", response.data.message, "error");
@@ -575,7 +669,11 @@ const RegistrationSteps = () => {
     } catch (error) {
       setIsFetching(false);
       console.error("Upload Error:", error);
-      Swal.fire("Error", "An error occurred while uploading the selfie.", "error");
+      Swal.fire(
+        "Error",
+        "An error occurred while uploading the selfie.",
+        "error"
+      );
     }
   };
   
@@ -627,9 +725,8 @@ const RegistrationSteps = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-
           },
-          credentials:'include'
+          credentials: "include",
         })
           .then((response) => response.json())
           .then((data) => {
@@ -858,39 +955,36 @@ const RegistrationSteps = () => {
           },
         }}
       >
-
-
-
-      {/* Steps UI and Completion Message */}
-      {allStepsCompleted && (
-        <Box
-          sx={{
-            padding: 4,
-            textAlign: "center",
-            backgroundColor: "#e6f9e9",
-            borderRadius: 3,
-            marginTop: 4,
-            boxShadow: "0 4px 8px rgba(0, 128, 0, 0.4)",
-          }}
-        >
-          <Typography variant="h5" sx={{ fontWeight: 600, marginBottom: 2 }}>
-            Congratulations! You've completed all the steps.
-          </Typography>
-          <img
-            src="congratulation-image-url.jpg"
-            alt="Congratulations"
-            style={{ maxWidth: "100%", height: "auto", marginBottom: 2 }}
-          />
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "#FF6600", color: "white" }}
-            onClick={() => navigate("/loan-application")}
+        {/* Steps UI and Completion Message */}
+        {allStepsCompleted && (
+          <Box
+            sx={{
+              padding: 4,
+              textAlign: "center",
+              backgroundColor: "#e6f9e9",
+              borderRadius: 3,
+              marginTop: 4,
+              boxShadow: "0 4px 8px rgba(0, 128, 0, 0.4)",
+            }}
           >
-            Continue to Next Page
-          </Button>
-        </Box>
-      )}
- 
+            <Typography variant="h5" sx={{ fontWeight: 600, marginBottom: 2 }}>
+              Congratulations! You've completed all the steps.
+            </Typography>
+            <img
+              src="congratulation-image-url.jpg"
+              alt="Congratulations"
+              style={{ maxWidth: "100%", height: "auto", marginBottom: 2 }}
+            />
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "#FF6600", color: "white" }}
+              onClick={() => navigate("/loan-application")}
+            >
+              Continue to Next Page
+            </Button>
+          </Box>
+        )}
+
         <Grid
           container
           alignItems="center"
@@ -962,14 +1056,13 @@ const RegistrationSteps = () => {
             "income",
             () => showIncomeInfoForm("income")
           )}
-           {renderStepBox(
-        <CameraAltIcon />,
-        "Selfie Verification",
-        "Upload your selfie",
-        "selfie",
-        handleSelfieCapture // Directly passing function
-      )}
-      
+          {renderStepBox(
+            <CameraAltIcon />,
+            "Selfie Verification",
+            "Upload your selfie",
+            "selfie",
+            handleSelfieCapture // Directly passing function
+          )}
         </Box>
 
         {allStepsCompleted && (
