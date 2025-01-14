@@ -53,21 +53,21 @@ const RegistrationSteps = () => {
   const [registrationStatus, setRegistrationStatus] = useState("");
  
  
-  const fetchDashboardDetails = async () => {
-    try {
-      const response = await fetch(
-        `${BASE_URL}/api/user/getDashboardDetails`
-      );
-      const data = await response.json();
-      if (data.success) {
-        setRegistrationStatus(data.registrationStatus);
-      }
-    } catch (error) {
-      console.error("Error fetching dashboard details:", error);
-    }
-  };
+  // const fetchDashboardDetails = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `${BASE_URL}/api/user/getDashboardDetails`
+  //     );
+  //     const data = await response.json();
+  //     if (data.success) {
+  //       setRegistrationStatus(data.registrationStatus);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching dashboard details:", error);
+  //   }
+  // };
 
-  fetchDashboardDetails();
+  // fetchDashboardDetails();
 
   
   const handleCompleteStep = (step) => {
@@ -97,7 +97,6 @@ const RegistrationSteps = () => {
   };
 
   const handleSubmitPan = async () => {
-    console.log("ggggggg>>>>");
     
     // const token =
     //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZiYTg5N2EyOGYwMWE2YjM1MjdjYyIsImlhdCI6MTczNjI1Mjc4MSwiZXhwIjoxNzM4ODQ0NzgxfQ.BC5jt4Whb5S8jBQwDr0gPYV3SjtPuUw6QDjzTDz02h0";
@@ -530,36 +529,30 @@ const RegistrationSteps = () => {
   );
 
   const [selfie, setSelfie] = useState(null);
-
-  // Function to handle the selfie upload
+  
+  // Function to handle selfie upload
   const handleSelfieCapture = () => {
     const inputFile = document.createElement("input");
     inputFile.type = "file";
-    inputFile.accept = "image/*"; // Allows image files and camera access
-    inputFile.capture = "environment"; // Suggests rear camera (optional)
-
+    inputFile.accept = "image/*";
+    inputFile.capture = "environment";
+  
     inputFile.onchange = (event) => {
       const file = event.target.files[0];
       if (file) {
         setSelfie(file);
-        handleSelfieUpload(file);
+        uploadSelfieToBackend(file); // Trigger upload after capturing
       }
     };
-
-    inputFile.click(); // Open file chooser or trigger camera
+  
+    inputFile.click();
   };
-
-  // Upload the selfie to the backend
-  const handleSelfieUpload = (fileData) => {
-    if (fileData) {
-      uploadSelfieToBackend(fileData);
-    }
-  };
-
+  
+  // Upload selfie to backend
   const uploadSelfieToBackend = async (fileData) => {
     const formData = new FormData();
-    formData.append("selfie", fileData);
-
+    formData.append("profilePicture", fileData); // Ensure backend key matches
+  
     try {
       setIsFetching(true);
       const response = await axios.patch(
@@ -567,27 +560,25 @@ const RegistrationSteps = () => {
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true,
+          withCredentials: true, // Maintain user session
         }
       );
+  console.log(response);
+  
       setIsFetching(false);
-
-      if (response.data.success) {
+  
+      if (response.status===200) {
         Swal.fire("Success", "Selfie uploaded successfully!", "success");
       } else {
         Swal.fire("Error", response.data.message, "error");
       }
     } catch (error) {
       setIsFetching(false);
-      Swal.fire(
-        "Error",
-        "An error occurred while uploading the selfie.",
-        "error"
-      );
+      console.error("Upload Error:", error);
+      Swal.fire("Error", "An error occurred while uploading the selfie.", "error");
     }
   };
-
-
+  
   const handleMobileVerification = () => {
     MySwal.fire({
       title: "Enter Mobile Number",
@@ -971,13 +962,14 @@ const RegistrationSteps = () => {
             "income",
             () => showIncomeInfoForm("income")
           )}
-          {renderStepBox(
-            <CameraAltIcon />,
-            "Selfie Verification",
-            "Upload your selfie",
-            "selfie",
-            () => handleSelfieCapture()
-          )}
+           {renderStepBox(
+        <CameraAltIcon />,
+        "Selfie Verification",
+        "Upload your selfie",
+        "selfie",
+        handleSelfieCapture // Directly passing function
+      )}
+      
         </Box>
 
         {allStepsCompleted && (

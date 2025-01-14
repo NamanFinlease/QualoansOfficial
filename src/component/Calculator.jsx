@@ -70,13 +70,11 @@ const LoanCalculator = () => {
         payload,
         {
           headers: {
-            // Authorization: `Bearer ${token}`, // Add Authorization header if needed
+            // Authorization: `Bearer ${token}`, // Add Authorization header
             "Content-Type": "application/json", // Optional: Specify Content-Type
           },
-          withCredentials: true, // Ensures cookies and credentials are sent along with the request
         }
       );
-      
 
       setResponseMessage(response.data.message);
       Swal.fire({
