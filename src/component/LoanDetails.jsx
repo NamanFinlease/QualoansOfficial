@@ -28,13 +28,15 @@ const token = getToken();
         //   const token =
         //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
 
-          const response = await fetch(`${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=loanDetails`, {
+        const response = await fetch(`${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=loanDetails`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
+              // Authorization: `Bearer ${token}`, // Uncomment if token is needed
             },
+            credentials: 'include', // Ensures that cookies are included with the request
           });
+          
             // console.log(response);
             
           // Check if the response status is OK

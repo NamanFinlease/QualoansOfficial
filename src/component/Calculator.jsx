@@ -15,7 +15,7 @@ import {
   Button,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
-import loanImage from "../assets/image/Repay Now qua (1).webp";
+import loanImage from "../assets/image/Untitled design.gif";
 import axios from "axios"; // Import axios for API calls
 import { BASE_URL } from "../baseURL";
 import Dashboard from "./Dashboard";
@@ -70,11 +70,13 @@ const LoanCalculator = () => {
         payload,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Add Authorization header
+            // Authorization: `Bearer ${token}`, // Add Authorization header if needed
             "Content-Type": "application/json", // Optional: Specify Content-Type
           },
+          withCredentials: true, // Ensures cookies and credentials are sent along with the request
         }
       );
+      
 
       setResponseMessage(response.data.message);
       Swal.fire({

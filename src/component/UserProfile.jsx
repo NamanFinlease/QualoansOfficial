@@ -29,14 +29,14 @@ const UserProfile = () => {
         //   const token =
         //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
       
-          const response = await fetch(`${BASE_URL}/api/user/getProfileDetails`, {
+        const response = await fetch(`${BASE_URL}/api/user/getProfileDetails`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
             },
+            credentials: "include", // This ensures cookies and other credentials are sent with the request
           });
-
+          
           // Check if the response status is OK
           if (!response.ok) {
             throw new Error("Failed to fetch user data");

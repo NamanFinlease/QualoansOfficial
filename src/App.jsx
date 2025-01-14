@@ -23,6 +23,10 @@ import LoanApplication from "./component/LoanApplication";
 import Calculator from "./component/Calculator";
 import OurJourney from "./component/OurJourney";
 import UserPreview from "./component/UserPreview";
+import LoanRepaymentComponent from "./component/LoanRepaymentComponent";
+import LoanDetailsTable from "./component/LoanDetailsTable";
+import LoanStatus from "./component/LoanStatus";
+import PaymentOptions from "./component/PaymentOptions";
 // import Navbar from "./navbar/NavBar"
 
 function App() {
@@ -38,7 +42,12 @@ function App() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-condition" element={<TermsAndConditions />} />
         <Route path="/repay-now" element={<RepayLoan />} />
-        <Route path="/fqa" element={<FAQs />} />
+        <Route path="/faq" element={<FAQs />} />
+        <Route path="/loanRepayent" element={<LoanRepaymentComponent/>}/>
+        <Route path="/loandetailstable" element={<LoanDetailsTable/>}/>
+        <Route path="/loanstatus" element={<LoanStatus/>}/>
+        <Route path="/payment-option" element={<PaymentOptions/>}/>
+
         <Route path="/calculator" element={<LoanCalculator />} />
         <Route path="/login-form" element={<LoginForm />} />
         {/* <Route path="/navbar" element={<Navbar />} /> */}

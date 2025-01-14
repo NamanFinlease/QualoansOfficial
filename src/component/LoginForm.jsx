@@ -36,7 +36,7 @@ const rotateIn = keyframes`
   }
 `;
 
-const LoginForm = ({ setLoginCompleted }) => {
+const LoginForm = ({ setLoginComleted }) => {
   const navigate = useNavigate(); // Initialize the navigate function
   const [aadhaar, setAadhaar] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]); // Changed to an array of 6 characters
@@ -85,6 +85,7 @@ const LoginForm = ({ setLoginCompleted }) => {
     try {
       const response = await axios.get(
         `http://localhost:8081/api/user/aadhaar-login/${aadhaar}`
+        // { withCredentials: true }
       );
 
       console.log("API Full Response:", response.data); // Debugging Step
@@ -117,21 +118,65 @@ const LoginForm = ({ setLoginCompleted }) => {
     }
   };
 
+  // const sendOtp = async () => {
+  //   if (!aadhaar) {
+  //     setErrorMessage("Please enter your Aadhaar number.");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+  //   setErrorMessage("");
+  //   console.log("Sending OTP...");
+
+  //   try {
+  //     const response = await axios.get(
+  //       `http://localhost:8081/api/user/aadhaar-login/${aadhaar}`
+  //     );
+
+  //     console.log("API Full Response:", response.data); // Debugging Step
+
+  //     if (response.data.success) {
+  //       setOtpSent(true);
+  //       setSuccessMessage(
+  //         "OTP sent successfully to your Aadhaar-linked mobile number."
+  //       );
+  //       setTransactionId(response.data.transactionId);
+  //       setFwdp(response.data.fwdp);
+  //       setCodeVerifier(response.data.codeVerifier);
+  //       setMobileNumber(response.data.mobileNumber || "Unknown"); // Handle missing mobile gracefully
+  //       setUserAlreadyRegistered(response.data.isAlreadyRegisterdUser);
+
+  //       console.log(
+  //         "Mobile captured:",
+  //         response.data.mobileNumber || "Unknown"
+  //       ); // Debugging Step
+  //     } else {
+  //       setErrorMessage(response.data.message || "Failed to send OTP.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error sending OTP:", error.response || error); // Detailed Error
+  //     setErrorMessage(
+  //       error.response?.data?.message || "An error occurred while sending OTP."
+  //     );
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const verifyOtp = async () => {
     if (!otp.every((digit) => digit)) {
       setErrorMessage("Please enter the OTP.");
       return;
     }
-
+  
     if (!mobileNumber) {
       setErrorMessage("Mobile number is missing. Please resend the OTP.");
       return;
     }
-
+  
     setLoading(true);
     setErrorMessage("");
     setSuccessMessage("");
-
+  
     try {
       if (userAlreadyRegistered) {
         // Create the request body for mobile OTP verification
@@ -140,26 +185,28 @@ const LoginForm = ({ setLoginCompleted }) => {
           otp: otp.join(""), // Join the OTP array into a single string
           isAlreadyRegisterdUser: true,
         };
-
+  
         console.log("Mobile OTP Request:", mobileOtpRequest);
-
+  
         const mobileOtpResponse = await axios.post(
           "http://localhost:8081/api/verify/mobile/verify-otp",
           mobileOtpRequest,
           { withCredentials: true }
         );
-
-        console.log("new ", mobileOtpResponse);
-
+  
+        console.log("Mobile OTP Response:", mobileOtpResponse);
+  
         if (mobileOtpResponse.data?.success) {
           setSuccessMessage("OTP verified successfully!");
+  
+          // Show SweetAlert and redirect after "OK" click
           Swal.fire({
             title: "OTP Verified!",
             text: "You will now be redirected to your dashboard.",
             icon: "success",
             confirmButtonText: "OK",
           }).then(() => {
-            navigate("/ourjourney");
+            navigate("/ourjourney"); // Redirect to the 'ourjourney' page after OTP is verified
           });
         } else {
           setErrorMessage(mobileOtpResponse.data.message || "Invalid OTP.");
@@ -169,7 +216,7 @@ const LoginForm = ({ setLoginCompleted }) => {
           setErrorMessage("Missing necessary data for OTP verification.");
           return;
         }
-
+  
         // Create the request body for Aadhaar OTP verification
         const requestBody = {
           otp: otp.join(""),
@@ -177,28 +224,26 @@ const LoginForm = ({ setLoginCompleted }) => {
           fwdp,
           codeVerifier,
         };
-
+  
         console.log("Aadhaar OTP Request Body:", requestBody);
-
+  
         const response = await axios.post(
           "http://localhost:8081/api/user/submit-aadhaar-otp",
           requestBody,
           { withCredentials: true }
         );
-
-        const token = response?.data?.token;
-        setToken(token);
-
+  
         if (response.data?.success) {
           setSuccessMessage("OTP verified successfully!");
+          
+          // Show SweetAlert and redirect after "OK" click
           Swal.fire({
             title: "OTP Verified!",
             text: "You will now be redirected to your dashboard.",
             icon: "success",
             confirmButtonText: "OK",
           }).then(() => {
-            setLoginCompleted(true);
-            navigate("/dashboard");
+            navigate("/ourjourney"); // Redirect to the 'ourjourney' page after OTP is verified
           });
         } else {
           setErrorMessage(response.data.message || "Invalid OTP.");
@@ -214,6 +259,10 @@ const LoginForm = ({ setLoginCompleted }) => {
       setLoading(false);
     }
   };
+  
+  // 
+  
+
 
   const handleOtpChange = (e, index) => {
     const newOtp = [...otp];

@@ -40,10 +40,11 @@ const EmploymentInformation = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
+              // Authorization: `Bearer ${token}`, // Uncomment and use if you need Authorization
             },
+            credentials: "include", // This sends cookies and credentials along with the request
           });
-            
+          
           // Check if the response status is OK
           if (!response.ok) {
             throw new Error("Failed to fetch employment data");

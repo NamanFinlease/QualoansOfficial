@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Divider } from "@mui/material";
 import { BASE_URL } from "../baseURL";
-import { getToken } from "../../tokenManager";
+// import { getToken } from "../../tokenManager";
 // Define the income Profile component
 const IncomeInformation = () => {
 
-    const token=getToken();
+    // const token=getToken();
     
   // State to store income data
   const [income, setIncome] = useState({
@@ -32,8 +32,9 @@ const IncomeInformation = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
+            //   Authorization: `Bearer ${token}`,
             },
+            credentials: "include", // Ensures cookies and credentials are included in the request
           });
 
           // Check if the response status is OK

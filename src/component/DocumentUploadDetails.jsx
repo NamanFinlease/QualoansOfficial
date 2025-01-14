@@ -30,16 +30,17 @@ const DocumentUploadDetails = () => {
         // const token =
         // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
         const response = await fetch(
-          `${BASE_URL}/api/loanApplication/getDocumentStatus`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
+            `${BASE_URL}/api/loanApplication/getDocumentStatus`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                // Authorization: `Bearer ${token}`,
+              },
+              credentials: 'include', // Ensures cookies and credentials are included in the request
+            }
+          );
+          
         console.log("api working ",response);
         
         if (!response.ok) {

@@ -78,7 +78,7 @@ const Footer = () => {
                   <li><Link href="/" sx={linkStyle}>Home</Link></li>
                   <li><Link href="about-us" sx={linkStyle}>About Us</Link></li>
                   <li><Link href="apply-now" sx={linkStyle}>Apply Now</Link></li>
-                  <li><Link href="repay-now" sx={linkStyle}>Repay Now</Link></li>
+                  <li><Link href="loanRepayent" sx={linkStyle}>Repay Now</Link></li>
                   <li><Link href="contact-us" sx={linkStyle}>Contact Us</Link></li>
                 </Box>
               </Grid>
@@ -89,7 +89,7 @@ const Footer = () => {
                 <Box component="ul" sx={{ listStyleType: 'none', padding: 0, margin: 0 }}>
                   <li><Link href="terms-condition" sx={linkStyle}>Terms & Conditions</Link></li>
                   <li><Link href="privacy-policy" sx={linkStyle}>Privacy Policy</Link></li>
-                  <li><Link href="fqa" sx={linkStyle}>FAQs</Link></li>
+                  <li><Link href="faq" sx={linkStyle}>FAQs</Link></li>
                 </Box>
               </Grid>
 

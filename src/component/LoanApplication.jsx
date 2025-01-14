@@ -136,6 +136,10 @@ const LoanApplication = () => {
   ];
 
   const handleDisbursalbankdetails = async () => {
+
+    
+
+    
     // First SweetAlert with Bank Details Form
     const { value: formValues } = await SweetAlert.fire({
       title: "Disbursal Bank Details",
@@ -143,7 +147,7 @@ const LoanApplication = () => {
         <div style="text-align: left; padding: 10px;">
           <input id="accountNo" class="swal2-input" placeholder="Account Number" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
           <input id="confirmAccountNo" class="swal2-input" placeholder="Confirm Account Number" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
-          <input id="ifscCode" class="swal2-input" placeholder="IFC Code" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
+          <input id="ifscCode" class="swal2-input" placeholder="IFSC Code" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
           <input id="bankName" class="swal2-input" placeholder="Bank Name" style="border-radius: 8px; border: 1px solid #ddd; padding: 12px; width: 80%; margin-bottom: 10px; font-size: 14px;"/>
           <select id="accountType" class="swal2-input" style="border-radius: 8px; border: 1px solid #ddd; padding: 8px; width: 80%; margin-bottom: 10px; font-size: 14px;">
             <option value="" disabled selected>Select Account Type</option>
@@ -153,13 +157,19 @@ const LoanApplication = () => {
         </div>
       `,
       preConfirm: () => {
-        const accountNumber = document.getElementById("accountNo").value;
+        const accountNumber = document.getElementById("accountNo")?.value;
         const confirmAccountNo =
-          document.getElementById("confirmAccountNo").value;
-        const ifscCode = document.getElementById("ifcCode").value;
-        const bankName = document.getElementById("bankName").value;
-        const accountType = document.getElementById("accountType").value;
+          document.getElementById("confirmAccountNo")?.value;
+        const ifscCode = document.getElementById("ifscCode")?.value;
+        const bankName = document.getElementById("bankName")?.value;
+        const accountType = document.getElementById("accountType")?.value;
 
+        console.log("hhhh>>>");
+    console.log("account ",accountNumber);
+    console.log("account ",confirmAccountNo);
+    console.log("account ",ifscCode);
+    console.log("account ",bankName);
+    console.log("account ",accountType);
         // Validation
         if (
           !accountNumber ||
@@ -207,18 +217,19 @@ const LoanApplication = () => {
 
     if (formValues) {
       try {
-        const response = await fetch(
-          `${BASE_URL}/api/loanApplication/disbursalBankDetails`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(formValues),
-          }
-        );
-
+        const response = await fetch("http://localhost:8081/api/loanApplication/disbursalBankDetails", {
+          method: "PATCH", // Using PATCH method
+          headers: {
+            "Content-Type": "application/json",
+            // Authorization: `Bearer ${token}`, // Uncomment and use token if required
+          },
+          body: JSON.stringify(formValues), // Replace 'apiData' with the data you want to send in the body
+          credentials: 'include', // Ensures cookies and credentials are included in the request
+        });
+        
+        
+        console.log("bbbb>>>",response);
+        
         if (response.status === 200) {
           console.log(response.status);
 
@@ -273,11 +284,13 @@ const LoanApplication = () => {
         {
           method: "PATCH",
           headers: {
-            Authorization: `Bearer ${token}`, // Add Bearer token
+            // Authorization: `Bearer ${token}`, // Uncomment if token is needed
           },
           body: formData, // Include the FormData object
+          credentials: "include", // Ensures that cookies are sent with the request
         }
       );
+      
       // console.log(response);
 
       // Check if the response is OK (status 200-299)
@@ -432,11 +445,14 @@ const LoanApplication = () => {
               method: "PATCH",
               headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`, // Ensure token is valid
+                // Authorization: `Bearer ${token}`, // Uncomment if you need to include token
               },
               body: JSON.stringify(apiData), // Ensure data is structured correctly
+              credentials: "include", // This will send cookies and credentials with the request
             }
           );
+          console.log("VVVVVV>>>", response);
+          
 
           if (response.status === 200) {
             const result = await response.json();
@@ -560,6 +576,8 @@ const LoanApplication = () => {
           <Grid container spacing={3}>
             {steps.map((item, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
+              {console.log('HHHHHH....>>>',item)
+              }
                 <Box
                   sx={{
                     display: "flex",

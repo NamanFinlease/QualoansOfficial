@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Box, Typography, Button, LinearProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import creditExecutiveImage from "../assets/image/image1.png";
+import creditExecutiveImage from "../assets/image/1.gif";
+import journeryprocess from '../assets/image/Untitled design (1).gif'
 import Dashboard from "./Dashboard";
 
 const OurJourney = () => {
@@ -165,7 +166,7 @@ const OurJourney = () => {
               }}
             >
               <img
-                src={creditExecutiveImage}
+                src={journeryprocess}
                 alt="Credit Executive"
                 style={{
                   width: "100%",

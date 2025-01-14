@@ -67,21 +67,22 @@ const DocumentUploadModal = () => {
     setLoading(true);
 
     try {
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+      // const token =
+      //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
 
       // Fetch the API using axios
       const response = await axios.patch(
-        `https://qualoan-staging.onrender.com/api/loanApplication/uploadDocuments`,
+        `${BASE_URL}/api/loanApplication/uploadDocuments`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
+            // Authorization: `Bearer ${token}`, // Uncomment if token is needed
           },
+          withCredentials: true, // Ensures that cookies are included with the request
         }
       );
-
+      
       // Handle success response
       console.log("API response:", response.data);
       MySwal.fire({

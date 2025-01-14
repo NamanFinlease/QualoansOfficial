@@ -42,10 +42,11 @@ const Dashboard = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            // Authorization: `Bearer ${token}`, // Uncomment and provide the token if needed
           },
+          credentials: "include", // This ensures cookies and other credentials are sent with the request
         });
-
+        
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
         }
