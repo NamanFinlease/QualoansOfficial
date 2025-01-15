@@ -1,10 +1,12 @@
 import React from 'react';
 import { Box, Typography, Container, Paper, Divider } from '@mui/material';
 import { Fade } from '@mui/material';
+import Header from '../navbar/Header';
 
 const TermsAndConditions = () => {
     return (
         <div>
+            <Header/>
             <Box 
                 sx={{ 
                     minHeight: '100vh',

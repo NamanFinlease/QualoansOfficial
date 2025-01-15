@@ -14,13 +14,12 @@ import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import ApplyNowIcon from '@mui/icons-material/Assignment';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import { keyframes } from '@mui/system';
 
 import logo from '../assets/image/Artboard 1.webp'; // Adjust the path based on your structure
+import Cookies from 'js-cookie'; // Ensure this is installed and imported
 
-// Blinking animation for the "Apply Now" button
 const blinking = keyframes`
   0% { background-color: gray; color: white; }
   50% { background-color: #fc8403; color: black; }
@@ -41,6 +40,50 @@ const Header = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+
+  const handleApplyNowClick = async () => {
+    try {
+      // Check for 'userRegistered' cookie (if necessary, but backend will handle it)
+      const userRegistered = Cookies.get('userRegistered'); // If you still need to check the cookie
+  
+      // if (userRegistered) {
+      //   // If the user is already registered, redirect to loan-application
+      //   window.location.href = '/loan-application';
+      //   return;
+      // } else {
+        // Make the API call before redirecting to the login form
+        const response = await fetch('http://localhost:8081/api', {
+          method: 'GET', // or 'POST', depending on your API
+          headers: {
+            'Content-Type': 'application/json',
+          },
+
+        });
+  
+        if (response.isUserAuthentic) {
+          // redirect logic dashboard
+
+          window.location.href = '/dashboard';
+
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+  
+        const data = await response.json();
+        console.log('API Response:', data);
+  
+        // After the API call, redirect to login-form if the user is not registered
+        window.location.href = '/login-form';
+        return;
+      }
+     catch (error) {
+      console.error('Error while calling the API:', error);
+      alert('Failed to submit application.');
+    }
+  };
+  
+  
 
   return (
     <>
@@ -112,17 +155,17 @@ const Header = () => {
                 <ContactPageIcon sx={{ mr: 1 }} /> Contact Us
               </Link>
             </MenuItem>
-            {/* <MenuItem onClick={handleClose}>
+            <MenuItem onClick={handleClose}>
               <Link to="/repay-now" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
                 <ApplyNowIcon sx={{ mr: 1 }} /> Repay Now
               </Link>
-            </MenuItem> */}
+            </MenuItem> 
             <MenuItem onClick={handleClose}>
-              <Link to="/loan-calculator" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
+              <Link to="/calculator" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
                 <CalculateIcon sx={{ mr: 1 }} /> Loan Calculator
               </Link>
             </MenuItem>
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={handleApplyNowClick}>
               <Link to="/apply-now" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
                 <ApplyNowIcon sx={{ mr: 1 }} /> Apply Now
               </Link>
@@ -206,7 +249,7 @@ const Header = () => {
     <ContactPageIcon sx={{ mr: 1 }} /> Contact Us
   </Link>
 
-  {/* <Link
+  <Link
     to="/repay-now"
     onClick={scrollToTop}
     style={{
@@ -223,7 +266,7 @@ const Header = () => {
     onMouseLeave={(e) => (e.currentTarget.style.color = '#0b2747')}
   >
     <ApplyNowIcon sx={{ mr: 1 }} /> Repay Now
-  </Link> */}
+  </Link> 
 
   <Link
     to="/calculator"
@@ -248,30 +291,30 @@ const Header = () => {
 
   {/* "Apply Now" Button */}
   <Button
-    component={Link}
-    to="/apply-now"
-    variant="contained"
-    sx={{
-      backgroundColor: 'orange',
-      color: 'white',
-      padding: '10px 20px',
-      borderRadius: '50px',
-      fontWeight: 'bold',
-      animation: `${blinking} 1.5s infinite`,
-      fontFamily: 'Roboto, sans-serif',
-      textTransform: 'none', // Normal case
-      '&:hover': {
-        backgroundColor: '#fc8403',
-      },
-      '@media (max-width: 600px)': {
-        fontSize: '14px',
-        padding: '8px 12px',
-      },
-    }}
-  >
-    Apply Now
-  </Button>
-</Box>
+              variant="contained"
+              onClick={handleApplyNowClick} // API call on click
+              sx={{
+                backgroundColor: 'orange',
+                color: 'white',
+                padding: '10px 20px',
+                borderRadius: '50px',
+                fontWeight: 'bold',
+                animation: `${blinking} 1.5s infinite`,
+                fontFamily: 'Roboto, sans-serif',
+                textTransform: 'none',
+                '&:hover': {
+                  backgroundColor: '#fc8403',
+                },
+                '@media (max-width: 600px)': {
+                  fontSize: '14px',
+                  padding: '8px 12px',
+                },
+              }}
+            >
+              Apply Now
+            </Button>
+   
+            </Box>
 
         </Toolbar>
       </AppBar>

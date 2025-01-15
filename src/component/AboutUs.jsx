@@ -8,6 +8,7 @@ import WhyChooseUs from './WhyChooseUs';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MissionImage from '../assets/image/Our-Mission.jpg'; // Import your mission image here
 import technologyGif from '../assets/image/Repayment (2).gif'; // Importing the GIF
+import Header from '../navbar/Header';
 
 
 const techSteps = [
@@ -32,6 +33,7 @@ const techSteps = [
 
 
 const AboutUs = () => {
+<Header /> 
 
 
   const [isVisible, setIsVisible] = useState(false);
@@ -62,11 +64,13 @@ const AboutUs = () => {
   }, []);
 
   
-
-
+  
 
   
   return (
+    <>
+    <Header/>
+
     <Box 
     sx={{ 
       background: '#f9f9f9',
@@ -77,6 +81,7 @@ const AboutUs = () => {
       padding: { xs: '20px', sm: '45px' }, // Adjust padding for small screens
     }}
   >
+   
     {/* Image Section */}
    
       <Box
@@ -475,7 +480,7 @@ we’re here to ensure that financial hurdles don’t hold you back. With our fu
 
         
         </Box>
-        
+        </> 
    
   );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { TextField, Button, Grid, Typography, Box } from '@mui/material';
 import Swal from 'sweetalert2';
 import aboutImage from '../assets/image/Contact-Us.jpg';
+import Header from '../navbar/Header';
 
 const AboutUs = () => {
   const handleSubmit = (event) => {
@@ -15,6 +16,9 @@ const AboutUs = () => {
   };
 
   return (
+    <>
+    <Header /> 
+    
     <Box
       sx={{
       
@@ -255,6 +259,7 @@ const AboutUs = () => {
         />
       </Box>
     </Box>
+    </>
   );
 };
 

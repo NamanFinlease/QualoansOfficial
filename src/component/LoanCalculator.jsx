@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 import { useInView } from 'react-intersection-observer';
 import { keyframes } from '@mui/system';
+import Header from '../navbar/Header';
 
 
 // Define keyframes for the animations
@@ -88,6 +89,8 @@ const LoanCalculator = () => {
     };
 
     return (
+        <>
+        <Header/>
         <Box
             sx={{
 
@@ -503,10 +506,12 @@ const LoanCalculator = () => {
                     </Paper>
                     </Grid>
 
-                    </Grid>
+                   </Grid>
                 </Container>
             </Box>
         </Box>
+        </>
+
     );
 };
 

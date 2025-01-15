@@ -4,9 +4,13 @@ import WarningIcon from '@mui/icons-material/Warning'; // Import Warning icon
 import AXIS from '../assets/image/axis (1).png'; 
 import repayaImage from '../assets/image/Qua-Repayment.jpg';
 import { Grid, Box, Typography, Button, Divider } from '@mui/material';
+import Header from '../navbar/Header';
 
 const RepayLoan = () => {
   return (
+    <>
+    <Header/>
+
     <Box 
       sx={{ 
         background: '#f9f9f9',
@@ -328,6 +332,7 @@ const RepayLoan = () => {
 </Box>
 
     </Box>
+    </>
   );
 };
 

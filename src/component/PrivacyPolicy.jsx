@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Typography, Container, Paper, Divider, Slide, Fade } from '@mui/material';
 import privacyImage from '../assets/image/Untitled-1.jpg';
+import Header from '../navbar/Header';
 
 const PrivacyPolicy = () => {
     const sections = [
@@ -109,6 +110,7 @@ const PrivacyPolicy = () => {
 
     return (
         <div ref={policyRef}>
+            <Header/>
             <Box 
                 sx={{ 
                     minHeight: '100vh',
