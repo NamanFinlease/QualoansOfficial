@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -14,9 +13,8 @@ import {
   InputLabel,
   Button,
 } from "@mui/material";
-import { keyframes } from "@mui/system";
 import loanImage from "../assets/image/Untitled design.gif";
-import axios from "axios"; // Import axios for API calls
+import axios from "axios";
 import { BASE_URL } from "../baseURL";
 import Dashboard from "./Dashboard";
 import { getToken } from "../../tokenManager";
@@ -29,8 +27,8 @@ const LoanCalculator = () => {
   const [purpose, setPurpose] = useState("");
   const [isLoading, setIsLoading] = useState(false); // Loading state for API call
   const [responseMessage, setResponseMessage] = useState(""); // To store API response message
+  const [isModalOpen, setIsModalOpen] = useState(true); // Modal visibility state
   const token = getToken();
-  const navigate = useNavigate();
 
   const calculateTotalAmount = () => {
     const totalInterest = (loanAmount * interestRate * loanTenure) / 100;
@@ -62,17 +60,14 @@ const LoanCalculator = () => {
 
     try {
       setIsLoading(true);
-      // const token =
-      //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
-
       const response = await axios.post(
         `${BASE_URL}/api/loanApplication/applyLoan`,
         payload,
         {
           headers: {
-            // Authorization: `Bearer ${token}`, // Add Authorization header
-            "Content-Type": "application/json", // Optional: Specify Content-Type
+            "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
 
@@ -82,7 +77,7 @@ const LoanCalculator = () => {
         title: "Success",
         text: response.data.message,
       }).then(() => {
-        navigate("/loan-application");
+        setIsModalOpen(false); // Close modal on success
       });
     } catch (error) {
       console.error("Error applying for loan:", error);
@@ -95,6 +90,20 @@ const LoanCalculator = () => {
       setIsLoading(false);
     }
   };
+
+  const cancelLoanApplication = () => {
+    Swal.fire({
+      icon: "info",
+      title: "Process Cancelled",
+      text: "Your loan application process has been cancelled.",
+    }).then(() => {
+      setIsModalOpen(false); // Close modal when canceled
+    });
+  };
+
+  if (!isModalOpen) {
+    return null; // Don't render anything if modal is closed
+  }
 
   return (
     <>
@@ -291,6 +300,25 @@ const LoanCalculator = () => {
                   disabled={isLoading}
                 >
                   {isLoading ? "Processing..." : "Submit"}
+                </Button>
+
+                <Button
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "80px",
+                    color: "#fc8403",
+                    fontWeight: "bold",
+                    fontSize: { xs: "14px", sm: "16px" },
+                    padding: { xs: "8px 16px", sm: "6px 30px" },
+                    marginTop: 2,
+                    "&:hover": {
+                      backgroundColor: "#fc8403",
+                      color: "white",
+                    },
+                  }}
+                  onClick={cancelLoanApplication}
+                >
+                  Cancel
                 </Button>
               </Grid>
             </div>

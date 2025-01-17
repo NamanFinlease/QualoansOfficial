@@ -57,7 +57,6 @@ const IncomeInformation = () => {
             obligations: data?.data?.incomeDetails?.obligations,  // Fixed field for Date of Birth
             nextSalaryDate: data?.data?.incomeDetails?.nextSalaryDate,
             incomeMode: data?.data?.incomeDetails?.incomeMode,  // Corrected syntax issue
-            incomeMode: data?.data?.incomeDetails?.incomeMode,
           
         });
           

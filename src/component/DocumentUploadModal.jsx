@@ -12,21 +12,18 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
-import { getToken } from "../../tokenManager";
 
 // Initialize SweetAlert with React content
 const MySwal = withReactContent(Swal);
 
-
-const DocumentUploadModal = () => {
-  const token = getToken();
+const DocumentUploadModal = ({ prefillData }) => {
   const [formValues, setFormValues] = useState({
-    salarySlip: null,
-    aadhaarFront: null,
-    aadhaarBack: null,
-    panCard: null,
-    otherType: "",
-    otherDocument: null,
+    salarySlip: prefillData?.salarySlip || null,
+    aadhaarFront: prefillData?.aadhaarFront || null,
+    aadhaarBack: prefillData?.aadhaarBack || null,
+    panCard: prefillData?.panCard || null,
+    otherType: prefillData?.otherType || "",
+    otherDocument: prefillData?.otherDocument || null,
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -82,7 +79,7 @@ const DocumentUploadModal = () => {
           withCredentials: true, // Ensures that cookies are included with the request
         }
       );
-      
+
       // Handle success response
       console.log("API response:", response.data);
       MySwal.fire({
@@ -128,189 +125,190 @@ const DocumentUploadModal = () => {
 
   return (
     <Box
-  sx={{
-    padding: 4,
-    border: "2px solid #ddd",
-    borderRadius: 3,
-    maxWidth: 900,
-    margin: "0 auto",
-    boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-    background: "#4D4D4E",
-  }}
->
-  <Typography variant="h5" mb={2} sx={{ color: "white" }}>
-    Upload Documents
-  </Typography>
-
-  <Grid container spacing={2}>
-    {/* Salary Slips */}
-    <Grid item xs={12}>
-      <TextField
-        fullWidth
-        type="file"
-        inputProps={{ accept: ".pdf" }}
-        label="Upload Salary Slips (Last 3 Months)"
-        placeholder="Last 3 Months (PDF only)"
-        error={!!errors.salarySlips}
-        helperText={errors.salarySlips}
-        InputLabelProps={{ shrink: true }}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            color: "white",
-            "& fieldset": { borderColor: "white" },
-            "&:hover fieldset": { borderColor: "white" },
-          },
-          "& input": { color: "white" },
-          label: { color: "white" },
-        }}
-        onChange={(e) => handleFileChange("salarySlips", e.target.files[0])}
-      />
-    </Grid>
-
-    {/* Aadhaar Front */}
-    <Grid item xs={12} sm={6}>
-      <TextField
-        fullWidth
-        type="file"
-        inputProps={{ accept: ".pdf,image/*" }}
-        label="Aadhaar Front"
-        placeholder="Upload PDF or Image"
-        error={!!errors.aadhaarFront}
-        helperText={errors.aadhaarFront}
-        InputLabelProps={{ shrink: true }}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            color: "white",
-            "& fieldset": { borderColor: "white" },
-            "&:hover fieldset": { borderColor: "white" },
-          },
-          "& input": { color: "white" },
-          label: { color: "white" },
-        }}
-        onChange={(e) => handleFileChange("aadhaarFront", e.target.files[0])}
-      />
-    </Grid>
-
-    {/* Aadhaar Back */}
-    <Grid item xs={12} sm={6}>
-      <TextField
-        fullWidth
-        type="file"
-        inputProps={{ accept: ".pdf,image/*" }}
-        label="Aadhaar Back"
-        placeholder="Upload PDF or Image"
-        error={!!errors.aadhaarBack}
-        helperText={errors.aadhaarBack}
-        InputLabelProps={{ shrink: true }}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            color: "white",
-            "& fieldset": { borderColor: "white" },
-            "&:hover fieldset": { borderColor: "white" },
-          },
-          "& input": { color: "white" },
-          label: { color: "white" },
-        }}
-        onChange={(e) => handleFileChange("aadhaarBack", e.target.files[0])}
-      />
-    </Grid>
-
-    {/* PAN Card */}
-    <Grid item xs={12}>
-      <TextField
-        fullWidth
-        type="file"
-        inputProps={{ accept: ".pdf,image/*" }}
-        label="PAN Card"
-        placeholder="Upload PDF or Image"
-        error={!!errors.panCard}
-        helperText={errors.panCard}
-        InputLabelProps={{ shrink: true }}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            color: "white",
-            "& fieldset": { borderColor: "white" },
-            "&:hover fieldset": { borderColor: "white" },
-          },
-          "& input": { color: "white" },
-          label: { color: "white" },
-        }}
-        onChange={(e) => handleFileChange("panCard", e.target.files[0])}
-      />
-    </Grid>
-
-    {/* Other Document Type */}
-    <Grid item xs={12} sm={6}>
-      <TextField
-        fullWidth
-        select
-        label="Other Document Type"
-        placeholder="Select Document Type"
-        value={formValues.otherType}
-        onChange={handleDropdownChange}
-        InputLabelProps={{ shrink: true }}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            color: "white",
-            "& fieldset": { borderColor: "white" },
-            "&:hover fieldset": { borderColor: "white" },
-          },
-          label: { color: "white" },
-        }}
-      >
-        <MenuItem value="">None</MenuItem>
-        <MenuItem value="Residential Address">Residential Address</MenuItem>
-        <MenuItem value="Electricity Bill">Electricity Bill</MenuItem>
-        <MenuItem value="Gas Connection">Gas Connection</MenuItem>
-      </TextField>
-    </Grid>
-
-    {/* Other Document */}
-    <Grid item xs={12} sm={6}>
-      <TextField
-        fullWidth
-        type="file"
-        inputProps={{ accept: ".pdf,image/*" }}
-        label="Other Document (Optional)"
-        placeholder="Upload PDF or Image"
-        InputLabelProps={{ shrink: true }}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            color: "white",
-            "& fieldset": { borderColor: "white" },
-            "&:hover fieldset": { borderColor: "white" },
-          },
-          "& input": { color: "white" },
-          label: { color: "white" },
-        }}
-        onChange={(e) => handleFileChange("otherDocument", e.target.files[0])}
-      />
-    </Grid>
-  </Grid>
-
-  {/* Submit and Cancel Buttons */}
-  <Box mt={3} textAlign="right">
-    <Button
-      variant="outlined"
-      onClick={() => MySwal.close()}
-      sx={{ mr: 2, color: "white", borderColor: "white" }}
+      sx={{
+        padding: 4,
+        border: "2px solid #ddd",
+        borderRadius: 3,
+        maxWidth: 900,
+        margin: "0 auto",
+        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+        background: "#4D4D4E",
+      }}
     >
-      Cancel
-    </Button>
-    <Button
-      variant="contained"
-      onClick={handleSubmit}
-      disabled={loading}
-      sx={{ backgroundColor: "orange", color: "white" }}
-      startIcon={loading && <CircularProgress size={20} />}
-    >
-      {loading ? "Submitting..." : "Submit"}
-    </Button>
-  </Box>
-</Box>
+      <Typography variant="h5" mb={2} sx={{ color: "white" }}>
+        Upload Documents
+      </Typography>
 
-  
-  
+      <Grid container spacing={2}>
+        {/* Salary Slips */}
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            type="file"
+            inputProps={{ accept: ".pdf" }}
+            label="Upload Salary Slips (Last 3 Months)"
+            placeholder="Last 3 Months (PDF only)"
+            error={!!errors.salarySlips}
+            helperText={errors.salarySlips}
+            InputLabelProps={{ shrink: true }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                color: "white",
+                "& fieldset": { borderColor: "white" },
+                "&:hover fieldset": { borderColor: "white" },
+              },
+              "& input": { color: "white" },
+              label: { color: "white" },
+            }}
+            onChange={(e) => handleFileChange("salarySlips", e.target.files[0])}
+          />
+        </Grid>
+
+        {/* Aadhaar Front */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            type="file"
+            inputProps={{ accept: ".pdf,image/*" }}
+            label="Aadhaar Front"
+            placeholder="Upload PDF or Image"
+            error={!!errors.aadhaarFront}
+            helperText={errors.aadhaarFront}
+            InputLabelProps={{ shrink: true }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                color: "white",
+                "& fieldset": { borderColor: "white" },
+                "&:hover fieldset": { borderColor: "white" },
+              },
+              "& input": { color: "white" },
+              label: { color: "white" },
+            }}
+            onChange={(e) =>
+              handleFileChange("aadhaarFront", e.target.files[0])
+            }
+          />
+        </Grid>
+
+        {/* Aadhaar Back */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            type="file"
+            inputProps={{ accept: ".pdf,image/*" }}
+            label="Aadhaar Back"
+            placeholder="Upload PDF or Image"
+            error={!!errors.aadhaarBack}
+            helperText={errors.aadhaarBack}
+            InputLabelProps={{ shrink: true }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                color: "white",
+                "& fieldset": { borderColor: "white" },
+                "&:hover fieldset": { borderColor: "white" },
+              },
+              "& input": { color: "white" },
+              label: { color: "white" },
+            }}
+            onChange={(e) => handleFileChange("aadhaarBack", e.target.files[0])}
+          />
+        </Grid>
+
+        {/* PAN Card */}
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            type="file"
+            inputProps={{ accept: ".pdf,image/*" }}
+            label="PAN Card"
+            placeholder="Upload PDF or Image"
+            error={!!errors.panCard}
+            helperText={errors.panCard}
+            InputLabelProps={{ shrink: true }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                color: "white",
+                "& fieldset": { borderColor: "white" },
+                "&:hover fieldset": { borderColor: "white" },
+              },
+              "& input": { color: "white" },
+              label: { color: "white" },
+            }}
+            onChange={(e) => handleFileChange("panCard", e.target.files[0])}
+          />
+        </Grid>
+
+        {/* Other Document Type */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            select
+            label="Other Document Type"
+            placeholder="Select Document Type"
+            value={formValues.otherType}
+            onChange={handleDropdownChange}
+            InputLabelProps={{ shrink: true }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                color: "white",
+                "& fieldset": { borderColor: "white" },
+                "&:hover fieldset": { borderColor: "white" },
+              },
+              label: { color: "white" },
+            }}
+          >
+            <MenuItem value="">None</MenuItem>
+            <MenuItem value="Residential Address">Residential Address</MenuItem>
+            <MenuItem value="Electricity Bill">Electricity Bill</MenuItem>
+            <MenuItem value="Gas Connection">Gas Connection</MenuItem>
+          </TextField>
+        </Grid>
+
+        {/* Other Document */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            type="file"
+            inputProps={{ accept: ".pdf,image/*" }}
+            label="Other Document (Optional)"
+            placeholder="Upload PDF or Image"
+            InputLabelProps={{ shrink: true }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                color: "white",
+                "& fieldset": { borderColor: "white" },
+                "&:hover fieldset": { borderColor: "white" },
+              },
+              "& input": { color: "white" },
+              label: { color: "white" },
+            }}
+            onChange={(e) =>
+              handleFileChange("otherDocument", e.target.files[0])
+            }
+          />
+        </Grid>
+      </Grid>
+
+      {/* Submit and Cancel Buttons */}
+      <Box mt={3} textAlign="right">
+        <Button
+          variant="outlined"
+          onClick={() => MySwal.close()}
+          sx={{ mr: 2, color: "white", borderColor: "white" }}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={loading}
+          sx={{ backgroundColor: "orange", color: "white" }}
+          startIcon={loading && <CircularProgress size={20} />}
+        >
+          {loading ? "Submitting..." : "Submit"}
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
