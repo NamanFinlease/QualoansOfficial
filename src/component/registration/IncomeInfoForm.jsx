@@ -17,53 +17,47 @@ import { BASE_URL } from "../../baseURL";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const StepBox = ({ icon, title, description, onComplete, disabled }) => (
+const StepBox = ({ icon, title, description, disabled, completed, onClick }) => (
   <Box
+    onClick={!disabled && !completed ? onClick : null}
     sx={{
       display: "flex",
       flexDirection: "column",
       alignItems: "flex-start",
       justifyContent: "center",
       padding: 2,
-      border: "2px solid",
+      borderColor: completed ? "green" : disabled ? "grey" : "orange",
       borderRadius: 3,
       margin: 1,
       width: "30%",
       minWidth: 200,
-      cursor: disabled ? "not-allowed" : "pointer",
+      cursor: disabled || completed ? "not-allowed" : "pointer",
       textAlign: "left",
-      background: "linear-gradient(45deg, #4D4D4E, orange)",
-      color: "white",
+      background: completed
+        ? "linear-gradient(45deg, #28a745, #218838)"
+        : disabled
+        ? "lightgrey"
+        : "linear-gradient(45deg, #4D4D4E, orange)",
+      color: completed || !disabled ? "white" : "darkgrey",
       "@media (max-width: 600px)": {
         width: "80%",
         margin: "auto",
       },
     }}
   >
-    <IconButton sx={{ color: "white", ml: 1 }} disabled={disabled}>
-      {icon}
+    <IconButton sx={{ color: completed ? "white" : disabled ? "grey" : "white", ml: 1 }}>
+      {completed ? (
+        <i className="fas fa-check-circle" style={{ fontSize: "24px" }}></i> // Green tick icon
+      ) : (
+        icon
+      )}
     </IconButton>
     <Box sx={{ ml: 2, flexGrow: 1 }}>
       <Typography variant="h6" sx={{ fontWeight: "bold" }}>
         {title}
       </Typography>
-      <Typography variant="body2" sx={{ color: "white" }}>
-        {description}
-      </Typography>
+      <Typography variant="body2">{description}</Typography>
     </Box>
-    <Button
-      variant="contained"
-      onClick={onComplete}
-      sx={{
-        ml: 2,
-        background: "linear-gradient(45deg, #4D4D4E, orange)",
-        color: "white",
-        "&:hover": { backgroundColor: "#ffcc00" },
-      }}
-      disabled={disabled}
-    >
-      Start
-    </Button>
   </Box>
 );
 
@@ -78,9 +72,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
     incomeMode: "",
   });
   const [isStepCompleted, setIsStepCompleted] = useState(false);
-
   const [error, setError] = useState("");
-  const [formCompleted, setFormCompleted] = useState(false);
 
   const handleFormChange = (key, value) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
@@ -110,9 +102,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
       );
       if (response.status === 200) {
         Swal.fire("Success", "Income details added successfully!", "success");
-        setFormCompleted(true); // Mark the form as completed
         setIsStepCompleted(true); // Mark step as completed
-
         setOpenModal(false);
         if (onComplete) onComplete();
       } else {
@@ -131,8 +121,9 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
         icon={<AccountBalanceWalletIcon />}
         title="Income Information"
         description="Please provide your income details."
-        onComplete={() => setOpenModal(true)}
+        onClick={() => setOpenModal(true)}
         disabled={disabled || isStepCompleted}
+        completed={isStepCompleted}
       />
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
@@ -144,7 +135,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
             padding: 3,
             maxWidth: 400,
             margin: "auto",
-            marginTop: "1%",
+            marginTop: "5%",
             mb: "20%",
           }}
         >
@@ -166,10 +157,10 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
                 shrink: true,
                 style: { color: "#4D4D4E" },
               }}
-              disabled={formCompleted}
+              disabled={isStepCompleted}
             >
               <option value="SALARIED">Salaried</option>
-              <option value="SELF EMPLOYED">Self-Employed</option>
+              <option value="SELF_EMPLOYED">Self-Employed</option>
             </TextField>
           </FormControl>
 
@@ -187,7 +178,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
               shrink: true,
               style: { color: "#4D4D4E" },
             }}
-            disabled={formCompleted}
+            disabled={isStepCompleted}
           />
 
           {/* Obligations */}
@@ -204,7 +195,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
               shrink: true,
               style: { color: "#4D4D4E" },
             }}
-            disabled={formCompleted}
+            disabled={isStepCompleted}
           />
 
           {/* Next Salary Date */}
@@ -221,7 +212,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
               shrink: true,
               style: { color: "#4D4D4E" },
             }}
-            disabled={formCompleted}
+            disabled={isStepCompleted}
           />
 
           {/* Income Mode */}
@@ -232,7 +223,6 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
             value={formValues.incomeMode}
             onChange={(e) => handleFormChange("incomeMode", e.target.value)}
             row
-            disabled={formCompleted}
           >
             <FormControlLabel value="BANK" control={<Radio />} label="Bank" />
             <FormControlLabel value="CHEQUE" control={<Radio />} label="Cheque" />
@@ -243,11 +233,11 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
           {error && <Typography color="error">{error}</Typography>}
 
           {/* Actions */}
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: 2 }}>
             <Button variant="outlined" color="secondary" onClick={() => setOpenModal(false)}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleSubmit} disabled={isFetching || formCompleted}>
+            <Button variant="contained" onClick={handleSubmit} disabled={isFetching || isStepCompleted}>
               {isFetching ? <CircularProgress size={24} /> : "Submit"}
             </Button>
           </Box>

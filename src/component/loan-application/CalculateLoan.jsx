@@ -22,6 +22,7 @@ import loanImage from "../../assets/image/Untitled design.gif";
 import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 import Dashboard from "../Dashboard";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
   const [loanAmount, setLoanAmount] = useState(5000);
@@ -31,6 +32,7 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
   const [purpose, setPurpose] = useState("");
   const [isLoading, setIsLoading] = useState(false); // Loading state for API call
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
+  const [isComplete, setIsComplete] = useState(false); // State to track completion
 
   const openLoanCalculatorModal = () => {
     // setIsModalOpen(true);
@@ -130,7 +132,7 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
             ? "#ccc"
             : "linear-gradient(45deg, #4D4D4E, orange)",
           cursor: disabled ? "not-allowed" : "pointer",
-          height: 180,
+          height: 200,
           width: "100%",
           maxWidth: 350,
           transition: "all 0.3s",
@@ -146,14 +148,14 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
         <IconButton
           sx={{
             marginBottom: 1,
-            backgroundColor: "#4D4D4E",
+            backgroundColor: isComplete ? "green" : "#4D4D4E",
             color: "white",
             "&:hover": {
-              backgroundColor: "white",
+              backgroundColor: isComplete ? "darkgreen" : "white",
             },
           }}
         >
-          <WorkIcon />
+          {isComplete ? <CheckCircleIcon /> : <WorkIcon />}
         </IconButton>
         <Typography
           variant="h6"
@@ -179,9 +181,9 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
         fullWidth
         maxWidth="md"
       >
-        <DialogTitle>Loan Calculator</DialogTitle>
+        {/* <DialogTitle>Loan Calculator</DialogTitle> */}
         <DialogContent>
-          <Dashboard />
+          {/* <Dashboard /> */}
           <Container maxWidth="lg">
             <Typography
               variant="h4"
@@ -352,7 +354,7 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                       variant="contained"
                       sx={{
                         borderRadius: "80px",
-                        backgroundColor: "#fc8403",
+                        background: "#ff5722",
                         color: "white",
                         fontWeight: "bold",
                         fontSize: { xs: "14px", sm: "16px" },
@@ -371,7 +373,8 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                       variant="outlined"
                       sx={{
                         borderRadius: "80px",
-                        color: "#fc8403",
+
+                        color: "#ff5722",
                         fontWeight: "bold",
                         fontSize: { xs: "14px", sm: "16px" },
                         padding: { xs: "8px 16px", sm: "6px 30px" },

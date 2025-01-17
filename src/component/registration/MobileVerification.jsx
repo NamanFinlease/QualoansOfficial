@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import PhoneIcon from "@mui/icons-material/PhoneIphone";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"; // Import CheckCircleIcon
 import Swal from "sweetalert2"; // Import SweetAlert2 for alerts
 import { BASE_URL } from "../../baseURL";
 
@@ -54,13 +55,10 @@ const MobileVerification = ({ onComplete, disabled }) => {
           credentials: "include",
         }
       );
-      
       const data = await response.json();
-      console.log("data",data);
-      
+      console.log("data", data);
       if (data.success) {
         setCurrentStep("otp");
-        // Swal.fire("OTP Sent", "Please check your mobile for the OTP.", "success");
       } else {
         throw new Error("Failed to send OTP.");
       }
@@ -95,64 +93,67 @@ const MobileVerification = ({ onComplete, disabled }) => {
     }
   };
 
-  const StepBox = ({ icon, title, description, stepId, onComplete, isCompleted }) => (
+  const resendOTP = () => {
+    if (mobile) {
+      sendOTP(mobile); // Resend the OTP to the same mobile number
+    } else {
+      Swal.fire("Error", "Please enter a mobile number to resend OTP.", "warning");
+    }
+  };
+  const StepBox = ({ icon, title, description, onClick, disabled, completed }) => (
     <Box
+      onClick={!disabled && !completed ? onClick : null}
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start", // Align items to the left
+        alignItems: "flex-start",
         justifyContent: "center",
         padding: 2,
-        border: "2px solid",
+        borderColor: completed ? "green" : disabled ? "grey" : "orange",
         borderRadius: 3,
         margin: 1,
-        width: "30%", // Adjust width for larger screens
+        width: "30%",
         minWidth: 200,
-        cursor: "pointer",
-        textAlign: "left", // Left align text
-        color: "white",
-        background: "linear-gradient(45deg, #4D4D4E, orange)",
+        cursor: disabled || completed ? "not-allowed" : "pointer",
+        textAlign: "left",
+        background: completed
+          ? "linear-gradient(45deg, #28a745, #218838)"
+          : disabled
+          ? "lightgrey"
+          : "linear-gradient(45deg, #4D4D4E, orange)",
+        color: completed || !disabled ? "white" : "darkgrey",
         "@media (max-width: 600px)": {
-          // For mobile responsiveness
-          width: "80%", // Make the step box larger on smaller screens
-          margin: "auto", // Center the boxes
+          width: "80%",
+          margin: "auto",
         },
       }}
     >
-      <IconButton sx={{ color: "white", ml: 1 }}>{icon}</IconButton>
+      <IconButton
+        sx={{
+          color: completed ? "white" : disabled ? "grey" : "white",
+          ml: 1,
+        }}
+      >
+        {completed ? <CheckCircleIcon /> : icon}
+      </IconButton>
       <Box sx={{ ml: 2, flexGrow: 1 }}>
         <Typography variant="h6" sx={{ fontWeight: "bold" }}>
           {title}
         </Typography>
-        <Typography variant="body2" sx={{ color: "white" }}>
-          {description}
-        </Typography>
+        <Typography variant="body2">{description}</Typography>
       </Box>
-      <Button
-        variant="contained"
-        onClick={onComplete}
-        sx={{
-          ml: 2,
-          background: "linear-gradient(45deg, #4D4D4E, orange)",
-          color: "white",
-          "&:hover": { backgroundColor: "#ffcc00" },
-        }}
-        disabled={isCompleted} // Disable button if step is completed
-      >
-        Start
-      </Button>
     </Box>
   );
-  
+
   return (
     <>
-          <StepBox
+      <StepBox
         icon={<PhoneIcon />}
         title="Mobile Verification"
         description="Verify your mobile number"
-        stepId="mobile"
-        onComplete={() => setOpenDialog(true)}
-        isCompleted={isOtpVerified} // Pass OTP verification status
+        onClick={() => setOpenDialog(true)}
+        disabled={disabled}
+        completed={isOtpVerified}
       />
 
       <Dialog
@@ -186,7 +187,9 @@ const MobileVerification = ({ onComplete, disabled }) => {
             }
             disabled={isLoading}
             placeholder={
-              currentStep === "mobile" ? "Enter your mobile number" : "Enter OTP"
+              currentStep === "mobile"
+                ? "Enter your mobile number"
+                : "Enter OTP"
             }
           />
         </DialogContent>
@@ -196,13 +199,6 @@ const MobileVerification = ({ onComplete, disabled }) => {
           ) : (
             <>
               <Button
-                variant="outlined"
-                onClick={() => setOpenDialog(false)}
-                sx={{ color: "black", borderColor: "black" }}
-              >
-                Cancel
-              </Button>
-              <Button
                 variant="contained"
                 onClick={() => {
                   if (currentStep === "mobile") {
@@ -210,13 +206,21 @@ const MobileVerification = ({ onComplete, disabled }) => {
                     if (mobileRegex.test(mobile)) {
                       sendOTP(mobile);
                     } else {
-                      Swal.fire("Invalid Input", "Enter a valid 10-digit number.", "warning");
+                      Swal.fire(
+                        "Invalid Input",
+                        "Enter a valid 10-digit number.",
+                        "warning"
+                      );
                     }
                   } else if (currentStep === "otp") {
                     if (otp.length === 6) {
                       verifyOTP(mobile, otp);
                     } else {
-                      Swal.fire("Invalid Input", "Enter a valid 6-digit OTP.", "warning");
+                      Swal.fire(
+                        "Invalid Input",
+                        "Enter a valid 6-digit OTP.",
+                        "warning"
+                      );
                     }
                   }
                 }}
@@ -224,6 +228,15 @@ const MobileVerification = ({ onComplete, disabled }) => {
               >
                 {currentStep === "mobile" ? "Send OTP" : "Verify OTP"}
               </Button>
+              {currentStep === "otp" && !isOtpVerified && (
+                <Button
+                  variant="outlined"
+                  onClick={resendOTP}
+                  sx={{ color: "black", borderColor: "black" }}
+                >
+                  Resend OTP
+                </Button>
+              )}
             </>
           )}
         </DialogActions>

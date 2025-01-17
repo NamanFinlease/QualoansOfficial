@@ -131,6 +131,8 @@ const RegistrationSteps = () => {
             onComplete={() => handleStepCompletion("pan")}
             disabled={!completedSteps.mobile || completedSteps.pan}
           />
+          {console.log('completedSteps.pan >>> ',completedSteps.pan)}
+          {console.log('completedSteps.personal >>> ',completedSteps.personal)}
           <PersonalInfo
             onComplete={() => handleStepCompletion("personal")}
             disabled={!completedSteps.pan || completedSteps.personal}

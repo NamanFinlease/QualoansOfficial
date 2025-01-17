@@ -17,59 +17,59 @@ import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
-const StepBox = ({ icon, title, description, onComplete, disabled }) => (
+const StepBox = ({ icon, title, description, onClick, disabled, completed }) => (
   <Box
+    onClick={!disabled && !completed ? onClick : null}
     sx={{
       display: "flex",
       flexDirection: "column",
       alignItems: "flex-start",
       justifyContent: "center",
       padding: 2,
-      border: "2px solid",
+      borderColor: completed ? "green" : disabled ? "grey" : "orange",
       borderRadius: 3,
       margin: 1,
       width: "30%",
       minWidth: 200,
-      cursor: disabled ? "not-allowed" : "pointer",
+      cursor: disabled || completed ? "not-allowed" : "pointer",
       textAlign: "left",
-      background: "linear-gradient(45deg, #4D4D4E, orange)",
-      color: "white",
+      background: completed
+        ? "linear-gradient(45deg, #28a745, #218838)"
+        : disabled
+        ? "lightgrey"
+        : "linear-gradient(45deg, #4D4D4E, orange)",
+      color: completed || !disabled ? "white" : "darkgrey",
       "@media (max-width: 600px)": {
         width: "80%",
         margin: "auto",
       },
     }}
   >
-    <IconButton sx={{ color: "white", ml: 1 }} disabled={disabled}>
-      {icon}
+    <IconButton
+      sx={{
+        color: completed ? "white" : disabled ? "grey" : "white",
+        ml: 1,
+      }}
+    >
+      {completed ? (
+        <i className="fas fa-check-circle" style={{ fontSize: "24px" }}></i>
+      ) : (
+        icon
+      )}
     </IconButton>
     <Box sx={{ ml: 2, flexGrow: 1 }}>
       <Typography variant="h6" sx={{ fontWeight: "bold" }}>
         {title}
       </Typography>
-      <Typography variant="body2" sx={{ color: "white" }}>
-        {description}
-      </Typography>
+      <Typography variant="body2">{description}</Typography>
     </Box>
-    <Button
-      variant="contained"
-      onClick={onComplete}
-      sx={{
-        ml: 2,
-        background: "linear-gradient(45deg, #4D4D4E, orange)",
-        color: "white",
-        "&:hover": { backgroundColor: "#ffcc00" },
-      }}
-      disabled={disabled} // Disable the button if the step is completed
-    >
-      Start
-    </Button>
   </Box>
 );
 
 const AddressInfo = ({ onComplete, disabled }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
+  const [stepCompleted, setStepCompleted] = useState(false);
   const [formValues, setFormValues] = useState({
     address: "",
     landmark: "",
@@ -79,15 +79,13 @@ const AddressInfo = ({ onComplete, disabled }) => {
     residenceType: "OWNED",
   });
   const [error, setError] = useState("");
-  const [isStepCompleted, setIsStepCompleted] = useState(false); // Track completion status
 
   const handleFormChange = (key, value) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
-    if (error) setError(""); // Clear error on input change
+    if (error) setError("");
   };
 
   const handleSubmit = async () => {
-    // Check if any field is empty
     if (Object.values(formValues).some((val) => !val)) {
       setError("Please fill out all fields.");
       return;
@@ -98,21 +96,22 @@ const AddressInfo = ({ onComplete, disabled }) => {
       const response = await axios.patch(
         `${BASE_URL}/api/user/currentResidence`,
         formValues,
-        { headers: { "Content-Type": "application/json" }, withCredentials: true }
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
       );
-
-      console.log('Response:', response); // Log the response
 
       if (response.status >= 200 && response.status < 300) {
         Swal.fire("Address details updated successfully!");
         setOpenModal(false);
-        setIsStepCompleted(true); // Mark step as completed
+        setStepCompleted(true);
         onComplete?.();
       } else {
         setError("Failed to update address details.");
       }
     } catch (error) {
-      console.error('API Error:', error); // Log the error
+      console.error("API Error:", error);
       setError("Error submitting address details. Please try again.");
     } finally {
       setIsFetching(false);
@@ -125,9 +124,11 @@ const AddressInfo = ({ onComplete, disabled }) => {
         icon={<LocationOn />}
         title="Address Information"
         description="Update your current residence details."
-        onComplete={() => setOpenModal(true)}
-        disabled={disabled || isStepCompleted} // Disable "Start" button if step is completed or if previous step is not completed
+        onClick={() => setOpenModal(true)}
+        disabled={disabled || stepCompleted}
+        completed={stepCompleted}
       />
+
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Box
           sx={{
@@ -137,8 +138,7 @@ const AddressInfo = ({ onComplete, disabled }) => {
             padding: 3,
             maxWidth: 400,
             margin: "auto",
-            marginTop: "1%",
-            mb: "20%",
+            marginTop: "5%",
           }}
         >
           <Typography variant="h6" sx={{ marginBottom: 2 }}>
@@ -176,10 +176,18 @@ const AddressInfo = ({ onComplete, disabled }) => {
           {error && <Typography color="error">{error}</Typography>}
 
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button variant="outlined" color="secondary" onClick={() => setOpenModal(false)}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => setOpenModal(false)}
+            >
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleSubmit} disabled={isFetching || isStepCompleted}>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              disabled={isFetching || stepCompleted}
+            >
               {isFetching ? <CircularProgress size={24} /> : "Submit"}
             </Button>
           </Box>

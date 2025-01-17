@@ -12,12 +12,13 @@ import {
   CircularProgress,
   IconButton,
 } from "@mui/material";
-import { Person, DateRange, Email, Accessibility } from "@mui/icons-material"; // Icons for title
+import { Person, CheckCircle } from "@mui/icons-material"; // Green tick icon
 import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
 const PersonalInfo = ({ onComplete, disabled }) => {
+  console.log('disabled before >> ',{ onComplete, disabled } )
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [personalDetails, setPersonalDetails] = useState(null);
@@ -27,85 +28,73 @@ const PersonalInfo = ({ onComplete, disabled }) => {
     personalEmail: "",
     maritalStatus: "",
     spouseName: "",
-    dob: "", // Initial value for dob, but it will be fetched from backend
+    dob: "",
   });
-
+  const [stepCompleted, setStepCompleted] = useState(false); // Track step completion
   const [error, setError] = useState("");
 
-  // StepBox Component for consistent UI
-  const StepBox = ({ icon, title, description, onComplete }) => (
+  // StepBox Component
+  const StepBox = ({ icon, title, description, disabled }) => (
+  <>
+  {console.log('disabled after >> ',disabled)}
     <Box
+      onClick={!disabled ? () => handleCompleteStep("personal") : null}
       sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
         justifyContent: "center",
         padding: 2,
-        border: "2px solid",
         borderRadius: 3,
         margin: 1,
         width: "30%",
         minWidth: 200,
-        cursor: "pointer",
+        cursor: disabled? "not-allowed" : "pointer",
         textAlign: "left",
-        background: "linear-gradient(45deg, #4D4D4E, orange)",
-        color: "white",
+        background: disabled
+        ? "grey"
+          : "linear-gradient(45deg, #28a745, #218838)" ,// Green gradient when step is complete
+        color:  !disabled ? "white" : "darkgrey",
         "@media (max-width: 600px)": {
           width: "80%",
           margin: "auto",
         },
       }}
     >
-      <IconButton sx={{ color: "white", ml: 1 }}>{icon}</IconButton>
+      <IconButton
+        sx={{
+          color: disabled ? "grey" : "white",
+          ml: 1,
+        }}
+      >
+        {!disabled ? <CheckCircle /> : icon}
+      </IconButton>
+  
       <Box sx={{ ml: 2, flexGrow: 1 }}>
         <Typography variant="h6" sx={{ fontWeight: "bold" }}>
           {title}
         </Typography>
-        <Typography variant="body2" sx={{ color: "white" }}>
-          {description}
-        </Typography>
+        <Typography variant="body2">{description}</Typography>
       </Box>
-      <Button
-        variant="contained"
-        onClick={onComplete}
-        sx={{
-          ml: 2,
-          background: "linear-gradient(45deg, #4D4D4E, orange)",
-          color: "white",
-          "&:hover": { backgroundColor: "#ffcc00" },
-        }}
-        disabled={disabled}
-
-      >
-        Start
-      </Button>
     </Box>
+    </>
   );
-
-  // Handle the step completion
+  
+  
   const handleCompleteStep = async (step) => {
-    if (step === "personal" && !disabled) {
+    if (step === "personal") {
       await showPersonalInfoForm();
     }
   };
 
-  // Fetch personal details and open the modal
   const showPersonalInfoForm = async () => {
     setIsFetching(true);
-
-    
     try {
-      const response = await axios.get(
-        `${BASE_URL}/api/user/getProfileDetails`,
-        {
-          withCredentials: true,
-        }
-      );
-      
+      const response = await axios.get(`${BASE_URL}/api/user/getProfileDetails`, {
+        withCredentials: true,
+      });
 
-      if (response.status !== 200) {
-        throw new Error("Failed to fetch profile details.");
-      }
+      if (response.status !== 200) throw new Error("Failed to fetch profile details.");
 
       const { success, data } = response.data;
       if (success && data?.personalDetails) {
@@ -116,9 +105,9 @@ const PersonalInfo = ({ onComplete, disabled }) => {
           personalEmail: data.personalDetails.personalEmail || "",
           maritalStatus: data.personalDetails.maritalStatus || "",
           spouseName: data.personalDetails.spouseName || "",
-          dob: data.personalDetails.dob || "", // Populate dob from the backend
+          dob: data.personalDetails.dob || "",
         });
-        setOpenModal(true); // Open modal once details are loaded
+        setOpenModal(true);
       } else {
         setError("Unable to retrieve personal details.");
       }
@@ -130,61 +119,48 @@ const PersonalInfo = ({ onComplete, disabled }) => {
     }
   };
 
-  // Handle form changes
   const handleFormChange = (field, value) => {
     setFormValues((prev) => ({ ...prev, [field]: value }));
-    setError(""); // Clear error on field change
+    setError("");
   };
 
-  // Handle form submission
   const handleSubmit = async () => {
-    // Validate the email using regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formValues.personalEmail)) {
       setError("Please enter a valid email address.");
       return;
     }
-  
-    // Validate marital status based on enum values
-    const allowedMaritalStatuses = ["MARRIED", "SINGLE", "DIVORCED"];
-    if (!allowedMaritalStatuses.includes(formValues.maritalStatus)) {
-      setError("Invalid marital status.");
-      return;
-    }
-  
-    // Prepare updatedDetails object
+
     const updatedDetails = {
       fullName: formValues.fullName,
       gender: formValues.gender,
-      dob: formValues.dob,  // Send dob as part of the updated details
-      personalEmail: formValues.personalEmail, // Use personalEmail from the form state
+      dob: formValues.dob,
+      personalEmail: formValues.personalEmail,
       maritalStatus: formValues.maritalStatus,
-      spouseName: formValues.maritalStatus === "MARRIED" ? formValues.spouseName : null,
+      spouseName:
+        formValues.maritalStatus === "MARRIED" ? formValues.spouseName : null,
     };
-  
-    console.log("Updated Details:", updatedDetails);  // Log the updated details to ensure correctness
-  
+
     setIsFetching(true);
-  
+
     try {
       const response = await axios.patch(
-        `${BASE_URL}/api/user/personalInfo`, // API endpoint for updating personal info
+        `${BASE_URL}/api/user/personalInfo`,
         updatedDetails,
         {
           headers: { "Content-Type": "application/json" },
-          withCredentials: true, // Include cookies for authentication if needed
+          withCredentials: true,
         }
       );
-  
-  
+
       if (response.status === 200) {
-        Swal.fire("Success", "Details updated successfully!", "success");  // Corrected Swal usage
-        setOpenModal(false); // Close modal on success
-        onComplete(); // Notify parent component when step is completed
+        Swal.fire("Success", "Details updated successfully!", "success");
+        setStepCompleted(true); // Mark step as completed
+        setOpenModal(false);
+        onComplete(); // Notify parent component
       } else {
         setError("Failed to update details.");
       }
-      
     } catch (error) {
       console.error("Error updating details:", error.response || error.message);
       setError("Failed to update personal details.");
@@ -193,120 +169,119 @@ const PersonalInfo = ({ onComplete, disabled }) => {
       setIsFetching(false);
     }
   };
-  
-  
+
   return (
     <>
       <StepBox
-        icon={<Person />}
+        icon={stepCompleted ? <CheckCircle /> : <Person />}
         title="Personal Information"
         description="Please update your personal details."
-        onComplete={() => handleCompleteStep("personal")}
+        disabled={disabled || stepCompleted}
       />
 
-      <Modal open={openModal} onClose={() => setOpenModal(false)}>
-        <Box
-          sx={{
-            backgroundColor: "white",
-            borderRadius: 4,
-            boxShadow: 24,
-            padding: 3,
-            maxWidth: 400,
-            margin: "auto",
-            marginTop: "1%",
-            marginBottom:"20%"
-          }}
-        >
-          <Typography variant="h6" sx={{ marginBottom: 2 }}>
-            Share Your Details
-          </Typography>
+<Modal open={openModal} onClose={() => setOpenModal(false)}>
+  <Box
+    sx={{
+      backgroundColor: "white",
+      borderRadius: 4,
+      boxShadow: 24,
+      padding: 3,
+      maxWidth: 400,
+      margin: "auto",
+      marginTop: "5%",  // Adjusted for better centering
+      marginBottom: "5%", // Reduced bottom margin for proper display
+      display: "flex",
+      flexDirection: "column", // To ensure the content is stacked vertically
+      alignItems: "center", // To center the content horizontally
+      justifyContent: "center", // To ensure the content is centered vertically
+    }}
+  >
+    <Typography variant="h6" sx={{ marginBottom: 2 }}>
+      Share Your Details
+    </Typography>
 
-          {/* Full Name - Disabled */}
-          <TextField
-            label="Full Name"
-            value={formValues.fullName}
-            fullWidth
-            disabled
-            sx={{ marginBottom: 2 }}
-          />
+    <TextField
+      label="Full Name"
+      value={formValues.fullName}
+      fullWidth
+      disabled
+      sx={{ marginBottom: 2 }}
+    />
 
-          {/* Email */}
-          <TextField
-            label="Email"
-            value={formValues.personalEmail}
-            onChange={(e) => handleFormChange("personalEmail", e.target.value)}
-            fullWidth
-            sx={{ marginBottom: 2 }}
-            error={!!error && !formValues.personalEmail.includes("@")}
-            helperText={!!error && !formValues.personalEmail.includes("@") ? error : ""}
-          />
+    <TextField
+      label="Email"
+      value={formValues.personalEmail}
+      onChange={(e) => handleFormChange("personalEmail", e.target.value)}
+      fullWidth
+      sx={{ marginBottom: 2 }}
+      error={!!error && !formValues.personalEmail.includes("@")}
+      helperText={
+        !!error && !formValues.personalEmail.includes("@") ? error : ""
+      }
+    />
 
-          {/* Date of Birth - Read-Only */}
-          <TextField
-            label="Date of Birth"
-            value={formValues.dob}
-            fullWidth
-            disabled
-            sx={{ marginBottom: 2 }}
-          />
+    <TextField
+      label="Date of Birth"
+      value={formValues.dob}
+      fullWidth
+      disabled
+      sx={{ marginBottom: 2 }}
+    />
 
-          {/* Gender */}
-          <FormControl fullWidth sx={{ marginBottom: 2 }}>
-            <InputLabel>Gender</InputLabel>
-            <Select
-              value={formValues.gender}
-              onChange={(e) => handleFormChange("gender", e.target.value)}
-            >
-              <MenuItem value="M">Male</MenuItem>
-              <MenuItem value="F">Female</MenuItem>
-            </Select>
-          </FormControl>
+    <FormControl fullWidth sx={{ marginBottom: 2 }}>
+      <InputLabel>Gender</InputLabel>
+      <Select
+        value={formValues.gender}
+        onChange={(e) => handleFormChange("gender", e.target.value)}
+      >
+        <MenuItem value="M">Male</MenuItem>
+        <MenuItem value="F">Female</MenuItem>
+      </Select>
+    </FormControl>
 
-          {/* Marital Status */}
-          <FormControl fullWidth sx={{ marginBottom: 2 }}>
-            <InputLabel>Marital Status</InputLabel>
-            <Select
-              value={formValues.maritalStatus}
-              onChange={(e) =>
-                handleFormChange("maritalStatus", e.target.value)
-              }
-            >
-              <MenuItem value="SINGLE">Single</MenuItem>
-              <MenuItem value="MARRIED">Married</MenuItem>
-              <MenuItem value="DIVORCED">Divorced</MenuItem>
-            </Select>
-          </FormControl>
+    <FormControl fullWidth sx={{ marginBottom: 2 }}>
+      <InputLabel>Marital Status</InputLabel>
+      <Select
+        value={formValues.maritalStatus}
+        onChange={(e) =>
+          handleFormChange("maritalStatus", e.target.value)
+        }
+      >
+        <MenuItem value="SINGLE">Single</MenuItem>
+        <MenuItem value="MARRIED">Married</MenuItem>
+        <MenuItem value="DIVORCED">Divorced</MenuItem>
+      </Select>
+    </FormControl>
 
-          {/* Spouse Name - Visible only if Married */}
-          {formValues.maritalStatus === "Married" && (
-            <TextField
-              label="Spouse Name"
-              value={formValues.spouseName}
-              onChange={(e) => handleFormChange("spouseName", e.target.value)}
-              fullWidth
-              sx={{ marginBottom: 2 }}
-            />
-          )}
+    {formValues.maritalStatus === "MARRIED" && (
+      <TextField
+        label="Spouse Name"
+        value={formValues.spouseName}
+        onChange={(e) => handleFormChange("spouseName", e.target.value)}
+        fullWidth
+        sx={{ marginBottom: 2 }}
+      />
+    )}
 
-          {/* Actions */}
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={() => setOpenModal(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              disabled={isFetching}
-            >
-              {isFetching ? <CircularProgress size={24} /> : "Submit"}
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
+    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Button
+        variant="outlined"
+        color="secondary"
+        onClick={() => setOpenModal(false)}
+      >
+        Cancel
+      </Button>
+      <Button
+        variant="contained"
+        onClick={handleSubmit}
+        disabled={isFetching}
+      >
+        {isFetching ? <CircularProgress size={24} /> : "Submit"}
+      </Button>
+    </Box>
+  </Box>
+</Modal>
+
     </>
   );
 };

@@ -27,7 +27,6 @@ const LoanCalculator = () => {
   const [isLoading, setIsLoading] = useState(false); // Loading state for API call
   const [responseMessage, setResponseMessage] = useState(""); // To store API response message
   const [isModalOpen, setIsModalOpen] = useState(true); // Modal visibility state
-  const token = getToken();
 
   const calculateTotalAmount = () => {
     const totalInterest = (loanAmount * interestRate * loanTenure) / 100;
