@@ -106,7 +106,7 @@ const AboutUs = () => {
             >
               Email
             </Typography>
-            <Typography sx={{ mb: 3 }}>info@qualoan.com</Typography>
+            <Typography sx={{ mb: 3 }}>credit@qualoan.com</Typography>
             <Typography
               sx={{
                 fontWeight: 'bold',

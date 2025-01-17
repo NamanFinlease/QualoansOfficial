@@ -10,9 +10,59 @@ import {
   InputLabel,
   FormControl,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
+import { LocationOn } from "@mui/icons-material";  // For Address Info Icon
 import axios from "axios";
 import { BASE_URL } from "../../baseURL";
+import Swal from "sweetalert2";
+
+const StepBox = ({ icon, title, description, onComplete }) => (
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      justifyContent: "center",
+      padding: 2,
+      border: "2px solid",
+      borderRadius: 3,
+      margin: 1,
+      width: "30%",
+      minWidth: 200,
+      cursor: "pointer",
+      textAlign: "left",
+      background: "linear-gradient(45deg, #4D4D4E, orange)",
+      color: "white",
+      "@media (max-width: 600px)": {
+        width: "80%",
+        margin: "auto",
+      },
+    }}
+  >
+    <IconButton sx={{ color: "white", ml: 1 }}>{icon}</IconButton>
+    <Box sx={{ ml: 2, flexGrow: 1 }}>
+      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+        {title}
+      </Typography>
+      <Typography variant="body2" sx={{ color: "white" }}>
+        {description}
+      </Typography>
+    </Box>
+    <Button
+      variant="contained"
+      onClick={onComplete}
+      sx={{
+        ml: 2,
+        background: "linear-gradient(45deg, #4D4D4E, orange)",
+        color: "white",
+        "&:hover": { backgroundColor: "#ffcc00" },
+      }}
+    >
+      Start
+    </Button>
+  </Box>
+);
 
 const AddressInfo = ({ onComplete, disabled }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -27,64 +77,79 @@ const AddressInfo = ({ onComplete, disabled }) => {
   });
   const [error, setError] = useState("");
 
-  // Function to handle form submission
-  const handleSubmit = async () => {
-    const { address, landmark, pincode, city, state, residenceType } =
-      formValues;
+  const handleFormChange = (key, value) => {
+    setFormValues((prev) => ({ ...prev, [key]: value }));
+    if (error) setError("");  // Clear error on input change
+  };
 
-    // Validation
-    if (!address || !landmark || !pincode || !city || !state) {
+  const handleSubmit = async () => {
+    // Check if any field is empty
+    if (Object.values(formValues).some((val) => !val)) {
       setError("Please fill out all fields.");
       return;
     }
-
+  
     setIsFetching(true);
-
     try {
-      const apiData = {
-        address,
-        landmark,
-        pincode,
-        city,
-        state,
-        residenceType,
-      };
       const response = await axios.patch(
         `${BASE_URL}/api/user/currentResidence`,
-        apiData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
+        formValues,
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
-
-      if (response.status === 200) {
-        alert("Address details updated successfully!");
-        setOpenModal(false); // Close the modal on success
-        if (onComplete) onComplete(); // Notify parent component when address is updated
+  
+      console.log('Response:', response); // Log the response
+  
+      if (response.status >= 200 && response.status < 300) {
+        Swal.fire("Address details updated successfully!");
+        setOpenModal(false);
+        onComplete?.();
       } else {
         setError("Failed to update address details.");
       }
     } catch (error) {
-      console.error("Error updating address data:", error);
+      console.error('API Error:', error); // Log the error
       setError("Error submitting address details. Please try again.");
     } finally {
       setIsFetching(false);
     }
   };
+  
+  // const handleSubmit = async () => {
+  //   if (Object.values(formValues).some((val) => !val)) {
+  //     setError("Please fill out all fields.");
+  //     return;
+  //   }
+
+  //   setIsFetching(true);
+  //   try {
+  //     const response = await axios.patch(
+  //       `${BASE_URL}/api/user/currentResidence`,
+  //       formValues,
+  //       { headers: { "Content-Type": "application/json" }, withCredentials: true }
+  //     );
+
+  //     if (response.status === 200) {
+  //       Swal("Address details updated successfully!");
+  //       setOpenModal(false);
+  //       onComplete?.();
+  //     } else {
+  //       setError("Failed to update address details.");
+  //     }
+  //   } catch {
+  //     setError("Error submitting address details. Please try again.");
+  //   } finally {
+  //     setIsFetching(false);
+  //   }
+  // };
 
   return (
     <>
-      <Button
-        variant="contained"
-        onClick={() => setOpenModal(true)}
-        disabled={disabled} // Disable the button if the step is already completed
-      >
-        Complete Address Info
-      </Button>
-
+      <StepBox
+        icon={<LocationOn />}
+        title="Address Information"
+        description="Update your current residence details."
+        onComplete={() => setOpenModal(true)}
+      />
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Box
           sx={{
@@ -94,110 +159,49 @@ const AddressInfo = ({ onComplete, disabled }) => {
             padding: 3,
             maxWidth: 400,
             margin: "auto",
-            marginTop: "20%",
+            marginTop: "1%",
+            mb:"20%"
           }}
         >
           <Typography variant="h6" sx={{ marginBottom: 2 }}>
-            Current Resident Address
+            Current Residence Information
           </Typography>
 
-          {/* Address */}
-          <TextField
-            label="Address"
-            value={formValues.address}
-            onChange={(e) =>
-              setFormValues((prev) => ({ ...prev, address: e.target.value }))
-            }
-            fullWidth
-            sx={{ marginBottom: 2 }}
-            required
-          />
+          {["address", "landmark", "pincode", "city", "state"].map((field) => (
+            <TextField
+              key={field}
+              label={field.replace(/^\w/, (c) => c.toUpperCase())}
+              value={formValues[field]}
+              onChange={(e) => handleFormChange(field, e.target.value)}
+              fullWidth
+              sx={{ marginBottom: 2 }}
+              required
+            />
+          ))}
 
-          {/* Landmark */}
-          <TextField
-            label="Landmark"
-            value={formValues.landmark}
-            onChange={(e) =>
-              setFormValues((prev) => ({ ...prev, landmark: e.target.value }))
-            }
-            fullWidth
-            sx={{ marginBottom: 2 }}
-            required
-          />
-
-          {/* Pincode */}
-          <TextField
-            label="Pincode"
-            value={formValues.pincode}
-            onChange={(e) =>
-              setFormValues((prev) => ({ ...prev, pincode: e.target.value }))
-            }
-            fullWidth
-            sx={{ marginBottom: 2 }}
-            required
-          />
-
-          {/* City */}
-          <TextField
-            label="City"
-            value={formValues.city}
-            onChange={(e) =>
-              setFormValues((prev) => ({ ...prev, city: e.target.value }))
-            }
-            fullWidth
-            sx={{ marginBottom: 2 }}
-            required
-          />
-
-          {/* State */}
-          <TextField
-            label="State"
-            value={formValues.state}
-            onChange={(e) =>
-              setFormValues((prev) => ({ ...prev, state: e.target.value }))
-            }
-            fullWidth
-            sx={{ marginBottom: 2 }}
-            required
-          />
-
-          {/* Residence Type */}
           <FormControl fullWidth sx={{ marginBottom: 2 }}>
             <InputLabel>Residence Type</InputLabel>
             <Select
               value={formValues.residenceType}
-              onChange={(e) =>
-                setFormValues((prev) => ({
-                  ...prev,
-                  residenceType: e.target.value,
-                }))
-              }
+              onChange={(e) => handleFormChange("residenceType", e.target.value)}
             >
-              <MenuItem value="OWNED">Owned</MenuItem>
-              <MenuItem value="RENTED">Rented</MenuItem>
-              <MenuItem value="PARENTAL">Parental</MenuItem>
-              <MenuItem value="COMPANY PROVIDED">Company Provided</MenuItem>
-              <MenuItem value="OTHERS">Others</MenuItem>
+              {["OWNED", "RENTED", "PARENTAL", "COMPANY PROVIDED", "OTHERS"].map(
+                (type) => (
+                  <MenuItem key={type} value={type}>
+                    {type}
+                  </MenuItem>
+                )
+              )}
             </Select>
           </FormControl>
 
-          {/* Error message */}
           {error && <Typography color="error">{error}</Typography>}
 
-          {/* Actions */}
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={() => setOpenModal(false)}
-            >
+            <Button variant="outlined" color="secondary" onClick={() => setOpenModal(false)}>
               Cancel
             </Button>
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              disabled={isFetching}
-            >
+            <Button variant="contained" onClick={handleSubmit} disabled={isFetching}>
               {isFetching ? <CircularProgress size={24} /> : "Submit"}
             </Button>
           </Box>

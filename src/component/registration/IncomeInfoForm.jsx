@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useState } from "react";
 import {
   Modal,
@@ -10,10 +14,59 @@ import {
   Button,
   Typography,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
-import axios from "axios";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { BASE_URL } from "../../baseURL";
+import axios from "axios";
+import Swal from "sweetalert2";
+
+const StepBox = ({ icon, title, description, onComplete }) => (
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      justifyContent: "center",
+      padding: 2,
+      border: "2px solid",
+      borderRadius: 3,
+      margin: 1,
+      width: "30%",
+      minWidth: 200,
+      cursor: "pointer",
+      textAlign: "left",
+      background: "linear-gradient(45deg, #4D4D4E, orange)",
+      color: "white",
+      "@media (max-width: 600px)": {
+        width: "80%",
+        margin: "auto",
+      },
+    }}
+  >
+    <IconButton sx={{ color: "white", ml: 1 }}>{icon}</IconButton>
+    <Box sx={{ ml: 2, flexGrow: 1 }}>
+      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+        {title}
+      </Typography>
+      <Typography variant="body2" sx={{ color: "white" }}>
+        {description}
+      </Typography>
+    </Box>
+    <Button
+      variant="contained"
+      onClick={onComplete}
+      sx={{
+        ml: 2,
+        background: "linear-gradient(45deg, #4D4D4E, orange)",
+        color: "white",
+        "&:hover": { backgroundColor: "#ffcc00" },
+      }}
+    >
+      Start
+    </Button>
+  </Box>
+);
 
 const IncomeInfoForm = ({ onComplete, disabled }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -36,61 +89,40 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
       incomeMode,
     } = formValues;
 
-    // Validation
-    if (
-      !employementType ||
-      !monthlyIncome ||
-      !obligations ||
-      !nextSalaryDate ||
-      !incomeMode
-    ) {
+    if (!employementType || !monthlyIncome || !obligations || !nextSalaryDate || !incomeMode) {
       setError("Please fill out all fields.");
       return;
     }
 
     setIsFetching(true);
-
     try {
       const response = await axios.patch(
         `${BASE_URL}/api/user/addIncomeDetails`,
-        {
-          employementType,
-          monthlyIncome,
-          obligations,
-          nextSalaryDate,
-          incomeMode,
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
+        { employementType, monthlyIncome, obligations, nextSalaryDate, incomeMode },
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
-
       if (response.status === 200) {
-        alert("Income details added successfully!");
-        setOpenModal(false); // Close the modal on success
-        if (onComplete) onComplete(); // Notify parent component when income info is updated
+        Swal.fire("Success", "Income details added successfully!", "success");
+        setOpenModal(false);
+        if (onComplete) onComplete();
       } else {
         setError(response?.data?.message || "Failed to add income details.");
       }
     } catch (error) {
-      setError(
-        error.message || "An error occurred while adding income details."
-      );
-    } finally {
+      setError(error.message || "An error occurred while adding income details.");
+    }
+     finally {
       setIsFetching(false);
     }
   };
-
   return (
     <>
-      <Button
-        variant="contained"
-        onClick={() => setOpenModal(true)}
-        disabled={disabled} // Disable the button if the step is already completed
-      >
-        <AccountBalanceWalletIcon /> Income Info
-      </Button>
+      <StepBox
+        icon={<AccountBalanceWalletIcon />}
+        title="Income Information"
+        description="Please provide your income details."
+        onComplete={() => setOpenModal(true)}
+      />
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Box
@@ -101,7 +133,8 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
             padding: 3,
             maxWidth: 400,
             margin: "auto",
-            marginTop: "20%",
+            marginTop: "1%",
+            mb:"20%"
           }}
         >
           <Typography variant="h6" sx={{ marginBottom: 2 }}>
@@ -114,12 +147,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
               select
               label="Employee Type"
               value={formValues.employementType}
-              onChange={(e) =>
-                setFormValues((prev) => ({
-                  ...prev,
-                  employementType: e.target.value,
-                }))
-              }
+              onChange={(e) => setFormValues({ ...formValues, employementType: e.target.value })}
               fullWidth
               required
             >
@@ -133,12 +161,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
             label="Monthly Income"
             type="number"
             value={formValues.monthlyIncome}
-            onChange={(e) =>
-              setFormValues((prev) => ({
-                ...prev,
-                monthlyIncome: e.target.value,
-              }))
-            }
+            onChange={(e) => setFormValues({ ...formValues, monthlyIncome: e.target.value })}
             fullWidth
             sx={{ marginBottom: 2 }}
             required
@@ -149,12 +172,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
             label="Obligations"
             type="number"
             value={formValues.obligations}
-            onChange={(e) =>
-              setFormValues((prev) => ({
-                ...prev,
-                obligations: e.target.value,
-              }))
-            }
+            onChange={(e) => setFormValues({ ...formValues, obligations: e.target.value })}
             fullWidth
             sx={{ marginBottom: 2 }}
           />
@@ -164,63 +182,35 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
             label="Next Salary Date"
             type="date"
             value={formValues.nextSalaryDate}
-            onChange={(e) =>
-              setFormValues((prev) => ({
-                ...prev,
-                nextSalaryDate: e.target.value,
-              }))
-            }
+            onChange={(e) => setFormValues({ ...formValues, nextSalaryDate: e.target.value })}
             fullWidth
             sx={{ marginBottom: 2 }}
             required
           />
 
           {/* Income Mode */}
-          <Typography
-            variant="body1"
-            sx={{ fontWeight: "bold", marginBottom: 2 }}
-          >
+          <Typography variant="body1" sx={{ fontWeight: "bold", marginBottom: 2 }}>
             Mode of Income Received
           </Typography>
           <RadioGroup
             value={formValues.incomeMode}
-            onChange={(e) =>
-              setFormValues((prev) => ({ ...prev, incomeMode: e.target.value }))
-            }
+            onChange={(e) => setFormValues({ ...formValues, incomeMode: e.target.value })}
             row
-            required
           >
             <FormControlLabel value="BANK" control={<Radio />} label="Bank" />
-            <FormControlLabel
-              value="CHEQUE"
-              control={<Radio />}
-              label="Cheque"
-            />
+            <FormControlLabel value="CHEQUE" control={<Radio />} label="Cheque" />
             <FormControlLabel value="CASH" control={<Radio />} label="Cash" />
-            <FormControlLabel
-              value="OTHERS"
-              control={<Radio />}
-              label="OTHERS"
-            />
+            <FormControlLabel value="OTHERS" control={<Radio />} label="Others" />
           </RadioGroup>
 
-          {/* Error message */}
           {error && <Typography color="error">{error}</Typography>}
 
           {/* Actions */}
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={() => setOpenModal(false)}
-            >
+            <Button variant="outlined" color="secondary" onClick={() => setOpenModal(false)}>
               Cancel
             </Button>
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              disabled={isFetching}
-            >
+            <Button variant="contained" onClick={handleSubmit} disabled={isFetching}>
               {isFetching ? <CircularProgress size={24} /> : "Submit"}
             </Button>
           </Box>
@@ -231,3 +221,4 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
 };
 
 export default IncomeInfoForm;
+

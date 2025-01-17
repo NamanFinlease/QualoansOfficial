@@ -88,7 +88,6 @@ const LoginForm = ({ setLoginComleted }) => {
         // { withCredentials: true }
       );
 
-      console.log("API Full Response:", response.data); // Debugging Step
 
       if (response.data.success) {
         setOtpSent(true);

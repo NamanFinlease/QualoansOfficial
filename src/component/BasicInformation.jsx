@@ -13,8 +13,8 @@ const BaasicInformation = () => {
     gender:'',
     dob:'',
     personalEmail:'',
+    maritalStatus:'',
     spouseName:'',
-    mobile:'',
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,8 +53,8 @@ const BaasicInformation = () => {
             gender: data?.data?.personalDetails?.gender,
             dob: data?.data?.personalDetails?.dob,  // Fixed field for Date of Birth
             personalEmail: data?.data?.personalDetails?.personalEmail,
+            maritalStatus:data?.data?.personalDetails?.maritalStatus,
             spouseName: data?.data?.personalDetails?.spouseName,  // Corrected syntax issue
-            mobile: data?.data?.personalDetails?.mobile,
           });
           
         } catch (err) {
@@ -89,9 +89,10 @@ const BaasicInformation = () => {
       padding: 3,
       background: "linear-gradient(90deg, #4D4D4E, orange)",
       boxShadow: 3,
-      borderRadius: 3,
+     ml: { xs: 0, sm: 10 }, // Margin left 0 on smaller screens and 30 on larger ones
 
-      width: "60%", // Decreased width (can adjust as needed)
+        borderRadius: 3,
+        width: { xs: "100%", sm: "53%", md: "60%" }, 
       height: "auto", // Increased height (auto for dynamic adjustment)
       maxWidth: "400px", // Set a max width if needed
       margin: "auto", // Center the box
@@ -139,16 +140,17 @@ const BaasicInformation = () => {
       </Grid>
       <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
+          <strong>maritalStatus:</strong> {user.maritalStatus}
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="body1" sx={{ color: "white" }}>
           <strong> SpouseName:</strong> {user.spouseName}
         </Typography>
       </Grid>
       
       {/* Mobile Number */}
-      <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>Mobile Number:</strong> {user.mobile}
-        </Typography>
-      </Grid>
+      
     </Grid>
   </Box>
   

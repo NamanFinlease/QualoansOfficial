@@ -156,10 +156,10 @@ const Header = () => {
               </Link>
             </MenuItem>
             <MenuItem onClick={handleClose}>
-              <Link to="/loanRepayent" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
+              <Link to="/repay-now" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
                 <ApplyNowIcon sx={{ mr: 1 }} /> Repay Now
               </Link>
-            </MenuItem>
+            </MenuItem> 
             <MenuItem onClick={handleClose}>
               <Link to="/calculator" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
                 <CalculateIcon sx={{ mr: 1 }} /> Loan Calculator
@@ -250,7 +250,7 @@ const Header = () => {
   </Link>
 
   <Link
-    to="/loanRepayent"
+    to="/repay-now"
     onClick={scrollToTop}
     style={{
       color: '#0b2747',
@@ -266,7 +266,7 @@ const Header = () => {
     onMouseLeave={(e) => (e.currentTarget.style.color = '#0b2747')}
   >
     <ApplyNowIcon sx={{ mr: 1 }} /> Repay Now
-  </Link>
+  </Link> 
 
   <Link
     to="/calculator"

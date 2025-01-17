@@ -1,15 +1,39 @@
 import React, { useState } from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
+  Box,
   Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
   TextField,
   Typography,
-  CircularProgress,
 } from "@mui/material";
+import PhoneIcon from "@mui/icons-material/PhoneIphone";
+import Swal from "sweetalert2"; // Import SweetAlert2 for alerts
 import { BASE_URL } from "../../baseURL";
+
+// Reusable Input Component
+const InputField = ({ label, value, onChange, disabled, placeholder }) => (
+  <TextField
+    fullWidth
+    variant="outlined"
+    label={label}
+    value={value}
+    onChange={onChange}
+    disabled={disabled}
+    placeholder={placeholder}
+    sx={{
+      input: { color: "black" },
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": { borderColor: "black" },
+        "&:hover fieldset": { borderColor: "#ffcc00" },
+      },
+    }}
+  />
+);
 
 const MobileVerification = ({ onComplete, disabled }) => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -32,12 +56,12 @@ const MobileVerification = ({ onComplete, disabled }) => {
       const data = await response.json();
       if (data.success) {
         setCurrentStep("otp");
+        Swal.fire("OTP Sent", "Please check your mobile for the OTP.", "success");
       } else {
         throw new Error("Failed to send OTP.");
       }
     } catch (error) {
-      console.error(error);
-      alert("Failed to send OTP. Please try again.");
+      Swal.fire("Error", "Failed to send OTP. Please try again.", "error");
     } finally {
       setIsLoading(false);
     }
@@ -53,57 +77,112 @@ const MobileVerification = ({ onComplete, disabled }) => {
       });
       const data = await response.json();
       if (data.success) {
-        alert("Mobile number verified successfully!");
+        Swal.fire("Verified", "Mobile number verified successfully!", "success");
         onComplete(); // Mark the step as completed
         setOpenDialog(false);
       } else {
         throw new Error("Invalid OTP. Please try again.");
       }
     } catch (error) {
-      console.error(error);
-      alert(error.message);
+      Swal.fire("Error", error.message, "error");
     } finally {
       setIsLoading(false);
     }
   };
 
-  return (
-    <>
+  const StepBox = ({ icon, title, description, stepId, onComplete }) => (
+    <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start", // Align items to the left
+      justifyContent: "center",
+      padding: 2,
+      border: "2px solid",
+      borderRadius: 3,
+      margin: 1,
+      width: "30%", // Adjust width for larger screens
+      minWidth: 200,
+      cursor: "pointer",
+      textAlign: "left", // Left align text
+      color: "white",
+      background: "linear-gradient(45deg, #4D4D4E, orange)",
+     
+      "@media (max-width: 600px)": {
+        // For mobile responsiveness
+        width: "80%", // Make the step box larger on smaller screens
+        margin: "auto", // Center the boxes
+      },
+    }}   
+    >
+      
+      <IconButton sx={{ color: "white" ,ml:1}}>{icon}</IconButton>
+      <Box sx={{ ml: 2, flexGrow: 1 }}>
+        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          {title}
+        </Typography>
+        <Typography variant="body2" sx={{ color: "white" }}>
+          {description}
+        </Typography>
+      </Box>
       <Button
         variant="contained"
-        onClick={() => setOpenDialog(true)}
-        disabled={disabled}
+        onClick={onComplete}
+        sx={{
+          ml:2,
+          background: "linear-gradient(45deg, #4D4D4E, orange)",
+          color: "white",
+          "&:hover": { backgroundColor: "#ffcc00" },
+        }}
       >
-        Verify Mobile Number
+        Start
       </Button>
+    </Box>
+  );
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>
+  return (
+    <>
+      <StepBox
+        icon={<PhoneIcon />}
+        title="Mobile Verification"
+        description="Verify your mobile number"
+        stepId="mobile"
+        onComplete={() => setOpenDialog(true)}
+      />
+
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        PaperProps={{
+          sx: {
+            padding: 3,
+            borderRadius: 3,
+            background: "white", // Set background to white
+            boxShadow: 3, // Add a subtle shadow to the dialog
+          },
+        }}
+      >
+        <DialogTitle sx={{ color: "black", textAlign: "left" }}>
           {currentStep === "mobile"
             ? "Enter Mobile Number"
             : `Enter OTP for ${mobile}`}
         </DialogTitle>
         <DialogContent>
-          <Typography variant="body2" sx={{ marginBottom: 2 }}>
+          <Typography variant="body2" sx={{ color: "black", marginBottom: 2 }}>
             {currentStep === "mobile"
               ? "Please enter your mobile number to receive an OTP."
               : "Please enter the OTP sent to your mobile number."}
           </Typography>
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder={
-              currentStep === "mobile"
-                ? "Enter your mobile number"
-                : "Enter OTP"
-            }
+          <InputField
+            label={currentStep === "mobile" ? "Mobile Number" : "OTP"}
             value={currentStep === "mobile" ? mobile : otp}
             onChange={(e) =>
-              currentStep === "mobile"
-                ? setMobile(e.target.value)
-                : setOtp(e.target.value)
+              currentStep === "mobile" ? setMobile(e.target.value) : setOtp(e.target.value)
             }
             disabled={isLoading}
+            placeholder={
+              currentStep === "mobile" ? "Enter your mobile number" : "Enter OTP"
+            }
           />
         </DialogContent>
         <DialogActions>
@@ -113,15 +192,10 @@ const MobileVerification = ({ onComplete, disabled }) => {
             <>
               <Button
                 variant="outlined"
-                onClick={() => {
-                  if (currentStep === "otp") {
-                    sendOTP(mobile); // Resend OTP
-                  } else {
-                    setOpenDialog(false);
-                  }
-                }}
+                onClick={() => setOpenDialog(false)}
+                sx={{ color: "black", borderColor: "black" }}
               >
-                {currentStep === "otp" ? "Resend OTP" : "Cancel"}
+                Cancel
               </Button>
               <Button
                 variant="contained"
@@ -131,16 +205,17 @@ const MobileVerification = ({ onComplete, disabled }) => {
                     if (mobileRegex.test(mobile)) {
                       sendOTP(mobile);
                     } else {
-                      alert("Please enter a valid 10-digit mobile number.");
+                      Swal.fire("Invalid Input", "Enter a valid 10-digit number.", "warning");
                     }
                   } else if (currentStep === "otp") {
                     if (otp.length === 6) {
                       verifyOTP(mobile, otp);
                     } else {
-                      alert("Please enter a valid 6-digit OTP.");
+                      Swal.fire("Invalid Input", "Enter a valid 6-digit OTP.", "warning");
                     }
                   }
                 }}
+                sx={{ backgroundColor: "#ffcc00", color: "black" }}
               >
                 {currentStep === "mobile" ? "Send OTP" : "Verify OTP"}
               </Button>

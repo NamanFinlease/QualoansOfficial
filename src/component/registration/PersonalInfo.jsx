@@ -10,9 +10,12 @@ import {
   InputLabel,
   FormControl,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
+import { Person, DateRange, Email, Accessibility } from "@mui/icons-material"; // Icons for title
 import axios from "axios";
 import { BASE_URL } from "../../baseURL";
+import Swal from "sweetalert2";
 
 const PersonalInfo = ({ onComplete, disabled }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -21,13 +24,61 @@ const PersonalInfo = ({ onComplete, disabled }) => {
   const [formValues, setFormValues] = useState({
     fullName: "",
     gender: "",
-    dob: "",
     personalEmail: "",
     maritalStatus: "",
     spouseName: "",
+    dob: "", // Initial value for dob, but it will be fetched from backend
   });
 
   const [error, setError] = useState("");
+
+  // StepBox Component for consistent UI
+  const StepBox = ({ icon, title, description, onComplete }) => (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        padding: 2,
+        border: "2px solid",
+        borderRadius: 3,
+        margin: 1,
+        width: "30%",
+        minWidth: 200,
+        cursor: "pointer",
+        textAlign: "left",
+        background: "linear-gradient(45deg, #4D4D4E, orange)",
+        color: "white",
+        "@media (max-width: 600px)": {
+          width: "80%",
+          margin: "auto",
+        },
+      }}
+    >
+      <IconButton sx={{ color: "white", ml: 1 }}>{icon}</IconButton>
+      <Box sx={{ ml: 2, flexGrow: 1 }}>
+        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          {title}
+        </Typography>
+        <Typography variant="body2" sx={{ color: "white" }}>
+          {description}
+        </Typography>
+      </Box>
+      <Button
+        variant="contained"
+        onClick={onComplete}
+        sx={{
+          ml: 2,
+          background: "linear-gradient(45deg, #4D4D4E, orange)",
+          color: "white",
+          "&:hover": { backgroundColor: "#ffcc00" },
+        }}
+      >
+        Start
+      </Button>
+    </Box>
+  );
 
   // Handle the step completion
   const handleCompleteStep = async (step) => {
@@ -39,6 +90,8 @@ const PersonalInfo = ({ onComplete, disabled }) => {
   // Fetch personal details and open the modal
   const showPersonalInfoForm = async () => {
     setIsFetching(true);
+
+    
     try {
       const response = await axios.get(
         `${BASE_URL}/api/user/getProfileDetails`,
@@ -46,6 +99,7 @@ const PersonalInfo = ({ onComplete, disabled }) => {
           withCredentials: true,
         }
       );
+      
 
       if (response.status !== 200) {
         throw new Error("Failed to fetch profile details.");
@@ -57,10 +111,10 @@ const PersonalInfo = ({ onComplete, disabled }) => {
         setFormValues({
           fullName: data.personalDetails.fullName || "",
           gender: data.personalDetails.gender || "",
-          dob: data.personalDetails.dob || "",
           personalEmail: data.personalDetails.personalEmail || "",
           maritalStatus: data.personalDetails.maritalStatus || "",
           spouseName: data.personalDetails.spouseName || "",
+          dob: data.personalDetails.dob || "", // Populate dob from the backend
         });
         setOpenModal(true); // Open modal once details are loaded
       } else {
@@ -82,56 +136,72 @@ const PersonalInfo = ({ onComplete, disabled }) => {
 
   // Handle form submission
   const handleSubmit = async () => {
-    if (!formValues.personalEmail.includes("@")) {
+    // Validate the email using regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formValues.personalEmail)) {
       setError("Please enter a valid email address.");
       return;
     }
-
+  
+    // Validate marital status based on enum values
+    const allowedMaritalStatuses = ["MARRIED", "SINGLE", "DIVORCED"];
+    if (!allowedMaritalStatuses.includes(formValues.maritalStatus)) {
+      setError("Invalid marital status.");
+      return;
+    }
+  
+    // Prepare updatedDetails object
     const updatedDetails = {
       fullName: formValues.fullName,
       gender: formValues.gender,
-      dob: formValues.dob,
-      personalEmail: formValues.personalEmail,
+      dob: formValues.dob,  // Send dob as part of the updated details
+      personalEmail: formValues.personalEmail, // Use personalEmail from the form state
       maritalStatus: formValues.maritalStatus,
-      spouseName:
-        formValues.maritalStatus === "Married" ? formValues.spouseName : null,
+      spouseName: formValues.maritalStatus === "MARRIED" ? formValues.spouseName : null,
     };
-
+  
+    console.log("Updated Details:", updatedDetails);  // Log the updated details to ensure correctness
+  
     setIsFetching(true);
+  
     try {
       const response = await axios.patch(
-        `${BASE_URL}/api/user/personalInfo`,
+        `${BASE_URL}/api/user/personalInfo`, // API endpoint for updating personal info
         updatedDetails,
         {
           headers: { "Content-Type": "application/json" },
-          withCredentials: true,
+          withCredentials: true, // Include cookies for authentication if needed
         }
       );
-
+  
+      console.log("API Response:", updatedDetails); // Log API response to see if the update was successful
+  
       if (response.status === 200) {
-        alert("Details updated successfully!");
-        setOpenModal(false); // Close the modal on success
+        Swal.fire("Success", "Details updated successfully!", "success");  // Corrected Swal usage
+        setOpenModal(false); // Close modal on success
         onComplete(); // Notify parent component when step is completed
       } else {
         setError("Failed to update details.");
       }
+      
     } catch (error) {
-      console.error("Error updating details:", error);
+      console.error("Error updating details:", error.response || error.message);
       setError("Failed to update personal details.");
+      Swal.fire("Error", "Unable to fetch or update your details.", "error");
     } finally {
       setIsFetching(false);
     }
   };
-
+  
+  
   return (
     <>
-      <Button
-        variant="contained"
-        onClick={() => handleCompleteStep("personal")}
-        disabled={disabled} // Disable the button if the step is already completed
-      >
-        Complete Personal Info
-      </Button>
+      <StepBox
+        icon={<Person />}
+        title="Personal Information"
+        description="Please update your personal details."
+        onComplete={() => handleCompleteStep("personal")}
+      />
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Box
@@ -142,7 +212,8 @@ const PersonalInfo = ({ onComplete, disabled }) => {
             padding: 3,
             maxWidth: 400,
             margin: "auto",
-            marginTop: "20%",
+            marginTop: "1%",
+            marginBottom:"20%"
           }}
         >
           <Typography variant="h6" sx={{ marginBottom: 2 }}>
@@ -169,17 +240,13 @@ const PersonalInfo = ({ onComplete, disabled }) => {
             helperText={!!error && !formValues.personalEmail.includes("@") ? error : ""}
           />
 
-          {/* Date of Birth */}
+          {/* Date of Birth - Read-Only */}
           <TextField
             label="Date of Birth"
             value={formValues.dob}
-            onChange={(e) => handleFormChange("dob", e.target.value)}
             fullWidth
-            type="date"
+            disabled
             sx={{ marginBottom: 2 }}
-            InputLabelProps={{
-              shrink: true,
-            }}
           />
 
           {/* Gender */}
@@ -203,9 +270,9 @@ const PersonalInfo = ({ onComplete, disabled }) => {
                 handleFormChange("maritalStatus", e.target.value)
               }
             >
-              <MenuItem value="Single">Single</MenuItem>
-              <MenuItem value="Married">Married</MenuItem>
-              <MenuItem value="Divorced">Divorced</MenuItem>
+              <MenuItem value="SINGLE">Single</MenuItem>
+              <MenuItem value="MARRIED">Married</MenuItem>
+              <MenuItem value="DIVORCED">Divorced</MenuItem>
             </Select>
           </FormControl>
 

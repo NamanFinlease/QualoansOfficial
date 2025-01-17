@@ -2,49 +2,61 @@ import React, { useState } from "react";
 import {
   Box,
   Button,
-  Modal,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   TextField,
   Typography,
-  CircularProgress,
+  IconButton,
 } from "@mui/material";
 import { BASE_URL } from "../../baseURL";
+import Swal from "sweetalert2"; // Import SweetAlert2 for alerts
+
+// Reusable Input Component
+const InputField = ({ label, value, onChange, disabled, placeholder }) => (
+  <TextField
+    fullWidth
+    variant="outlined"
+    label={label}
+    value={value}
+    onChange={onChange}
+    disabled={disabled}
+    placeholder={placeholder}
+    sx={{
+      input: { color: "black" },
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": { borderColor: "black" },
+        "&:hover fieldset": { borderColor: "#ffcc00" },
+      },
+    }}
+  />
+);
 
 const PANValidation = ({ onComplete, disabled }) => {
-  const [openModal, setOpenModal] = useState(false);
-  const [formValues, setFormValues] = useState({ pan: "" });
-  const [error, setError] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
+  const [pan, setPan] = useState("");
   const [isFetching, setIsFetching] = useState(false);
-  const [completedSteps, setCompletedSteps] = useState({});
-  const [progress, setProgress] = useState(0);
+  const [error, setError] = useState("");
+  const [currentStep, setCurrentStep] = useState("pan");
 
-  const handleCompleteStep = async (step) => {
-    if (step === "pan") {
-      setOpenModal(true);
-    } else if (!completedSteps[step]) {
-      // Mark the step as completed
-      setCompletedSteps((prev) => ({ ...prev, [step]: true }));
+  const handleCompleteStep = () => setOpenDialog(true);
 
-      // Update the progress
-      const completedCount =
-        Object.values(completedSteps).filter(Boolean).length;
-      setProgress((completedCount + 1) * (100 / 6)); // Update progress percentage
-    }
-  };
-
-  const handlePanChange = (e) => {
-    setFormValues((prev) => ({ ...prev, pan: e.target.value }));
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setPan("");
     setError("");
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setFormValues({ pan: "" });
+  const handlePanChange = (e) => {
+    setPan(e.target.value);
     setError("");
   };
 
   const handleSubmitPan = async () => {
     const panFormat = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-    if (!panFormat.test(formValues.pan)) {
+    if (!panFormat.test(pan)) {
       setError("Invalid PAN card format.");
       return;
     }
@@ -54,7 +66,7 @@ const PANValidation = ({ onComplete, disabled }) => {
 
     try {
       const response = await fetch(
-        `${BASE_URL}/api/verify/verifyPAN/${formValues.pan}`,
+        `${BASE_URL}/api/verify/verifyPAN/${pan}`,
         {
           method: "POST",
           credentials: "include",
@@ -64,11 +76,9 @@ const PANValidation = ({ onComplete, disabled }) => {
       const data = await response.json();
 
       if (response.ok) {
-        setCompletedSteps((prev) => ({ ...prev, pan: true }));
-        setProgress((prev) => (prev === 100 ? 100 : prev + 16.67)); // 16.67% per step
-        handleCloseModal();
         onComplete(); // Notify parent component that the step is complete
-        alert("PAN card validated successfully!");
+        Swal.fire("PAN card validated successfully!");
+        setOpenDialog(false);
       } else {
         setError(data.message || "Error validating PAN.");
       }
@@ -82,57 +92,106 @@ const PANValidation = ({ onComplete, disabled }) => {
 
   return (
     <>
-      <Button
-        variant="contained"
-        onClick={() => handleCompleteStep("pan")}
-        disabled={disabled} // Disable the button if step is already completed
-      >
-        Validate PAN
-      </Button>
-
-      <Modal open={openModal} onClose={handleCloseModal}>
-        <Box
-          sx={{
-            backgroundColor: "white",
-            borderRadius: 4,
-            boxShadow: 24,
-            padding: 3,
-            maxWidth: 400,
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          padding: 2,
+          border: "2px solid",
+          borderRadius: 3,
+          margin: 1,
+          width: "30%",
+          minWidth: 200,
+          cursor: "pointer",
+          textAlign: "left",
+          color: "white",
+          background: "linear-gradient(45deg, #4D4D4E, orange)",
+          "@media (max-width: 600px)": {
+            width: "80%",
             margin: "auto",
-            marginTop: "20%",
+          },
+        }}
+      >
+        <IconButton sx={{ color: "white", ml: 1 }}>📇</IconButton>
+        <Box sx={{ ml: 2, flexGrow: 1 }}>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            PAN Verification
+          </Typography>
+          <Typography variant="body2" sx={{ color: "white" }}>
+            Verify your PAN card number
+          </Typography>
+        </Box>
+        <Button
+          variant="contained"
+          onClick={handleCompleteStep}
+          sx={{
+            ml: 2,
+            background: "linear-gradient(45deg, #4D4D4E, orange)",
+            color: "white",
+            "&:hover": { backgroundColor: "#ffcc00" },
           }}
         >
-          <Typography variant="h6" sx={{ marginBottom: 2 }}>
-            Enter your PAN Number
+          Start
+        </Button>
+      </Box>
+
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        PaperProps={{
+          sx: {
+            padding: 3,
+            borderRadius: 3,
+            background: "white",
+            boxShadow: 3,
+          },
+        }}
+      >
+        <DialogTitle sx={{ color: "black", textAlign: "left" }}>
+          Enter your PAN Number
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{ color: "black", marginBottom: 2 }}>
+            Please enter your PAN number to verify it.
           </Typography>
-          <TextField
+          <InputField
             label="PAN Number"
-            variant="outlined"
-            fullWidth
-            value={formValues.pan}
+            value={pan}
             onChange={handlePanChange}
-            sx={{ marginBottom: 2 }}
-            error={!!error}
-            helperText={error}
+            disabled={isFetching}
+            placeholder="Enter your PAN number"
           />
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={handleCloseModal}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleSubmitPan}
-              disabled={isFetching}
-            >
-              {isFetching ? <CircularProgress size={24} /> : "Submit"}
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
+          {error && (
+            <Typography variant="body2" sx={{ color: "red", marginTop: 2 }}>
+              {error}
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          {isFetching ? (
+            <CircularProgress size={24} />
+          ) : (
+            <>
+              <Button
+                variant="outlined"
+                onClick={handleCloseDialog}
+                sx={{ color: "black", borderColor: "black" }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleSubmitPan}
+                sx={{ backgroundColor: "#ffcc00", color: "black" }}
+              >
+                Submit
+              </Button>
+            </>
+          )}
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

@@ -13,6 +13,9 @@ import {
   Avatar,
   Divider,
 } from "@mui/material";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PolicyIcon from "@mui/icons-material/Policy";
 import GavelIcon from "@mui/icons-material/Gavel";
@@ -23,6 +26,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import logo from "../assets/image/White.webp";
 import { BASE_URL } from "../baseURL";
 import { getToken } from "../../tokenManager";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+
+
+const MySwal = withReactContent(Swal);
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false  );
@@ -31,6 +38,8 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
   const location = useLocation();
   const token = getToken()
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -66,13 +75,51 @@ const Dashboard = () => {
     fetchUserData();
   }, []);
 
-  const options = [
+
+  const handleLogout = async () => {
+    console.log("HHJJJJJ>>>>>>");
+    
+    try {
+      const response = await fetch(`${BASE_URL}/api/user/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Ensures the cookie is sent
+      });
+      console.log("responce>>>>",response);
+      
+  
+      if (response.status===200) {
+        console.log("hy responce ");
+        
+        // removeToken(); // Clear any additional client-side tokens if needed
+        MySwal.fire({
+          title: "Logged Out",
+          text: "You have successfully logged out.",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        }).then(() => {
+          navigate("/login-form"); // Redirect user to login page
+        });
+      } else {
+        const errorData = await response.json();
+        MySwal.fire("Error", errorData.message || "Failed to log out. Please try again.", "error");
+      }
+    } catch (error) {
+      MySwal.fire("Error", "An error occurred during logout. Please try again later.", "error");
+    }
+  };
+    const options = [
     { text: "Dashboard", icon: <DashboardIcon />, link: "/ourjourney" },
     { text: "Privacy Policy", icon: <PolicyIcon />, link: "/privacy-policy" },
     { text: "Terms & Conditions", icon: <GavelIcon />, link: "/terms-conditions" },
     { text: "User Preview", icon: <PersonIcon />, link: "/user-preview" },
-    { text: "Logout", icon: <LogoutIcon />, link: "/logout" },
+    { text: "Logout", icon: <LogoutIcon />, action: handleLogout }, // Attach logout action here
   ];
+
+
 
   return (
     <Box sx={{ display: "flex", overflow: "hidden", flexDirection: "column", backgroundColor: "#f9f9f9" }}>
@@ -106,22 +153,31 @@ const Dashboard = () => {
            position: "fixed", top: "55px", left: 0, bottom: 0, zIndex: 1200, boxShadow: 3, color: "#fff" }}>
           <Divider />
           <List>
-            {options.map((option, index) => (
-              <Link key={index} to={option.link} style={{ textDecoration: "none", color: "inherit" }}>
-                <ListItem
-                  button
-                  sx={{
-                    backgroundColor: location.pathname === option.link ? "#e0e0e0" : "transparent",
-                    "&:hover": { backgroundColor: "#d6d6d6" },
-                  }}
-                >
-                  <ListItemIcon sx={{ color: location.pathname === option.link ? "#000" : "#fff" }}>{option.icon}</ListItemIcon>
-                  <ListItemText primary={option.text} sx={{ color: location.pathname === option.link ? "#000" : "#fff" }} />
-                </ListItem>
-              </Link>
-            ))}
-          </List>
-        </Box>
+  {options.map((option, index) =>
+    option.action ? (
+      <ListItem
+        button
+        key={index}
+        onClick={() => {
+          option.action(); // Call the logout function
+          setSidebarOpen(false); // Optionally, close the sidebar after clicking logout
+        }}
+        sx={{ "&:hover": { backgroundColor: "#d6d6d6" } }}
+      >
+        <ListItemIcon sx={{ color: "#fff" }}>{option.icon}</ListItemIcon>
+        <ListItemText primary={option.text} />
+      </ListItem>
+    ) : (
+      <Link key={index} to={option.link} style={{ textDecoration: "none", color: "inherit" }}>
+        <ListItem button sx={{ backgroundColor: location.pathname === option.link ? "#e0e0e0" : "transparent", "&:hover": { backgroundColor: "#d6d6d6" } }}>
+          <ListItemIcon sx={{ color: location.pathname === option.link ? "#000" : "#fff" }}>{option.icon}</ListItemIcon>
+          <ListItemText primary={option.text} sx={{ color: location.pathname === option.link ? "#000" : "#fff" }} />
+        </ListItem>
+      </Link>
+    )
+  )}
+</List>
+ </Box>
       )}
 
       {/* Main Content */}
