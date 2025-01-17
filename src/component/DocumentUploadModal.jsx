@@ -81,7 +81,6 @@ const DocumentUploadModal = ({ prefillData }) => {
       );
 
       // Handle success response
-      console.log("API response:", response.data);
       MySwal.fire({
         icon: "success",
         title: "Documents uploaded successfully",

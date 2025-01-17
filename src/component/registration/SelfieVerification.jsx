@@ -12,6 +12,8 @@ import InfoIcon from "@mui/icons-material/Info";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { BASE_URL } from "../../baseURL";
+import yourImage from "../../assets/image/Untitled design (1).gif";  // Import your image
 
 const SelfieVerification = ({ onComplete, disabled }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -35,51 +37,142 @@ const SelfieVerification = ({ onComplete, disabled }) => {
 
     inputFile.click();
   };
-
-
-const uploadSelfieToBackend = async (fileData) => {
-  const formData = new FormData();
-  formData.append("profilePicture", fileData);
-
-  try {
-    setIsUploading(true);
-    const response = await axios.patch(
-      "http://localhost:8081/api/user/uploadProfile",
-      formData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      }
-    );
-
-    setIsUploading(false);
-
-    if (response.status === 200) {
-      // First SweetAlert: Selfie uploaded successfully
-      Swal.fire("Success", "Selfie uploaded successfully!", "success").then(() => {
-        // After closing the first SweetAlert, show the second SweetAlert
-        Swal.fire({
-          title: "You have successfully registered to Qualoan!",
-          text: "Complete your loan application process.",
-          icon: "info",
-          confirmButtonText: "Go to Loan Application",
-        }).then((result) => {
-          // If the user clicks the button, redirect to the loan application page
-          if (result.isConfirmed) {
-            // Redirect to LoanApplication page
-            navigate('/loan-application');
-          }
+  const uploadSelfieToBackend = async (fileData) => {
+    const formData = new FormData();
+    formData.append("profilePicture", fileData);
+  
+    try {
+      setIsUploading(true);
+      const response = await axios.patch(
+        `${BASE_URL}/api/user/uploadProfile`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
+        }
+      );
+  
+      setIsUploading(false);
+  
+      if (response.status === 200) {
+        // First SweetAlert: Selfie uploaded successfully
+        Swal.fire("Success", "Selfie uploaded successfully!", "success").then(() => {
+          // After closing the first SweetAlert, show the second SweetAlert with animation
+          Swal.fire({
+            title: "You have successfully registered to Qualoan!",
+            html: `
+              <div style="animation: zoomOut 1.5s infinite, blink 0.8s infinite;size=20px">
+                Complete your loan application process.
+              </div>`,
+            imageUrl: yourImage,  // Use the imported image here
+            imageWidth: 100,  // Optional: Adjust the width of the image
+            imageHeight: 100,  // Optional: Adjust the height of the image
+            confirmButtonText: "Go to Loan Application",
+            customClass: {
+              popup: 'custom-popup',
+              confirmButton: 'confirm-button-orange' // Custom class for the button
+            },
+            willOpen: () => {
+              // Dynamically inject CSS animations when the alert is opened
+              const style = document.createElement('style');
+              style.innerHTML = `
+                @keyframes zoomOut {
+                  0% {
+                    transform: scale(1);
+                  }
+                  50% {
+                    transform: scale(0.8);
+                  }
+                  100% {
+                    transform: scale(1);
+                  }
+                }
+  
+                @keyframes blink {
+                  0% {
+                    opacity: 1;
+                  }
+                  50% {
+                    opacity: 0;
+                  }
+                  100% {
+                    opacity: 1;
+                  }
+                }
+  
+                .confirm-button-orange {
+                  background-color: orange !important;  /* Set button background to orange */
+                  color: white !important;  /* Set button text to white */
+                  border: none !important;  /* Remove border */
+                }
+              `;
+              document.head.appendChild(style);
+            }
+          }).then((result) => {
+            // If the user clicks the button, redirect to the loan application page
+            if (result.isConfirmed) {
+              // Redirect to LoanApplication page
+              navigate('/loan-application');
+            }
+          });
         });
-      });
-    } else {
-      Swal.fire("Error", response.data.message, "error");
+      } else {
+        Swal.fire("Error", response.data.message, "error");
+      }
+    } catch (error) {
+      setIsUploading(false);
+      setError("An error occurred while uploading the selfie.");
+      console.error("Upload Error:", error);
     }
-  } catch (error) {
-    setIsUploading(false);
-    setError("An error occurred while uploading the selfie.");
-    console.error("Upload Error:", error);
-  }
-};
+  };
+  
+  
+
+// const uploadSelfieToBackend = async (fileData) => {
+//   const formData = new FormData();
+//   formData.append("profilePicture", fileData);
+
+//   try {
+//     setIsUploading(true);
+//     const response = await axios.patch(
+//       `${BASE_URL}/api/user/uploadProfile`,
+//       formData,
+//       {
+//         headers: { "Content-Type": "multipart/form-data" },
+//         withCredentials: true,
+//       }
+//     );
+
+//     setIsUploading(false);
+
+//     if (response.status === 200) {
+//       // First SweetAlert: Selfie uploaded successfully
+//       Swal.fire("Success", "Selfie uploaded successfully!", "success").then(() => {
+//         // After closing the first SweetAlert, show the second SweetAlert
+//         Swal.fire({
+//           title: "You have successfully registered to Qualoan!",
+//           text: "Complete your loan application process.",
+//           imageUrl: yourImage,  // Use the imported image here
+//           imageWidth: 100,  // Optional: Adjust the width of the image
+//           imageHeight: 100,  // Optional: Adjust the height of the image
+//           confirmButtonText: "Go to Loan Application",
+//         }).then((result) => {
+//           // If the user clicks the button, redirect to the loan application page
+//           if (result.isConfirmed) {
+//             // Redirect to LoanApplication page
+//             navigate('/loan-application');
+//           }
+//         });
+//       });
+//     } else {
+//       Swal.fire("Error", response.data.message, "error");
+//     }
+//   } catch (error) {
+//     setIsUploading(false);
+//     setError("An error occurred while uploading the selfie.");
+//     console.error("Upload Error:", error);
+//   }
+// };
 
 
   return (

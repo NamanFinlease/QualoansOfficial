@@ -1,47 +1,23 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  Typography,
-  IconButton,
-} from "@mui/material";
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography, IconButton } from "@mui/material";
+import DescriptionIcon from '@mui/icons-material/Description'; // Import Description icon
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2"; // Import SweetAlert2 for alerts
-
-// Reusable Input Component
-const InputField = ({ label, value, onChange, disabled, placeholder }) => (
-  <TextField
-    fullWidth
-    variant="outlined"
-    label={label}
-    value={value}
-    onChange={onChange}
-    disabled={disabled}
-    placeholder={placeholder}
-    sx={{
-      input: { color: "black" },
-      "& .MuiOutlinedInput-root": {
-        "& fieldset": { borderColor: "black" },
-        "&:hover fieldset": { borderColor: "#ffcc00" },
-      },
-    }}
-  />
-);
 
 const PANValidation = ({ onComplete, disabled }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [pan, setPan] = useState("");
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState("");
-  const [currentStep, setCurrentStep] = useState("pan");
 
-  const handleCompleteStep = () => setOpenDialog(true);
+  const showPanDetails = async () => {
+    setIsFetching(true);
+  };
+
+  const handleCompleteStep = async () => {
+    if (disabled) return;
+    setOpenDialog(true); // Open PAN input dialog when the step starts
+  };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
@@ -90,6 +66,7 @@ const PANValidation = ({ onComplete, disabled }) => {
     }
   };
 
+
   return (
     <>
       <Box
@@ -106,15 +83,16 @@ const PANValidation = ({ onComplete, disabled }) => {
           minWidth: 200,
           cursor: "pointer",
           textAlign: "left",
-          color: "white",
           background: "linear-gradient(45deg, #4D4D4E, orange)",
+          color: "white",
           "@media (max-width: 600px)": {
             width: "80%",
             margin: "auto",
           },
         }}
       >
-        <IconButton sx={{ color: "white", ml: 1 }}>📇</IconButton>
+        <IconButton sx={{ color: "white", ml: 1 }} disabled={disabled}>
+        <DescriptionIcon sx={{ color: "white" }} /> {/* Set icon color to white */}        </IconButton>
         <Box sx={{ ml: 2, flexGrow: 1 }}>
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
             PAN Verification
@@ -125,18 +103,20 @@ const PANValidation = ({ onComplete, disabled }) => {
         </Box>
         <Button
           variant="contained"
-          onClick={handleCompleteStep}
+          onClick={handleCompleteStep} // Trigger dialog on click
           sx={{
             ml: 2,
             background: "linear-gradient(45deg, #4D4D4E, orange)",
             color: "white",
             "&:hover": { backgroundColor: "#ffcc00" },
           }}
+          disabled={disabled} // Disable button when step is completed
         >
           Start
         </Button>
       </Box>
 
+      {/* Dialog for PAN input */}
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
@@ -156,12 +136,22 @@ const PANValidation = ({ onComplete, disabled }) => {
           <Typography variant="body2" sx={{ color: "black", marginBottom: 2 }}>
             Please enter your PAN number to verify it.
           </Typography>
-          <InputField
+          <TextField
             label="PAN Number"
             value={pan}
             onChange={handlePanChange}
             disabled={isFetching}
+            fullWidth
+            variant="outlined"
             placeholder="Enter your PAN number"
+            sx={{
+              marginBottom: 2,
+              input: { color: "black" },
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": { borderColor: "black" },
+                "&:hover fieldset": { borderColor: "#ffcc00" },
+              },
+            }}
           />
           {error && (
             <Typography variant="body2" sx={{ color: "red", marginTop: 2 }}>

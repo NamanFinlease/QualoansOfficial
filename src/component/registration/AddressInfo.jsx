@@ -12,12 +12,12 @@ import {
   CircularProgress,
   IconButton,
 } from "@mui/material";
-import { LocationOn } from "@mui/icons-material";  // For Address Info Icon
+import { LocationOn } from "@mui/icons-material"; // For Address Info Icon
 import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
-const StepBox = ({ icon, title, description, onComplete }) => (
+const StepBox = ({ icon, title, description, onComplete, disabled }) => (
   <Box
     sx={{
       display: "flex",
@@ -30,7 +30,7 @@ const StepBox = ({ icon, title, description, onComplete }) => (
       margin: 1,
       width: "30%",
       minWidth: 200,
-      cursor: "pointer",
+      cursor: disabled ? "not-allowed" : "pointer",
       textAlign: "left",
       background: "linear-gradient(45deg, #4D4D4E, orange)",
       color: "white",
@@ -40,7 +40,9 @@ const StepBox = ({ icon, title, description, onComplete }) => (
       },
     }}
   >
-    <IconButton sx={{ color: "white", ml: 1 }}>{icon}</IconButton>
+    <IconButton sx={{ color: "white", ml: 1 }} disabled={disabled}>
+      {icon}
+    </IconButton>
     <Box sx={{ ml: 2, flexGrow: 1 }}>
       <Typography variant="h6" sx={{ fontWeight: "bold" }}>
         {title}
@@ -58,6 +60,7 @@ const StepBox = ({ icon, title, description, onComplete }) => (
         color: "white",
         "&:hover": { backgroundColor: "#ffcc00" },
       }}
+      disabled={disabled} // Disable the button if the step is completed
     >
       Start
     </Button>
@@ -76,10 +79,11 @@ const AddressInfo = ({ onComplete, disabled }) => {
     residenceType: "OWNED",
   });
   const [error, setError] = useState("");
+  const [isStepCompleted, setIsStepCompleted] = useState(false); // Track completion status
 
   const handleFormChange = (key, value) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
-    if (error) setError("");  // Clear error on input change
+    if (error) setError(""); // Clear error on input change
   };
 
   const handleSubmit = async () => {
@@ -88,7 +92,7 @@ const AddressInfo = ({ onComplete, disabled }) => {
       setError("Please fill out all fields.");
       return;
     }
-  
+
     setIsFetching(true);
     try {
       const response = await axios.patch(
@@ -96,12 +100,13 @@ const AddressInfo = ({ onComplete, disabled }) => {
         formValues,
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
-  
+
       console.log('Response:', response); // Log the response
-  
+
       if (response.status >= 200 && response.status < 300) {
         Swal.fire("Address details updated successfully!");
         setOpenModal(false);
+        setIsStepCompleted(true); // Mark step as completed
         onComplete?.();
       } else {
         setError("Failed to update address details.");
@@ -113,34 +118,6 @@ const AddressInfo = ({ onComplete, disabled }) => {
       setIsFetching(false);
     }
   };
-  
-  // const handleSubmit = async () => {
-  //   if (Object.values(formValues).some((val) => !val)) {
-  //     setError("Please fill out all fields.");
-  //     return;
-  //   }
-
-  //   setIsFetching(true);
-  //   try {
-  //     const response = await axios.patch(
-  //       `${BASE_URL}/api/user/currentResidence`,
-  //       formValues,
-  //       { headers: { "Content-Type": "application/json" }, withCredentials: true }
-  //     );
-
-  //     if (response.status === 200) {
-  //       Swal("Address details updated successfully!");
-  //       setOpenModal(false);
-  //       onComplete?.();
-  //     } else {
-  //       setError("Failed to update address details.");
-  //     }
-  //   } catch {
-  //     setError("Error submitting address details. Please try again.");
-  //   } finally {
-  //     setIsFetching(false);
-  //   }
-  // };
 
   return (
     <>
@@ -149,6 +126,7 @@ const AddressInfo = ({ onComplete, disabled }) => {
         title="Address Information"
         description="Update your current residence details."
         onComplete={() => setOpenModal(true)}
+        disabled={disabled || isStepCompleted} // Disable "Start" button if step is completed or if previous step is not completed
       />
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Box
@@ -160,7 +138,7 @@ const AddressInfo = ({ onComplete, disabled }) => {
             maxWidth: 400,
             margin: "auto",
             marginTop: "1%",
-            mb:"20%"
+            mb: "20%",
           }}
         >
           <Typography variant="h6" sx={{ marginBottom: 2 }}>
@@ -201,7 +179,7 @@ const AddressInfo = ({ onComplete, disabled }) => {
             <Button variant="outlined" color="secondary" onClick={() => setOpenModal(false)}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleSubmit} disabled={isFetching}>
+            <Button variant="contained" onClick={handleSubmit} disabled={isFetching || isStepCompleted}>
               {isFetching ? <CircularProgress size={24} /> : "Submit"}
             </Button>
           </Box>

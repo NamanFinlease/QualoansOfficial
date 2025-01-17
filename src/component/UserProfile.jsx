@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
 import { BASE_URL } from "../baseURL";
-import { getToken } from "../../tokenManager";
 
 // Define the UserProfile component
 const UserProfile = () => {
-  const token = getToken();
 
   // State to store user data
   const [user, setUser] = useState({

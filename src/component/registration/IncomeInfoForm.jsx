@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useState } from "react";
 import {
   Modal,
@@ -21,7 +17,7 @@ import { BASE_URL } from "../../baseURL";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const StepBox = ({ icon, title, description, onComplete }) => (
+const StepBox = ({ icon, title, description, onComplete, disabled }) => (
   <Box
     sx={{
       display: "flex",
@@ -34,7 +30,7 @@ const StepBox = ({ icon, title, description, onComplete }) => (
       margin: 1,
       width: "30%",
       minWidth: 200,
-      cursor: "pointer",
+      cursor: disabled ? "not-allowed" : "pointer",
       textAlign: "left",
       background: "linear-gradient(45deg, #4D4D4E, orange)",
       color: "white",
@@ -44,7 +40,9 @@ const StepBox = ({ icon, title, description, onComplete }) => (
       },
     }}
   >
-    <IconButton sx={{ color: "white", ml: 1 }}>{icon}</IconButton>
+    <IconButton sx={{ color: "white", ml: 1 }} disabled={disabled}>
+      {icon}
+    </IconButton>
     <Box sx={{ ml: 2, flexGrow: 1 }}>
       <Typography variant="h6" sx={{ fontWeight: "bold" }}>
         {title}
@@ -62,6 +60,7 @@ const StepBox = ({ icon, title, description, onComplete }) => (
         color: "white",
         "&:hover": { backgroundColor: "#ffcc00" },
       }}
+      disabled={disabled}
     >
       Start
     </Button>
@@ -78,7 +77,15 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
     nextSalaryDate: "",
     incomeMode: "",
   });
+  const [isStepCompleted, setIsStepCompleted] = useState(false);
+
   const [error, setError] = useState("");
+  const [formCompleted, setFormCompleted] = useState(false);
+
+  const handleFormChange = (key, value) => {
+    setFormValues((prev) => ({ ...prev, [key]: value }));
+    if (error) setError(""); // Clear error on input change
+  };
 
   const handleSubmit = async () => {
     const {
@@ -103,6 +110,9 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
       );
       if (response.status === 200) {
         Swal.fire("Success", "Income details added successfully!", "success");
+        setFormCompleted(true); // Mark the form as completed
+        setIsStepCompleted(true); // Mark step as completed
+
         setOpenModal(false);
         if (onComplete) onComplete();
       } else {
@@ -110,11 +120,11 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
       }
     } catch (error) {
       setError(error.message || "An error occurred while adding income details.");
-    }
-     finally {
+    } finally {
       setIsFetching(false);
     }
   };
+
   return (
     <>
       <StepBox
@@ -122,6 +132,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
         title="Income Information"
         description="Please provide your income details."
         onComplete={() => setOpenModal(true)}
+        disabled={disabled || isStepCompleted}
       />
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
@@ -134,7 +145,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
             maxWidth: 400,
             margin: "auto",
             marginTop: "1%",
-            mb:"20%"
+            mb: "20%",
           }}
         >
           <Typography variant="h6" sx={{ marginBottom: 2 }}>
@@ -147,9 +158,15 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
               select
               label="Employee Type"
               value={formValues.employementType}
-              onChange={(e) => setFormValues({ ...formValues, employementType: e.target.value })}
+              onChange={(e) => handleFormChange("employementType", e.target.value)}
               fullWidth
               required
+              variant="outlined"
+              InputLabelProps={{
+                shrink: true,
+                style: { color: "#4D4D4E" },
+              }}
+              disabled={formCompleted}
             >
               <option value="SALARIED">Salaried</option>
               <option value="SELF EMPLOYED">Self-Employed</option>
@@ -161,20 +178,33 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
             label="Monthly Income"
             type="number"
             value={formValues.monthlyIncome}
-            onChange={(e) => setFormValues({ ...formValues, monthlyIncome: e.target.value })}
+            onChange={(e) => handleFormChange("monthlyIncome", e.target.value)}
             fullWidth
             sx={{ marginBottom: 2 }}
             required
+            variant="outlined"
+            InputLabelProps={{
+              shrink: true,
+              style: { color: "#4D4D4E" },
+            }}
+            disabled={formCompleted}
           />
 
           {/* Obligations */}
           <TextField
-            label="Obligations"
+            label="Loan Amount"
             type="number"
             value={formValues.obligations}
-            onChange={(e) => setFormValues({ ...formValues, obligations: e.target.value })}
+            onChange={(e) => handleFormChange("obligations", e.target.value)}
             fullWidth
             sx={{ marginBottom: 2 }}
+            required
+            variant="outlined"
+            InputLabelProps={{
+              shrink: true,
+              style: { color: "#4D4D4E" },
+            }}
+            disabled={formCompleted}
           />
 
           {/* Next Salary Date */}
@@ -182,10 +212,16 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
             label="Next Salary Date"
             type="date"
             value={formValues.nextSalaryDate}
-            onChange={(e) => setFormValues({ ...formValues, nextSalaryDate: e.target.value })}
+            onChange={(e) => handleFormChange("nextSalaryDate", e.target.value)}
             fullWidth
             sx={{ marginBottom: 2 }}
             required
+            variant="outlined"
+            InputLabelProps={{
+              shrink: true,
+              style: { color: "#4D4D4E" },
+            }}
+            disabled={formCompleted}
           />
 
           {/* Income Mode */}
@@ -194,8 +230,9 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
           </Typography>
           <RadioGroup
             value={formValues.incomeMode}
-            onChange={(e) => setFormValues({ ...formValues, incomeMode: e.target.value })}
+            onChange={(e) => handleFormChange("incomeMode", e.target.value)}
             row
+            disabled={formCompleted}
           >
             <FormControlLabel value="BANK" control={<Radio />} label="Bank" />
             <FormControlLabel value="CHEQUE" control={<Radio />} label="Cheque" />
@@ -210,7 +247,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
             <Button variant="outlined" color="secondary" onClick={() => setOpenModal(false)}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleSubmit} disabled={isFetching}>
+            <Button variant="contained" onClick={handleSubmit} disabled={isFetching || formCompleted}>
               {isFetching ? <CircularProgress size={24} /> : "Submit"}
             </Button>
           </Box>
@@ -221,4 +258,3 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
 };
 
 export default IncomeInfoForm;
-

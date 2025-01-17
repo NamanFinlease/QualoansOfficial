@@ -13,6 +13,7 @@ import {
 import axios from "axios";
 import loginGif from "../assets/image/Untitled design (2) (1).gif"; // Adjust the path based on your project structure
 import Header from "../navbar/Header";
+import { BASE_URL } from "../baseURL";
 
 const fadeIn = keyframes`
   from {
@@ -84,22 +85,31 @@ const LoginForm = ({ setLoginComleted }) => {
 
     try {
       const response = await axios.get(
-        `http://localhost:8081/api/user/aadhaar-login/${aadhaar}`
+        `${BASE_URL}/api/user/aadhaar-login/${aadhaar}`
         // { withCredentials: true }
       );
 
 
       if (response.data.success) {
         setOtpSent(true);
-        setSuccessMessage(
-          "OTP sent successfully to your Aadhaar-linked mobile number."
-        );
+  
+        // Display appropriate message based on mobile number availability
+        if (response.data.mobileNumber) {
+          setSuccessMessage(
+            "OTP sent to your registered mobile number."
+          );
+        } else {
+          setSuccessMessage(  "OTP sent successfully to your Aadhaar-linked mobile number."
+          );
+        }
+  
+        // Set additional response data
         setTransactionId(response.data.transactionId);
         setFwdp(response.data.fwdp);
         setCodeVerifier(response.data.codeVerifier);
         setMobileNumber(response.data.mobileNumber || "Unknown"); // Handle missing mobile gracefully
         setUserAlreadyRegistered(response.data.isAlreadyRegisterdUser);
-
+  
         console.log(
           "Mobile captured:",
           response.data.mobileNumber || "Unknown"
@@ -115,6 +125,35 @@ const LoginForm = ({ setLoginComleted }) => {
     } finally {
       setLoading(false);
     }
+  
+
+
+    //   if (response.data.success) {
+    //     setOtpSent(true);
+    //     setSuccessMessage(
+    //       "OTP sent successfully to your Aadhaar-linked mobile number."
+    //     );
+    //     setTransactionId(response.data.transactionId);
+    //     setFwdp(response.data.fwdp);
+    //     setCodeVerifier(response.data.codeVerifier);
+    //     setMobileNumber(response.data.mobileNumber || "Unknown"); // Handle missing mobile gracefully
+    //     setUserAlreadyRegistered(response.data.isAlreadyRegisterdUser);
+
+    //     console.log(
+    //       "Mobile captured:",
+    //       response.data.mobileNumber || "Unknown"
+    //     ); // Debugging Step
+    //   } else {
+    //     setErrorMessage(response.data.message || "Failed to send OTP.");
+    //   }
+    // } catch (error) {
+    //   console.error("Error sending OTP:", error.response || error); // Detailed Error
+    //   setErrorMessage(
+    //     error.response?.data?.message || "An error occurred while sending OTP."
+    //   );
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   // const sendOtp = async () => {
@@ -188,7 +227,7 @@ const LoginForm = ({ setLoginComleted }) => {
         console.log("Mobile OTP Request:", mobileOtpRequest);
   
         const mobileOtpResponse = await axios.post(
-          "http://localhost:8081/api/verify/mobile/verify-otp",
+          `${BASE_URL}/api/verify/mobile/verify-otp`,
           mobileOtpRequest,
           { withCredentials: true }
         );
@@ -227,7 +266,7 @@ const LoginForm = ({ setLoginComleted }) => {
         console.log("Aadhaar OTP Request Body:", requestBody);
   
         const response = await axios.post(
-          "http://localhost:8081/api/user/submit-aadhaar-otp",
+          `${BASE_URL}/api/user/submit-aadhaar-otp`,
           requestBody,
           { withCredentials: true }
         );

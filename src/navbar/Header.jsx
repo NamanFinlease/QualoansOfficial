@@ -19,6 +19,7 @@ import { keyframes } from '@mui/system';
 
 import logo from '../assets/image/Artboard 1.webp'; // Adjust the path based on your structure
 import Cookies from 'js-cookie'; // Ensure this is installed and imported
+import { BASE_URL } from '../baseURL';
 
 const blinking = keyframes`
   0% { background-color: gray; color: white; }
@@ -53,7 +54,7 @@ const Header = () => {
       //   return;
       // } else {
         // Make the API call before redirecting to the login form
-        const response = await fetch('http://localhost:8081/api', {
+        const response = await fetch(`${BASE_URL}/api`, {
           method: 'GET', // or 'POST', depending on your API
           headers: {
             'Content-Type': 'application/json',
@@ -64,7 +65,7 @@ const Header = () => {
         if (response.isUserAuthentic) {
           // redirect logic dashboard
 
-          window.location.href = '/dashboard';
+          window.location.href = '/ourjourney';
 
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -167,7 +168,7 @@ const Header = () => {
             </MenuItem>
             <MenuItem onClick={handleApplyNowClick}>
               <Link to="/apply-now" onClick={scrollToTop} style={{ color: '#0b2747', display: 'flex', alignItems: 'center' }}>
-                <ApplyNowIcon sx={{ mr: 1 }} /> Apply Now
+                <ApplyNowIcon sx={{ mr: 1 }} /> Sign In
               </Link>
             </MenuItem>
             
@@ -311,7 +312,7 @@ const Header = () => {
                 },
               }}
             >
-              Apply Now
+              Sign in
             </Button>
    
             </Box>

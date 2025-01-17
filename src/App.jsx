@@ -18,7 +18,7 @@ import LoanCalculator from "./component/LoanCalculator";
 import LoginForm from "./component/LoginForm";
 import Dashboard from "./component/Dashboard";
 import RegistrationSteps from "./component/RegistrationSteps";
-import PersonalInfoPage from "./component/PersonalInfoPage";
+// import PersonalInfoPage from "./component/PersonalInfoPage";
 import LoanApplication from "./component/LoanApplication";
 import Calculator from "./component/Calculator";
 import OurJourney from "./component/OurJourney";
@@ -54,7 +54,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
 
         <Route path="/registration" element={<RegistrationSteps />} />
-        <Route path="/personal-info" element={<PersonalInfoPage />} />
+        {/* <Route path="/personal-info" element={<PersonalInfoPage />} /> */}
         <Route path="/loan-application" element={<LoanApplication />} />
         <Route path="/calculator-loan" element={<Calculator />} />
         <Route path="/ourjourney" element={<OurJourney />} />

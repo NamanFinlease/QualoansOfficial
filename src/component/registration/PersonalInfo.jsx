@@ -74,6 +74,8 @@ const PersonalInfo = ({ onComplete, disabled }) => {
           color: "white",
           "&:hover": { backgroundColor: "#ffcc00" },
         }}
+        disabled={disabled}
+
       >
         Start
       </Button>
@@ -174,7 +176,6 @@ const PersonalInfo = ({ onComplete, disabled }) => {
         }
       );
   
-      console.log("API Response:", updatedDetails); // Log API response to see if the update was successful
   
       if (response.status === 200) {
         Swal.fire("Success", "Details updated successfully!", "success");  // Corrected Swal usage

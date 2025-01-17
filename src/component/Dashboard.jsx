@@ -77,7 +77,6 @@ const Dashboard = () => {
 
 
   const handleLogout = async () => {
-    console.log("HHJJJJJ>>>>>>");
     
     try {
       const response = await fetch(`${BASE_URL}/api/user/logout`, {
@@ -87,11 +86,9 @@ const Dashboard = () => {
         },
         credentials: "include", // Ensures the cookie is sent
       });
-      console.log("responce>>>>",response);
       
   
       if (response.status===200) {
-        console.log("hy responce ");
         
         // removeToken(); // Clear any additional client-side tokens if needed
         MySwal.fire({

@@ -44,9 +44,9 @@ const IncomeInformation = () => {
       
           // Parse the JSON data from the response
           const data = await response.json();
-          console.log(data);
+          // console.log(data);
 
-          console.log(data); // Log the fetched data after it's assigned
+          // console.log(data); // Log the fetched data after it's assigned
       
         //   setIncome(data); // Set the fetched data to the state
         setIncome({

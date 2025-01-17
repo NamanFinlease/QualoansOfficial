@@ -94,8 +94,8 @@ const FrontPage = () => {
             <Box
         sx={{
           marginTop: '-10px',
-          paddingLeft: {md:0,md:'100px'},
-          paddingRight: {md:0,md:'100px'},
+          paddingLeft: {xs:0,md:'100px'},
+          paddingRight: {xs:0,md:'100px'},
           width: '100%',
           textAlign: 'center',
           mx:'90px',

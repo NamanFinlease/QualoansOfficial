@@ -22,16 +22,13 @@ const OurJourney = () => {
 
   const handleContinue = () => {
     if (processType === "registration") {
-      setProcessType("loanApplication"); // Switch to loan application progress after registration
-    } else {
-      navigate("/registration");
+      navigate("/registration"); // Navigate to the registration page
+    } else if (processType === "loan application") {
+      navigate("/loan-application"); // Navigate to the loan application page
     }
   };
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
+ 
   const calculateProgress = () => {
     if (processType === "registration") {
       return 50; // Example progress for registration
@@ -118,37 +115,40 @@ const OurJourney = () => {
                 </Typography>
               </Box>
               <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
+              <Button
+      variant="contained"
+      sx={{
+        background: "#4D4D4E",
+        width: "100%",
+        maxWidth: "150px",
+        borderRadius: "30px",
+        fontWeight: "bold",
+        textTransform: "none",
+      }}
+      onClick={handleContinue}
+    >
+      {processType === "registration" ? "Continue" : "Apply"}
+    </Button>
                 <Button
-                  variant="contained"
-                  sx={{
-                    background: "#4D4D4E",
-                    width: "100%",
-                    maxWidth: "150px",
-                    borderRadius: "30px",
-                    fontWeight: "bold",
-                    textTransform: "none",
-                  }}
-                  onClick={handleContinue}
-                >
-                  {processType === "registration" ? "Continue" : "Finish"}
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={handleRedirectToVideo}
-                  sx={{
-                    width: "100%",
-                    maxWidth: "200px",
-                    borderRadius: "30px",
-                    fontWeight: "bold",
-                    textTransform: "none",
-                    background: "linear-gradient(45deg, #00A5E5, orange)",
-                    "&:hover": {
-                      background: "orange",
-                    },
-                  }}
-                >
-                  Loan Journey
-                </Button>
+              variant="contained"
+              onClick={() => {
+                window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // Replace with your video URL
+              }}
+              sx={{
+                width: "100%",
+                maxWidth: "200px",
+                borderRadius: "30px",
+                fontWeight: "bold",
+                textTransform: "none",
+                background: "linear-gradient(45deg, #00A5E5, orange)",
+                "&:hover": {
+                  background: "orange",
+                },
+              }}
+            >
+              Loan Journey
+            </Button>
+
               </Box>
             </Box>
 

@@ -17,7 +17,7 @@ const PersonalInfoPage = () => {
   const handlePersonalInfoSubmit = async (formData) => {
     try {
       // Simulate an API call
-      const response = await fetch("https://api.example.com/personal-info", {
+      const response = await fetch(`${BASE_URL}/api.example.com/personal-info`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

@@ -9,10 +9,8 @@ import {
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { BASE_URL } from "../baseURL";
-import { getToken } from "../../tokenManager";
 
 const DocumentUploadDetails = () => {
-    const token= getToken();
   // State to manage document upload status
   const [documentStatus, setDocumentStatus] = useState({
     bankStatement: false,
@@ -41,14 +39,12 @@ const DocumentUploadDetails = () => {
             }
           );
           
-        console.log("api working ",response);
         
         if (!response.ok) {
           throw new Error("Failed to fetch document data");
         }
 
         const data = await response.json();
-        console.log("data>>>",data);
         
         setDocumentStatus({
           bankStatement: data?.multipleDocumentsStatus

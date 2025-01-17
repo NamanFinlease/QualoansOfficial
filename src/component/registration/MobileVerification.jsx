@@ -41,6 +41,7 @@ const MobileVerification = ({ onComplete, disabled }) => {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState("mobile"); // "mobile" or "otp"
+  const [isOtpVerified, setIsOtpVerified] = useState(false); // New state to track OTP verification status
 
   const sendOTP = async (mobileNumber) => {
     try {
@@ -53,10 +54,13 @@ const MobileVerification = ({ onComplete, disabled }) => {
           credentials: "include",
         }
       );
+      
       const data = await response.json();
+      console.log("data",data);
+      
       if (data.success) {
         setCurrentStep("otp");
-        Swal.fire("OTP Sent", "Please check your mobile for the OTP.", "success");
+        // Swal.fire("OTP Sent", "Please check your mobile for the OTP.", "success");
       } else {
         throw new Error("Failed to send OTP.");
       }
@@ -78,6 +82,7 @@ const MobileVerification = ({ onComplete, disabled }) => {
       const data = await response.json();
       if (data.success) {
         Swal.fire("Verified", "Mobile number verified successfully!", "success");
+        setIsOtpVerified(true); // Mark OTP as verified
         onComplete(); // Mark the step as completed
         setOpenDialog(false);
       } else {
@@ -90,33 +95,31 @@ const MobileVerification = ({ onComplete, disabled }) => {
     }
   };
 
-  const StepBox = ({ icon, title, description, stepId, onComplete }) => (
+  const StepBox = ({ icon, title, description, stepId, onComplete, isCompleted }) => (
     <Box
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-start", // Align items to the left
-      justifyContent: "center",
-      padding: 2,
-      border: "2px solid",
-      borderRadius: 3,
-      margin: 1,
-      width: "30%", // Adjust width for larger screens
-      minWidth: 200,
-      cursor: "pointer",
-      textAlign: "left", // Left align text
-      color: "white",
-      background: "linear-gradient(45deg, #4D4D4E, orange)",
-     
-      "@media (max-width: 600px)": {
-        // For mobile responsiveness
-        width: "80%", // Make the step box larger on smaller screens
-        margin: "auto", // Center the boxes
-      },
-    }}   
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start", // Align items to the left
+        justifyContent: "center",
+        padding: 2,
+        border: "2px solid",
+        borderRadius: 3,
+        margin: 1,
+        width: "30%", // Adjust width for larger screens
+        minWidth: 200,
+        cursor: "pointer",
+        textAlign: "left", // Left align text
+        color: "white",
+        background: "linear-gradient(45deg, #4D4D4E, orange)",
+        "@media (max-width: 600px)": {
+          // For mobile responsiveness
+          width: "80%", // Make the step box larger on smaller screens
+          margin: "auto", // Center the boxes
+        },
+      }}
     >
-      
-      <IconButton sx={{ color: "white" ,ml:1}}>{icon}</IconButton>
+      <IconButton sx={{ color: "white", ml: 1 }}>{icon}</IconButton>
       <Box sx={{ ml: 2, flexGrow: 1 }}>
         <Typography variant="h6" sx={{ fontWeight: "bold" }}>
           {title}
@@ -129,25 +132,27 @@ const MobileVerification = ({ onComplete, disabled }) => {
         variant="contained"
         onClick={onComplete}
         sx={{
-          ml:2,
+          ml: 2,
           background: "linear-gradient(45deg, #4D4D4E, orange)",
           color: "white",
           "&:hover": { backgroundColor: "#ffcc00" },
         }}
+        disabled={isCompleted} // Disable button if step is completed
       >
         Start
       </Button>
     </Box>
   );
-
+  
   return (
     <>
-      <StepBox
+          <StepBox
         icon={<PhoneIcon />}
         title="Mobile Verification"
         description="Verify your mobile number"
         stepId="mobile"
         onComplete={() => setOpenDialog(true)}
+        isCompleted={isOtpVerified} // Pass OTP verification status
       />
 
       <Dialog

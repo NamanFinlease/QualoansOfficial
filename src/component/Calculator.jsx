@@ -17,7 +17,6 @@ import loanImage from "../assets/image/Untitled design.gif";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
 import Dashboard from "./Dashboard";
-import { getToken } from "../../tokenManager";
 
 const LoanCalculator = () => {
   const [loanAmount, setLoanAmount] = useState(5000);
