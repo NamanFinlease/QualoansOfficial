@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import Employment from "./loan-application/Employment";
@@ -7,6 +7,8 @@ import DocumentationStep from "./loan-application/DocumentationStep";
 import DisbursalBankDetails from "./loan-application/DisbursalBankDetails";
 import LoanCalculator from "./loan-application/CalculateLoan";
 import Dashboard from "./Dashboard";
+import axios from "axios";
+import { BASE_URL } from "../baseURL";
 
 const LoanApplication = () => {
   const [steps, setSteps] = useState({
@@ -16,6 +18,80 @@ const LoanApplication = () => {
     fetchDocument: { completed: false, data: null },
     disbursalBankDetail: { completed: false, data: null },
   });
+  const [loading, setLoading] = useState(true);
+
+  // Fetch progress status from API
+  useEffect(() => {
+    const fetchProgress = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/api/user/getDashboardDetails`,
+          {
+            withCredentials: true,
+          }
+        );
+        if (response.data.success) {
+          const { progressStatus } = response.data;
+
+          // Map progressStatus to step completion
+          const updatedSteps = {
+            loanCalculator: {
+              completed: [
+                "CALCULATED",
+                "EMPLOYMENT_DETAILS_SAVED",
+                "BANK_STATEMENT_FETCHED",
+                "DOCUMENTS_SAVED",
+                "DISBURSAL_DETAILS_SAVED",
+                "COMPLETED",
+              ].includes(progressStatus),
+              data: null,
+            },
+            employmentInfo: {
+              completed: [
+                "EMPLOYMENT_DETAILS_SAVED",
+                "BANK_STATEMENT_FETCHED",
+                "DOCUMENTS_SAVED",
+                "DISBURSAL_DETAILS_SAVED",
+                "COMPLETED",
+              ].includes(progressStatus),
+              data: null,
+            },
+            bankStatement: {
+              completed: [
+                "BANK_STATEMENT_FETCHED",
+                "DOCUMENTS_SAVED",
+                "DISBURSAL_DETAILS_SAVED",
+                "COMPLETED",
+              ].includes(progressStatus),
+              data: null,
+            },
+            fetchDocument: {
+              completed: [
+                "DOCUMENTS_SAVED",
+                "DISBURSAL_DETAILS_SAVED",
+                "COMPLETED",
+              ].includes(progressStatus),
+              data: null,
+            },
+            disbursalBankDetail: {
+              completed: ["DISBURSAL_DETAILS_SAVED", "COMPLETED"].includes(
+                progressStatus
+              ),
+              data: null,
+            },
+          };
+
+          setSteps(updatedSteps);
+        }
+      } catch (error) {
+        console.error("Error fetching progress status:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProgress();
+  }, []);
 
   const calculateProgress = () => {
     const completedSteps = Object.values(steps).filter(
@@ -30,6 +106,10 @@ const LoanApplication = () => {
       [stepName]: { completed: isCompleted, data },
     }));
   };
+
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
 
   return (
     <>
@@ -94,7 +174,7 @@ const LoanApplication = () => {
               onComplete={(data) =>
                 handleStepCompletion("employmentInfo", true, data)
               }
-              disabled={!steps.loanCalculator.completed} // Enable only after LoanCalculator is completed
+              disabled={!steps.loanCalculator.completed}
               prefillData={steps.employmentInfo.data}
             />
           </Grid>
@@ -112,7 +192,7 @@ const LoanApplication = () => {
               onComplete={(data) =>
                 handleStepCompletion("fetchDocument", true, data)
               }
-              disabled={!steps.bankStatement.completed} // Enable only after Employment is completed
+              disabled={!steps.bankStatement.completed}
               prefillData={steps.fetchDocument.data}
             />
           </Grid>
@@ -121,7 +201,7 @@ const LoanApplication = () => {
               onComplete={(data) =>
                 handleStepCompletion("disbursalBankDetail", true, data)
               }
-              disabled={!steps.fetchDocument.completed} // Enable only after Employment is completed
+              disabled={!steps.fetchDocument.completed}
               prefillData={steps.disbursalBankDetail.data}
             />
           </Grid>

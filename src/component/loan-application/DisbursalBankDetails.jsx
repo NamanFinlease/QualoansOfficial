@@ -152,7 +152,6 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
         </IconButton>
         <Box sx={{ textAlign: "left", width: "100%" }}>
           <Typography
-            variant="h6"
             sx={{
               fontWeight: "bold",
               marginBottom: 1,
@@ -182,7 +181,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
             minWidth: 400,
           }}
         >
-          <Typography variant="h6" sx={{ mb: 2 }}>
+          <Typography sx={{ mb: 2 }}>
             Disbursal Bank Details
           </Typography>
           <TextField

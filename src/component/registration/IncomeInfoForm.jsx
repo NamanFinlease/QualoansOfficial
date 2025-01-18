@@ -53,7 +53,7 @@ const StepBox = ({ icon, title, description, disabled, completed, onClick }) => 
       )}
     </IconButton>
     <Box sx={{ ml: 2, flexGrow: 1 }}>
-      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+      <Typography sx={{ fontWeight: "bold" }}>
         {title}
       </Typography>
       <Typography variant="body2">{description}</Typography>
@@ -139,7 +139,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
             mb: "20%",
           }}
         >
-          <Typography variant="h6" sx={{ marginBottom: 2 }}>
+          <Typography sx={{ marginBottom: 2 }}>
             Income Information
           </Typography>
 

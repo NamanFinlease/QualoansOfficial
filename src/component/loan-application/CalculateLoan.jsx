@@ -158,7 +158,6 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
           {isComplete ? <CheckCircleIcon /> : <WorkIcon />}
         </IconButton>
         <Typography
-          variant="h6"
           sx={{
             fontWeight: "bold",
             marginBottom: 1,

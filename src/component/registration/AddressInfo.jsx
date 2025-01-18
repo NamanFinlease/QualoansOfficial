@@ -58,7 +58,7 @@ const StepBox = ({ icon, title, description, onClick, disabled, completed }) => 
       )}
     </IconButton>
     <Box sx={{ ml: 2, flexGrow: 1 }}>
-      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+      <Typography sx={{ fontWeight: "bold" }}>
         {title}
       </Typography>
       <Typography variant="body2">{description}</Typography>
@@ -141,7 +141,7 @@ const AddressInfo = ({ onComplete, disabled }) => {
             marginTop: "5%",
           }}
         >
-          <Typography variant="h6" sx={{ marginBottom: 2 }}>
+          <Typography sx={{ marginBottom: 2 }}>
             Current Residence Information
           </Typography>
 

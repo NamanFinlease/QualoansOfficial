@@ -78,7 +78,6 @@ const DocumentationStep = ({ onComplete, disabled, prefillData }) => {
         </IconButton>
         <Box sx={{ textAlign: "left", width: "100%" }}>
           <Typography
-            variant="h6"
             sx={{
               fontWeight: "bold",
               marginBottom: 1,

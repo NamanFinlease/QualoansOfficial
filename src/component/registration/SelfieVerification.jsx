@@ -80,16 +80,10 @@ const SelfieVerification = ({ onComplete, disabled }) => {
       <IconButton
         sx={{ color: completed ? "white" : disabled ? "grey" : "white", ml: 1 }}
       >
-        {completed ? (
-          <CheckCircle style={{ fontSize: "24px" }} />
-        ) : (
-          icon
-        )}
+        {completed ? <CheckCircle style={{ fontSize: "24px" }} /> : icon}
       </IconButton>
       <Box sx={{ ml: 2, flexGrow: 1 }}>
-        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-          {title}
-        </Typography>
+        <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
         <Typography variant="body2">{description}</Typography>
       </Box>
     </Box>
@@ -170,9 +164,7 @@ const SelfieVerification = ({ onComplete, disabled }) => {
             textAlign: "center",
           }}
         >
-          <Typography variant="h6" sx={{ marginBottom: 2 }}>
-            Upload Your Selfie
-          </Typography>
+          <Typography sx={{ marginBottom: 2 }}>Upload Your Selfie</Typography>
 
           {selfie ? (
             <Typography sx={{ marginBottom: 2 }}>
@@ -187,7 +179,11 @@ const SelfieVerification = ({ onComplete, disabled }) => {
           {error && <Typography color="error">{error}</Typography>}
 
           <Box
-            sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
           >
             <Button
               variant="contained"

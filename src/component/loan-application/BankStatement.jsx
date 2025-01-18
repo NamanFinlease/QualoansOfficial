@@ -87,7 +87,7 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
           ? "#ccc"
           : "linear-gradient(45deg, #4D4D4E, orange)",
         cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
-        height: 180,
+        height: 200,
         width: "100%",
         maxWidth: 350,
         transition: "all 0.3s",
@@ -119,7 +119,6 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
       </IconButton>
       <Box sx={{ textAlign: "left", width: "100%" }}>
         <Typography
-          variant="h6"
           sx={{
             fontWeight: "bold",
             marginBottom: 1,

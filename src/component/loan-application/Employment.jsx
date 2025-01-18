@@ -125,7 +125,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
             ? "#ccc"
             : "linear-gradient(45deg, #4D4D4E, orange)",
           cursor: disabled ? "not-allowed" : "pointer",
-          height: 180,
+          height: 200,
           width: "100%",
           maxWidth: 350,
           transition: "all 0.3s",
@@ -154,7 +154,6 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
           <AccountBalanceIcon />
         </IconButton>
         <Typography
-          variant="h6"
           sx={{
             fontWeight: "bold",
             marginBottom: 1,

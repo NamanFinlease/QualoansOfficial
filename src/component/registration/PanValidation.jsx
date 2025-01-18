@@ -112,7 +112,7 @@ const PANValidation = ({ onComplete, disabled }) => {
     )}
   </IconButton>
   <Box sx={{ ml: 2, flexGrow: 1 }}>
-    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+    <Typography sx={{ fontWeight: "bold" }}>
       PAN Verification
     </Typography>
     <Typography variant="body2" sx={{ color: disabled || isPanValidated ? "white" : "black" }}>

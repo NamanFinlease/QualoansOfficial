@@ -137,7 +137,7 @@ const MobileVerification = ({ onComplete, disabled }) => {
         {completed ? <CheckCircleIcon /> : icon}
       </IconButton>
       <Box sx={{ ml: 2, flexGrow: 1 }}>
-        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+        <Typography sx={{ fontWeight: "bold" }}>
           {title}
         </Typography>
         <Typography variant="body2">{description}</Typography>
