@@ -76,23 +76,26 @@ const DocumentUploadDetails = () => {
 
   return (
     <Box
-      sx={{
-        padding: 3,
-        background: "linear-gradient(90deg, #4D4D4E, orange)",
-        boxShadow: 3,
-        borderRadius: 3,
-        width: "60%",
-        maxWidth: "400px",
-        margin: "auto",
-      }}
-    >
-      <Typography
-        variant="h4"
-        gutterBottom
-        align="center"
-        sx={{ mb: 3, color: "white" ,bgcolor:'black'}}
-      >
-        Document Upload Status
+    sx={{
+      padding: 3,
+      background: "linear-gradient(90deg, #4D4D4E, orange)",
+      boxShadow: 3,
+      ml: { xs: 0, sm: 10 }, // Margin left 0 on smaller screens and 30 on larger ones
+
+      borderRadius: 3,
+      width: { xs: "80%", sm: "53%", md: "60%" }, 
+      height: "auto", // Increased height (auto for dynamic adjustment)
+      maxWidth: "400px", // Set a max width if needed
+      margin: "auto", // Center the box
+    }}
+  >
+    <Typography
+      variant="h4"
+      gutterBottom
+      align="center"
+      sx={{ mb: 3, color: "white" }} // Set text color to white
+    >      
+      Document Upload Status
       </Typography>
 
       <Divider sx={{ marginBottom: 2 }} />

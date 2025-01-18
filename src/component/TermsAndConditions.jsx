@@ -6,7 +6,7 @@ import Header from '../navbar/Header';
 const TermsAndConditions = () => {
     return (
         <div>
-            <Header/>
+            {/* <Header/> */}
             <Box 
                 sx={{ 
                     minHeight: '100vh',

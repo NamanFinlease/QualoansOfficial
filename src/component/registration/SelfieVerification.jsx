@@ -227,7 +227,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import { BASE_URL } from "../../baseURL";
-import yourImage from "../../assets/image/Untitled design (1).gif"; // Import your image
+import yourImage from "../../assets/image/vidu-general-4-2025-01-18T06_43_27Z (1).gif"; // Import your image
 
 const SelfieVerification = ({ onComplete, disabled }) => {
   const [openModal, setOpenModal] = useState(false);

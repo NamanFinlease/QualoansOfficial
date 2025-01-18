@@ -129,9 +129,9 @@ const Dashboard = () => {
         <img src={logo} alt="Logo" style={{ height: 40, marginRight: 16 }} />
         
         {/* Right-aligned content */}
-        <Box sx={{ display: "flex", alignItems: "center", marginLeft: "auto" }}>
-          <Typography sx={{ marginRight: 2 }}>Hi!!</Typography>
-          <Typography variant="h6" sx={{ marginRight: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", marginLeft: "auto",marginRight:{xs:4,md:0}, }}>
+          {/* <Typography sx={{ marginRight: 2 }}>Hi!!</Typography> */}
+          <Typography sx={{ marginRight: 2 }}>
             {loading ? "Loading..." : profileData.name}
           </Typography>
           <Avatar

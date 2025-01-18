@@ -17,7 +17,7 @@ const AboutUs = () => {
 
   return (
     <>
-    <Header /> 
+    {/* <Header />  */}
     
     <Box
       sx={{

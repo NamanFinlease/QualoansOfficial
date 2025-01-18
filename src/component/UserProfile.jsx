@@ -84,7 +84,7 @@ const UserProfile = () => {
         variant="h4"
         gutterBottom
         align="center"
-        sx={{ mb: 3, color: "white", bgcolor: 'black' }}
+        sx={{ mb: 3, color: "white" }}
       >
         User Profile
       </Typography>

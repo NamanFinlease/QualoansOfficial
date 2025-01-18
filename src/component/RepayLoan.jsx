@@ -9,7 +9,7 @@ import Header from '../navbar/Header';
 const RepayLoan = () => {
   return (
     <>
-    <Header/>
+    {/* <Header/> */}
 
     <Box 
       sx={{ 

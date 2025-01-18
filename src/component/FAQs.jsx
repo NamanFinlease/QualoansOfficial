@@ -27,7 +27,7 @@ const FAQs = () => {
 
     return (
         <>
-        <Header/>
+        {/* <Header/> */}
         <Box
             sx={{
                 padding: 4,

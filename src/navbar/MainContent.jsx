@@ -11,7 +11,7 @@ function MainContent() {
  
   return (
     <div>
-            <Header /> {/* If you want Header to be shown on all pages */}
+            {/* <Header /> If you want Header to be shown on all pages */}
 
       <FrontPage/>
       <WhoWeAre/>

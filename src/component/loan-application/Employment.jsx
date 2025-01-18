@@ -12,8 +12,10 @@ import {
   IconButton,
 } from "@mui/material";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 import { BASE_URL } from "../../baseURL";
+import Swal from "sweetalert2";
 
 const Employment = ({ onComplete, disabled, prefillData }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -69,7 +71,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
         !formValues.designation ||
         !formValues.officeEmail
       ) {
-        alert("All fields are required.");
+        Swal.fire("All fields are required.");
         return;
       }
 
@@ -88,7 +90,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
       );
 
       if (response.status === 200) {
-        alert("Employment information submitted successfully!");
+        Swal.fire("Employment information submitted successfully!");
         setStepCompleted(true);
         setOpenModal(false);
 
@@ -96,10 +98,10 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
           onComplete(apiData); // Pass data back to the parent
         }
       } else {
-        alert("Error submitting employment information.");
+        Swal.fire("Error submitting employment information.");
       }
     } catch (error) {
-      alert("An error occurred while submitting the data.");
+      Swal.fire("An error occurred while submitting the data.");
       console.error("Error:", error);
     }
   };
@@ -123,35 +125,42 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
           borderRadius: 3,
           background: disabled
             ? "#ccc"
+            : stepCompleted
+            ? "green" // Change the background color to green when the step is completed
             : "linear-gradient(45deg, #4D4D4E, orange)",
-          cursor: disabled ? "not-allowed" : "pointer",
-          height: 200,
-          width: "100%",
+          cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
+          height: 150,
+          width: "1o0%",
           maxWidth: 350,
           transition: "all 0.3s",
-          boxShadow: stepCompleted
-            ? "0px 4px 15px rgba(0, 123, 255, 0.3)"
-            : "0px 2px 8px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
           "&:hover": {
-            backgroundColor: disabled ? "#ccc" : "orange",
-            color: "white",
+            backgroundColor: disabled
+              ? "#ccc"
+              : stepCompleted
+              ? "green" // Keep the green background on hover if the step is completed
+              : "orange",
+            color: disabled ? "white" : "black",
             transform: disabled ? "none" : "scale(1.03)",
           },
         }}
         onClick={openEmploymentModal}
       >
-        <IconButton
-          disabled={stepCompleted || disabled}
+               <IconButton
           sx={{
             marginBottom: 1,
-            backgroundColor: "#4D4D4E",
             color: "white",
             "&:hover": {
               backgroundColor: "white",
             },
           }}
+          disabled={disabled}
         >
-          <AccountBalanceIcon />
+          {stepCompleted ? (
+            <CheckCircleIcon sx={{ color: "white" }} />
+          ) : (
+        
+          <AccountBalanceIcon />)}
         </IconButton>
         <Typography
           sx={{

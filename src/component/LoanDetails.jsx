@@ -93,7 +93,7 @@ const token = getToken();
       boxShadow: 3,
       borderRadius: 3,
 
-      width: "60%", // Decreased width (can adjust as needed)
+      width: "100%", // Decreased width (can adjust as needed)
       height: "auto", // Increased height (auto for dynamic adjustment)
       maxWidth: "400px", // Set a max width if needed
       margin: "auto", // Center the box
@@ -103,7 +103,7 @@ const token = getToken();
       variant="h4"
       gutterBottom
       align="center"
-      sx={{ mb: 3, color: "white",bgcolor:'black' }} // Set text color to white
+      sx={{ mb: 3, color: "white" }} // Set text color to white
     >
       Loan Information
     </Typography>

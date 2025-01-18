@@ -110,7 +110,7 @@ const PrivacyPolicy = () => {
 
     return (
         <div ref={policyRef}>
-            <Header/>
+            {/* <Header/> */}
             <Box 
                 sx={{ 
                     minHeight: '100vh',

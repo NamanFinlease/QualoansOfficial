@@ -16,12 +16,16 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import SweetAlert from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { BASE_URL } from "../../baseURL";
+import CompletionImage from "../../assets/image/vidu-general-4-2025-01-18T06_43_27Z (1).gif";
+import { useNavigate } from "react-router-dom";
 
 const MySwal = withReactContent(SweetAlert);
 
 const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
   const [stepCompleted, setStepCompleted] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [completionModalOpen, setCompletionModalOpen] = useState(false); // For the new modal
+  const navigate = useNavigate(); // To navigate to other pages
   const [formValues, setFormValues] = useState({
     accountNumber: prefillData?.accountNumber || "",
     confirmAccountNo: prefillData?.confirmAccountNo || "",
@@ -32,7 +36,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
 
   useEffect(() => {
     if (stepCompleted) {
-      onComplete(formValues); // Pass form values to the parent when the step is completed
+      onComplete(formValues);
     }
   }, [stepCompleted, formValues, onComplete]);
 
@@ -45,14 +49,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
     const { accountNumber, confirmAccountNo, ifscCode, bankName, accountType } =
       formValues;
 
-    // Validation
-    if (
-      !accountNumber ||
-      !confirmAccountNo ||
-      !ifscCode ||
-      !bankName ||
-      !accountType
-    ) {
+    if (!accountNumber || !confirmAccountNo || !ifscCode || !bankName || !accountType) {
       MySwal.fire({
         icon: "error",
         title: "Oops!",
@@ -85,11 +82,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
       if (response.status === 200) {
         setStepCompleted(true);
         setOpenModal(false);
-        MySwal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Bank details saved successfully!",
-        });
+        setCompletionModalOpen(true); // Open the completion modal
       } else {
         MySwal.fire({
           icon: "error",
@@ -106,6 +99,11 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
     }
   };
 
+  const handleModalClose = () => {
+    setCompletionModalOpen(false);
+    navigate("/ourjourney"); // Navigate to the desired page
+  };
+
   return (
     <>
       <Box
@@ -118,15 +116,21 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
           borderRadius: 3,
           background: disabled
             ? "#ccc"
+            : stepCompleted
+            ? "green"
             : "linear-gradient(45deg, #4D4D4E, orange)",
-          cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
-          height: 180,
+          cursor: disabled ? "not-allowed" : "pointer",
+          height: 150,
           width: "100%",
           maxWidth: 350,
           transition: "all 0.3s",
           boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
           "&:hover": {
-            backgroundColor: disabled ? "#ccc" : "orange",
+            backgroundColor: disabled
+              ? "#ccc"
+              : stepCompleted
+              ? "green"
+              : "orange",
             color: disabled ? "white" : "black",
             transform: disabled ? "none" : "scale(1.03)",
           },
@@ -137,7 +141,6 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
           disabled={disabled || stepCompleted}
           sx={{
             marginBottom: 1,
-            backgroundColor: "#4D4D4E",
             color: "white",
             "&:hover": {
               backgroundColor: "white",
@@ -145,19 +148,13 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
           }}
         >
           {stepCompleted ? (
-            <CheckCircleIcon color="success" />
+            <CheckCircleIcon sx={{ color: "white" }} />
           ) : (
             <AccountBalanceWalletIcon />
           )}
         </IconButton>
         <Box sx={{ textAlign: "left", width: "100%" }}>
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              marginBottom: 1,
-              color: "white",
-            }}
-          >
+          <Typography sx={{ fontWeight: "bold", marginBottom: 1, color: "white" }}>
             Disbursal Bank Details
           </Typography>
           <Typography variant="body2" sx={{ color: "white" }}>
@@ -181,9 +178,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
             minWidth: 400,
           }}
         >
-          <Typography sx={{ mb: 2 }}>
-            Disbursal Bank Details
-          </Typography>
+          <Typography sx={{ mb: 2 }}>Disbursal Bank Details</Typography>
           <TextField
             fullWidth
             label="Account Number"
@@ -234,10 +229,66 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
             <Button variant="outlined" onClick={() => setOpenModal(false)}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleSubmit}>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              sx={{
+                backgroundColor: "orange",
+                "&:hover": {
+                  backgroundColor: "#ff7f00",
+                },
+              }}
+            >
               Submit
             </Button>
           </Box>
+        </Box>
+      </Modal>
+
+      {/* Completion Modal */}
+      <Modal
+        open={completionModalOpen}
+        onClose={handleModalClose}
+        aria-labelledby="loan-completion-modal"
+        aria-describedby="loan-completion-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "white",
+            borderRadius: 4,
+            boxShadow: 24,
+            textAlign: "center",
+          }}
+        >
+          <img
+            src={CompletionImage}
+            alt="Loan Completion"
+            style={{ width: "100%", marginBottom: "20px" }}
+          />
+          <Typography id="loan-completion-modal-description" sx={{ mt: 2 }}>
+            Process is completed! You are eligible for the loan.
+          </Typography>
+          <Button
+            onClick={handleModalClose}
+            sx={{
+              borderRadius: 50,
+              px: 4,
+              mb: 5,
+              mt: 2,
+              backgroundColor: "orange",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#4D4D4E",
+              },
+            }}
+          >
+            Completed
+          </Button>
         </Box>
       </Modal>
     </>

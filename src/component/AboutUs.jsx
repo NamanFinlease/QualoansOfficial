@@ -69,7 +69,7 @@ const AboutUs = () => {
   
   return (
     <>
-    <Header/>
+    {/* <Header/> */}
 
     <Box 
     sx={{ 
@@ -453,7 +453,7 @@ we’re here to ensure that financial hurdles don’t hold you back. With our fu
                   justifyContent: 'center', // Centers horizontally
                   alignItems: 'center', // Centers vertically
                   textAlign: 'center',
-                  alignItems: 'center', // Centers vertically
+                  // alignItems: 'center', // Centers vertically
 
                   maxWidth: { xs: "100%", md: "30%" },
                   height: "100%", // Ensures full height of the container

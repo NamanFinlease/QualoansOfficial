@@ -131,10 +131,10 @@ const DocumentUploadModal = ({ prefillData }) => {
         maxWidth: 900,
         margin: "0 auto",
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-        background: "#4D4D4E",
+        background: "white",
       }}
     >
-      <Typography variant="h5" mb={2} sx={{ color: "white" }}>
+      <Typography variant="h5" mb={2} sx={{ color: "black" }}>
         Upload Documents
       </Typography>
 
@@ -152,12 +152,12 @@ const DocumentUploadModal = ({ prefillData }) => {
             InputLabelProps={{ shrink: true }}
             sx={{
               "& .MuiOutlinedInput-root": {
-                color: "white",
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
+                color: "black",
+                "& fieldset": { borderColor: "black" },
+                "&:hover fieldset": { borderColor: "black" },
               },
-              "& input": { color: "white" },
-              label: { color: "white" },
+              "& input": { color: "black" },
+              label: { color: "black" },
             }}
             onChange={(e) => handleFileChange("salarySlips", e.target.files[0])}
           />
@@ -176,12 +176,12 @@ const DocumentUploadModal = ({ prefillData }) => {
             InputLabelProps={{ shrink: true }}
             sx={{
               "& .MuiOutlinedInput-root": {
-                color: "white",
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
+                color: "black",
+                "& fieldset": { borderColor: "black" },
+                "&:hover fieldset": { borderColor: "black" },
               },
-              "& input": { color: "white" },
-              label: { color: "white" },
+              "& input": { color: "black" },
+              label: { color: "black" },
             }}
             onChange={(e) =>
               handleFileChange("aadhaarFront", e.target.files[0])
@@ -202,12 +202,12 @@ const DocumentUploadModal = ({ prefillData }) => {
             InputLabelProps={{ shrink: true }}
             sx={{
               "& .MuiOutlinedInput-root": {
-                color: "white",
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
+                color: "black",
+                "& fieldset": { borderColor: "black" },
+                "&:hover fieldset": { borderColor: "black" },
               },
-              "& input": { color: "white" },
-              label: { color: "white" },
+              "& input": { color: "black" },
+              label: { color: "black" },
             }}
             onChange={(e) => handleFileChange("aadhaarBack", e.target.files[0])}
           />
@@ -226,12 +226,12 @@ const DocumentUploadModal = ({ prefillData }) => {
             InputLabelProps={{ shrink: true }}
             sx={{
               "& .MuiOutlinedInput-root": {
-                color: "white",
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
+                color: "black",
+                "& fieldset": { borderColor: "black" },
+                "&:hover fieldset": { borderColor: "black" },
               },
-              "& input": { color: "white" },
-              label: { color: "white" },
+              "& input": { color: "black" },
+              label: { color: "black" },
             }}
             onChange={(e) => handleFileChange("panCard", e.target.files[0])}
           />
@@ -249,11 +249,11 @@ const DocumentUploadModal = ({ prefillData }) => {
             InputLabelProps={{ shrink: true }}
             sx={{
               "& .MuiOutlinedInput-root": {
-                color: "white",
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
+                color: "black",
+                "& fieldset": { borderColor: "black" },
+                "&:hover fieldset": { borderColor: "black" },
               },
-              label: { color: "white" },
+              label: { color: "black" },
             }}
           >
             <MenuItem value="">None</MenuItem>
@@ -274,12 +274,12 @@ const DocumentUploadModal = ({ prefillData }) => {
             InputLabelProps={{ shrink: true }}
             sx={{
               "& .MuiOutlinedInput-root": {
-                color: "white",
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
+                color: "black",
+                "& fieldset": { borderColor: "black" },
+                "&:hover fieldset": { borderColor: "black" },
               },
-              "& input": { color: "white" },
-              label: { color: "white" },
+              "& input": { color: "black" },
+              label: { color: "black" },
             }}
             onChange={(e) =>
               handleFileChange("otherDocument", e.target.files[0])
@@ -293,7 +293,7 @@ const DocumentUploadModal = ({ prefillData }) => {
         <Button
           variant="outlined"
           onClick={() => MySwal.close()}
-          sx={{ mr: 2, color: "white", borderColor: "white" }}
+          sx={{ mr: 2, color: "black", borderColor: "black" }}
         >
           Cancel
         </Button>

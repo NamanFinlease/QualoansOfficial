@@ -102,7 +102,7 @@ const BaasicInformation = () => {
       variant="h4"
       gutterBottom
       align="center"
-      sx={{ mb: 3, color: "white",bgcolor:'black' }} // Set text color to white
+      sx={{ mb: 3, color: "white"}} // Set text color to white
     >
       Basic Information
     </Typography>

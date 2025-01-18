@@ -187,7 +187,7 @@ const OurJourney = () => {
         {/* Description Box */}
         <Box
           sx={{
-            marginLeft: { xs: 0, md: "108px" },
+            marginLeft: { xs: 0, md: "280px" },
             transition: "margin-left 0.3s ease",
             mt: 5,
             fontWeight: "800",
@@ -214,121 +214,125 @@ const OurJourney = () => {
 
         {/* Credit Executive Section */}
         <Box
-          sx={{
-            border: "5px solid #4D4D4E",
-            borderTop: "none",
-            borderRight: "none",
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" }, // Stack on small screens
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            background: "linear-gradient(45deg, #4D4D4E, orange)",
-            borderRadius: 5,
-            boxShadow: 3,
-            padding: 2,
-            margin: "auto",
-            maxWidth: 810,
-            mt: 5,
-          }}
-        >
-          <Box sx={{ flex: 1, paddingRight: 2 }}>
-            <Typography
-              variant="h6"
-              gutterBottom
-              sx={{ fontWeight: "bold", color: "white" }}
-            >
-              Credit Executive
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                mt: 2,
-                fontWeight: "bold",
-                marginBottom: 1,
-                fontStyle: "italic",
-                color: "white",
-              }}
-            >
-              Stuck in application at any point? Feel free to call your credit
-              executive.
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ fontWeight: "bold", color: "white", mt: 2 }}
-            >
-              Name: John Doe
-            </Typography>
-            <Typography variant="body2" sx={{ color: "white", mt: 2 }}>
-              Email: johndoe@example.com
-            </Typography>
-            <Typography variant="body2" sx={{ color: "white", mt: 2 }}>
-              Mobile: +91 9876543210
-            </Typography>
+  sx={{
+    border: "5px solid #4D4D4E",
+    borderTop: "none",
+    borderRight: "none",
+    display: "flex",
+    flexDirection: { xs: "column", md: "row" }, // Stack on small, side-by-side on medium+
+    justifyContent: "space-between",
+    alignItems: { xs: "center", md: "flex-start" },
+    background: "linear-gradient(45deg, #4D4D4E, orange)",
+    borderRadius: 5,
+    boxShadow: 3,
+    padding: 2,
+    margin: "auto",
+    maxWidth: 810,
+    mt: 5,
+    gap: { xs: 3, md: 2 }, // Space between content and image
+  }}
+>
+  {/* Text Content Box */}
+  <Box
+    sx={{
+      flex: 1,
+      paddingRight: { md: 2, xs: 0 }, // Adjust padding based on screen size
+      textAlign: { xs: "center", md: "left" },
+    }}
+  >
+    <Typography
+      variant="h6"
+      gutterBottom
+      sx={{ fontWeight: "bold", color: "white" }}
+    >
+      Credit Executive
+    </Typography>
+    <Typography
+      variant="body1"
+      sx={{
+        mt: 2,
+        fontWeight: "bold",
+        marginBottom: 1,
+        fontStyle: "italic",
+        color: "white",
+      }}
+    >
+      Stuck in application at any point? Feel free to call your credit
+      executive.
+    </Typography>
+    <Typography variant="body2" sx={{ fontWeight: "bold", color: "white", mt: 2 }}>
+      Name: John Doe
+    </Typography>
+    <Typography variant="body2" sx={{ color: "white", mt: 2 }}>
+      Email: johndoe@example.com
+    </Typography>
+    <Typography variant="body2" sx={{ color: "white", mt: 2 }}>
+      Mobile: +91 9876543210
+    </Typography>
 
-            <Box sx={{ marginTop: 2, display: "flex", gap: 2, mt: 2 }}>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  paddingX: 4,
+    {/* Buttons */}
+    <Box sx={{ marginTop: 2, display: "flex", justifyContent: { xs: "center", md: "flex-start" }, gap: 2 }}>
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{
+          paddingX: 4,
+          borderRadius: "30px",
+          fontWeight: "bold",
+          textTransform: "none",
+          background: "linear-gradient(45deg, #00A5E5, orange)",
+          "&:hover": {
+            background: "orange",
+          },
+        }}
+        onClick={() => window.location.href = "tel:+919876543210"}
+      >
+        Call Us
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        sx={{
+          paddingX: 4,
+          borderRadius: "30px",
+          fontWeight: "bold",
+          textTransform: "none",
+          border: "2px solid #4D4D4E",
+          color: "white",
+        }}
+        onClick={() => window.location.href = "mailto:johndoe@example.com"}
+      >
+        Email Us
+      </Button>
+    </Box>
+  </Box>
 
-                  borderRadius: "30px",
-                  fontWeight: "bold",
-                  textTransform: "none",
-                  background: "linear-gradient(45deg, #00A5E5, orange)",
-                  "&:hover": {
-                    background: "orange",
-                  },
-                }}
-                onClick={() => (window.location.href = "tel:+919876543210")}
-              >
-                Call Us
-              </Button>
-              <Button
-                variant="outlined"
-                color="primary"
-                sx={{
-                  paddingX: 4,
-                  borderRadius: "30px",
-                  fontWeight: "bold",
-                  textTransform: "none",
-                  border: "2px solid #4D4D4E",
-                  color: "white",
-                }}
-                onClick={() =>
-                  (window.location.href = "mailto:johndoe@example.com")
-                }
-              >
-                Email Us
-              </Button>
-            </Box>
-          </Box>
+  {/* Right Image Box */}
+  <Box
+    sx={{
+      marginLeft: { md: 2, xs: 0 },
+      borderTopLeftRadius: 2,
+      borderBottomRightRadius: 2,
+      overflow: "hidden",
+      width: { xs: "100%", md: 250 },
+      height: "auto",
+      display: "flex",
+      justifyContent: "center",
+    }}
+  >
+    <img
+      src={creditExecutiveImage}
+      alt="Credit Executive"
+      style={{
+        width: "100%",
+        height: "auto",
+        borderRadius: "8px",
+        objectFit: "cover",
+      }}
+    />
+  </Box>
+</Box>
 
-          {/* Right Image Box */}
-          <Box
-            sx={{
-              marginLeft: { sm: 2, xs: 0 },
-              borderTopLeftRadius: 2,
-              borderBottomRightRadius: 2,
-              overflow: "hidden",
-              width: { xs: "100%", sm: 250 },
-              height: "auto",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <img
-              src={creditExecutiveImage}
-              alt="Credit Executive"
-              style={{
-                width: "100%",
-                height: "auto",
-                borderRadius: "8px",
-                objectFit: "cover",
-              }}
-            />
-          </Box>
-        </Box>
       </Box>
     </div>
   );

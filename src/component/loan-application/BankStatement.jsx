@@ -75,46 +75,51 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
 
   // Render the UI for the bank statement upload step
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        padding: 3,
-        border: "1px solid #ddd",
-        borderRadius: 3,
-        background: disabled
-          ? "#ccc"
-          : "linear-gradient(45deg, #4D4D4E, orange)",
-        cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
-        height: 200,
-        width: "100%",
-        maxWidth: 350,
-        transition: "all 0.3s",
-        boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-        "&:hover": {
-          backgroundColor: disabled ? "#ccc" : "orange",
-          color: disabled ? "white" : "black",
-          transform: disabled ? "none" : "scale(1.03)",
-        },
-      }}
-      onClick={!disabled ? handleBankStatementUpload : null}
-    >
-      <IconButton
-        disabled={disabled || stepCompleted}
+      <Box
         sx={{
-          marginBottom: 1,
-          backgroundColor: "#4D4D4E",
-          color: "white",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          padding: 3,
+          border: "1px solid #ddd",
+          borderRadius: 3,
+          background: disabled
+            ? "#ccc"
+            : stepCompleted
+            ? "green" // Change the background color to green when the step is completed
+            : "linear-gradient(45deg, #4D4D4E, orange)",
+          cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
+          height: 150,
+          width: "1o0%",
+          maxWidth: 350,
+          transition: "all 0.3s",
+          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
           "&:hover": {
-            backgroundColor: "white",
+            backgroundColor: disabled
+              ? "#ccc"
+              : stepCompleted
+              ? "green" // Keep the green background on hover if the step is completed
+              : "orange",
+            color: disabled ? "white" : "black",
+            transform: disabled ? "none" : "scale(1.03)",
           },
         }}
-      >
-        {stepCompleted ? (
-          <CheckCircleIcon color="success" />
-        ) : (
-          <DescriptionIcon />
+        onClick={!disabled ? handleBankStatementUpload : null}
+    >
+    <IconButton
+          sx={{
+            marginBottom: 1,
+            color: "white",
+            "&:hover": {
+              backgroundColor: "white",
+            },
+          }}
+          disabled={disabled}
+        >
+          {stepCompleted ? (
+            <CheckCircleIcon sx={{ color: "white" }} />
+          ) : (
+            <DescriptionIcon />
         )}
       </IconButton>
       <Box sx={{ textAlign: "left", width: "100%" }}>

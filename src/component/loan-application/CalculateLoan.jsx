@@ -21,7 +21,6 @@ import WorkIcon from "@mui/icons-material/Work";
 import loanImage from "../../assets/image/Untitled design.gif";
 import axios from "axios";
 import { BASE_URL } from "../../baseURL";
-import Dashboard from "../Dashboard";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
@@ -30,12 +29,11 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
   const [interestRate, setInterestRate] = useState(0.5);
   const [totalAmount, setTotalAmount] = useState(0);
   const [purpose, setPurpose] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // Loading state for API call
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
-  const [isComplete, setIsComplete] = useState(false); // State to track completion
+  const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isComplete, setIsComplete] = useState(false); // Add this state for completion tracking
 
   const openLoanCalculatorModal = () => {
-    // setIsModalOpen(true);
     if (!disabled) {
       setIsModalOpen(true);
     }
@@ -74,7 +72,6 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
     };
 
     try {
-      //   setIsLoading(true);
       const response = await axios.post(
         `${BASE_URL}/api/loanApplication/applyLoan`,
         payload,
@@ -89,6 +86,9 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
       console.log("Loan Application Response:", response);
       onComplete({ success: true, data: payload });
       setIsModalOpen(false);
+
+      // Set the box color to green after successful submission
+      setIsComplete(true);
 
       Swal.fire({
         icon: "success",
@@ -113,8 +113,7 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
       title: "Process Cancelled",
       text: "Your loan application process has been cancelled.",
     }).then(() => {
-      setIsModalOpen(false); // Close modal when canceled
-      console.log("Modal Closed: ", isModalOpen);
+      setIsModalOpen(false);
     });
   };
 
@@ -130,66 +129,52 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
           borderRadius: 3,
           background: disabled
             ? "#ccc"
+            : isComplete
+            ? "green" // Change the background to green when the loan process is complete
             : "linear-gradient(45deg, #4D4D4E, orange)",
           cursor: disabled ? "not-allowed" : "pointer",
-          height: 200,
+          height: 150,
           width: "100%",
           maxWidth: 350,
           transition: "all 0.3s",
           boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
           "&:hover": {
-            backgroundColor: !disabled ? "orange" : undefined,
-            color: !disabled ? "white" : undefined,
-            transform: !disabled ? "scale(1.03)" : undefined,
+            backgroundColor: disabled
+              ? "#ccc"
+              : isComplete
+              ? "green"
+              : "orange",
+            color: disabled ? "white" : "black",
+            transform: disabled ? "none" : "scale(1.03)",
           },
         }}
-        onClick={openLoanCalculatorModal}
+        onClick={!disabled ? openLoanCalculatorModal : null}
       >
         <IconButton
+          disabled={disabled || isComplete}
           sx={{
             marginBottom: 1,
-            backgroundColor: isComplete ? "green" : "#4D4D4E",
             color: "white",
             "&:hover": {
-              backgroundColor: isComplete ? "darkgreen" : "white",
+              backgroundColor: "white",
             },
           }}
         >
-          {isComplete ? <CheckCircleIcon /> : <WorkIcon />}
+          {isComplete ? <CheckCircleIcon sx={{ color: "white" }} /> : <WorkIcon />}
         </IconButton>
-        <Typography
-          sx={{
-            fontWeight: "bold",
-            marginBottom: 1,
-            color: "white",
-          }}
-        >
+        <Typography sx={{ fontWeight: "bold", marginBottom: 1, color: "white" }}>
           Open Loan Calculator
         </Typography>
         <Typography variant="body2" sx={{ color: "white" }}>
           Choose the loan amount and tenure
         </Typography>
       </Box>
-      {/* </Grid>
-            </Grid> */}
 
       {/* Modal for Loan Calculator */}
-      <Dialog
-        open={isModalOpen}
-        onClose={closeLoanCalculatorModal}
-        fullWidth
-        maxWidth="md"
-      >
-        {/* <DialogTitle>Loan Calculator</DialogTitle> */}
+      <Dialog open={isModalOpen} onClose={closeLoanCalculatorModal} fullWidth maxWidth="md">
         <DialogContent>
-          {/* <Dashboard /> */}
           <Container maxWidth="lg">
-            <Typography
-              variant="h4"
-              align="center"
-              gutterBottom
-              sx={{ fontWeight: "bold", color: "#444", marginBottom: 1 }}
-            >
+            <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: "bold", color: "#444", marginBottom: 1 }}>
               Loan Calculator
             </Typography>
 
@@ -205,17 +190,8 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                 boxShadow: "0px 2px 2px rgba(0, 0, 0, 0.1)",
               }}
             >
-              <Box
-                component={Paper}
-                elevation={4}
-                sx={{
-                  flex: 1,
-                  padding: 3,
-                  borderRadius: "4px",
-                  background: "#ffffff",
-                  boxShadow: "0px 0px 0px rgba(255, 255, 255, 0.7)",
-                }}
-              >
+              {/* Loan Image and Details */}
+              <Box component={Paper} elevation={4} sx={{ flex: 1, padding: 3, borderRadius: "4px", background: "#ffffff", boxShadow: "0px 0px 0px rgba(255, 255, 255, 0.7)" }}>
                 <img
                   src={loanImage}
                   alt="Loan"
@@ -227,14 +203,7 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                     marginBottom: "12px",
                   }}
                 />
-                <Typography
-                  sx={{
-                    fontWeight: "bold",
-                    fontSize: "1.2rem",
-                    color: "#333",
-                    marginBottom: 2,
-                  }}
-                >
+                <Typography sx={{ fontWeight: "bold", fontSize: "1.2rem", color: "#333", marginBottom: 2 }}>
                   Get quick loans with transparent processes.
                 </Typography>
                 <Box
@@ -252,32 +221,16 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                   Processing Fee: 10%
                 </Box>
 
-                <Typography
-                  sx={{ marginTop: 2, color: "#555", textAlign: "center" }}
-                >
-                  Experience fast approvals and easy repayments with flexible
-                  terms.
+                <Typography sx={{ marginTop: 2, color: "#555", textAlign: "center" }}>
+                  Experience fast approvals and easy repayments with flexible terms.
                 </Typography>
               </Box>
 
-              <Box
-                component={Paper}
-                elevation={4}
-                sx={{
-                  flex: 1,
-                  padding: 3,
-                  borderRadius: "4px",
-                  background: "#f8f9fa",
-                  minHeight: "300px",
-                }}
-              >
+              {/* Loan Calculator Inputs */}
+              <Box component={Paper} elevation={4} sx={{ flex: 1, padding: 3, borderRadius: "4px", background: "#f8f9fa", minHeight: "300px" }}>
                 <FormControl required fullWidth sx={{ marginBottom: 3 }}>
                   <InputLabel>Purpose of Loan</InputLabel>
-                  <Select
-                    value={purpose}
-                    label="Purpose of Loan"
-                    onChange={(e) => setPurpose(e.target.value)}
-                  >
+                  <Select value={purpose} label="Purpose of Loan" onChange={(e) => setPurpose(e.target.value)}>
                     <MenuItem value="TRAVEL">TRAVEL</MenuItem>
                     <MenuItem value="MEDICAL">MEDICAL</MenuItem>
                     <MenuItem value="ACADEMICS">ACADEMICS</MenuItem>
@@ -292,103 +245,40 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                   <Typography variant="subtitle1" gutterBottom>
                     Loan Amount (₹)
                   </Typography>
-                  <Slider
-                    value={loanAmount}
-                    min={5000}
-                    max={100000}
-                    onChange={(e, newValue) => setLoanAmount(newValue)}
-                    valueLabelDisplay="auto"
-                    sx={{ color: "#fc8403" }}
-                  />
+                  <Slider value={loanAmount} min={5000} max={100000} onChange={(e, newValue) => setLoanAmount(newValue)} valueLabelDisplay="auto" sx={{ color: "#fc8403" }} />
                 </Box>
 
                 <Box sx={{ marginBottom: 3 }}>
                   <Typography variant="subtitle1" gutterBottom>
                     Loan Tenure (Days)
                   </Typography>
-                  <Slider
-                    value={loanTenure}
-                    min={1}
-                    max={90}
-                    onChange={(e, newValue) => setLoanTenure(newValue)}
-                    valueLabelDisplay="auto"
-                    sx={{ color: "#fc8403" }}
-                  />
+                  <Slider value={loanTenure} min={1} max={90} onChange={(e, newValue) => setLoanTenure(newValue)} valueLabelDisplay="auto" sx={{ color: "#fc8403" }} />
                 </Box>
 
                 <Box sx={{ marginBottom: 3 }}>
                   <Typography variant="subtitle1" gutterBottom>
                     Interest Rate (%)
                   </Typography>
-                  <Slider
-                    value={interestRate}
-                    min={0.5}
-                    max={2}
-                    step={0.1}
-                    onChange={(e, newValue) => setInterestRate(newValue)}
-                    valueLabelDisplay="auto"
-                    sx={{ color: "#fc8403" }}
-                  />
+                  <Slider value={interestRate} min={0.5} max={2} step={0.1} onChange={(e, newValue) => setInterestRate(newValue)} valueLabelDisplay="auto" sx={{ color: "#fc8403" }} />
                 </Box>
 
                 <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    <Paper
-                      elevation={2}
-                      sx={{
-                        padding: 2,
-                        borderRadius: "10px",
-                        textAlign: "center",
-                        backgroundColor: "#fcf8e3",
-                      }}
-                    >
-                      <Typography>Total Loan</Typography>
-                      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                        ₹{totalAmount.toFixed(2)}
-                      </Typography>
-                    </Paper>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        borderRadius: "80px",
-                        background: "#ff5722",
-                        color: "white",
-                        fontWeight: "bold",
-                        fontSize: { xs: "14px", sm: "16px" },
-                        padding: { xs: "8px 16px", sm: "6px 30px" },
-                        "&:hover": {
-                          backgroundColor: "black",
-                        },
-                      }}
-                      onClick={handleSubmit}
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Processing..." : "Submit"}
-                    </Button>
-
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        borderRadius: "80px",
-
-                        color: "#ff5722",
-                        fontWeight: "bold",
-                        fontSize: { xs: "14px", sm: "16px" },
-                        padding: { xs: "8px 16px", sm: "6px 30px" },
-                        marginTop: 2,
-                        "&:hover": {
-                          backgroundColor: "#fc8403",
-                          color: "white",
-                        },
-                      }}
-                      onClick={closeLoanCalculatorModal}
-                    >
-                      Cancel
-                    </Button>
+                  <Grid item xs={6}>
+                    <Typography variant="h6">Total Amount Payable (₹)</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: "bold", fontSize: "1.2rem" }}>
+                      {totalAmount.toFixed(2)}
+                    </Typography>
                   </Grid>
                 </Grid>
+
+                <Box sx={{ marginTop: 3, display: "flex", justifyContent: "space-between" }}>
+                  <Button variant="contained" color="error" onClick={cancelLoanApplication}>
+                    Cancel
+                  </Button>
+                  <Button variant="contained" onClick={handleSubmit} disabled={isLoading}>
+                    {isLoading ? "Submitting..." : "Submit"}
+                  </Button>
+                </Box>
               </Box>
             </Box>
           </Container>

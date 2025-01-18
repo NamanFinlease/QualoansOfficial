@@ -95,11 +95,13 @@ export default function UserPreview() {
     <Typography
       variant="h4"
       gutterBottom
-      align="center"
+      align="left"
       sx={{
         color: "#f5f5f5",
         mb: 2,
-        bgcolor: "black",
+        mt:2,
+        ml:2,
+        // bgcolor: "black",
       }}
     >
       User Preview
@@ -141,6 +143,7 @@ export default function UserPreview() {
   {/* Right Side: Active Component */}
   <Box
     sx={{
+      marginRight:20,
       flex: 1, // Take up more space
       marginTop: 3,
       '@media (max-width: 600px)': {
