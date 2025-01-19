@@ -31,57 +31,59 @@ const LoanApplication = () => {
           }
         );
         if (response.data.success) {
-          const { progressStatus } = response.data;
+          if (!response.data.isRegistration) {
+            const { progressStatus } = response.data;
 
-          // Map progressStatus to step completion
-          const updatedSteps = {
-            loanCalculator: {
-              completed: [
-                "CALCULATED",
-                "EMPLOYMENT_DETAILS_SAVED",
-                "BANK_STATEMENT_FETCHED",
-                "DOCUMENTS_SAVED",
-                "DISBURSAL_DETAILS_SAVED",
-                "COMPLETED",
-              ].includes(progressStatus),
-              data: null,
-            },
-            employmentInfo: {
-              completed: [
-                "EMPLOYMENT_DETAILS_SAVED",
-                "BANK_STATEMENT_FETCHED",
-                "DOCUMENTS_SAVED",
-                "DISBURSAL_DETAILS_SAVED",
-                "COMPLETED",
-              ].includes(progressStatus),
-              data: null,
-            },
-            bankStatement: {
-              completed: [
-                "BANK_STATEMENT_FETCHED",
-                "DOCUMENTS_SAVED",
-                "DISBURSAL_DETAILS_SAVED",
-                "COMPLETED",
-              ].includes(progressStatus),
-              data: null,
-            },
-            fetchDocument: {
-              completed: [
-                "DOCUMENTS_SAVED",
-                "DISBURSAL_DETAILS_SAVED",
-                "COMPLETED",
-              ].includes(progressStatus),
-              data: null,
-            },
-            disbursalBankDetail: {
-              completed: ["DISBURSAL_DETAILS_SAVED", "COMPLETED"].includes(
-                progressStatus
-              ),
-              data: null,
-            },
-          };
+            // Map progressStatus to step completion
+            const updatedSteps = {
+              loanCalculator: {
+                completed: [
+                  "CALCULATED",
+                  "EMPLOYMENT_DETAILS_SAVED",
+                  "BANK_STATEMENT_FETCHED",
+                  "DOCUMENTS_SAVED",
+                  "DISBURSAL_DETAILS_SAVED",
+                  "COMPLETED",
+                ].includes(progressStatus),
+                data: null,
+              },
+              employmentInfo: {
+                completed: [
+                  "EMPLOYMENT_DETAILS_SAVED",
+                  "BANK_STATEMENT_FETCHED",
+                  "DOCUMENTS_SAVED",
+                  "DISBURSAL_DETAILS_SAVED",
+                  "COMPLETED",
+                ].includes(progressStatus),
+                data: null,
+              },
+              bankStatement: {
+                completed: [
+                  "BANK_STATEMENT_FETCHED",
+                  "DOCUMENTS_SAVED",
+                  "DISBURSAL_DETAILS_SAVED",
+                  "COMPLETED",
+                ].includes(progressStatus),
+                data: null,
+              },
+              fetchDocument: {
+                completed: [
+                  "DOCUMENTS_SAVED",
+                  "DISBURSAL_DETAILS_SAVED",
+                  "COMPLETED",
+                ].includes(progressStatus),
+                data: null,
+              },
+              disbursalBankDetail: {
+                completed: ["DISBURSAL_DETAILS_SAVED", "COMPLETED"].includes(
+                  progressStatus
+                ),
+                data: null,
+              },
+            };
 
-          setSteps(updatedSteps);
+            setSteps(updatedSteps);
+          }
         }
       } catch (error) {
         console.error("Error fetching progress status:", error);

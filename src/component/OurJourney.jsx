@@ -1,16 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Button, LinearProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import creditExecutiveImage from "../assets/image/1.gif";
-import journeryprocess from '../assets/image/Untitled design (1).gif'
+import journeryprocess from "../assets/image/Untitled design (1).gif";
 import Dashboard from "./Dashboard";
+import axios from "axios";
+import { BASE_URL } from "../baseURL";
 
 const OurJourney = () => {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Dashboard");
   const [isVideoPage, setIsVideoPage] = useState(false);
-  const [processType, setProcessType] = useState("registration"); // Track the current process
-  const navigate = useNavigate();
+  const [isRegistration, setRegistration] = useState(true); // Track the current process
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/api/user/getDashboardDetails`,
+          {
+            withCredentials: true,
+          }
+        );
+        if (response.data.success) {
+          setRegistration(response.data.isRegistration);
+        }
+      } catch (error) {
+        console.error("Error fetching dashboard details:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleRedirectToVideo = () => {
     setIsVideoPage(true);
@@ -21,21 +43,11 @@ const OurJourney = () => {
   };
 
   const handleContinue = () => {
-    if (processType === "registration") {
+    if (isRegistration) {
       navigate("/registration"); // Navigate to the registration page
-    } else if (processType === "loan application") {
+    } else {
       navigate("/loan-application"); // Navigate to the loan application page
     }
-  };
-
- 
-  const calculateProgress = () => {
-    if (processType === "registration") {
-      return 50; // Example progress for registration
-    } else if (processType === "loanApplication") {
-      return 80; // Example progress for loan application
-    }
-    return 0;
   };
 
   return (
@@ -96,59 +108,52 @@ const OurJourney = () => {
                 }}
               >
                 <Typography variant="h6" gutterBottom>
-                  {processType === "registration" ? "Registration Process" : "Loan Application Progress"}
-                </Typography>
-                <LinearProgress
-                  variant="determinate"
-                  value={calculateProgress()}
-                  sx={{
-                    height: 30,
-                    borderRadius: 5,
-                    "& .MuiLinearProgress-bar": {
-                      backgroundColor: "#4D4D4E",
-                    },
-                    marginBottom: 2,
-                  }}
-                />
-                <Typography variant="body2">
-                  Progress: {calculateProgress()}% completed.
+                  {isRegistration
+                    ? "Complete your Registration"
+                    : "Complete your Loan Application"}
                 </Typography>
               </Box>
-              <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
-              <Button
-      variant="contained"
-      sx={{
-        background: "#4D4D4E",
-        width: "100%",
-        maxWidth: "150px",
-        borderRadius: "30px",
-        fontWeight: "bold",
-        textTransform: "none",
-      }}
-      onClick={handleContinue}
-    >
-      {processType === "registration" ? "Continue" : "Apply"}
-    </Button>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: { xs: "column", sm: "row" },
+                  gap: 2,
+                }}
+              >
                 <Button
-              variant="contained"
-              onClick={() => {
-                window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // Replace with your video URL
-              }}
-              sx={{
-                width: "100%",
-                maxWidth: "200px",
-                borderRadius: "30px",
-                fontWeight: "bold",
-                textTransform: "none",
-                background: "linear-gradient(45deg, #00A5E5, orange)",
-                "&:hover": {
-                  background: "orange",
-                },
-              }}
-            >
-              Loan Journey
-            </Button>
-
+                  variant="contained"
+                  sx={{
+                    background: "#4D4D4E",
+                    width: "100%",
+                    maxWidth: "150px",
+                    borderRadius: "30px",
+                    fontWeight: "bold",
+                    textTransform: "none",
+                  }}
+                  onClick={handleContinue}
+                >
+                  {isRegistration === "registration" ? "Continue" : "Apply"}
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    window.location.href =
+                      "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // Replace with your video URL
+                  }}
+                  sx={{
+                    width: "100%",
+                    maxWidth: "200px",
+                    borderRadius: "30px",
+                    fontWeight: "bold",
+                    textTransform: "none",
+                    background: "linear-gradient(45deg, #00A5E5, orange)",
+                    "&:hover": {
+                      background: "orange",
+                    },
+                  }}
+                >
+                  Loan Journey
+                </Button>
               </Box>
             </Box>
 
@@ -200,14 +205,16 @@ const OurJourney = () => {
           }}
         >
           <Typography>
-            Experience a smarter way to borrow with our instant personal loans. No collateral, no credit score worries—just a seamless 100% online process with minimal documentation. Achieve your goals effortlessly and step into a world of financial ease today!
+            Experience a smarter way to borrow with our instant personal loans.
+            No collateral, no credit score worries—just a seamless 100% online
+            process with minimal documentation. Achieve your goals effortlessly
+            and step into a world of financial ease today!
           </Typography>
         </Box>
 
         {/* Credit Executive Section */}
         <Box
           sx={{
-            
             border: "5px solid #4D4D4E",
             borderTop: "none",
             borderRight: "none",
@@ -242,9 +249,13 @@ const OurJourney = () => {
                 color: "white",
               }}
             >
-              Stuck in application at any point? Feel free to call your credit executive.
+              Stuck in application at any point? Feel free to call your credit
+              executive.
             </Typography>
-            <Typography variant="body2" sx={{ fontWeight: "bold", color: "white", mt: 2 }}>
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: "bold", color: "white", mt: 2 }}
+            >
               Name: John Doe
             </Typography>
             <Typography variant="body2" sx={{ color: "white", mt: 2 }}>
@@ -259,7 +270,7 @@ const OurJourney = () => {
                 variant="contained"
                 color="primary"
                 sx={{
-                  paddingX:4,
+                  paddingX: 4,
 
                   borderRadius: "30px",
                   fontWeight: "bold",
@@ -269,7 +280,7 @@ const OurJourney = () => {
                     background: "orange",
                   },
                 }}
-                onClick={() => window.location.href = "tel:+919876543210"}
+                onClick={() => (window.location.href = "tel:+919876543210")}
               >
                 Call Us
               </Button>
@@ -277,14 +288,16 @@ const OurJourney = () => {
                 variant="outlined"
                 color="primary"
                 sx={{
-                  paddingX:4,
+                  paddingX: 4,
                   borderRadius: "30px",
                   fontWeight: "bold",
                   textTransform: "none",
                   border: "2px solid #4D4D4E",
                   color: "white",
                 }}
-                onClick={() => window.location.href = "mailto:johndoe@example.com"}
+                onClick={() =>
+                  (window.location.href = "mailto:johndoe@example.com")
+                }
               >
                 Email Us
               </Button>

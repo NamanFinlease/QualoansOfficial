@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -12,19 +12,17 @@ import {
   Typography,
 } from "@mui/material";
 import PhoneIcon from "@mui/icons-material/PhoneIphone";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle"; // Import CheckCircleIcon
-import Swal from "sweetalert2"; // Import SweetAlert2 for alerts
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Swal from "sweetalert2";
 import { BASE_URL } from "../../baseURL";
 
-// Reusable Input Component
-const InputField = ({ label, value, onChange, disabled, placeholder }) => (
+const InputField = ({ label, value, onChange, placeholder }) => (
   <TextField
     fullWidth
     variant="outlined"
     label={label}
     value={value}
     onChange={onChange}
-    disabled={disabled}
     placeholder={placeholder}
     sx={{
       input: { color: "black" },
@@ -36,13 +34,20 @@ const InputField = ({ label, value, onChange, disabled, placeholder }) => (
   />
 );
 
-const MobileVerification = ({ onComplete, disabled }) => {
+const MobileVerification = ({ onComplete, disabled, prefillData, }) => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [mobile, setMobile] = useState("");
+  const [mobile, setMobile] = useState(prefillData?.mobile || "");
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [currentStep, setCurrentStep] = useState("mobile"); // "mobile" or "otp"
-  const [isOtpVerified, setIsOtpVerified] = useState(false); // New state to track OTP verification status
+  const [currentStep, setCurrentStep] = useState("mobile");
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
+
+  useEffect(() => {
+    if (prefillData && prefillData.mobile && prefillData.verified) {
+      setMobile(prefillData.mobile);
+      setIsOtpVerified(true);
+    }
+  }, [prefillData]);
 
   const sendOTP = async (mobileNumber) => {
     try {
@@ -56,7 +61,6 @@ const MobileVerification = ({ onComplete, disabled }) => {
         }
       );
       const data = await response.json();
-      console.log("data", data);
       if (data.success) {
         setCurrentStep("otp");
       } else {
@@ -79,9 +83,13 @@ const MobileVerification = ({ onComplete, disabled }) => {
       });
       const data = await response.json();
       if (data.success) {
-        Swal.fire("Verified", "Mobile number verified successfully!", "success");
-        setIsOtpVerified(true); // Mark OTP as verified
-        onComplete(); // Mark the step as completed
+        Swal.fire(
+          "Verified",
+          "Mobile number verified successfully!",
+          "success"
+        );
+        setIsOtpVerified(true);
+        onComplete({ mobile: mobileNumber, verified: true });
         setOpenDialog(false);
       } else {
         throw new Error("Invalid OTP. Please try again.");
@@ -95,14 +103,26 @@ const MobileVerification = ({ onComplete, disabled }) => {
 
   const resendOTP = () => {
     if (mobile) {
-      sendOTP(mobile); // Resend the OTP to the same mobile number
+      sendOTP(mobile);
     } else {
-      Swal.fire("Error", "Please enter a mobile number to resend OTP.", "warning");
+      Swal.fire(
+        "Error",
+        "Please enter a mobile number to resend OTP.",
+        "warning"
+      );
     }
   };
-  const StepBox = ({ icon, title, description, onClick, disabled, completed }) => (
+
+  const StepBox = ({
+    icon,
+    title,
+    description,
+    onClick,
+    disabled,
+    completed,
+  }) => (
     <Box
-      onClick={!disabled && !completed ? onClick : null}
+      onClick={!disabled ? onClick : null}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -114,7 +134,7 @@ const MobileVerification = ({ onComplete, disabled }) => {
         margin: 1,
         width: "30%",
         minWidth: 200,
-        cursor: disabled || completed ? "not-allowed" : "pointer",
+        cursor: disabled ? "not-allowed" : "pointer",
         textAlign: "left",
         background: completed
           ? "linear-gradient(45deg, #28a745, #218838)"
@@ -137,9 +157,7 @@ const MobileVerification = ({ onComplete, disabled }) => {
         {completed ? <CheckCircleIcon /> : icon}
       </IconButton>
       <Box sx={{ ml: 2, flexGrow: 1 }}>
-        <Typography sx={{ fontWeight: "bold" }}>
-          {title}
-        </Typography>
+        <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
         <Typography variant="body2">{description}</Typography>
       </Box>
     </Box>
@@ -163,8 +181,8 @@ const MobileVerification = ({ onComplete, disabled }) => {
           sx: {
             padding: 3,
             borderRadius: 3,
-            background: "white", // Set background to white
-            boxShadow: 3, // Add a subtle shadow to the dialog
+            background: "white",
+            boxShadow: 3,
           },
         }}
       >
@@ -183,9 +201,11 @@ const MobileVerification = ({ onComplete, disabled }) => {
             label={currentStep === "mobile" ? "Mobile Number" : "OTP"}
             value={currentStep === "mobile" ? mobile : otp}
             onChange={(e) =>
-              currentStep === "mobile" ? setMobile(e.target.value) : setOtp(e.target.value)
+              currentStep === "mobile"
+                ? setMobile(e.target.value)
+                : setOtp(e.target.value)
             }
-            disabled={isLoading}
+            disabled={isLoading || isOtpVerified}
             placeholder={
               currentStep === "mobile"
                 ? "Enter your mobile number"

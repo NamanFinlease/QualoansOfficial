@@ -1,29 +1,45 @@
-import React, { useState } from "react";
-import { Box, CircularProgress, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography, IconButton } from "@mui/material";
-import DescriptionIcon from '@mui/icons-material/Description'; // Import Description icon
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // Import CheckCircle icon for validated state
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  CircularProgress,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import DescriptionIcon from "@mui/icons-material/Description";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { BASE_URL } from "../../baseURL";
-import Swal from "sweetalert2"; // Import SweetAlert2 for alerts
+import Swal from "sweetalert2";
 
-const PANValidation = ({ onComplete, disabled }) => {
+const PANValidation = ({ onComplete, disabled, prefillData }) => {
+  console.log("PANValidation -> prefillData", prefillData);
   const [openDialog, setOpenDialog] = useState(false);
   const [pan, setPan] = useState("");
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState("");
-  const [isPanValidated, setIsPanValidated] = useState(false); // State to track if PAN is validated
+  const [isPanValidated, setIsPanValidated] = useState(false);
 
-  const showPanDetails = async () => {
-    setIsFetching(true);
-  };
+  // Prefill PAN data if available
+  useEffect(() => {
+    if (prefillData && prefillData.pan) {
+      setPan(prefillData.pan);
+      setIsPanValidated(true);
+    }
+  }, [prefillData]);
 
   const handleCompleteStep = async () => {
-    if (disabled) return; // Prevent opening dialog if mobile verification is not complete
-    setOpenDialog(true); // Open PAN input dialog when the box is clicked
+    if (disabled) return;
+    setOpenDialog(true);
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    setPan("");
+    setPan(prefillData?.pan || "");
     setError("");
   };
 
@@ -40,22 +56,19 @@ const PANValidation = ({ onComplete, disabled }) => {
     }
 
     setIsFetching(true);
-    setError(""); // Clear any previous error
+    setError("");
 
     try {
-      const response = await fetch(
-        `${BASE_URL}/api/verify/verifyPAN/${pan}`,
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${BASE_URL}/api/verify/verifyPAN/${pan}`, {
+        method: "POST",
+        credentials: "include",
+      });
 
       const data = await response.json();
 
       if (response.ok) {
-        setIsPanValidated(true); // Mark PAN as validated
-        onComplete(); // Notify parent component that the step is complete
+        setIsPanValidated(true);
+        onComplete({ pan }); // Pass validated PAN data to parent component
         Swal.fire("PAN card validated successfully!");
         setOpenDialog(false);
       } else {
@@ -71,55 +84,62 @@ const PANValidation = ({ onComplete, disabled }) => {
 
   return (
     <>
-<Box
-  onClick={handleCompleteStep}
-  sx={{
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "center",
-    padding: 2,
-    borderRadius: 3,
-    margin: 1,
-    width: "30%",
-    minWidth: 200,
-    cursor: disabled ? "not-allowed" : "pointer",
-    textAlign: "left",
-    background: isPanValidated
-    ? "linear-gradient(45deg, #28a745, #218838)"
-    : disabled
-      ? "linear-gradient(45deg, #b5b5b5, #d6d6d6)" // Grey background when disabled
-      : "linear-gradient(45deg, #4D4D4E, orange)", // Normal gradient background
-    color: disabled || isPanValidated ? "white" : "black", // White text for green or grey backgrounds
-    "&:hover": {
-      background: disabled
-        ? "linear-gradient(45deg, #b5b5b5, #d6d6d6)"
-        : isPanValidated
-        ? "linear-gradient(45deg, #66BB6A, #A5D6A7)" // Hover effect for green background
-        : "linear-gradient(45deg, #ffcc00, orange)", // Hover effect for normal background
-    },
-    "@media (max-width: 600px)": {
-      width: "80%",
-      margin: "auto",
-    },
-  }}
->
-  <IconButton sx={{ color: disabled || isPanValidated ? "white" : "black", ml: 1 }} disabled={disabled}>
-    {isPanValidated ? (
-      <CheckCircleIcon sx={{ color: "white" }} /> // White tick icon for green background
-    ) : (
-      <DescriptionIcon sx={{ color: disabled ? "#7f7f7f" : "white" }} />
-    )}
-  </IconButton>
-  <Box sx={{ ml: 2, flexGrow: 1 }}>
-    <Typography sx={{ fontWeight: "bold" }}>
-      PAN Verification
-    </Typography>
-    <Typography variant="body2" sx={{ color: disabled || isPanValidated ? "white" : "black" }}>
-      Verify your PAN card number
-    </Typography>
-  </Box>
-</Box>
+      <Box
+        onClick={handleCompleteStep}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          padding: 2,
+          borderRadius: 3,
+          margin: 1,
+          width: "30%",
+          minWidth: 200,
+          cursor: disabled ? "not-allowed" : "pointer",
+          textAlign: "left",
+          background: isPanValidated
+            ? "linear-gradient(45deg, #28a745, #218838)"
+            : disabled
+            ? "linear-gradient(45deg, #b5b5b5, #d6d6d6)"
+            : "linear-gradient(45deg, #4D4D4E, orange)",
+          color: disabled || isPanValidated ? "white" : "black",
+          "&:hover": {
+            background: disabled
+              ? "linear-gradient(45deg, #b5b5b5, #d6d6d6)"
+              : isPanValidated && "linear-gradient(45deg, #66BB6A, #A5D6A7)",
+            // : "linear-gradient(45deg, #ffcc00, orange)",
+          },
+          "@media (max-width: 600px)": {
+            width: "80%",
+            margin: "auto",
+          },
+        }}
+      >
+        <IconButton
+          sx={{ color: disabled || isPanValidated ? "white" : "black", ml: 1 }}
+          disabled={disabled}
+        >
+          {isPanValidated ? (
+            <CheckCircleIcon sx={{ color: "white" }} />
+          ) : (
+            <DescriptionIcon sx={{ color: disabled ? "#7f7f7f" : "white" }} />
+          )}
+        </IconButton>
+        <Box sx={{ ml: 2, flexGrow: 1 }}>
+          <Typography
+            sx={{ fontWeight: "bold", color: disabled ? "#7f7f7f" : "white" }}
+          >
+            PAN Verification
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{ color: disabled || isPanValidated ? "#7f7f7f" : "white" }}
+          >
+            Verify your PAN card number
+          </Typography>
+        </Box>
+      </Box>
 
       {/* Dialog for PAN input */}
       <Dialog
@@ -145,7 +165,7 @@ const PANValidation = ({ onComplete, disabled }) => {
             label="PAN Number"
             value={pan}
             onChange={handlePanChange}
-            disabled={isFetching || disabled} // Disable input when fetching or disabled
+            disabled={isFetching || disabled}
             fullWidth
             variant="outlined"
             placeholder="Enter your PAN number"
