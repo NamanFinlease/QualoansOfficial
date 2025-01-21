@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
@@ -24,11 +24,9 @@ import PaymentOptions from "./component/PaymentOptions";
 import LoanCalculator from "./component/LoanCalculator";
 import LoginForm from "./component/LoginForm";
 import RepayLoan from "./component/RepayLoan";
+import ProtectedRoute from "./ProtectedRoute";
 
-// Minimal Layout for specific components
-const MinimalLayout = ({ children }) => {
-  return <div>{children}</div>;
-};
+const MinimalLayout = ({ children }) => <div>{children}</div>;
 
 function App() {
   const location = useLocation();
@@ -44,8 +42,7 @@ function App() {
     "/terms-condition",
     "/faq",
     "/calculator",
-    "/login-form"
-
+    "/login-form",
   ];
 
   const showHeaderFooter = routesWithHeaderFooter.includes(location.pathname);
@@ -60,63 +57,81 @@ function App() {
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/apply-now" element={<ApplyNow />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/repay-now" element={<RepayLoan/>}/>
+        <Route path="/repay-now" element={<RepayLoan />} />
         <Route path="/terms-condition" element={<TermsAndConditions />} />
-        <Route path="/calculator" element={<LoanCalculator />}/>
-        <Route path="/faq" element={<FAQs/>}/>
-        <Route path="/login-form"element={<LoginForm/>}/>
-        {/* Routes with Minimal Layout */}
-       
+        <Route path="/calculator" element={<LoanCalculator />} />
+        <Route path="/faq" element={<FAQs />} />
+        <Route path="/login-form" element={<LoginForm />} />
+
+        {/* Protected Routes */}
         <Route
           path="/dashboard"
           element={
-            <MinimalLayout>
-              <Dashboard />
-            </MinimalLayout>
+            <ProtectedRoute requiresLogin={true}>
+              <MinimalLayout>
+                <Dashboard />
+              </MinimalLayout>
+            </ProtectedRoute>
           }
         />
+
         <Route
           path="/registration"
           element={
-            <MinimalLayout>
-              <RegistrationSteps />
-            </MinimalLayout>
+            <ProtectedRoute requiresLogin={true}>
+              <MinimalLayout>
+                <RegistrationSteps />
+              </MinimalLayout>
+            </ProtectedRoute>
           }
         />
+
         <Route
           path="/loan-application"
           element={
-            <MinimalLayout>
-              <LoanApplication />
-            </MinimalLayout>
+            <ProtectedRoute requiresLogin={true}>
+              <MinimalLayout>
+                <LoanApplication />
+              </MinimalLayout>
+            </ProtectedRoute>
           }
         />
-        <Route
+
+        {/* <Route
           path="/calculator-loan"
           element={
-            <MinimalLayout>
-              <Calculator />
-            </MinimalLayout>
+            <ProtectedRoute>
+              <MinimalLayout>
+                <Calculator />
+              </MinimalLayout>
+            </ProtectedRoute>
           }
-        />
+        /> */}
+
         <Route
           path="/ourjourney"
           element={
-            <MinimalLayout>
-              <OurJourney />
-            </MinimalLayout>
+            <ProtectedRoute requiresLogin={true}>
+              <MinimalLayout>
+                <OurJourney />
+              </MinimalLayout>
+            </ProtectedRoute>
           }
         />
+
         <Route
           path="/user-preview"
           element={
-            <MinimalLayout>
-              <UserPreview />
-            </MinimalLayout>
+            <ProtectedRoute requiresLogin={true}>
+              <MinimalLayout>
+                <UserPreview />
+              </MinimalLayout>
+            </ProtectedRoute>
           }
         />
-        <Route
-          path="/loanRepayent"
+
+        {/* <Route
+          path="/loanRepayment"
           element={
             <MinimalLayout>
               <LoanRepaymentComponent />
@@ -152,14 +167,6 @@ function App() {
           element={
             <MinimalLayout>
               <LoanCalculator />
-            </MinimalLayout>
-          }
-        />
-        {/* <Route
-          path="/login-form"
-          element={
-            <MinimalLayout>
-              <LoginForm />
             </MinimalLayout>
           }
         /> */}

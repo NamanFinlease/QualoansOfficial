@@ -123,24 +123,6 @@ const OurJourney = () => {
                 <Button
                   variant="contained"
                   sx={{
-                    background: "#4D4D4E",
-                    width: "100%",
-                    maxWidth: "150px",
-                    borderRadius: "30px",
-                    fontWeight: "bold",
-                    textTransform: "none",
-                  }}
-                  onClick={handleContinue}
-                >
-                  {isRegistration === "registration" ? "Continue" : "Apply"}
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    window.location.href =
-                      "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // Replace with your video URL
-                  }}
-                  sx={{
                     width: "100%",
                     maxWidth: "200px",
                     borderRadius: "30px",
@@ -151,8 +133,37 @@ const OurJourney = () => {
                       background: "orange",
                     },
                   }}
+                  onClick={handleContinue}
                 >
-                  Loan Journey
+                  {isRegistration === "registration" ? "Continue" : "Apply"}
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    window.location.href =
+                      "https://www.youtube.com/watch?v=a3ICNMQW7Ok&ab_channel=TimotiusJoso"; // Replace with your video URL
+                  }}
+                  // sx={{
+                  //   width: "100%",
+                  //   maxWidth: "200px",
+                  //   borderRadius: "30px",
+                  //   fontWeight: "bold",
+                  //   textTransform: "none",
+                  //   background: "linear-gradient(45deg, #00A5E5, orange)",
+                  //   "&:hover": {
+                  //     background: "orange",
+                  //   },
+                  // }}
+                  sx={{
+                    background: "#4D4D4E",
+                    width: "100%",
+                    maxWidth: "200px",
+                    borderRadius: "30px",
+                    fontWeight: "bold",
+                    textTransform: "none",
+                  }}
+                >
+                  Learn How to Apply
                 </Button>
               </Box>
             </Box>
@@ -214,125 +225,136 @@ const OurJourney = () => {
 
         {/* Credit Executive Section */}
         <Box
-  sx={{
-    border: "5px solid #4D4D4E",
-    borderTop: "none",
-    borderRight: "none",
-    display: "flex",
-    flexDirection: { xs: "column", md: "row" }, // Stack on small, side-by-side on medium+
-    justifyContent: "space-between",
-    alignItems: { xs: "center", md: "flex-start" },
-    background: "linear-gradient(45deg, #4D4D4E, orange)",
-    borderRadius: 5,
-    boxShadow: 3,
-    padding: 2,
-    margin: "auto",
-    maxWidth: 810,
-    mt: 5,
-    gap: { xs: 3, md: 2 }, // Space between content and image
-  }}
->
-  {/* Text Content Box */}
-  <Box
-    sx={{
-      flex: 1,
-      paddingRight: { md: 2, xs: 0 }, // Adjust padding based on screen size
-      textAlign: { xs: "center", md: "left" },
-    }}
-  >
-    <Typography
-      variant="h6"
-      gutterBottom
-      sx={{ fontWeight: "bold", color: "white" }}
-    >
-      Credit Executive
-    </Typography>
-    <Typography
-      variant="body1"
-      sx={{
-        mt: 2,
-        fontWeight: "bold",
-        marginBottom: 1,
-        fontStyle: "italic",
-        color: "white",
-      }}
-    >
-      Stuck in application at any point? Feel free to call your credit
-      executive.
-    </Typography>
-    <Typography variant="body2" sx={{ fontWeight: "bold", color: "white", mt: 2 }}>
-      Name: John Doe
-    </Typography>
-    <Typography variant="body2" sx={{ color: "white", mt: 2 }}>
-      Email: johndoe@example.com
-    </Typography>
-    <Typography variant="body2" sx={{ color: "white", mt: 2 }}>
-      Mobile: +91 9876543210
-    </Typography>
+          sx={{
+            border: "5px solid #4D4D4E",
+            borderTop: "none",
+            borderRight: "none",
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" }, // Stack on small, side-by-side on medium+
+            justifyContent: "space-between",
+            alignItems: { xs: "center", md: "flex-start" },
+            background: "linear-gradient(45deg, #4D4D4E, orange)",
+            borderRadius: 5,
+            boxShadow: 3,
+            padding: 2,
+            margin: "auto",
+            maxWidth: 810,
+            mt: 5,
+            gap: { xs: 3, md: 2 }, // Space between content and image
+          }}
+        >
+          {/* Text Content Box */}
+          <Box
+            sx={{
+              flex: 1,
+              paddingRight: { md: 2, xs: 0 }, // Adjust padding based on screen size
+              textAlign: { xs: "center", md: "left" },
+            }}
+          >
+            <Typography
+              variant="h6"
+              gutterBottom
+              sx={{ fontWeight: "bold", color: "white" }}
+            >
+              Credit Executive
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                mt: 2,
+                fontWeight: "bold",
+                marginBottom: 1,
+                fontStyle: "italic",
+                color: "white",
+              }}
+            >
+              Stuck in application at any point? Feel free to call your credit
+              executive.
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: "bold", color: "white", mt: 2 }}
+            >
+              Name: John Doe
+            </Typography>
+            <Typography variant="body2" sx={{ color: "white", mt: 2 }}>
+              Email: johndoe@example.com
+            </Typography>
+            <Typography variant="body2" sx={{ color: "white", mt: 2 }}>
+              Mobile: +91 9876543210
+            </Typography>
 
-    {/* Buttons */}
-    <Box sx={{ marginTop: 2, display: "flex", justifyContent: { xs: "center", md: "flex-start" }, gap: 2 }}>
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{
-          paddingX: 4,
-          borderRadius: "30px",
-          fontWeight: "bold",
-          textTransform: "none",
-          background: "linear-gradient(45deg, #00A5E5, orange)",
-          "&:hover": {
-            background: "orange",
-          },
-        }}
-        onClick={() => window.location.href = "tel:+919876543210"}
-      >
-        Call Us
-      </Button>
-      <Button
-        variant="outlined"
-        color="primary"
-        sx={{
-          paddingX: 4,
-          borderRadius: "30px",
-          fontWeight: "bold",
-          textTransform: "none",
-          border: "2px solid #4D4D4E",
-          color: "white",
-        }}
-        onClick={() => window.location.href = "mailto:johndoe@example.com"}
-      >
-        Email Us
-      </Button>
-    </Box>
-  </Box>
+            {/* Buttons */}
+            <Box
+              sx={{
+                marginTop: 2,
+                display: "flex",
+                justifyContent: { xs: "center", md: "flex-start" },
+                gap: 2,
+              }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  paddingX: 4,
+                  borderRadius: "30px",
+                  fontWeight: "bold",
+                  textTransform: "none",
+                  background: "linear-gradient(45deg, #00A5E5, orange)",
+                  "&:hover": {
+                    background: "orange",
+                  },
+                }}
+                onClick={() => (window.location.href = "tel:+919876543210")}
+              >
+                Call Us
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                sx={{
+                  paddingX: 4,
+                  borderRadius: "30px",
+                  fontWeight: "bold",
+                  textTransform: "none",
+                  border: "2px solid #4D4D4E",
+                  color: "white",
+                }}
+                onClick={() =>
+                  (window.location.href = "mailto:johndoe@example.com")
+                }
+              >
+                Email Us
+              </Button>
+            </Box>
+          </Box>
 
-  {/* Right Image Box */}
-  <Box
-    sx={{
-      marginLeft: { md: 2, xs: 0 },
-      borderTopLeftRadius: 2,
-      borderBottomRightRadius: 2,
-      overflow: "hidden",
-      width: { xs: "100%", md: 250 },
-      height: "auto",
-      display: "flex",
-      justifyContent: "center",
-    }}
-  >
-    <img
-      src={creditExecutiveImage}
-      alt="Credit Executive"
-      style={{
-        width: "100%",
-        height: "auto",
-        borderRadius: "8px",
-        objectFit: "cover",
-      }}
-    />
-  </Box>
-</Box>
-
+          {/* Right Image Box */}
+          <Box
+            sx={{
+              marginLeft: { md: 2, xs: 0 },
+              borderTopLeftRadius: 2,
+              borderBottomRightRadius: 2,
+              overflow: "hidden",
+              width: { xs: "100%", md: 250 },
+              height: "auto",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <img
+              src={creditExecutiveImage}
+              alt="Credit Executive"
+              style={{
+                width: "100%",
+                height: "auto",
+                borderRadius: "8px",
+                objectFit: "cover",
+              }}
+            />
+          </Box>
+        </Box>
       </Box>
     </div>
   );
