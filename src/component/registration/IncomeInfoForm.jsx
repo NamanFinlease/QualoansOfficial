@@ -137,6 +137,9 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
             margin: "auto",
             marginTop: "5%",
             mb: "20%",
+            overflowY: 'auto', // Enable vertical scrolling
+            maxHeight: '90vh', // Set the maximum height
+
           }}
         >
           <Typography sx={{ marginBottom: 2 }}>
@@ -159,7 +162,7 @@ const IncomeInfoForm = ({ onComplete, disabled }) => {
               }}
               disabled={isStepCompleted}
             >
-              <option value="SALARIED">Salaried</option>
+              <option value="SALARIED" >Salaried</option>
               <option value="SELF_EMPLOYED">Self-Employed</option>
             </TextField>
           </FormControl>

@@ -52,11 +52,12 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
         alignItems: "flex-start",
         justifyContent: "center",
         padding: 2,
+        borderColor: completed ? "green" : disabled ? "grey" : "orange",
         borderRadius: 3,
         margin: 1,
         width: "30%",
         minWidth: 200,
-        cursor: completed ? "not-allowed" : "pointer",
+        cursor: disabled ? "not-allowed" : "pointer",
         textAlign: "left",
         background: completed
           ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
@@ -238,19 +239,41 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
             <Select
               value={formValues.gender}
               onChange={(e) => handleFormChange("gender", e.target.value)}
+              label="Gender"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: formValues.gender ? 'transparent' : 'gray', // Custom border color
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'orange', // Border color on hover
+                  },
+                },
+              }}
             >
               <MenuItem value="M">Male</MenuItem>
               <MenuItem value="F">Female</MenuItem>
+              <MenuItem value="O">Other</MenuItem>
             </Select>
           </FormControl>
+
 
           <FormControl fullWidth sx={{ marginBottom: 2 }}>
             <InputLabel>Marital Status</InputLabel>
             <Select
               value={formValues.maritalStatus}
-              onChange={(e) =>
-                handleFormChange("maritalStatus", e.target.value)
-              }
+              onChange={(e) => handleFormChange("maritalStatus", e.target.value)}
+              label="Marital Status"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: formValues.maritalStatus ? 'transparent' : 'gray', // Custom border color
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'orange', // Border color on hover
+                  },
+                },
+              }}
             >
               <MenuItem value="SINGLE">Single</MenuItem>
               <MenuItem value="MARRIED">Married</MenuItem>

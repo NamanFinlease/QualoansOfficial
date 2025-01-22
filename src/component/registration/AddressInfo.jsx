@@ -22,27 +22,27 @@ const StepBox = ({ icon, title, description, onClick, disabled, completed }) => 
     onClick={!disabled && !completed ? onClick : null}
     sx={{
       display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-start",
-      justifyContent: "center",
-      padding: 2,
-      borderColor: completed ? "green" : disabled ? "grey" : "orange",
-      borderRadius: 3,
-      margin: 1,
-      width: "30%",
-      minWidth: 200,
-      cursor: disabled || completed ? "not-allowed" : "pointer",
-      textAlign: "left",
-      background: completed
-        ? "linear-gradient(45deg, #28a745, #218838)"
-        : disabled
-        ? "lightgrey"
-        : "linear-gradient(45deg, #4D4D4E, orange)",
-      color: completed || !disabled ? "white" : "darkgrey",
-      "@media (max-width: 600px)": {
-        width: "80%",
-        margin: "auto",
-      },
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        padding: 2,
+        borderColor: completed ? "green" : disabled ? "grey" : "orange",
+        borderRadius: 3,
+        margin: 1,
+        width: "30%",
+        minWidth: 200,
+        cursor: disabled ? "not-allowed" : "pointer",
+        textAlign: "left",
+        background: completed
+          ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
+          : disabled
+          ? "lightgrey"
+          : "linear-gradient(45deg, #4D4D4E, orange)",
+        color: completed || !disabled ? "white" : "darkgrey",
+        "@media (max-width: 600px)": {
+          width: "80%",
+          margin: "auto",
+              },
     }}
   >
     <IconButton
@@ -58,9 +58,7 @@ const StepBox = ({ icon, title, description, onClick, disabled, completed }) => 
       )}
     </IconButton>
     <Box sx={{ ml: 2, flexGrow: 1 }}>
-      <Typography sx={{ fontWeight: "bold" }}>
-        {title}
-      </Typography>
+      <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
       <Typography variant="body2">{description}</Typography>
     </Box>
   </Box>
@@ -70,6 +68,8 @@ const AddressInfo = ({ onComplete, disabled }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [stepCompleted, setStepCompleted] = useState(false);
+  const [state, setState] = useState('');
+  const [city, setCity] = useState('');
   const [formValues, setFormValues] = useState({
     address: "",
     landmark: "",
@@ -83,6 +83,66 @@ const AddressInfo = ({ onComplete, disabled }) => {
   const handleFormChange = (key, value) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
     if (error) setError("");
+  };
+
+  
+
+  const handlePincodeChange = async (e) => {
+    const value = e.target.value;
+
+    // Only allow numeric input and ensure the pincode has no more than 6 digits
+    if (/^\d{0,6}$/.test(value)) {
+      setFormValues({ ...formValues, pincode: value });
+
+      // If the pincode has exactly 6 digits, fetch city and state
+      if (value.length === 6) {
+        try {
+          const response = await fetch(`https://api.postalpincode.in/pincode/${value}`);
+          console.log("response",response);
+          
+          const data = await response.json();
+
+          if (data[0].Status === "Success") {
+            const { Block, State } = data[0].PostOffice[0];
+            setFormValues((prev) => ({
+              ...prev,
+              city: Block,
+              state: State,
+            }));
+            console.log("City:", Block, "State:", State);
+          } else {
+            // Handle invalid pin code case
+            setFormValues((prev) => ({
+              ...prev,
+              city: "",
+              state: "",
+            }));
+            Swal.fire({
+              icon: "error",
+              title: "Invalid Pincode",
+              text: "Please enter a valid pincode.",
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching pincode data:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "An error occurred while fetching data. Please try again later.",
+          });
+        }
+      } else {
+        // Reset city and state if pincode is incomplete
+        setFormValues((prev) => ({
+          ...prev,
+          city: "",
+          state: "",
+        }));
+      }
+    } else {
+      // Clear the pincode and reset city/state if input is invalid
+      setFormValues({ ...formValues, pincode: "", city: "", state: "" });
+    }
   };
 
   const handleSubmit = async () => {
@@ -139,6 +199,8 @@ const AddressInfo = ({ onComplete, disabled }) => {
             maxWidth: 400,
             margin: "auto",
             marginTop: "5%",
+            maxHeight: "90vh", // Set the maximum height
+            overflowY: "auto", // Enable vertical scrolling
           }}
         >
           <Typography sx={{ marginBottom: 2 }}>
@@ -150,7 +212,9 @@ const AddressInfo = ({ onComplete, disabled }) => {
               key={field}
               label={field.replace(/^\w/, (c) => c.toUpperCase())}
               value={formValues[field]}
-              onChange={(e) => handleFormChange(field, e.target.value)}
+              onChange={
+                field === "pincode" ? handlePincodeChange : (e) => handleFormChange(field, e.target.value)
+              }
               fullWidth
               sx={{ marginBottom: 2 }}
               required
@@ -158,10 +222,12 @@ const AddressInfo = ({ onComplete, disabled }) => {
           ))}
 
           <FormControl fullWidth sx={{ marginBottom: 2 }}>
-            <InputLabel>Residence Type</InputLabel>
+            <InputLabel id="residence-type-label">Residence Type</InputLabel>
             <Select
+              labelId="residence-type-label"
               value={formValues.residenceType}
               onChange={(e) => handleFormChange("residenceType", e.target.value)}
+              label="Residence Type" // Ensure this matches the InputLabel text
             >
               {["OWNED", "RENTED", "PARENTAL", "COMPANY PROVIDED", "OTHERS"].map(
                 (type) => (

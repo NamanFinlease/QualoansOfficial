@@ -152,7 +152,7 @@ const LoanApplication = () => {
                 height: 30,
                 borderRadius: 5,
                 "& .MuiLinearProgress-bar": {
-                  backgroundColor: "#4D4D4D",
+                  backgroundColor: "green",
                 },
               }}
             />

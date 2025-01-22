@@ -11,8 +11,9 @@ const DisbursalBankDetails = () => {
         bankName:'',
         accountNumber:'',
         ifscCode:'',
-        accountType:''
-
+        accountType:'',
+        branchName:'',
+        beneficiaryName:''
     
     
   });
@@ -52,7 +53,8 @@ const DisbursalBankDetails = () => {
 
       
         setDisbursal({
-           
+            beneficiaryName:data?.data?.beneficiaryName,
+            branchName:data?.data?.branchName,
             bankName: data?.data?.bankName,
             accountNumber: data?.data?.accountNumber,
             ifscCode: data?.data?.ifscCode,  
@@ -108,7 +110,7 @@ return (
       gutterBottom
       align="center"
       sx={{ mb: 3, color: "white" }} // Set text color to white
-    >    Disbursal Bank Details
+    >    Bank Details
     </Typography>
   
     {/* Profile Picture */}
@@ -118,7 +120,11 @@ return (
   
     {/* Profile Details (Stacked in a column) */}
     <Grid container direction="column" spacing={2}>
-   
+    <Grid item xs={12}>
+        <Typography variant="body1" sx={{ color: "white" }}>
+          <strong>Beneficiary Name:</strong> {disbursal.beneficiaryName}
+        </Typography>
+      </Grid>
     <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
           <strong>BankName:</strong> {disbursal.bankName}
@@ -133,6 +139,11 @@ return (
       <Grid item xs={12}>
         <Typography variant="body1" sx={{ color: "white" }}>
           <strong>IfscCode:</strong> {disbursal.ifscCode}
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="body1" sx={{ color: "white" }}>
+          <strong>Branch Name:</strong> {disbursal.branchName}
         </Typography>
       </Grid>
   

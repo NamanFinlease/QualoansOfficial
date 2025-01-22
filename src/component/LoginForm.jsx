@@ -279,7 +279,8 @@ const LoginForm = ({ setLoginComleted }) => {
           justifyContent: "space-between",
           alignItems: "center",
           boxShadow: 4,
-          borderRadius: 3,
+          borderTopLeftRadius: 40,
+          borderBottomRightRadius:40,
           padding: 4,
           backgroundColor: "#ffffff",
           maxWidth: "900px",
@@ -298,7 +299,6 @@ const LoginForm = ({ setLoginComleted }) => {
             width: { xs: "100%", md: "40%" },
             height: "auto",
             borderRadius: 2,
-            boxShadow: 5,
             animation: `${rotateIn} 1s ease-in-out`,
             objectFit: "cover",
           }}
@@ -308,8 +308,7 @@ const LoginForm = ({ setLoginComleted }) => {
         <Box
           sx={{
             padding: { xs: 3, md: 5 },
-            borderRadius: 2,
-            boxShadow: 5,
+            borderRadius: 3,
             maxWidth: "400px",
             width: "100%",
             animation: `${fadeIn} 1s ease-in-out`,

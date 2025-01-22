@@ -32,6 +32,7 @@ const MinimalLayout = ({ children }) => <div>{children}</div>;
 function App() {
   const location = useLocation();
 
+
   // Routes where Header and Footer should appear
   const routesWithHeaderFooter = [
     "/",

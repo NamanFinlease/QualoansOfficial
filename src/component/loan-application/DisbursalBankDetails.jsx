@@ -27,11 +27,14 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
   const [completionModalOpen, setCompletionModalOpen] = useState(false); // For the new modal
   const navigate = useNavigate(); // To navigate to other pages
   const [formValues, setFormValues] = useState({
+    beneficiaryName:prefillData?.beneficiaryName||"",
     accountNumber: prefillData?.accountNumber || "",
     confirmAccountNo: prefillData?.confirmAccountNo || "",
     ifscCode: prefillData?.ifscCode || "",
+    branchName:prefillData?.branchName||"",
     bankName: prefillData?.bankName || "",
     accountType: prefillData?.accountType || "",
+
   });
 
   useEffect(() => {
@@ -155,10 +158,10 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
         </IconButton>
         <Box sx={{ textAlign: "left", width: "100%" }}>
           <Typography sx={{ fontWeight: "bold", marginBottom: 1, color: "white" }}>
-            Disbursal Bank Details
+             Bank Details
           </Typography>
           <Typography variant="body2" sx={{ color: "white" }}>
-            Share your disbursal bank details
+            Share your  bank details
           </Typography>
         </Box>
       </Box>
@@ -178,7 +181,17 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
             minWidth: 400,
           }}
         >
-          <Typography sx={{ mb: 2 }}>Disbursal Bank Details</Typography>
+          <Typography sx={{ mb: 2 }}> Bank Details</Typography>
+
+          <TextField
+          fullWidth
+          label="Beneficiary Name"
+          name="beneficiaryName"
+          value={formValues.beneficiaryName || prefillData?.beneficiaryName || ""}
+          onChange={handleInputChange}
+          sx={{ mb: 2 }}
+        />
+
           <TextField
             fullWidth
             label="Account Number"
@@ -200,6 +213,14 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
             label="IFSC Code"
             name="ifscCode"
             value={formValues.ifscCode}
+            onChange={handleInputChange}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            fullWidth
+            label="Branch Name"
+            name="branchName"
+            value={formValues.branchName || prefillData?.branchName || ""}
             onChange={handleInputChange}
             sx={{ mb: 2 }}
           />

@@ -7,13 +7,16 @@ import {
   Typography,
   Grid,
   CircularProgress,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
 
-// Initialize SweetAlert with React content
+const availableOptions = ["Residential Address", "Electricity Bill", "Gas Connection"];
 const MySwal = withReactContent(Swal);
 
 const DocumentUploadModal = ({ prefillData }) => {
@@ -22,27 +25,58 @@ const DocumentUploadModal = ({ prefillData }) => {
     aadhaarFront: prefillData?.aadhaarFront || null,
     aadhaarBack: prefillData?.aadhaarBack || null,
     panCard: prefillData?.panCard || null,
-    otherType: prefillData?.otherType || "",
-    otherDocument: prefillData?.otherDocument || null,
+    otherDocuments: prefillData?.otherDocuments || [{ type: "", files: null }],
   });
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const handleFileChange = (field, file) => {
-    setFormValues({ ...formValues, [field]: file });
+  const getAvailableOptions = (index) => {
+    const uploadedDocuments = formValues.otherDocuments.map((doc, idx) =>
+      idx === index ? "" : doc.type
+    );
+    return availableOptions.filter((option) => !uploadedDocuments.includes(option));
   };
 
-  const handleDropdownChange = (event) => {
-    setFormValues({ ...formValues, otherType: event.target.value });
+  const handleFileChange = (field, file, index = 0) => {
+    const updatedFormValues = { ...formValues };
+    if (field === "otherDocuments") {
+      updatedFormValues.otherDocuments[index].files = file;
+    } else {
+      updatedFormValues[field] = file;
+    }
+    setFormValues(updatedFormValues);
+  };
+
+  const handleDropdownChange = (event, index) => {
+    const selectedType = event.target.value;
+    const updatedFormValues = { ...formValues };
+    updatedFormValues.otherDocuments[index].type = selectedType;
+    setFormValues(updatedFormValues);
+  };
+
+  const deleteUploadedFile = (field, index = 0) => {
+    const updatedFormValues = { ...formValues };
+    if (field === "otherDocuments") {
+      updatedFormValues.otherDocuments[index].files = null;
+    } else {
+      updatedFormValues[field] = null;
+    }
+    setFormValues(updatedFormValues);
   };
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formValues.salarySlips) newErrors.salarySlips = "Required";
+    if (!formValues.salarySlip) newErrors.salarySlip = "Required";
     if (!formValues.aadhaarFront) newErrors.aadhaarFront = "Required";
     if (!formValues.aadhaarBack) newErrors.aadhaarBack = "Required";
     if (!formValues.panCard) newErrors.panCard = "Required";
-    if (!formValues.otherType) newErrors.otherType = "Required";
+
+    formValues.otherDocuments.forEach((doc, index) => {
+      if (!doc.type) newErrors[`otherType-${index}`] = "Required";
+      if (!doc.files) newErrors[`otherFiles-${index}`] = "Required";
+    });
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -80,15 +114,11 @@ const DocumentUploadModal = ({ prefillData }) => {
         }
       );
 
-      // Handle success response
       MySwal.fire({
         icon: "success",
         title: "Documents uploaded successfully",
       });
-      MySwal.close();
     } catch (error) {
-      // Handle error response
-      console.error("Error uploading documents:", error);
       MySwal.fire({
         icon: "error",
         title: "Failed to upload documents",
@@ -99,28 +129,26 @@ const DocumentUploadModal = ({ prefillData }) => {
     }
   };
 
-  const style = document.createElement("style");
-  style.innerHTML = `
-    .swal-custom-popup {
-      background-color: #4D4D4E !important; /* Dark gray background */
-      color: white !important; /* White text color */
-      padding:0
-    }
-    .swal2-input {
-      background-color: #4D4D4E !important; /* Input field background */
-      color: white !important; /* Input text color */
-      border: 1px solid #ddd !important;
-    }
-    .swal2-confirm {
-      background-color: #007bff !important; /* Confirm button color */
-      color: white !important;
-    }
-    .swal2-cancel {
-      background-color: #f44336 !important; /* Cancel button color */
-      color: white !important;
-    }
-  `;
-  document.head.appendChild(style);
+  const addMoreDocumentFields = () => {
+    setFormValues({
+      ...formValues,
+      otherDocuments: [...formValues.otherDocuments, { type: "", files: null }],
+    });
+  };
+
+  const isSubmitDisabled = () => {
+    const requiredFields = [
+      formValues.salarySlip,
+      formValues.aadhaarFront,
+      formValues.aadhaarBack,
+      formValues.panCard,
+    ];
+    const otherDocsComplete = formValues.otherDocuments.every(
+      (doc) => doc.type && doc.files
+    );
+
+    return requiredFields.some((field) => !field) || !otherDocsComplete;
+  };
 
   return (
     <Box
@@ -137,176 +165,102 @@ const DocumentUploadModal = ({ prefillData }) => {
       <Typography variant="h5" mb={2} sx={{ color: "black" }}>
         Upload Documents
       </Typography>
-
       <Grid container spacing={2}>
-        {/* Salary Slips */}
+        {["salarySlip", "aadhaarFront", "aadhaarBack", "panCard"].map((field, index) => (
+          <Grid item xs={12} sm={6} key={index}>
+            <TextField
+              fullWidth
+              type="file"
+              inputProps={{ accept: ".pdf,image/*" }}
+              label={`Upload ${field.replace(/([A-Z])/g, " $1")}`}
+              error={!!errors[field]}
+              helperText={errors[field]}
+              InputLabelProps={{ shrink: true }}
+              InputProps={{
+                endAdornment: formValues[field] && (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => deleteUploadedFile(field)}>
+                      <ClearIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              onChange={(e) => handleFileChange(field, e.target.files[0])}
+            />
+          </Grid>
+        ))}
+
+        {formValues.otherDocuments.map((doc, index) => (
+          <React.Fragment key={index}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                select
+                fullWidth
+                label="Select Document Type"
+                value={doc.type}
+                onChange={(e) => handleDropdownChange(e, index)}
+                error={!!errors[`otherType-${index}`]}
+                helperText={errors[`otherType-${index}`]}
+              >
+                {getAvailableOptions(index).map((option, idx) => (
+                  <MenuItem key={idx} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                type="file"
+                label="Upload Document"
+                error={!!errors[`otherFiles-${index}`]}
+                helperText={errors[`otherFiles-${index}`]}
+                InputLabelProps={{ shrink: true }}
+                InputProps={{
+                  endAdornment: doc.files && (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => deleteUploadedFile("otherDocuments", index)}>
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                onChange={(e) => handleFileChange("otherDocuments", e.target.files[0], index)}
+              />
+            </Grid>
+          </React.Fragment>
+        ))}
         <Grid item xs={12}>
-          <TextField
-            fullWidth
-            type="file"
-            inputProps={{ accept: ".pdf" }}
-            label="Upload Salary Slips (Last 3 Months)"
-            placeholder="Last 3 Months (PDF only)"
-            error={!!errors.salarySlips}
-            helperText={errors.salarySlips}
-            InputLabelProps={{ shrink: true }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                color: "black",
-                "& fieldset": { borderColor: "black" },
-                "&:hover fieldset": { borderColor: "black" },
-              },
-              "& input": { color: "black" },
-              label: { color: "black" },
-            }}
-            onChange={(e) => handleFileChange("salarySlips", e.target.files[0])}
-          />
-        </Grid>
-
-        {/* Aadhaar Front */}
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            type="file"
-            inputProps={{ accept: ".pdf,image/*" }}
-            label="Aadhaar Front"
-            placeholder="Upload PDF or Image"
-            error={!!errors.aadhaarFront}
-            helperText={errors.aadhaarFront}
-            InputLabelProps={{ shrink: true }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                color: "black",
-                "& fieldset": { borderColor: "black" },
-                "&:hover fieldset": { borderColor: "black" },
-              },
-              "& input": { color: "black" },
-              label: { color: "black" },
-            }}
-            onChange={(e) =>
-              handleFileChange("aadhaarFront", e.target.files[0])
-            }
-          />
-        </Grid>
-
-        {/* Aadhaar Back */}
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            type="file"
-            inputProps={{ accept: ".pdf,image/*" }}
-            label="Aadhaar Back"
-            placeholder="Upload PDF or Image"
-            error={!!errors.aadhaarBack}
-            helperText={errors.aadhaarBack}
-            InputLabelProps={{ shrink: true }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                color: "black",
-                "& fieldset": { borderColor: "black" },
-                "&:hover fieldset": { borderColor: "black" },
-              },
-              "& input": { color: "black" },
-              label: { color: "black" },
-            }}
-            onChange={(e) => handleFileChange("aadhaarBack", e.target.files[0])}
-          />
-        </Grid>
-
-        {/* PAN Card */}
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            type="file"
-            inputProps={{ accept: ".pdf,image/*" }}
-            label="PAN Card"
-            placeholder="Upload PDF or Image"
-            error={!!errors.panCard}
-            helperText={errors.panCard}
-            InputLabelProps={{ shrink: true }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                color: "black",
-                "& fieldset": { borderColor: "black" },
-                "&:hover fieldset": { borderColor: "black" },
-              },
-              "& input": { color: "black" },
-              label: { color: "black" },
-            }}
-            onChange={(e) => handleFileChange("panCard", e.target.files[0])}
-          />
-        </Grid>
-
-        {/* Other Document Type */}
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            select
-            label="Other Document Type"
-            placeholder="Select Document Type"
-            value={formValues.otherType}
-            onChange={handleDropdownChange}
-            InputLabelProps={{ shrink: true }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                color: "black",
-                "& fieldset": { borderColor: "black" },
-                "&:hover fieldset": { borderColor: "black" },
-              },
-              label: { color: "black" },
-            }}
+          <Button
+            variant="outlined"
+            onClick={addMoreDocumentFields}
+            disabled={formValues.otherDocuments.length >= availableOptions.length}
           >
-            <MenuItem value="">None</MenuItem>
-            <MenuItem value="Residential Address">Residential Address</MenuItem>
-            <MenuItem value="Electricity Bill">Electricity Bill</MenuItem>
-            <MenuItem value="Gas Connection">Gas Connection</MenuItem>
-          </TextField>
+            Add More Documents
+          </Button>
         </Grid>
-
-        {/* Other Document */}
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            type="file"
-            inputProps={{ accept: ".pdf,image/*" }}
-            label="Other Document (Optional)"
-            placeholder="Upload PDF or Image"
-            InputLabelProps={{ shrink: true }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                color: "black",
-                "& fieldset": { borderColor: "black" },
-                "&:hover fieldset": { borderColor: "black" },
-              },
-              "& input": { color: "black" },
-              label: { color: "black" },
-            }}
-            onChange={(e) =>
-              handleFileChange("otherDocument", e.target.files[0])
-            }
-          />
+        <Grid item xs={12}>
+          <Box mt={3} textAlign="center">
+            <Button
+              variant="outlined"
+              onClick={() => MySwal.close()}
+              sx={{ mr: 2, color: "black", borderColor: "black" }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              disabled={isSubmitDisabled() || loading}
+              sx={{ backgroundColor: "orange", color: "white" }}
+              startIcon={loading && <CircularProgress size={20} />}
+            >
+              {loading ? "Submitting..." : "Submit"}
+            </Button>
+          </Box>
         </Grid>
       </Grid>
-
-      {/* Submit and Cancel Buttons */}
-      <Box mt={3} textAlign="right">
-        <Button
-          variant="outlined"
-          onClick={() => MySwal.close()}
-          sx={{ mr: 2, color: "black", borderColor: "black" }}
-        >
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          disabled={loading}
-          sx={{ backgroundColor: "orange", color: "white" }}
-          startIcon={loading && <CircularProgress size={20} />}
-        >
-          {loading ? "Submitting..." : "Submit"}
-        </Button>
-      </Box>
     </Box>
   );
 };

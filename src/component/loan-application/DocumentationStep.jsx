@@ -58,7 +58,7 @@ const DocumentationStep = ({ onComplete, disabled, prefillData }) => {
             : "linear-gradient(45deg, #4D4D4E, orange)",
           cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
           height: 150,
-          width: "1o0%",
+          width: "100%",
           maxWidth: 350,
           transition: "all 0.3s",
           boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",

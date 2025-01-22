@@ -53,6 +53,55 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
     setOpenModal(true);
   };
 
+  const handlePincodeChange = async (e) => {
+    const value = e.target.value;
+
+    if (/^\d{0,6}$/.test(value)) {
+      setFormValues({ ...formValues, pincode: value });
+
+      if (value.length === 6) {
+        try {
+          const response = await fetch(`https://api.postalpincode.in/pincode/${value}`);
+          const data = await response.json();
+
+          if (data[0].Status === "Success") {
+            const { Block, State } = data[0].PostOffice[0];
+            setFormValues((prev) => ({
+              ...prev,
+              city: Block,
+              state: State,
+            }));
+          } else {
+            setFormValues((prev) => ({
+              ...prev,
+              city: "",
+              state: "",
+            }));
+            Swal.fire({
+              icon: "error",
+              title: "Invalid Pincode",
+              text: "Please enter a valid pincode.",
+            });
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "An error occurred while fetching data. Please try again later.",
+          });
+        }
+      } else {
+        setFormValues((prev) => ({
+          ...prev,
+          city: "",
+          state: "",
+        }));
+      }
+    } else {
+      setFormValues({ ...formValues, pincode: "", city: "", state: "" });
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (stepData.fields.some((field) => field.name === name)) {
@@ -179,38 +228,68 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
       <Dialog open={openModal} onClose={() => setOpenModal(false)}>
         <DialogTitle>{stepData.title}</DialogTitle>
         <DialogContent>
-          {stepData.fields?.map((field, index) => (
-            <Box key={index} sx={{ marginBottom: 2 }}>
-              {field.type === "select" ? (
-                <select
-                  name={field.name}
-                  onChange={handleInputChange}
-                  value={formValues[field.name] || ""}
-                  style={{ width: "100%", padding: "8px", borderRadius: "4px" }}
-                >
-                  <option value="" disabled selected>
-                    {field.label}
-                  </option>
-                  {field.options?.map((option, idx) => (
-                    <option key={idx} value={option}>
-                      {option}
+          {stepData.fields
+            ?.filter((field) => !["pincode", "city", "state"].includes(field.name)) // Exclude pincode, city, and state if present in stepData.fields
+            .map((field, index) => (
+              <Box key={index} sx={{ marginBottom: 2 }}>
+                {field.type === "select" ? (
+                  <select
+                    name={field.name}
+                    onChange={handleInputChange}
+                    value={formValues[field.name] || ""}
+                    style={{ width: "100%", padding: "8px", borderRadius: "4px" }}
+                  >
+                    <option value="" disabled selected>
+                      {field.label}
                     </option>
-                  ))}
-                </select>
-              ) : (
-                <TextField
-                  fullWidth
-                  name={field.name}
-                  label={field.label}
-                  value={formValues[field.name] || ""}
-                  onChange={handleInputChange}
-                  variant="outlined"
-                  margin="normal"
-                  type={field.type}
-                />
-              )}
-            </Box>
-          ))}
+                    {field.options?.map((option, idx) => (
+                      <option key={idx} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <TextField
+                    fullWidth
+                    name={field.name}
+                    label={field.label}
+                    value={formValues[field.name] || ""}
+                    onChange={handleInputChange}
+                    variant="outlined"
+                    margin="normal"
+                    type={field.type}
+                  />
+                )}
+              </Box>
+            ))}
+
+          {/* Editable Pincode, City, and State */}
+          <TextField
+            label="Pincode"
+            value={formValues.pincode || ""}
+            onChange={handlePincodeChange}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+            required
+          />
+          <TextField
+            label="City"
+            value={formValues.city || ""}
+            onChange={handleInputChange} // Make city editable
+            name="city"
+            fullWidth
+            sx={{ marginBottom: 2 }}
+            required
+          />
+          <TextField
+            label="State"
+            value={formValues.state || ""}
+            onChange={handleInputChange} // Make state editable
+            name="state"
+            fullWidth
+            sx={{ marginBottom: 2 }}
+            required
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenModal(false)} color="secondary">
@@ -221,6 +300,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
           </Button>
         </DialogActions>
       </Dialog>
+
     </>
   );
 };

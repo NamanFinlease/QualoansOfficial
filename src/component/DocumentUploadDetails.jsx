@@ -3,59 +3,37 @@ import {
   Box,
   Typography,
   Grid,
-  Avatar,
   Divider,
-  CircularProgress,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CloseIcon from "@mui/icons-material/Close";
 import { BASE_URL } from "../baseURL";
 
 const DocumentUploadDetails = () => {
-  // State to manage document upload status
-  const [documentStatus, setDocumentStatus] = useState({
-    bankStatement: false,
-    salarySlip: false,
-    sanctionLetter: false,
-    others: false,
-  });
-
+  const [singleDocuments, setSingleDocuments] = useState([]);
+  const [multipleDocuments, setMultipleDocuments] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchDocumentStatus = async () => {
       try {
-        // const token =
-        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
-        const response = await fetch(
-            `${BASE_URL}/api/loanApplication/getDocumentStatus`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                // Authorization: `Bearer ${token}`,
-              },
-              credentials: 'include', // Ensures cookies and credentials are included in the request
-            }
-          );
-          
-        
+        const response = await fetch(`${BASE_URL}/api/loanApplication/getDocumentStatus`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
         if (!response.ok) {
           throw new Error("Failed to fetch document data");
         }
 
         const data = await response.json();
-        
-        setDocumentStatus({
-          bankStatement: data?.multipleDocumentsStatus
-          ?.bankStatement || false,
-          salarySlip: data?.multipleDocumentsStatus
-          ?.salarySlip || false,
-          sanctionLetter: data?.multipleDocumentsStatus
-          ?.sanctionLetter || false,
-          others: data?.multipleDocumentsStatus
-          ?.others || false,
-        });
+
+        setSingleDocuments(data.singleDocumentsStatus || []);
+        setMultipleDocuments(data.multipleDocumentsStatus || {});
       } catch (err) {
         setError(err.message);
       } finally {
@@ -76,78 +54,66 @@ const DocumentUploadDetails = () => {
 
   return (
     <Box
-    sx={{
-      padding: 3,
-      background: "linear-gradient(90deg, #4D4D4E, orange)",
-      boxShadow: 3,
-      ml: { xs: 0, sm: 10 }, // Margin left 0 on smaller screens and 30 on larger ones
-
-      borderRadius: 3,
-      width: { xs: "80%", sm: "53%", md: "60%" }, 
-      height: "auto", // Increased height (auto for dynamic adjustment)
-      maxWidth: "400px", // Set a max width if needed
-      margin: "auto", // Center the box
-    }}
-  >
-    <Typography
-      variant="h4"
-      gutterBottom
-      align="center"
-      sx={{ mb: 3, color: "white" }} // Set text color to white
-    >      
-      Document Upload Status
+      sx={{
+        padding: 3,
+        background: "linear-gradient(90deg, #4D4D4E, orange)",
+        boxShadow: 3,
+        ml: { xs: 0, sm: 10 },
+        borderRadius: 3,
+        width: { xs: "80%", sm: "53%", md: "60%" },
+        height: "auto",
+        maxWidth: "400px",
+        margin: "auto",
+      }}
+    >
+      <Typography
+        variant="h4"
+        gutterBottom
+        align="center"
+        sx={{ mb: 3, color: "white" }}
+      >
+        Document Upload Status
       </Typography>
 
       <Divider sx={{ marginBottom: 2 }} />
 
       <Grid container direction="column" spacing={2}>
-        {/* Bank Statement */}
-        <Grid item>
-          <Typography sx={{ color: "white" }}>
-            Bank Statement:{" "}
-            {documentStatus.bankStatement ? (
-              <CheckCircleIcon sx={{ color: "green" }} />
-            ) : (
-              "Pending"
-            )}
-          </Typography>
-        </Grid>
+        {/* Single Documents */}
+        {singleDocuments.map((doc, index) => (
+          <Grid item key={index}>
+            <Typography sx={{ color: "white" }}>
+              {doc.type}:{" "}
+              {doc.status === "Uploaded" ? (
+                <CheckCircleIcon sx={{ color: "green" }} />
+              ) : (
+                <CloseIcon sx={{ color: "red" }} />
+              )}
+            </Typography>
+          </Grid>
+        ))}
 
-        {/* Salary Slip */}
-        <Grid item>
-          <Typography sx={{ color: "white" }}>
-            Salary Slip:{" "}
-            {documentStatus.salarySlip ? (
-              <CheckCircleIcon sx={{ color: "green" }} />
-            ) : (
-              "Pending"
-            )}
-          </Typography>
-        </Grid>
+        {/* Multiple Documents */}
+        {Object.entries(multipleDocuments).map(([docType, status], index) => (
+          
+          
+          <>
+          {docType!=="sanctionLetter" &&(
+            
+        
+          <Grid item key={index}>
+            <Typography sx={{ color: "white" }}>
 
-        {/* Sanction Letter */}
-        <Grid item>
-          <Typography sx={{ color: "white" }}>
-            Sanction Letter:{" "}
-            {documentStatus.sanctionLetter ? (
-              <CheckCircleIcon sx={{ color: "green" }} />
-            ) : (
-              "Pending"
-            )}
-          </Typography>
-        </Grid>
-
-        {/* Other Documents */}
-        <Grid item>
-          <Typography sx={{ color: "white" }}>
-            Other Documents:{" "}
-            {documentStatus.others ? (
-              <CheckCircleIcon sx={{ color: "green" }} />
-            ) : (
-              "Pending"
-            )}
-          </Typography>
-        </Grid>
+              {docType}:{" "}
+              {status === "Uploaded" ? (
+                <CheckCircleIcon sx={{ color: "green" }} />
+              ) : (
+                <CloseIcon sx={{ color: "red" }} />
+              )}
+            </Typography>
+          </Grid>
+           ) }
+            </>
+        ))}
       </Grid>
     </Box>
   );

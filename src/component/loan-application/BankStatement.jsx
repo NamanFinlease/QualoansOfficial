@@ -1,80 +1,89 @@
-import React, { useState, useEffect } from "react";
-import { Box, Grid, Typography, IconButton } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
 import SweetAlert from "sweetalert2";
-import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 
 const BankStatement = ({ onComplete, disabled, prefillData }) => {
   const [bankStatement, setBankStatement] = useState(prefillData || null);
   const [stepCompleted, setStepCompleted] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
-  useEffect(() => {
-    if (bankStatement) {
-      setStepCompleted(true);
-      onComplete({ bankStatement });
-    }
-  }, [bankStatement, onComplete]);
-
-  const handleBankStatementUpload = () => {
-    const inputFile = document.createElement("input");
-    inputFile.type = "file";
-    inputFile.accept = ".pdf,.jpg,.png"; // Accept specific formats for bank statements
-    inputFile.onchange = async (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        setBankStatement(file); // Save the uploaded file for later use
-        await uploadBankStatementToServer(file);
-      }
-    };
-    inputFile.click();
+  const handleOpenModal = () => {
+    if (!disabled) setIsModalOpen(true);
   };
 
-  const uploadBankStatementToServer = async (file) => {
-    const formData = new FormData();
-    formData.append("bankStatement", file); // Key "bankStatement"
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setBankStatement(prefillData || null); // Reset upload state if closed
+  };
+
+  const handleBankStatementUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setBankStatement(file); // Set the uploaded file in the state
+      setStepCompleted(true); // Mark the step as completed
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!bankStatement) {
+      SweetAlert.fire("Error", "Please upload a bank statement first.", "error");
+      return;
+    }
+
+    setIsUploading(true);
 
     try {
+      const formData = new FormData();
+      formData.append("bankStatement", bankStatement); // Key "bankStatement"
+
       const response = await fetch(
         `${BASE_URL}/api/loanApplication/uploadDocuments`,
         {
           method: "PATCH",
-          headers: {},
-          body: formData, // Include the FormData object
-          credentials: "include", // Ensures that cookies are sent with the request
+          body: formData,
+          credentials: "include",
         }
       );
 
       if (response.ok) {
-        const responseData = await response.json(); // Parse JSON response
-        SweetAlert.fire(
-          "Success",
-          "Bank statement uploaded successfully!",
-          "success"
-        );
-        setStepCompleted(true); // Mark step as completed
-        onComplete({ bankStatement: file }); // Pass the data to parent onComplete
+        const responseData = await response.json();
+        onComplete({ bankStatement }); // Notify parent that upload is complete
+        SweetAlert.fire("Success", "Bank statement uploaded successfully!", "success");
       } else {
-        const errorData = await response.json(); // Parse error details
-        SweetAlert.fire(
-          "Error",
-          errorData.message || "Unexpected error occurred.",
-          "error"
-        );
+        const errorData = await response.json();
+        SweetAlert.fire("Error", errorData.message || "Unexpected error occurred.", "error");
       }
     } catch (error) {
-      SweetAlert.fire(
-        "Error",
-        error.message ||
-          "An error occurred while uploading the bank statement.",
-        "error"
-      );
+      SweetAlert.fire("Error", error.message || "An error occurred while uploading.", "error");
+    } finally {
+      setIsUploading(false);
+      setIsModalOpen(false); // Close the modal after successful upload
     }
   };
 
-  // Render the UI for the bank statement upload step
+  const handleDelete = () => {
+    setBankStatement(null); // Reset uploaded file
+    setStepCompleted(false); // Reset step completion
+  };
+
   return (
+    <Box>
+      {/* Main Upload Box */}
       <Box
         sx={{
           display: "flex",
@@ -90,7 +99,7 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
             : "linear-gradient(45deg, #4D4D4E, orange)",
           cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
           height: 150,
-          width: "1o0%",
+          width: "100%",
           maxWidth: 350,
           transition: "all 0.3s",
           boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
@@ -98,15 +107,15 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
             backgroundColor: disabled
               ? "#ccc"
               : stepCompleted
-              ? "green" // Keep the green background on hover if the step is completed
+              ? "green"
               : "orange",
             color: disabled ? "white" : "black",
             transform: disabled ? "none" : "scale(1.03)",
           },
         }}
-        onClick={!disabled ? handleBankStatementUpload : null}
-    >
-    <IconButton
+        onClick={!disabled ? handleOpenModal : null} // Trigger modal on click instead of upload
+      >
+        <IconButton
           sx={{
             marginBottom: 1,
             color: "white",
@@ -120,22 +129,82 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
             <CheckCircleIcon sx={{ color: "white" }} />
           ) : (
             <DescriptionIcon />
-        )}
-      </IconButton>
-      <Box sx={{ textAlign: "left", width: "100%" }}>
-        <Typography
-          sx={{
-            fontWeight: "bold",
-            marginBottom: 1,
-            color: "white",
-          }}
-        >
-          Fetch Bank Statement
-        </Typography>
-        <Typography variant="body2" sx={{ color: "white" }}>
-          Share your bank statement
-        </Typography>
+          )}
+        </IconButton>
+        <Box sx={{ textAlign: "left", width: "100%" }}>
+          <Typography
+            sx={{
+              fontWeight: "bold",
+              marginBottom: 1,
+              color: "white",
+            }}
+          >
+            Upload Bank Statement
+          </Typography>
+          <Typography variant="body2" sx={{ color: "white" }}>
+            Share your bank statement
+          </Typography>
+        </Box>
       </Box>
+
+      {/* Modal for Upload */}
+      <Dialog open={isModalOpen} onClose={handleCloseModal} fullWidth maxWidth="sm">
+        <DialogTitle>
+          Upload Bank Statement
+          <IconButton
+            onClick={handleCloseModal}
+            sx={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" sx={{ marginBottom: 2 }}>
+            Please upload your bank statement in PDF, JPG, or PNG format.
+          </Typography>
+          <Button
+            variant="contained"
+            component="label"
+            disabled={isUploading}
+            sx={{ marginBottom: 2,bgcolor:"#4D4D4E" }}
+          >
+            {isUploading ? "Uploading..." : "Choose File"}
+            <input
+              type="file"
+              hidden
+              accept=".pdf,.jpg,.png"
+              onChange={handleBankStatementUpload} // Just handle the file selection
+            />
+          </Button>
+          {bankStatement && (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="body2" color="textSecondary" sx={{ flexGrow: 1 }}>
+                Uploaded File: {bankStatement.name}
+              </Typography>
+              <IconButton onClick={handleDelete} color="error">
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="error">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSubmit} // Call submit function here
+            disabled={!bankStatement || isUploading}
+            variant="contained"
+            sx={{
+              backgroundColor: 'orange',
+              '&:hover': {
+                backgroundColor: '#FF7043', // Optional: darker shade for hover effect
+              },
+            }}          >
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
