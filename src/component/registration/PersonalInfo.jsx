@@ -17,10 +17,7 @@ import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
-
-
-
-const PersonalInfo = ({ onComplete, disabled }) => {
+const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [personalDetails, setPersonalDetails] = useState(null);
@@ -34,12 +31,21 @@ const PersonalInfo = ({ onComplete, disabled }) => {
   });
   const [stepCompleted, setStepCompleted] = useState(false); // Track step completion
   const [error, setError] = useState("");
+  const [isPersonalInfoUpdated, setIsPersonalInfoUpdated] = useState(false);
+
+  useEffect(() => {
+    if (prefillData) {
+      setIsPersonalInfoUpdated(true);
+    }
+  }, [prefillData]);
 
   // StepBox Component
-  
+
   const StepBox = ({ icon, title, description, disabled, completed }) => (
     <Box
-      onClick={!disabled && !completed ? () => handleCompleteStep("personal") : null}
+      onClick={
+        !disabled && !completed ? () => handleCompleteStep("personal") : null
+      }
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -50,7 +56,7 @@ const PersonalInfo = ({ onComplete, disabled }) => {
         margin: 1,
         width: "30%",
         minWidth: 200,
-        cursor: disabled || completed ? "not-allowed" : "pointer",
+        cursor: completed ? "not-allowed" : "pointer",
         textAlign: "left",
         background: completed
           ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
@@ -72,16 +78,14 @@ const PersonalInfo = ({ onComplete, disabled }) => {
       >
         {completed ? <CheckCircle /> : icon}
       </IconButton>
-  
+
       <Box sx={{ ml: 2, flexGrow: 1 }}>
-        <Typography sx={{ fontWeight: "bold" }}>
-          {title}
-        </Typography>
+        <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
         <Typography variant="body2">{description}</Typography>
       </Box>
     </Box>
   );
-  
+
   const handleCompleteStep = async (step) => {
     if (step === "personal") {
       await showPersonalInfoForm();
@@ -91,11 +95,15 @@ const PersonalInfo = ({ onComplete, disabled }) => {
   const showPersonalInfoForm = async () => {
     setIsFetching(true);
     try {
-      const response = await axios.get(`${BASE_URL}/api/user/getProfileDetails`, {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/user/getProfileDetails`,
+        {
+          withCredentials: true,
+        }
+      );
 
-      if (response.status !== 200) throw new Error("Failed to fetch profile details.");
+      if (response.status !== 200)
+        throw new Error("Failed to fetch profile details.");
 
       const { success, data } = response.data;
       if (success && data?.personalDetails) {
@@ -174,13 +182,12 @@ const PersonalInfo = ({ onComplete, disabled }) => {
   return (
     <>
       <StepBox
-        icon={ <Person />}
+        icon={<Person />}
         title="Personal Information"
         description="Please update your personal details."
         onClick={() => setOpenModal(true)}
         disabled={disabled || stepCompleted}
-        completed={stepCompleted}
-
+        completed={isPersonalInfoUpdated}
       />
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
@@ -196,9 +203,7 @@ const PersonalInfo = ({ onComplete, disabled }) => {
             marginBottom: "30%",
           }}
         >
-          <Typography sx={{ marginBottom: 2 }}>
-            Share Your Details
-          </Typography>
+          <Typography sx={{ marginBottom: 2 }}>Share Your Details</Typography>
 
           <TextField
             label="Full Name"
