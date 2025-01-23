@@ -6,10 +6,16 @@ import journeryprocess from "../assets/image/Untitled design (1).gif";
 import Dashboard from "./Dashboard";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import SpeedIcon from "@mui/icons-material/Speed";
+import SecurityIcon from "@mui/icons-material/Security";
+import PhoneIcon from "@mui/icons-material/Phone";
+import EmailIcon from "@mui/icons-material/Email";
+import { useSidebar } from "../context/SidebarContext";
 
 const OurJourney = () => {
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { sidebarOpen, sidebarExpanded } = useSidebar();
   const [selectedOption, setSelectedOption] = useState("Dashboard");
   const [isVideoPage, setIsVideoPage] = useState(false);
   const [isRegistration, setRegistration] = useState(true); // Track the current process
@@ -50,297 +56,317 @@ const OurJourney = () => {
     }
   };
 
+  const features = [
+    {
+      title: "Quick Disbursement",
+      description: "Get funds in your account within 24 hours",
+      icon: <SpeedIcon sx={{ fontSize: 40, color: "#F26722" }} />,
+    },
+    {
+      title: "Competitive Rates",
+      description: "Competitive interest rates",
+      icon: <AccountBalanceIcon sx={{ fontSize: 40, color: "#F26722" }} />,
+    },
+    {
+      title: "Zero Collateral",
+      description: "No security deposit required",
+      icon: <SecurityIcon sx={{ fontSize: 40, color: "#F26722" }} />,
+    },
+  ];
+
   return (
     <div>
       <Dashboard />
-
       <Box
         sx={{
-          marginLeft: { xs: 0, sm: "200px" }, // Adjust margin for mobile
-          transition: "margin-left 0.3s ease",
-          padding: { xs: 1, sm: 2 },
-          mt: 2,
+          padding: { xs: 2, sm: 3 },
+          backgroundColor: "#f8f9fa",
+          minHeight: "100vh",
+          width: `calc(100% - ${
+            sidebarOpen ? (sidebarExpanded ? 240 : 70) : 0
+          }px)`,
+          marginLeft: `${sidebarOpen ? (sidebarExpanded ? 240 : 70) : 0}px`,
+          transition: "width 0.3s ease, margin-left 0.3s ease",
+         
         }}
       >
-        {selectedOption === "Dashboard" && !isVideoPage && (
-          <Box
-            sx={{
-              border: "5px solid #4D4D4E",
-              borderTop: "none",
-              borderRight: "none",
-              display: "flex",
-              flexDirection: { xs: "column", sm: "row" }, // Stack columns on small screens
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              background: "linear-gradient(45deg, #4D4D4E, orange)",
-              borderRadius: 5,
-              boxShadow: 3,
-              padding: 2,
-              margin: "auto",
-              maxWidth: 800,
-              mt: 5,
-            }}
-          >
-            {/* Left Content Box */}
-            <Box
-              sx={{
-                flex: 1,
-                alignItems: "flex-start",
-                backgroundColor: "#f5f5f5",
-                borderRadius: 2,
-                boxShadow: 3,
-                padding: 2,
-                width: "100%",
-                maxWidth: 400,
-                mb: { xs: 3, sm: 0 }, // Margin-bottom on small screens
-              }}
-            >
-              <Box
-                sx={{
-                  backgroundColor: "#fff",
-                  padding: 2,
-                  borderRadius: 2,
-                  boxShadow: 3,
-                  maxWidth: 350,
-                  textAlign: "center",
-                  width: "100%",
-                  marginBottom: 4,
-                }}
-              >
-                <Typography variant="h6" gutterBottom>
-                  {isRegistration
-                    ? "Complete your Registration"
-                    : "Complete your Loan Application"}
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: { xs: "column", sm: "row" },
-                  gap: 2,
-                }}
-              >
-                <Button
-                  variant="contained"
-                  sx={{
-                    width: "100%",
-                    maxWidth: "200px",
-                    borderRadius: "30px",
-                    fontWeight: "bold",
-                    textTransform: "none",
-                    background: "linear-gradient(45deg, #00A5E5, orange)",
-                    "&:hover": {
-                      background: "orange",
-                    },
-                  }}
-                  onClick={handleContinue}
-                >
-                  {isRegistration === "registration" ? "Continue" : "Apply"}
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    window.location.href =
-                      "https://www.youtube.com/watch?v=a3ICNMQW7Ok&ab_channel=TimotiusJoso"; // Replace with your video URL
-                  }}
-                  // sx={{
-                  //   width: "100%",
-                  //   maxWidth: "200px",
-                  //   borderRadius: "30px",
-                  //   fontWeight: "bold",
-                  //   textTransform: "none",
-                  //   background: "linear-gradient(45deg, #00A5E5, orange)",
-                  //   "&:hover": {
-                  //     background: "orange",
-                  //   },
-                  // }}
-                  sx={{
-                    background: "#4D4D4E",
-                    width: "100%",
-                    maxWidth: "200px",
-                    borderRadius: "30px",
-                    fontWeight: "bold",
-                    textTransform: "none",
-                  }}
-                >
-                  Learn How to Apply
-                </Button>
-              </Box>
-            </Box>
-
-            {/* Right Image Box */}
-            <Box
-              sx={{
-                marginLeft: { sm: 2, xs: 0 },
-                borderTopLeftRadius: 2,
-                borderBottomRightRadius: 2,
-                overflow: "hidden",
-                width: { xs: "100%", sm: 250 },
-                height: "auto",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <img
-                src={journeryprocess}
-                alt="Credit Executive"
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  borderRadius: "8px",
-                  objectFit: "cover",
-                }}
-              />
-            </Box>
-          </Box>
-        )}
-
-        {/* Description Box */}
         <Box
           sx={{
-            marginLeft: { xs: 0, md: "280px" },
-            transition: "margin-left 0.3s ease",
-            mt: 5,
-            fontWeight: "800",
-            fontSize: { xs: "16px", sm: "18px", md: "20px" },
-            lineHeight: 1.5,
+            background: "linear-gradient(135deg, #1a237e 0%, #0d47a1 100%)",
+            borderRadius: "20px",
+            padding: { xs: 4, md: 6 },
             color: "white",
-            background: "linear-gradient(45deg, #4D4D4E, orange)",
-            borderRadius: "10px",
-            padding: { xs: "16px", sm: "30px" },
-            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-            maxWidth: "800px",
-            width: "90%",
-            mb: 5,
             textAlign: "center",
+            mb: 4,
+            boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+            position: "relative",
+            overflow: "hidden",
           }}
         >
-          <Typography>
-            Experience a smarter way to borrow with our instant personal loans.
-            No collateral, no credit score worries—just a seamless 100% online
-            process with minimal documentation. Achieve your goals effortlessly
-            and step into a world of financial ease today!
-          </Typography>
-        </Box>
-
-        {/* Credit Executive Section */}
-        <Box
-          sx={{
-            border: "5px solid #4D4D4E",
-            borderTop: "none",
-            borderRight: "none",
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" }, // Stack on small, side-by-side on medium+
-            justifyContent: "space-between",
-            alignItems: { xs: "center", md: "flex-start" },
-            background: "linear-gradient(45deg, #4D4D4E, orange)",
-            borderRadius: 5,
-            boxShadow: 3,
-            padding: 2,
-            margin: "auto",
-            maxWidth: 810,
-            mt: 5,
-            gap: { xs: 3, md: 2 }, // Space between content and image
-          }}
-        >
-          {/* Text Content Box */}
           <Box
             sx={{
-              flex: 1,
-              paddingRight: { md: 2, xs: 0 }, // Adjust padding based on screen size
-              textAlign: { xs: "center", md: "left" },
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "#F26722",
+              zIndex: 0,
             }}
-          >
+          />
+          <Box sx={{ position: "relative", zIndex: 1 }}>
+            <Typography
+              variant="h3"
+              sx={{
+                fontWeight: 700,
+                mb: 2,
+                fontSize: { xs: "2rem", md: "2.5rem" },
+              }}
+            >
+              Fast & Easy Personal Loans
+            </Typography>
             <Typography
               variant="h6"
-              gutterBottom
-              sx={{ fontWeight: "bold", color: "white" }}
-            >
-              Credit Executive
-            </Typography>
-            <Typography
-              variant="body1"
               sx={{
-                mt: 2,
-                fontWeight: "bold",
-                marginBottom: 1,
-                fontStyle: "italic",
-                color: "white",
+                mb: 4,
+                color: "rgba(255,255,255,0.9)",
+                maxWidth: "800px",
+                margin: "0 auto",
               }}
             >
-              Stuck in application at any point? Feel free to call your credit
-              executive.
+              Get instant approval with minimal documentation and competitive
+              interest rates
             </Typography>
-            <Typography
-              variant="body2"
-              sx={{ fontWeight: "bold", color: "white", mt: 2 }}
-            >
-              Name: John Doe
-            </Typography>
-            <Typography variant="body2" sx={{ color: "white", mt: 2 }}>
-              Email: johndoe@example.com
-            </Typography>
-            <Typography variant="body2" sx={{ color: "white", mt: 2 }}>
-              Mobile: +91 9876543210
-            </Typography>
-
-            {/* Buttons */}
             <Box
               sx={{
-                marginTop: 2,
                 display: "flex",
-                justifyContent: { xs: "center", md: "flex-start" },
+                flexDirection: { xs: "column", sm: "row" },
+                justifyContent: "center",
                 gap: 2,
+                marginTop: 2,
               }}
             >
               <Button
                 variant="contained"
-                color="primary"
+                size="medium"
+                onClick={handleContinue}
                 sx={{
-                  paddingX: 4,
-                  borderRadius: "30px",
-                  fontWeight: "bold",
-                  textTransform: "none",
-                  background: "linear-gradient(45deg, #00A5E5, orange)",
+                  backgroundColor: "#ffff",
+                  color: "#000",
+                  px: 4,  
+                  py: 1,
+                  fontWeight: 600,
                   "&:hover": {
-                    background: "orange",
+                    backgroundColor: "#8b8887",
                   },
+                  // boxShadow: "0 4px 15px #8b8887",
+                  borderRadius: "30px",
+                  width: { xs: "100%", sm: "230px" },
                 }}
-                onClick={() => (window.location.href = "tel:+919876543210")}
               >
-                Call Us
+                {isRegistration ? "Registration" : "Loan Application"}
               </Button>
               <Button
-                variant="outlined"
-                color="primary"
-                sx={{
-                  paddingX: 4,
-                  borderRadius: "30px",
-                  fontWeight: "bold",
-                  textTransform: "none",
-                  border: "2px solid #4D4D4E",
-                  color: "white",
+                variant="contained"
+                onClick={() => {
+                  window.location.href =
+                    "https://www.youtube.com/watch?v=a3ICNMQW7Ok&ab_channel=TimotiusJoso"; // Replace with your video URL
                 }}
-                onClick={() =>
-                  (window.location.href = "mailto:johndoe@example.com")
-                }
+                sx={{
+                  backgroundColor: "#fff",
+                  color: "#000",
+                  px: 4,
+                  py: 1,
+                  fontWeight: 600,
+                  "&:hover": {
+                    backgroundColor: "#8b8887",
+                  },
+                  // boxShadow: "0 4px 15px #8b8887",
+                  borderRadius: "30px",
+                }}
               >
-                Email Us
+                Learn How to Apply
               </Button>
             </Box>
           </Box>
+        </Box>
 
-          {/* Right Image Box */}
+        {/* Features Grid - Updated with Material icons and better styling */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" },
+            gap: 4,
+            mb: 6,
+          }}
+        >
+          {features.map((feature) => (
+            <Box
+              key={feature.title}
+              sx={{
+                backgroundColor: "white",
+                borderRadius: "16px",
+                padding: 4,
+                textAlign: "center",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                "&:hover": {
+                  transform: "translateY(-5px)",
+                  boxShadow: "0 8px 25px rgba(0,0,0,0.12)",
+                },
+              }}
+            >
+              <Box sx={{ mb: 3 }}>{feature.icon}</Box>
+              <Typography
+                variant="h6"
+                sx={{
+                  mb: 2,
+                  fontWeight: 600,
+                  color: "#1c1c1c",
+                }}
+              >
+                {feature.title}
+              </Typography>
+              <Typography color="text.secondary">
+                {feature.description}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+
+        {/* Loan Process Steps */}
+        <Box
+          sx={{
+            backgroundColor: "white",
+            borderRadius: "16px",
+            padding: 4,
+            mb: 4,
+            boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+          }}
+        >
+          <Typography
+            variant="h5"
+            sx={{ mb: 4, fontWeight: 600, textAlign: "center" }}
+          >
+            Simple 3-Step Process
+          </Typography>
           <Box
             sx={{
-              marginLeft: { md: 2, xs: 0 },
-              borderTopLeftRadius: 2,
-              borderBottomRightRadius: 2,
-              overflow: "hidden",
-              width: { xs: "100%", md: 250 },
-              height: "auto",
               display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              gap: 4,
               justifyContent: "center",
+            }}
+          >
+            {[
+              {
+                step: 1,
+                title: "Fill Application",
+                desc: "Complete the online form",
+              },
+              {
+                step: 2,
+                title: "Quick Verification",
+                desc: "Digital KYC process",
+              },
+              { step: 3, title: "Get Money", desc: "Direct bank transfer" },
+            ].map((step) => (
+              <Box
+                key={step.step}
+                sx={{
+                  textAlign: "center",
+                  position: "relative",
+                  flex: 1,
+                }}
+              >
+                <Typography
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    backgroundColor: "#F26722",
+                    color: "white",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    margin: "0 auto",
+                    mb: 2,
+                    fontSize: "1.2rem",
+                    fontWeight: 600,
+                  }}
+                >
+                  {step.step}
+                </Typography>
+                <Typography variant="h6" sx={{ mb: 1 }}>
+                  {step.title}
+                </Typography>
+                <Typography color="text.secondary">{step.desc}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+
+        {/* Credit Executive Card - Modernized */}
+        <Box
+          sx={{
+            backgroundColor: "white",
+            borderRadius: "16px",
+            padding: 4,
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: "center",
+            gap: 4,
+            boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+          }}
+        >
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
+              Need Assistance?
+            </Typography>
+            <Typography sx={{ mb: 3, color: "text.secondary" }}>
+              Our credit executives are here to help you through the loan
+              process
+            </Typography>
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                John Doe - Senior Credit Executive
+              </Typography>
+              <Typography color="text.secondary">
+                Available Mon-Fri, 9AM-6PM
+              </Typography>
+            </Box>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <Button
+                variant="contained"
+                startIcon={<span>📞</span>}
+                onClick={() => (window.location.href = "tel:+919876543210")}
+                sx={{
+                  backgroundColor: "#F26722",
+                  "&:hover": { backgroundColor: "#1C1C1C" },
+                }}
+              >
+                Call Now
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<span>✉️</span>}
+                onClick={() =>
+                  (window.location.href = "mailto:johndoe@example.com")
+                }
+                sx={{
+                  color: "#F26722",
+                }}
+              >
+                Email
+              </Button>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              width: { xs: "100%", md: "300px" },
+              height: "300px",
+              overflow: "hidden",
+              borderRadius: "12px",
             }}
           >
             <img
@@ -348,8 +374,7 @@ const OurJourney = () => {
               alt="Credit Executive"
               style={{
                 width: "100%",
-                height: "auto",
-                borderRadius: "8px",
+                height: "100%",
                 objectFit: "cover",
               }}
             />
