@@ -34,7 +34,7 @@ const InputField = ({ label, value, onChange, placeholder }) => (
   />
 );
 
-const MobileVerification = ({ onComplete, disabled, prefillData, }) => {
+const MobileVerification = ({ onComplete, disabled, prefillData }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [mobile, setMobile] = useState(prefillData?.mobile || "");
   const [otp, setOtp] = useState("");
