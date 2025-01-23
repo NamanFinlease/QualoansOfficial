@@ -104,12 +104,12 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
             ? "linear-gradient(45deg, #b5b5b5, #d6d6d6)"
             : "linear-gradient(45deg, #4D4D4E, orange)",
           color: disabled || isPanValidated ? "white" : "black",
-          "&:hover": {
-            background: disabled
-              ? "linear-gradient(45deg, #b5b5b5, #d6d6d6)"
-              : isPanValidated && "linear-gradient(45deg, #66BB6A, #A5D6A7)",
-            // : "linear-gradient(45deg, #ffcc00, orange)",
-          },
+          // "&:hover": {
+          //   background: disabled
+          //     ? "linear-gradient(45deg, #b5b5b5, #d6d6d6)"
+          //     : isPanValidated && "linear-gradient(45deg, #66BB6A, #A5D6A7)",
+          //   // : "linear-gradient(45deg, #ffcc00, orange)",
+          // },
           "@media (max-width: 600px)": {
             width: "80%",
             margin: "auto",
@@ -134,7 +134,9 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: disabled || isPanValidated ? "#7f7f7f" : "white" }}
+            sx={{
+              color: isPanValidated ? "white" : disabled ? "#7f7f7f" : "white",
+            }}
           >
             Verify your PAN card number
           </Typography>
