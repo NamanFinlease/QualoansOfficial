@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
+import { 
+  Box, 
+  Typography, 
+  Grid, 
+  Avatar, 
+  Divider,
+  CircularProgress
+} from "@mui/material";
 import { BASE_URL } from "../baseURL";
+import { sharedStyles } from "./shared/styles";
 
 // Define the UserProfile component
 const UserProfile = () => {
@@ -53,12 +61,20 @@ const UserProfile = () => {
 
   // Show loading state while fetching data
   if (loading) {
-    return <Typography variant="h6" align="center">Loading...</Typography>;
+    return (
+      <Box sx={sharedStyles.loadingContainer}>
+        <CircularProgress sx={{ color: "#F26722" }} />
+      </Box>
+    );
   }
 
   // Show error if there's an issue with the API request
   if (error) {
-    return <Typography variant="h6" align="center" color="error">{error}</Typography>;
+    return (
+      <Box sx={sharedStyles.loadingContainer}>
+        <Typography color="error">{error}</Typography>
+      </Box>
+    );
   }
 
   // If no user data, show a message
@@ -67,69 +83,54 @@ const UserProfile = () => {
   }
 
   return (
-    <Box
-      sx={{
-        padding: 3,
-        background: "linear-gradient(90deg, #4D4D4E, orange)",
-        boxShadow: 3,
-        ml: { xs: 0, sm: 10 }, // Margin left 0 on smaller screens and 30 on larger ones
-
-        borderRadius: 3,
-        width: { xs: "100%", sm: "53%", md: "60%" }, // Responsive width for different screens
-        maxWidth: "400px", // Max width for larger screens
-        margin: "auto", // Center the box
-      }}
-    >
-      <Typography
-        variant="h4"
-        gutterBottom
-        align="center"
-        sx={{ mb: 3, color: "white" }}
-      >
+    <Box sx={sharedStyles.containerBox}>
+      <Typography variant="h4" sx={sharedStyles.title}>
         User Profile
       </Typography>
 
       {/* Profile Picture */}
-      <Grid container justifyContent="center" sx={{ mb: 3 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
         <Avatar
-          alt="Profile Picture"
+          alt={user.fullName}
           src={user.profileImage}
-          sx={{ width: 120, height: 120 }}
+          sx={{ width: 120, height: 120, border: "3px solid white" }}
         />
-      </Grid>
+      </Box>
 
-      {/* Name */}
       <Typography
         variant="h5"
-        align="center"
-        sx={{ fontWeight: "bold", mb: 2, color: "white" }}
+        sx={{
+          ...sharedStyles.fieldValue,
+          textAlign: "center",
+          mb: 2,
+          fontWeight: "500"
+        }}
       >
         {user.fullName}
       </Typography>
 
-      <Divider sx={{ marginBottom: 2 }} />
+      <Divider sx={sharedStyles.divider} />
 
-      {/* Profile Details (Stacked in a column) */}
-      <Grid container direction="column" spacing={2}>
-        {/* PAN Number */}
+      <Grid container sx={sharedStyles.gridContainer}>
         <Grid item xs={12}>
-          <Typography variant="body1" sx={{ color: "white" }}>
-            <strong>PAN Number:</strong> {user.PAN}
-          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+            <Typography sx={sharedStyles.fieldLabel}>PAN Number:</Typography>
+            <Typography sx={sharedStyles.fieldValue}>{user.PAN}</Typography>
+          </Box>
         </Grid>
 
-        {/* Aadhaar Number */}
         <Grid item xs={12}>
-          <Typography variant="body1" sx={{ color: "white" }}>
-            <strong>Aadhaar Number:</strong> {user.aadhaarNumber}
-          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+            <Typography sx={sharedStyles.fieldLabel}>Aadhaar Number:</Typography>
+            <Typography sx={sharedStyles.fieldValue}>{user.aadhaarNumber}</Typography>
+          </Box>
         </Grid>
 
-        {/* Mobile Number */}
         <Grid item xs={12}>
-          <Typography variant="body1" sx={{ color: "white" }}>
-            <strong>Mobile Number:</strong> {user.mobile}
-          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+            <Typography sx={sharedStyles.fieldLabel}>Mobile Number:</Typography>
+            <Typography sx={sharedStyles.fieldValue}>{user.mobile}</Typography>
+          </Box>
         </Grid>
       </Grid>
     </Box>
