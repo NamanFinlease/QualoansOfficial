@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
-import { BASE_URL } from "../baseURL";
+import { 
+  Box, 
+  Typography, 
+  Grid, 
+  Avatar, 
+  Divider,
+  CircularProgress
+} from "@mui/material";import { BASE_URL } from "../baseURL";
+import { sharedStyles } from "./shared/styles";
+
 // import { getToken } from "../../tokenManager";
 // Define the UserProfile component
 const BaasicInformation = () => {
