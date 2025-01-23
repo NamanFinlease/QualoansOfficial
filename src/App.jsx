@@ -25,6 +25,7 @@ import LoanCalculator from "./component/LoanCalculator";
 import LoginForm from "./component/LoginForm";
 import RepayLoan from "./component/RepayLoan";
 import ProtectedRoute from "./ProtectedRoute";
+import { SidebarProvider } from "./context/SidebarContext";
 
 const MinimalLayout = ({ children }) => <div>{children}</div>;
 
@@ -48,131 +49,133 @@ function App() {
   const showHeaderFooter = routesWithHeaderFooter.includes(location.pathname);
 
   return (
-    <div>
-      {showHeaderFooter && <Header />}
-      <Routes>
-        {/* Routes with Header and Footer */}
-        <Route path="/" element={<MainContent />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/apply-now" element={<ApplyNow />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/repay-now" element={<RepayLoan />} />
-        <Route path="/terms-condition" element={<TermsAndConditions />} />
-        <Route path="/calculator" element={<LoanCalculator />} />
-        <Route path="/faq" element={<FAQs />} />
-        <Route path="/login-form" element={<LoginForm />} />
+    <SidebarProvider>
+      <div>
+        {showHeaderFooter && <Header />}
+        <Routes>
+          {/* Routes with Header and Footer */}
+          <Route path="/" element={<MainContent />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/apply-now" element={<ApplyNow />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/repay-now" element={<RepayLoan />} />
+          <Route path="/terms-condition" element={<TermsAndConditions />} />
+          <Route path="/calculator" element={<LoanCalculator />} />
+          <Route path="/faq" element={<FAQs />} />
+          <Route path="/login-form" element={<LoginForm />} />
 
-        {/* Protected Routes */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute requiresLogin={true}>
+          {/* Protected Routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute requiresLogin={true}>
+                <MinimalLayout>
+                  <Dashboard />
+                </MinimalLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/registration"
+            element={
+              <ProtectedRoute requiresLogin={true}>
+                <MinimalLayout>
+                  <RegistrationSteps />
+                </MinimalLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/loan-application"
+            element={
+              <ProtectedRoute requiresLogin={true}>
+                <MinimalLayout>
+                  <LoanApplication />
+                </MinimalLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* <Route
+            path="/calculator-loan"
+            element={
+              <ProtectedRoute>
+                <MinimalLayout>
+                  <Calculator />
+                </MinimalLayout>
+              </ProtectedRoute>
+            }
+          /> */}
+
+          <Route
+            path="/ourjourney"
+            element={
+              <ProtectedRoute requiresLogin={true}>
+                <MinimalLayout>
+                  <OurJourney />
+                </MinimalLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/user-preview"
+            element={
+              <ProtectedRoute requiresLogin={true}>
+                <MinimalLayout>
+                  <UserPreview />
+                </MinimalLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* <Route
+            path="/loanRepayment"
+            element={
               <MinimalLayout>
-                <Dashboard />
+                <LoanRepaymentComponent />
               </MinimalLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/registration"
-          element={
-            <ProtectedRoute requiresLogin={true}>
+            }
+          />
+          <Route
+            path="/loandetailstable"
+            element={
               <MinimalLayout>
-                <RegistrationSteps />
+                <LoanDetailsTable />
               </MinimalLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/loan-application"
-          element={
-            <ProtectedRoute requiresLogin={true}>
+            }
+          />
+          <Route
+            path="/loanstatus"
+            element={
               <MinimalLayout>
-                <LoanApplication />
+                <LoanStatus />
               </MinimalLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* <Route
-          path="/calculator-loan"
-          element={
-            <ProtectedRoute>
+            }
+          />
+          <Route
+            path="/payment-option"
+            element={
               <MinimalLayout>
-                <Calculator />
+                <PaymentOptions />
               </MinimalLayout>
-            </ProtectedRoute>
-          }
-        /> */}
-
-        <Route
-          path="/ourjourney"
-          element={
-            <ProtectedRoute requiresLogin={true}>
+            }
+          />
+          <Route
+            path="/calculator"
+            element={
               <MinimalLayout>
-                <OurJourney />
+                <LoanCalculator />
               </MinimalLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/user-preview"
-          element={
-            <ProtectedRoute requiresLogin={true}>
-              <MinimalLayout>
-                <UserPreview />
-              </MinimalLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* <Route
-          path="/loanRepayment"
-          element={
-            <MinimalLayout>
-              <LoanRepaymentComponent />
-            </MinimalLayout>
-          }
-        />
-        <Route
-          path="/loandetailstable"
-          element={
-            <MinimalLayout>
-              <LoanDetailsTable />
-            </MinimalLayout>
-          }
-        />
-        <Route
-          path="/loanstatus"
-          element={
-            <MinimalLayout>
-              <LoanStatus />
-            </MinimalLayout>
-          }
-        />
-        <Route
-          path="/payment-option"
-          element={
-            <MinimalLayout>
-              <PaymentOptions />
-            </MinimalLayout>
-          }
-        />
-        <Route
-          path="/calculator"
-          element={
-            <MinimalLayout>
-              <LoanCalculator />
-            </MinimalLayout>
-          }
-        /> */}
-      </Routes>
-      {showHeaderFooter && <Footer />}
-    </div>
+            }
+          /> */}
+        </Routes>
+        {showHeaderFooter && <Footer />}
+      </div>
+    </SidebarProvider>
   );
 }
 
