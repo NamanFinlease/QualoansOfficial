@@ -11,7 +11,7 @@ import { sharedStyles } from "./shared/styles";
 
 // import { getToken } from "../../tokenManager";
 // Define the UserProfile component
-const BaasicInformation = () => {
+const BasicInformation = () => {
 //   const token=getToken();
     
   // State to store user data
@@ -92,78 +92,63 @@ const BaasicInformation = () => {
   }
 
   return (
-    <Box
-    sx={{
-      padding: 3,
-      background: "linear-gradient(90deg, #4D4D4E, orange)",
-      boxShadow: 3,
-     ml: { xs: 0, sm: 10 }, // Margin left 0 on smaller screens and 30 on larger ones
-
-        borderRadius: 3,
-        width: { xs: "100%", sm: "53%", md: "60%" }, 
-      height: "auto", // Increased height (auto for dynamic adjustment)
-      maxWidth: "400px", // Set a max width if needed
-      margin: "auto", // Center the box
-    }}
-  >
-    <Typography
-      variant="h4"
-      gutterBottom
-      align="center"
-      sx={{ mb: 3, color: "white"}} // Set text color to white
-    >
-      Basic Information
-    </Typography>
+      <Box sx={sharedStyles.containerBox}>
+            <Typography variant="h4" sx={sharedStyles.title}>
+            Basic Information
+          </Typography>
   
     {/* Profile Picture */}
     
+        <Divider sx={sharedStyles.divider} />
   
-    <Divider sx={{ marginBottom: 2 }} />
+        <Grid container sx={sharedStyles.gridContainer}>
+          <Grid item xs={12}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+              <Typography sx={sharedStyles.fieldLabel}>Full Name :</Typography>
+              <Typography sx={sharedStyles.fieldValue}>{user.fullName}</Typography>
+            </Box>
+          </Grid>
   
-    {/* Profile Details (Stacked in a column) */}
-    <Grid container direction="column" spacing={2}>
+          <Grid item xs={12}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+              <Typography sx={sharedStyles.fieldLabel}>Gender:</Typography>
+              <Typography sx={sharedStyles.fieldValue}>{user.gender}</Typography>
+            </Box>
+          </Grid>
+  
+          <Grid item xs={12}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+              <Typography sx={sharedStyles.fieldLabel}>DOB:</Typography>
+              <Typography sx={sharedStyles.fieldValue}>{user.dob}</Typography>
+            </Box>
+          </Grid>
 
-    <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>Name:</strong> {user.fullName}
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>Gender:</strong> {user.gender}
-        </Typography>
-      </Grid>
-      {/* PAN Number */}
-      <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>DOB:</strong> {user.dob}
-        </Typography>
-      </Grid>
+          <Grid item xs={12}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+              <Typography sx={sharedStyles.fieldLabel}>Personal Email:</Typography>
+              <Typography sx={sharedStyles.fieldValue}>{user.personalEmail}</Typography>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+              <Typography sx={sharedStyles.fieldLabel}>Marital Status:</Typography>
+              <Typography sx={sharedStyles.fieldValue}>{user.maritalStatus}</Typography>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+              <Typography sx={sharedStyles.fieldLabel}>Spouse Name:</Typography>
+              <Typography sx={sharedStyles.fieldValue}>{user.spouseName}</Typography>
+            </Box>
+          </Grid>
+        </Grid>
   
-      {/* Aadhaar Number */}
-      <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> PersonalEmail:</strong> {user.personalEmail}
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>maritalStatus:</strong> {user.maritalStatus}
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> SpouseName:</strong> {user.spouseName}
-        </Typography>
-      </Grid>
-      
-      {/* Mobile Number */}
-      
-    </Grid>
   </Box>
   
   
 );
 };
 
-export default BaasicInformation;
+export default BasicInformation;

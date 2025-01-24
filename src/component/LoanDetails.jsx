@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
 import { BASE_URL } from "../baseURL";
 import { getToken } from "../../tokenManager";
+import { sharedStyles } from "./shared/styles";
 
 // Define loan the  component
 const LoanDetails = () => {
@@ -86,58 +87,57 @@ const token = getToken();
   }
 
   return (
-    <Box
-    sx={{
-      padding: 3,
-      background: "linear-gradient(90deg, #4D4D4E, orange)",
-      boxShadow: 3,
-      borderRadius: 3,
-
-      width: "100%", // Decreased width (can adjust as needed)
-      height: "auto", // Increased height (auto for dynamic adjustment)
-      maxWidth: "400px", // Set a max width if needed
-      margin: "auto", // Center the box
-    }}
-  >
-    <Typography
-      variant="h4"
-      gutterBottom
-      align="center"
-      sx={{ mb: 3, color: "white" }} // Set text color to white
-    >
+<Box sx={sharedStyles.containerBox}>
+            <Typography variant="h4" sx={sharedStyles.title}>
       Loan Information
     </Typography>
   
     {/* Profile Picture */}
     
+   <Divider sx={sharedStyles.divider} />
+    
   
-    <Divider sx={{ marginBottom: 2 }} />
+      
   
     {/* Profile Details (Stacked in a column) */}
-    <Grid container direction="column" spacing={2}>
+    <Grid container sx={sharedStyles.gridContainer}>
 
     <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>Principal:</strong> {loan.principal}
-        </Typography>
+
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+      
+      <Typography sx={sharedStyles.fieldLabel}>Principal:</Typography>
+      <Typography sx={sharedStyles.fieldValue}>{loan.principal}</Typography>
+        </Box>
+       
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>IntrestPerMonth:</strong> {loan.intrestPerMonth}
-        </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+      
+      <Typography sx={sharedStyles.fieldLabel}>IntrestPerMonth:</Typography>
+      <Typography sx={sharedStyles.fieldValue}>{loan.intrestPerMonth}</Typography>
+        </Box>
+        
       </Grid>
       {/* PAN Number */}
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>TenureMonth:</strong> {loan.tenureMonth}
-        </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+      
+      <Typography sx={sharedStyles.fieldLabel}>Tenure Month:</Typography>
+      <Typography sx={sharedStyles.fieldValue}>{loan.tenureMonth}</Typography>
+        </Box>
+       
       </Grid>
   
       {/* Aadhaar Number */}
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> LoanPurpose:</strong> {loan.loanPurpose}
-        </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+      
+      <Typography sx={sharedStyles.fieldLabel}>Loan Purpose:</Typography>
+      <Typography sx={sharedStyles.fieldValue}>{loan.loanPurpose}</Typography>
+        </Box>
+       
+       
       </Grid>
 
     </Grid>

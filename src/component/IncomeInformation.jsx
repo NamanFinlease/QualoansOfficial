@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Divider } from "@mui/material";
 import { BASE_URL } from "../baseURL";
+import { sharedStyles } from "./shared/styles";
 // import { getToken } from "../../tokenManager";
 // Define the income Profile component
 const IncomeInformation = () => {
@@ -87,63 +88,64 @@ const IncomeInformation = () => {
   }
 
   return (
-    <Box
-    sx={{
-      padding: 3,
-      background: "linear-gradient(90deg, #4D4D4E, orange)",
-      boxShadow: 3,
-      ml: { xs: 0, sm: 10 }, // Margin left 0 on smaller screens and 30 on larger ones
-
-      borderRadius: 3,
-      width: { xs: "80%", sm: "53%", md: "60%" }, 
-      height: "auto", // Increased height (auto for dynamic adjustment)
-      maxWidth: "400px", // Set a max width if needed
-      margin: "auto", // Center the box
-    }}
-  >
-    <Typography
-      variant="h4"
-      gutterBottom
-      align="center"
-      sx={{ mb: 3, color: "white" }} // Set text color to white
-    >
+    <Box sx={sharedStyles.containerBox}>
+            <Typography variant="h4" sx={sharedStyles.title}>
       Income Information
     </Typography>
   
    
    
-    <Divider sx={{ marginBottom: 2 }} />
+        <Divider sx={sharedStyles.divider} />
   
     {/* Profile Details (Stacked in a column) */}
-    <Grid container direction="column" spacing={2}>
+        <Grid container sx={sharedStyles.gridContainer}>
 
     <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>EmployementType:</strong> {income.employementType}
-        </Typography>
+    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+
+    <Typography sx={sharedStyles.fieldLabel}>EmployementType:</Typography>
+    <Typography sx={sharedStyles.fieldValue}>{income.employementType}</Typography>
+       </Box>
+
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>MonthlyIncome:</strong> {income.monthlyIncome}
-        </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+
+      <Typography sx={sharedStyles.fieldLabel}>Monthly Income:</Typography>
+      <Typography sx={sharedStyles.fieldValue}>{income.monthlyIncome}</Typography>
+        </Box>
+
+        
       </Grid>
       {/* PAN Number */}
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>Loan Amount:</strong> {income.obligations}
-        </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+
+      <Typography sx={sharedStyles.fieldLabel}>Loan Amount:</Typography>
+      <Typography sx={sharedStyles.fieldValue}>{income.obligations}</Typography>
+        </Box>
+       
       </Grid>
   
       {/* Aadhaar Number */}
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> NextSalaryDate:</strong> {income.nextSalaryDate}
-        </Typography>
+
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+
+        <Typography sx={sharedStyles.fieldLabel}>NextSalary Date:</Typography>
+        <Typography sx={sharedStyles.fieldValue}>{income.nextSalaryDate}</Typography>
+          </Box>
+       
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> IncomeMode:</strong> {income.incomeMode}
-        </Typography>
+
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+
+      <Typography sx={sharedStyles.fieldLabel}>IncomeMode:</Typography>
+      <Typography sx={sharedStyles.fieldValue}>{income.incomeMode}</Typography>
+        </Box>
+
+       
       </Grid>
       
      

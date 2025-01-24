@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
 import { BASE_URL } from "../baseURL";
 import { getToken } from "../../tokenManager";
+import { sharedStyles } from "./shared/styles";
 // Define the UserProfile component
 const EmploymentInformation = () => {
   const token=getToken();
@@ -100,86 +101,84 @@ if (!employment) {
 }
 
 return (
-    <Box
-    sx={{
-      padding: 3,
-      background: "linear-gradient(90deg, #4D4D4E, orange)",
-      boxShadow: 3,
-      ml: { xs: 0, sm: 10 }, // Margin left 0 on smaller screens and 30 on larger ones
-
-      borderRadius: 3,
-      width: { xs: "80%", sm: "53%", md: "60%" }, 
-      height: "auto", // Increased height (auto for dynamic adjustment)
-      maxWidth: "400px", // Set a max width if needed
-      margin: "auto", // Center the box
-    }}
-  >
-    <Typography
-      variant="h4"
-      gutterBottom
-      align="center"
-      sx={{ mb: 3, color: "white" }} // Set text color to white
-    >
+ <Box sx={sharedStyles.containerBox}>
+            <Typography variant="h4" sx={sharedStyles.title}>
         Employment Information
     </Typography>
   
     {/* Profile Picture */}
     
   
-    <Divider sx={{ marginBottom: 2 }} />
+        <Divider sx={sharedStyles.divider} />
   
     {/* Profile Details (Stacked in a column) */}
-    <Grid container direction="column" spacing={2}>
+        <Grid container sx={sharedStyles.gridContainer}>
    
            
     <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>WorkFrom:</strong> {employment.workFrom}
-        </Typography>
+
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Typography sx={sharedStyles.fieldLabel}>WorkFrom:</Typography>
+          <Typography sx={sharedStyles.fieldValue}>{employment.workFrom}</Typography>
+             </Box>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>OfficeEmail:</strong> {employment.officeEmail}
-        </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Typography sx={sharedStyles.fieldLabel}>Office Email:</Typography>
+          <Typography sx={sharedStyles.fieldValue}>{employment.officeEmail}</Typography>
+             </Box>
       </Grid>
       {/* PAN Number */}
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>CompanyName:</strong> {employment.companyName}
-        </Typography>
+
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Typography sx={sharedStyles.fieldLabel}>Company Name :</Typography>
+          <Typography sx={sharedStyles.fieldValue}>{employment.companyName}</Typography>
+             </Box>
+        
       </Grid>
   
       {/* Aadhaar Number */}
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> Designation:</strong> {employment.designation}
-        </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Typography sx={sharedStyles.fieldLabel}>Designation:</Typography>
+          <Typography sx={sharedStyles.fieldValue}>{employment.designation}</Typography>
+             </Box>
+       
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> OfficeAddrress:</strong> {employment.officeAddrress}
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> Landmark:</strong> {employment.landmark}
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> City:</strong> {employment.city}
-        </Typography>
-      </Grid>
 
-      <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> State:</strong> {employment.state}
-        </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Typography sx={sharedStyles.fieldLabel}>Office Addrress:</Typography>
+          <Typography sx={sharedStyles.fieldValue}>{employment.officeAddrress}</Typography>
+             </Box>
+
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> Pincode:</strong> {employment.pincode}
-        </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Typography sx={sharedStyles.fieldLabel}>Landmark:</Typography>
+          <Typography sx={sharedStyles.fieldValue}>{employment.landmark}</Typography>
+             </Box>
+      </Grid>
+      <Grid item xs={12}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Typography sx={sharedStyles.fieldLabel}>City:</Typography>
+          <Typography sx={sharedStyles.fieldValue}>{employment.city}</Typography>
+             </Box>
+      </Grid>
+      <Grid item xs={12}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Typography sx={sharedStyles.fieldLabel}>State:</Typography>
+          <Typography sx={sharedStyles.fieldValue}>{employment.state}</Typography>
+             </Box>
+      
+      </Grid>
+      <Grid item xs={12}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Typography sx={sharedStyles.fieldLabel}>Pincode:</Typography>
+          <Typography sx={sharedStyles.fieldValue}>{employment.pincode}</Typography>
+             </Box>
+        
       </Grid>
       
 

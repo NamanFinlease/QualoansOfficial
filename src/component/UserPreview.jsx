@@ -28,7 +28,7 @@ import PendingIcon from "@mui/icons-material/Pending";
 import Dashboard from "./Dashboard";
 import UserProfile from "./UserProfile";
 import BasicInformation from "./BasicInformation";
-import RecidencialAddress from "./RecidencialAddress";
+import ResidentialAddress from "./ResidentialAddress";
 import IncomeInformation from "./IncomeInformation";
 import LoanDetails from "./LoanDetails";
 import EmploymentInformation from "./EmploymentInformation";
@@ -83,19 +83,15 @@ export default function UserPreview() {
       case "basic-information":
         return <BasicInformation />;
       case "residential-address":
-        return <RecidencialAddress />;
+        return <ResidentialAddress />;
       case "income-details":
         return <IncomeInformation/>;
       case "loan-details":
         return <LoanDetails />;
       case "employment-information":
-        return (
-          <EmploymentInformation/>
-        );
+        return <EmploymentInformation/>
       case "disbursal-bank-details":
-        return (
-          <DisbursalBankDetails/>
-        );
+        return <DisbursalBankDetails/>;
       case "documents":
         return <DocumentUploadDetails/>;
     }

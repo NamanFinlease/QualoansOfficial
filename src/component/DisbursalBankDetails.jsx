@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
 import { BASE_URL } from "../baseURL";
 import { getToken } from "../../tokenManager";
+import { sharedStyles } from "./shared/styles";
 
 // Define the UserProfile component
 const DisbursalBankDetails = () => {
@@ -91,67 +92,64 @@ if (!disbursal) {
 }
 
 return (
-    <Box
-    sx={{
-      padding: 3,
-      background: "linear-gradient(90deg, #4D4D4E, orange)",
-      boxShadow: 3,
-      ml: { xs: 0, sm: 10 }, // Margin left 0 on smaller screens and 30 on larger ones
-
-      borderRadius: 3,
-      width: { xs: "80%", sm: "53%", md: "60%" }, 
-      height: "auto", // Increased height (auto for dynamic adjustment)
-      maxWidth: "400px", // Set a max width if needed
-      margin: "auto", // Center the box
-    }}
-  >
-    <Typography
-      variant="h4"
-      gutterBottom
-      align="center"
-      sx={{ mb: 3, color: "white" }} // Set text color to white
-    >    Bank Details
+     <Box sx={sharedStyles.containerBox}>
+     <Typography variant="h4" sx={sharedStyles.title}>  
+                Bank Details
     </Typography>
   
     {/* Profile Picture */}
     
   
-    <Divider sx={{ marginBottom: 2 }} />
+        <Divider sx={sharedStyles.divider} />
   
     {/* Profile Details (Stacked in a column) */}
-    <Grid container direction="column" spacing={2}>
+        <Grid container sx={sharedStyles.gridContainer}>
     <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>Beneficiary Name:</strong> {disbursal.beneficiaryName}
-        </Typography>
+
+              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+                <Typography sx={sharedStyles.fieldLabel}>beneficiaryName:</Typography>
+                <Typography sx={sharedStyles.fieldValue}> {disbursal.beneficiaryName}</Typography>
+                   </Box>
+        
       </Grid>
     <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>BankName:</strong> {disbursal.bankName}
-        </Typography>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+                <Typography sx={sharedStyles.fieldLabel}>Bank Name:</Typography>
+                <Typography sx={sharedStyles.fieldValue}> {disbursal.bankName}</Typography>
+                   </Box>
+        
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>AccountNumber:</strong> {disbursal.accountNumber}
-        </Typography>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+                <Typography sx={sharedStyles.fieldLabel}>Account Number:</Typography>
+                <Typography sx={sharedStyles.fieldValue}> {disbursal.accountNumber}</Typography>
+                   </Box>
+       
       </Grid>
       {/* PAN Number */}
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>IfscCode:</strong> {disbursal.ifscCode}
-        </Typography>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+                <Typography sx={sharedStyles.fieldLabel}>ifsc Code:</Typography>
+                <Typography sx={sharedStyles.fieldValue}> {disbursal.ifscCode}</Typography>
+                   </Box>
+       
+       
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong>Branch Name:</strong> {disbursal.branchName}
-        </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+                <Typography sx={sharedStyles.fieldLabel}>Branch Name:</Typography>
+                <Typography sx={sharedStyles.fieldValue}> {disbursal.branchName}</Typography>
+                   </Box>
+        
       </Grid>
   
       {/* Aadhaar Number */}
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: "white" }}>
-          <strong> AccountType:</strong> {disbursal.accountType}
-        </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+                <Typography sx={sharedStyles.fieldLabel}>accountType:</Typography>
+                <Typography sx={sharedStyles.fieldValue}> {disbursal.accountType}</Typography>
+                   </Box>
+       
       </Grid>
 
 
