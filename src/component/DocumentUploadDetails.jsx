@@ -8,6 +8,7 @@ import {
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CloseIcon from "@mui/icons-material/Close";
 import { BASE_URL } from "../baseURL";
+import { sharedStyles } from "./shared/styles";
 
 const DocumentUploadDetails = () => {
   const [singleDocuments, setSingleDocuments] = useState([]);
@@ -53,68 +54,56 @@ const DocumentUploadDetails = () => {
   }
 
   return (
-    <Box
-      sx={{
-        padding: 3,
-        background: "linear-gradient(90deg, #4D4D4E, orange)",
-        boxShadow: 3,
-        ml: { xs: 0, sm: 10 },
-        borderRadius: 3,
-        width: { xs: "80%", sm: "53%", md: "60%" },
-        height: "auto",
-        maxWidth: "400px",
-        margin: "auto",
-      }}
-    >
-      <Typography
-        variant="h4"
-        gutterBottom
-        align="center"
-        sx={{ mb: 3, color: "white" }}
-      >
-        Document Upload Status
+<Box sx={sharedStyles.containerBox}>
+            <Typography variant="h4" sx={sharedStyles.title}> 
+                  Document Upload Status
       </Typography>
 
-      <Divider sx={{ marginBottom: 2 }} />
+        <Divider sx={sharedStyles.divider} />
 
-      <Grid container direction="column" spacing={2}>
-        {/* Single Documents */}
-        {singleDocuments.map((doc, index) => (
-          <Grid item key={index}>
-            <Typography sx={{ color: "white" }}>
-              {doc.type}:{" "}
-              {doc.status === "Uploaded" ? (
-                <CheckCircleIcon sx={{ color: "green" }} />
-              ) : (
-                <CloseIcon sx={{ color: "red" }} />
-              )}
-            </Typography>
-          </Grid>
-        ))}
+        <Box sx={{ maxHeight: "600px", overflowY: "auto", padding: 2,  borderRadius: "8px" }}>
+        <Grid container sx={sharedStyles.gridContainer} spacing={2}>
+          {/* Single Documents */}
+          {singleDocuments.map((doc, index) => (
+            <Grid item xs={12} key={index}>
+              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+                <Typography sx={sharedStyles.fieldLabel}>
+                  {doc.type}
+                </Typography>
+                <Typography sx={sharedStyles.fieldValue}>
+                  {doc.status === "Uploaded" ? (
+                    <CheckCircleIcon sx={{ color: "green" }} />
+                  ) : (
+                    <CloseIcon sx={{ color: "red" }} />
+                  )}
+                </Typography>
+              </Box>
+            </Grid>
+          ))}
 
-        {/* Multiple Documents */}
-        {Object.entries(multipleDocuments).map(([docType, status], index) => (
-          
-          
-          <>
-          {docType!=="sanctionLetter" &&(
-            
-        
-          <Grid item key={index}>
-            <Typography sx={{ color: "white" }}>
+          {/* Multiple Documents */}
+          {Object.entries(multipleDocuments).map(([docType, status], index) => (
+            docType !== "sanctionLetter" && (
+              <Grid item xs={12} key={index}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+                  <Typography sx={sharedStyles.fieldLabel}>
+                    {docType}
+                  </Typography>
+                  <Typography sx={sharedStyles.fieldValue}>
+                    {status === "Uploaded" ? (
+                      <CheckCircleIcon sx={{ color: "green" }} />
+                    ) : (
+                      <CloseIcon sx={{ color: "red" }} />
+                    )}
+                  </Typography>
+                </Box>
+              </Grid>
+            )
+          ))}
+        </Grid>
+        </Box>
 
-              {docType}:{" "}
-              {status === "Uploaded" ? (
-                <CheckCircleIcon sx={{ color: "green" }} />
-              ) : (
-                <CloseIcon sx={{ color: "red" }} />
-              )}
-            </Typography>
-          </Grid>
-           ) }
-            </>
-        ))}
-      </Grid>
+
     </Box>
   );
 };
