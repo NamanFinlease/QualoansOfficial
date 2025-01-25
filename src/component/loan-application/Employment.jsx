@@ -61,7 +61,9 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
 
       if (value.length === 6) {
         try {
-          const response = await fetch(`https://api.postalpincode.in/pincode/${value}`);
+          const response = await fetch(
+            `https://api.postalpincode.in/pincode/${value}`
+          );
           const data = await response.json();
 
           if (data[0].Status === "Success") {
@@ -165,37 +167,65 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
   return (
     <>
       <Box
+        // sx={{
+        //   display: "flex",
+        //   flexDirection: "column",
+        //   alignItems: "flex-start",
+        //   padding: 3,
+        //   border: "1px solid #ddd",
+        //   borderRadius: 3,
+        //   background: disabled
+        //     ? "#ccc"
+        //     : stepCompleted
+        //     ? "green" // Change the background color to green when the step is completed
+        //     : "linear-gradient(45deg, #4D4D4E, orange)",
+        //   cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
+        //   height: 150,
+        //   width: "1o0%",
+        //   maxWidth: 350,
+        //   transition: "all 0.3s",
+        //   boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+        //   "&:hover": {
+        //     backgroundColor: disabled
+        //       ? "#ccc"
+        //       : stepCompleted
+        //       ? "green" // Keep the green background on hover if the step is completed
+        //       : "orange",
+        //     color: disabled ? "white" : "black",
+        //     transform: disabled ? "none" : "scale(1.03)",
+        //   },
+        // }}
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
-          padding: 3,
-          border: "1px solid #ddd",
+          justifyContent: "center",
+          padding: 2,
+          borderColor:
+            // completed ? "green" :
+            disabled ? "#1c1c1c" : "#F26722",
           borderRadius: 3,
-          background: disabled
-            ? "#ccc"
-            : stepCompleted
-            ? "green" // Change the background color to green when the step is completed
-            : "linear-gradient(45deg, #4D4D4E, orange)",
-          cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
-          height: 150,
-          width: "1o0%",
-          maxWidth: 350,
-          transition: "all 0.3s",
-          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-          "&:hover": {
-            backgroundColor: disabled
-              ? "#ccc"
-              : stepCompleted
-              ? "green" // Keep the green background on hover if the step is completed
-              : "orange",
-            color: disabled ? "white" : "black",
-            transform: disabled ? "none" : "scale(1.03)",
+          margin: 1,
+          width: "25%",
+          minWidth: 200,
+          cursor: disabled ? "not-allowed" : "pointer",
+          textAlign: "left",
+          background:
+            //  completed
+            //   ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
+            //   :
+            disabled ? "#d9d9d9" : "#F26722",
+          color:
+            //  completed ||
+            !disabled ? "white" : "#1c1c1c",
+          "@media (max-width: 600px)": {
+            width: "80%",
+            margin: "auto",
           },
         }}
         onClick={openEmploymentModal}
       >
-               <IconButton
+        <IconButton
           sx={{
             marginBottom: 1,
             color: "white",
@@ -208,8 +238,8 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
           {stepCompleted ? (
             <CheckCircleIcon sx={{ color: "white" }} />
           ) : (
-        
-          <AccountBalanceIcon />)}
+            <AccountBalanceIcon />
+          )}
         </IconButton>
         <Typography
           sx={{
@@ -229,7 +259,9 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
         <DialogTitle>{stepData.title}</DialogTitle>
         <DialogContent>
           {stepData.fields
-            ?.filter((field) => !["pincode", "city", "state"].includes(field.name)) // Exclude pincode, city, and state if present in stepData.fields
+            ?.filter(
+              (field) => !["pincode", "city", "state"].includes(field.name)
+            ) // Exclude pincode, city, and state if present in stepData.fields
             .map((field, index) => (
               <Box key={index} sx={{ marginBottom: 2 }}>
                 {field.type === "select" ? (
@@ -237,7 +269,11 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
                     name={field.name}
                     onChange={handleInputChange}
                     value={formValues[field.name] || ""}
-                    style={{ width: "100%", padding: "8px", borderRadius: "4px" }}
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                    }}
                   >
                     <option value="" disabled selected>
                       {field.label}
@@ -295,12 +331,15 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
           <Button onClick={() => setOpenModal(false)} color="secondary">
             Cancel
           </Button>
-          <Button onClick={handleEmploymentSubmit} color="primary">
+          <Button
+            onClick={handleEmploymentSubmit}
+            color="primary"
+            sx={{ backgroundColor: "#F26722", color: "white" }}
+          >
             Submit
           </Button>
         </DialogActions>
       </Dialog>
-
     </>
   );
 };

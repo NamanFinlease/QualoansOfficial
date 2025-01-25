@@ -41,7 +41,11 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
 
   const handleSubmit = async () => {
     if (!bankStatement) {
-      SweetAlert.fire("Error", "Please upload a bank statement first.", "error");
+      SweetAlert.fire(
+        "Error",
+        "Please upload a bank statement first.",
+        "error"
+      );
       return;
     }
 
@@ -63,13 +67,25 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
       if (response.ok) {
         const responseData = await response.json();
         onComplete({ bankStatement }); // Notify parent that upload is complete
-        SweetAlert.fire("Success", "Bank statement uploaded successfully!", "success");
+        SweetAlert.fire(
+          "Success",
+          "Bank statement uploaded successfully!",
+          "success"
+        );
       } else {
         const errorData = await response.json();
-        SweetAlert.fire("Error", errorData.message || "Unexpected error occurred.", "error");
+        SweetAlert.fire(
+          "Error",
+          errorData.message || "Unexpected error occurred.",
+          "error"
+        );
       }
     } catch (error) {
-      SweetAlert.fire("Error", error.message || "An error occurred while uploading.", "error");
+      SweetAlert.fire(
+        "Error",
+        error.message || "An error occurred while uploading.",
+        "error"
+      );
     } finally {
       setIsUploading(false);
       setIsModalOpen(false); // Close the modal after successful upload
@@ -82,35 +98,64 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
   };
 
   return (
-    <Box>
+    <>
       {/* Main Upload Box */}
       <Box
+        // sx={{
+        //   display: "flex",
+        //   flexDirection: "column",
+        //   alignItems: "flex-start",
+        //   padding: 3,
+        //   border: "1px solid #ddd",
+        //   borderRadius: 3,
+        //   background: disabled
+        //     ? "#ccc"
+        //     : stepCompleted
+        //     ? "green" // Change the background color to green when the step is completed
+        //     : "linear-gradient(45deg, #4D4D4E, orange)",
+        //   cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
+        //   height: 150,
+        //   width: "100%",
+        //   maxWidth: 350,
+        //   transition: "all 0.3s",
+        //   boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+        //   "&:hover": {
+        //     backgroundColor: disabled
+        //       ? "#ccc"
+        //       : stepCompleted
+        //       ? "green"
+        //       : "orange",
+        //     color: disabled ? "white" : "black",
+        //     transform: disabled ? "none" : "scale(1.03)",
+        //   },
+        // }}
+
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
-          padding: 3,
-          border: "1px solid #ddd",
+          justifyContent: "center",
+          padding: 2,
+          borderColor:
+            // completed ? "green" :
+            disabled ? "#1c1c1c" : "#F26722",
           borderRadius: 3,
-          background: disabled
-            ? "#ccc"
-            : stepCompleted
-            ? "green" // Change the background color to green when the step is completed
-            : "linear-gradient(45deg, #4D4D4E, orange)",
-          cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
-          height: 150,
-          width: "100%",
-          maxWidth: 350,
-          transition: "all 0.3s",
-          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-          "&:hover": {
-            backgroundColor: disabled
-              ? "#ccc"
-              : stepCompleted
-              ? "green"
-              : "orange",
-            color: disabled ? "white" : "black",
-            transform: disabled ? "none" : "scale(1.03)",
+          margin: 1,
+          width: "25%",
+          minWidth: 200,
+          cursor: disabled ? "not-allowed" : "pointer",
+          textAlign: "left",
+          background:
+            //  completed
+            //   ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
+            //   :
+            disabled ? "#d9d9d9" : "#F26722",
+          color:
+            //  completed ||
+            !disabled ? "white" : "#1c1c1c",
+          "@media (max-width: 600px)": {
+            width: "80%",
+            margin: "auto",
           },
         }}
         onClick={!disabled ? handleOpenModal : null} // Trigger modal on click instead of upload
@@ -142,13 +187,18 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
             Upload Bank Statement
           </Typography>
           <Typography variant="body2" sx={{ color: "white" }}>
-            Share your bank statement
+            Share your bank statement(last 6 month)
           </Typography>
         </Box>
       </Box>
 
       {/* Modal for Upload */}
-      <Dialog open={isModalOpen} onClose={handleCloseModal} fullWidth maxWidth="sm">
+      <Dialog
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth="sm"
+      >
         <DialogTitle>
           Upload Bank Statement
           <IconButton
@@ -166,7 +216,7 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
             variant="contained"
             component="label"
             disabled={isUploading}
-            sx={{ marginBottom: 2,bgcolor:"#4D4D4E" }}
+            sx={{ marginBottom: 2, bgcolor: "#4D4D4E" }}
           >
             {isUploading ? "Uploading..." : "Choose File"}
             <input
@@ -178,7 +228,11 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
           </Button>
           {bankStatement && (
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography variant="body2" color="textSecondary" sx={{ flexGrow: 1 }}>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                sx={{ flexGrow: 1 }}
+              >
                 Uploaded File: {bankStatement.name}
               </Typography>
               <IconButton onClick={handleDelete} color="error">
@@ -196,16 +250,17 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
             disabled={!bankStatement || isUploading}
             variant="contained"
             sx={{
-              backgroundColor: 'orange',
-              '&:hover': {
-                backgroundColor: '#FF7043', // Optional: darker shade for hover effect
+              backgroundColor: "orange",
+              "&:hover": {
+                backgroundColor: "#FF7043", // Optional: darker shade for hover effect
               },
-            }}          >
+            }}
+          >
             Submit
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </>
   );
 };
 

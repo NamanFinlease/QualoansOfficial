@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -17,37 +17,46 @@ import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
-const StepBox = ({ icon, title, description, onClick, disabled, completed }) => (
+const StepBox = ({
+  icon,
+  title,
+  description,
+  onClick,
+  disabled,
+  completed,
+}) => (
   <Box
     onClick={!disabled && !completed ? onClick : null}
     sx={{
       display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        padding: 2,
-        borderColor: completed ? "green" : disabled ? "grey" : "orange",
-        borderRadius: 3,
-        margin: 1,
-        width: "30%",
-        minWidth: 200,
-        cursor: disabled ? "not-allowed" : "pointer",
-        textAlign: "left",
-        background: completed
-          ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
-          : disabled
-          ? "lightgrey"
-          : "linear-gradient(45deg, #4D4D4E, orange)",
-        color: completed || !disabled ? "white" : "darkgrey",
-        "@media (max-width: 600px)": {
-          width: "80%",
-          margin: "auto",
-              },
+      flexDirection: "column",
+      alignItems: "flex-start",
+      justifyContent: "center",
+      padding: 2,
+      borderColor:
+        //completed ? "green" :
+        disabled ? "#1c1c1c" : "#F26722",
+      borderRadius: 3,
+      margin: 1,
+      width: "25%",
+      minWidth: 200,
+      cursor: disabled ? "not-allowed" : "pointer",
+      textAlign: "left",
+      background:
+        // completed ? "linear-gradient(45deg, #28a745, #218838)":
+        disabled ? "#d9d9d9" : "#F26722",
+      color:
+        //completed ||
+        !disabled ? "white" : "#1c1c1c",
+      "@media (max-width: 600px)": {
+        width: "80%",
+        margin: "auto",
+      },
     }}
   >
     <IconButton
       sx={{
-        color: completed ? "white" : disabled ? "grey" : "white",
+        color: completed ? "white" : disabled ? "#1c1c1c" : "white",
         ml: 1,
       }}
     >
@@ -64,12 +73,13 @@ const StepBox = ({ icon, title, description, onClick, disabled, completed }) => 
   </Box>
 );
 
-const AddressInfo = ({ onComplete, disabled }) => {
+const AddressInfo = ({ onComplete, disabled, prefillData }) => {
+  console.log("prefillData", prefillData);
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [stepCompleted, setStepCompleted] = useState(false);
-  const [state, setState] = useState('');
-  const [city, setCity] = useState('');
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
   const [formValues, setFormValues] = useState({
     address: "",
     landmark: "",
@@ -80,12 +90,17 @@ const AddressInfo = ({ onComplete, disabled }) => {
   });
   const [error, setError] = useState("");
 
+  // useEffect(() => {
+  //   if (prefillData && prefillData.pan) {
+  //     setPan(prefillData.pan);
+  //     setIsPanValidated(true);
+  //   }
+  // }, [prefillData]);
+
   const handleFormChange = (key, value) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
     if (error) setError("");
   };
-
-  
 
   const handlePincodeChange = async (e) => {
     const value = e.target.value;
@@ -97,9 +112,11 @@ const AddressInfo = ({ onComplete, disabled }) => {
       // If the pincode has exactly 6 digits, fetch city and state
       if (value.length === 6) {
         try {
-          const response = await fetch(`https://api.postalpincode.in/pincode/${value}`);
-          console.log("response",response);
-          
+          const response = await fetch(
+            `https://api.postalpincode.in/pincode/${value}`
+          );
+          console.log("response", response);
+
           const data = await response.json();
 
           if (data[0].Status === "Success") {
@@ -144,7 +161,6 @@ const AddressInfo = ({ onComplete, disabled }) => {
       setFormValues({ ...formValues, pincode: "", city: "", state: "" });
     }
   };
-
   const handleSubmit = async () => {
     if (Object.values(formValues).some((val) => !val)) {
       setError("Please fill out all fields.");
@@ -162,11 +178,11 @@ const AddressInfo = ({ onComplete, disabled }) => {
         }
       );
 
-      if (response.status >= 200 && response.status < 300) {
+      if (response.status === 200) {
         Swal.fire("Address details updated successfully!");
         setOpenModal(false);
-        setStepCompleted(true);
-        onComplete?.();
+        // Do not set stepCompleted here
+        onComplete({ formValues });
       } else {
         setError("Failed to update address details.");
       }
@@ -178,15 +194,56 @@ const AddressInfo = ({ onComplete, disabled }) => {
     }
   };
 
+  // const handleSubmit = async () => {
+  //   if (Object.values(formValues).some((val) => !val)) {
+  //     setError("Please fill out all fields.");
+  //     return;
+  //   }
+
+  //   setIsFetching(true);
+  //   try {
+  //     const response = await axios.patch(
+  //       `${BASE_URL}/api/user/currentResidence`,
+  //       formValues,
+  //       {
+  //         headers: { "Content-Type": "application/json" },
+  //         withCredentials: true,
+  //       }
+  //     );
+
+  //     if (response.status === 200) {
+  //       Swal.fire("Address details updated successfully!");
+  //       setOpenModal(false);
+  //       setStepCompleted(true);
+  //       onComplete({ formValues });
+  //     } else {
+  //       setError("Failed to update address details.");
+  //     }
+  //   } catch (error) {
+  //     console.error("API Error:", error);
+  //     setError("Error submitting address details. Please try again.");
+  //   } finally {
+  //     setIsFetching(false);
+  //   }
+  // };
+
   return (
     <>
-      <StepBox
+      {/* <StepBox
         icon={<LocationOn />}
         title="Address Information"
         description="Update your current residence details."
         onClick={() => setOpenModal(true)}
         disabled={disabled || stepCompleted}
         completed={stepCompleted}
+      /> */}
+      <StepBox
+        icon={<LocationOn />}
+        title="Address Information"
+        description="Update your current residence details."
+        onClick={() => setOpenModal(true)}
+        disabled={disabled} // Remove the `stepCompleted` condition here
+        completed={stepCompleted} // Keep completed logic if necessary
       />
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
@@ -213,7 +270,9 @@ const AddressInfo = ({ onComplete, disabled }) => {
               label={field.replace(/^\w/, (c) => c.toUpperCase())}
               value={formValues[field]}
               onChange={
-                field === "pincode" ? handlePincodeChange : (e) => handleFormChange(field, e.target.value)
+                field === "pincode"
+                  ? handlePincodeChange
+                  : (e) => handleFormChange(field, e.target.value)
               }
               fullWidth
               sx={{ marginBottom: 2 }}
@@ -226,16 +285,22 @@ const AddressInfo = ({ onComplete, disabled }) => {
             <Select
               labelId="residence-type-label"
               value={formValues.residenceType}
-              onChange={(e) => handleFormChange("residenceType", e.target.value)}
+              onChange={(e) =>
+                handleFormChange("residenceType", e.target.value)
+              }
               label="Residence Type" // Ensure this matches the InputLabel text
             >
-              {["OWNED", "RENTED", "PARENTAL", "COMPANY PROVIDED", "OTHERS"].map(
-                (type) => (
-                  <MenuItem key={type} value={type}>
-                    {type}
-                  </MenuItem>
-                )
-              )}
+              {[
+                "OWNED",
+                "RENTED",
+                "PARENTAL",
+                "COMPANY PROVIDED",
+                "OTHERS",
+              ].map((type) => (
+                <MenuItem key={type} value={type}>
+                  {type}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 
@@ -246,6 +311,7 @@ const AddressInfo = ({ onComplete, disabled }) => {
               variant="outlined"
               color="secondary"
               onClick={() => setOpenModal(false)}
+              sx={{ color: "#1c1c1c", borderColor: "#1c1c1c" }}
             >
               Cancel
             </Button>
@@ -253,6 +319,7 @@ const AddressInfo = ({ onComplete, disabled }) => {
               variant="contained"
               onClick={handleSubmit}
               disabled={isFetching || stepCompleted}
+              sx={{ backgroundColor: "#F26722", color: "white" }}
             >
               {isFetching ? <CircularProgress size={24} /> : "Submit"}
             </Button>

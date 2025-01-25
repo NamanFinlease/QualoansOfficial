@@ -120,32 +120,64 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
   return (
     <>
       <Box
+        // sx={{
+        //   display: "flex",
+        //   flexDirection: "column",
+        //   alignItems: "flex-start",
+        //   justifyContent: "center",
+        //   padding: 2,
+        //   // border: "1px solid #ddd",
+        //   borderRadius: 3,
+        //   background:
+        //     //  isComplete ? "green" :
+        //     disabled ? "#1c1c1c" : "#F26722",
+        //   cursor: disabled ? "not-allowed" : "pointer",
+        //   // height: 150,
+        //   width: "25%",
+        //   maxWidth: 200,
+        //   transition: "all 0.3s",
+        //   // boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+        //   // "&:hover": {
+        //   //   backgroundColor: disabled
+        //   //     ? "#ccc"
+        //   //     : isComplete
+        //   //     ? "green"
+        //   //     : "orange",
+        //   //   color: disabled ? "white" : "black",
+        //   //   transform: disabled ? "none" : "scale(1.03)",
+        //   // },
+        //   "@media (max-width: 600px)": {
+        //     width: "80%",
+        //     margin: "auto",
+        //   },
+        // }}
+
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
-          padding: 3,
-          border: "1px solid #ddd",
+          // justifyContent: "center",
+          padding: 2,
+          borderColor:
+            // completed ? "green" :
+            disabled ? "#1c1c1c" : "#F26722",
           borderRadius: 3,
-          background: disabled
-            ? "#ccc"
-            : isComplete
-            ? "green" // Change the background to green when the loan process is complete
-            : "linear-gradient(45deg, #4D4D4E, orange)",
+          margin: 1,
+          width: "25%",
+          minWidth: 200,
           cursor: disabled ? "not-allowed" : "pointer",
-          height: 150,
-          width: "100%",
-          maxWidth: 350,
-          transition: "all 0.3s",
-          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-          "&:hover": {
-            backgroundColor: disabled
-              ? "#ccc"
-              : isComplete
-              ? "green"
-              : "orange",
-            color: disabled ? "white" : "black",
-            transform: disabled ? "none" : "scale(1.03)",
+          textAlign: "left",
+          background:
+            //  completed
+            //   ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
+            //   :
+            disabled ? "#d9d9d9" : "#F26722",
+          color:
+            //  completed ||
+            !disabled ? "white" : "#1c1c1c",
+          "@media (max-width: 600px)": {
+            width: "80%",
+            margin: "auto",
           },
         }}
         onClick={!disabled ? openLoanCalculatorModal : null}
@@ -160,9 +192,15 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
             },
           }}
         >
-          {isComplete ? <CheckCircleIcon sx={{ color: "white" }} /> : <WorkIcon />}
+          {isComplete ? (
+            <CheckCircleIcon sx={{ color: "white" }} />
+          ) : (
+            <WorkIcon />
+          )}
         </IconButton>
-        <Typography sx={{ fontWeight: "bold", marginBottom: 1, color: "white" }}>
+        <Typography
+          sx={{ fontWeight: "bold", marginBottom: 1, color: "white" }}
+        >
           Open Loan Calculator
         </Typography>
         <Typography variant="body2" sx={{ color: "white" }}>
@@ -171,10 +209,20 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
       </Box>
 
       {/* Modal for Loan Calculator */}
-      <Dialog open={isModalOpen} onClose={closeLoanCalculatorModal} fullWidth maxWidth="md">
+      <Dialog
+        open={isModalOpen}
+        onClose={closeLoanCalculatorModal}
+        fullWidth
+        maxWidth="md"
+      >
         <DialogContent>
           <Container maxWidth="lg">
-            <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: "bold", color: "#444", marginBottom: 1 }}>
+            <Typography
+              variant="h4"
+              align="center"
+              gutterBottom
+              sx={{ fontWeight: "bold", color: "#444", marginBottom: 1 }}
+            >
               Loan Calculator
             </Typography>
 
@@ -191,7 +239,17 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
               }}
             >
               {/* Loan Image and Details */}
-              <Box component={Paper} elevation={4} sx={{ flex: 1, padding: 3, borderRadius: "4px", background: "#ffffff", boxShadow: "0px 0px 0px rgba(255, 255, 255, 0.7)" }}>
+              <Box
+                component={Paper}
+                elevation={4}
+                sx={{
+                  flex: 1,
+                  padding: 3,
+                  borderRadius: "4px",
+                  background: "#ffffff",
+                  boxShadow: "0px 0px 0px rgba(255, 255, 255, 0.7)",
+                }}
+              >
                 <img
                   src={loanImage}
                   alt="Loan"
@@ -203,7 +261,14 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                     marginBottom: "12px",
                   }}
                 />
-                <Typography sx={{ fontWeight: "bold", fontSize: "1.2rem", color: "#333", marginBottom: 2 }}>
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: "1.2rem",
+                    color: "#333",
+                    marginBottom: 2,
+                  }}
+                >
                   Get quick loans with transparent processes.
                 </Typography>
                 <Box
@@ -221,16 +286,33 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                   Processing Fee: 10%
                 </Box>
 
-                <Typography sx={{ marginTop: 2, color: "#555", textAlign: "center" }}>
-                  Experience fast approvals and easy repayments with flexible terms.
+                <Typography
+                  sx={{ marginTop: 2, color: "#555", textAlign: "center" }}
+                >
+                  Experience fast approvals and easy repayments with flexible
+                  terms.
                 </Typography>
               </Box>
 
               {/* Loan Calculator Inputs */}
-              <Box component={Paper} elevation={4} sx={{ flex: 1, padding: 3, borderRadius: "4px", background: "#f8f9fa", minHeight: "300px" }}>
+              <Box
+                component={Paper}
+                elevation={4}
+                sx={{
+                  flex: 1,
+                  padding: 3,
+                  borderRadius: "4px",
+                  background: "#f8f9fa",
+                  minHeight: "300px",
+                }}
+              >
                 <FormControl required fullWidth sx={{ marginBottom: 3 }}>
                   <InputLabel>Purpose of Loan</InputLabel>
-                  <Select value={purpose} label="Purpose of Loan" onChange={(e) => setPurpose(e.target.value)}>
+                  <Select
+                    value={purpose}
+                    label="Purpose of Loan"
+                    onChange={(e) => setPurpose(e.target.value)}
+                  >
                     <MenuItem value="TRAVEL">TRAVEL</MenuItem>
                     <MenuItem value="MEDICAL">MEDICAL</MenuItem>
                     <MenuItem value="ACADEMICS">ACADEMICS</MenuItem>
@@ -245,37 +327,80 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                   <Typography variant="subtitle1" gutterBottom>
                     Loan Amount (₹)
                   </Typography>
-                  <Slider value={loanAmount} min={5000} max={100000} onChange={(e, newValue) => setLoanAmount(newValue)} valueLabelDisplay="auto" sx={{ color: "#fc8403" }} />
+                  <Slider
+                    value={loanAmount}
+                    min={5000}
+                    max={100000}
+                    onChange={(e, newValue) => setLoanAmount(newValue)}
+                    valueLabelDisplay="auto"
+                    sx={{ color: "#fc8403" }}
+                  />
                 </Box>
 
                 <Box sx={{ marginBottom: 3 }}>
                   <Typography variant="subtitle1" gutterBottom>
                     Loan Tenure (Days)
                   </Typography>
-                  <Slider value={loanTenure} min={1} max={90} onChange={(e, newValue) => setLoanTenure(newValue)} valueLabelDisplay="auto" sx={{ color: "#fc8403" }} />
+                  <Slider
+                    value={loanTenure}
+                    min={1}
+                    max={90}
+                    onChange={(e, newValue) => setLoanTenure(newValue)}
+                    valueLabelDisplay="auto"
+                    sx={{ color: "#fc8403" }}
+                  />
                 </Box>
 
                 <Box sx={{ marginBottom: 3 }}>
                   <Typography variant="subtitle1" gutterBottom>
                     Interest Rate (%)
                   </Typography>
-                  <Slider value={interestRate} min={0.5} max={2} step={0.1} onChange={(e, newValue) => setInterestRate(newValue)} valueLabelDisplay="auto" sx={{ color: "#fc8403" }} />
+                  <Slider
+                    value={interestRate}
+                    min={0.5}
+                    max={2}
+                    step={0.1}
+                    onChange={(e, newValue) => setInterestRate(newValue)}
+                    valueLabelDisplay="auto"
+                    sx={{ color: "#fc8403" }}
+                  />
                 </Box>
 
                 <Grid container spacing={3}>
                   <Grid item xs={6}>
-                    <Typography variant="h6">Total Amount Payable (₹)</Typography>
-                    <Typography variant="body1" sx={{ fontWeight: "bold", fontSize: "1.2rem" }}>
+                    <Typography variant="h6">
+                      Total Amount Payable (₹)
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
+                    >
                       {totalAmount.toFixed(2)}
                     </Typography>
                   </Grid>
                 </Grid>
 
-                <Box sx={{ marginTop: 3, display: "flex", justifyContent: "space-between" }}>
-                  <Button variant="contained" color="error" onClick={cancelLoanApplication}>
+                <Box
+                  sx={{
+                    marginTop: 3,
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={cancelLoanApplication}
+                  >
                     Cancel
                   </Button>
-                  <Button variant="contained" onClick={handleSubmit} disabled={isLoading}>
+                  <Button
+                    variant="contained"
+                    onClick={handleSubmit}
+                    disabled={isLoading}
+                    sx={{ backgroundColor: "#F26722", color: "white" }}
+
+                  >
                     {isLoading ? "Submitting..." : "Submit"}
                   </Button>
                 </Box>

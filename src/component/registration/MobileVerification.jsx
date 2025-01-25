@@ -129,19 +129,23 @@ const MobileVerification = ({ onComplete, disabled, prefillData }) => {
         alignItems: "flex-start",
         justifyContent: "center",
         padding: 2,
-        borderColor: completed ? "green" : disabled ? "grey" : "orange",
+        borderColor:
+          // completed ? "green" :
+          disabled ? "#1c1c1c" : "#F26722",
         borderRadius: 3,
         margin: 1,
-        width: "30%",
+        width: "25%",
         minWidth: 200,
         cursor: disabled ? "not-allowed" : "pointer",
         textAlign: "left",
-        background: completed
-          ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
-          : disabled
-          ? "lightgrey"
-          : "linear-gradient(45deg, #4D4D4E, orange)",
-        color: completed || !disabled ? "white" : "darkgrey",
+        background:
+          //  completed
+          //   ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
+          //   :
+          disabled ? "#d9d9d9" : "#F26722",
+        color:
+          //  completed ||
+          !disabled ? "white" : "#1c1c1c",
         "@media (max-width: 600px)": {
           width: "80%",
           margin: "auto",
@@ -150,7 +154,9 @@ const MobileVerification = ({ onComplete, disabled, prefillData }) => {
     >
       <IconButton
         sx={{
-          color: completed ? "white" : disabled ? "grey" : "white",
+          color:
+            // completed ? "white" :
+            disabled ? "grey" : "white",
           ml: 1,
         }}
       >
@@ -186,13 +192,16 @@ const MobileVerification = ({ onComplete, disabled, prefillData }) => {
           },
         }}
       >
-        <DialogTitle sx={{ color: "black", textAlign: "left" }}>
+        <DialogTitle sx={{ color: "#1c1c1c", textAlign: "left" }}>
           {currentStep === "mobile"
             ? "Enter Mobile Number"
             : `Enter OTP for ${mobile}`}
         </DialogTitle>
         <DialogContent>
-          <Typography variant="body2" sx={{ color: "black", marginBottom: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{ color: "#1c1c1c", marginBottom: 2 }}
+          >
             {currentStep === "mobile"
               ? "Please enter your mobile number to receive an OTP."
               : "Please enter the OTP sent to your mobile number."}
@@ -202,8 +211,8 @@ const MobileVerification = ({ onComplete, disabled, prefillData }) => {
             value={currentStep === "mobile" ? mobile : otp}
             onChange={(e) =>
               currentStep === "mobile"
-                ? setMobile(e.target.value)
-                : setOtp(e.target.value)
+                ? setMobile(e.target.value.trim())
+                : setOtp(e.target.value.trim())
             }
             disabled={isLoading || isOtpVerified}
             placeholder={
@@ -244,7 +253,7 @@ const MobileVerification = ({ onComplete, disabled, prefillData }) => {
                     }
                   }
                 }}
-                sx={{ backgroundColor: "#ffcc00", color: "black" }}
+                sx={{ backgroundColor: "#F26722", color: "white" }}
               >
                 {currentStep === "mobile" ? "Send OTP" : "Verify OTP"}
               </Button>
@@ -252,7 +261,7 @@ const MobileVerification = ({ onComplete, disabled, prefillData }) => {
                 <Button
                   variant="outlined"
                   onClick={resendOTP}
-                  sx={{ color: "black", borderColor: "black" }}
+                  sx={{ color: "#1c1c1c", borderColor: "#1c1c1c" }}
                 >
                   Resend OTP
                 </Button>

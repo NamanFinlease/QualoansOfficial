@@ -9,8 +9,11 @@ import LoanCalculator from "./loan-application/CalculateLoan";
 import Dashboard from "./Dashboard";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
+import { useSidebar } from "../context/SidebarContext";
 
 const LoanApplication = () => {
+  const { sidebarOpen, sidebarExpanded } = useSidebar();
+
   const [steps, setSteps] = useState({
     loanCalculator: { completed: false, data: null },
     employmentInfo: { completed: false, data: null },
@@ -118,33 +121,53 @@ const LoanApplication = () => {
       <Dashboard />
       <Box
         sx={{
-          padding: 4,
-          border: "2px solid #ddd",
-          borderRadius: 3,
-          maxWidth: 900,
-          margin: "0 auto",
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-          background: "linear-gradient(to bottom, #ffffff, #f9f9f9)",
+          paddingX: 6,
+          margin: "auto",
+          textAlign: "center",
+          marginTop: "80px",
+          maxWidth: "100%",
+          width: `calc(100% - ${
+            sidebarOpen ? (sidebarExpanded ? 240 : 70) : 0
+          }px)`,
+          marginLeft: `${sidebarOpen ? (sidebarExpanded ? 240 : 90) : 0}px`,
+          transition: "width 0.3s ease, margin-left 0.3s ease",
         }}
       >
-        <Grid
-          container
-          spacing={2}
-          alignItems="center"
-          sx={{ marginBottom: 4 }}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: 2,
+            width: "100%",
+            "@media (min-width: 600px)": {
+              flexDirection: "row",
+              justifyContent: "space-between",
+            },
+          }}
         >
-          <Grid item xs={12} md={6}>
-            <Typography
-              variant="h4"
-              sx={{ fontWeight: "bold", color: "#4D4D4E" }}
-            >
-              Begin a Journey to Financial Empowerment
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" sx={{ marginBottom: 1 }}>
-              Loan Application Progress
-            </Typography>
+          <span
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.35rem",
+              color: "#333",
+              width: "100%",
+              textAlign: "left",
+              fontFamily: '"Roboto", "Helvetica", "Arial", "sans-serif"',
+              "@media (min-width: 600px)": {
+                width: "50%",
+              },
+            }}
+          >
+            Begin a Journey to Financial Empowerment
+          </span>
+          <Box
+            sx={{
+              width: "100%",
+              marginTop: 2,
+              "@media (min-width: 600px)": { marginTop: 0 },
+            }}
+          >
             <LinearProgress
               variant="determinate"
               value={calculateProgress()}
@@ -152,62 +175,67 @@ const LoanApplication = () => {
                 height: 30,
                 borderRadius: 5,
                 "& .MuiLinearProgress-bar": {
-                  backgroundColor: "green",
+                  backgroundColor: "#4caf50",
                 },
               }}
             />
-            <Typography variant="body2" sx={{ marginTop: 1, color: "#555" }}>
+            <Typography variant="body2" sx={{ marginTop: 1, color: "#666" }}>
               {Math.round(calculateProgress())}% Complete
             </Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={4}>
-            <LoanCalculator
-              onComplete={(data) =>
-                handleStepCompletion("loanCalculator", true, data)
-              }
-              disabled={false} // Always enabled initially
-              prefillData={steps.loanCalculator.data}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Employment
-              onComplete={(data) =>
-                handleStepCompletion("employmentInfo", true, data)
-              }
-              disabled={!steps.loanCalculator.completed}
-              prefillData={steps.employmentInfo.data}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <BankStatement
-              onComplete={(data) =>
-                handleStepCompletion("bankStatement", true, data)
-              }
-              disabled={!steps.employmentInfo.completed}
-              prefillData={steps.bankStatement.data}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <DocumentationStep
-              onComplete={(data) =>
-                handleStepCompletion("fetchDocument", true, data)
-              }
-              disabled={!steps.bankStatement.completed}
-              prefillData={steps.fetchDocument.data}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <DisbursalBankDetails
-              onComplete={(data) =>
-                handleStepCompletion("disbursalBankDetail", true, data)
-              }
-              disabled={!steps.fetchDocument.completed}
-              prefillData={steps.disbursalBankDetail.data}
-            />
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            marginBottom: { xs: 5, md: 0 },
+            marginTop: { xs: 0, md: 10 },
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "left",
+            columnGap: "3rem",
+            rowGap: "2rem",
+            width: "100%",
+          }}
+        >
+          <LoanCalculator
+            onComplete={(data) =>
+              handleStepCompletion("loanCalculator", true, data)
+            }
+            disabled={false} // Always enabled initially
+            prefillData={steps.loanCalculator.data}
+          />
+
+          <Employment
+            onComplete={(data) =>
+              handleStepCompletion("employmentInfo", true, data)
+            }
+            disabled={!steps.loanCalculator.completed}
+            prefillData={steps.employmentInfo.data}
+          />
+
+          <BankStatement
+            onComplete={(data) =>
+              handleStepCompletion("bankStatement", true, data)
+            }
+            disabled={!steps.employmentInfo.completed}
+            prefillData={steps.bankStatement.data}
+          />
+
+          <DocumentationStep
+            onComplete={(data) =>
+              handleStepCompletion("fetchDocument", true, data)
+            }
+            disabled={!steps.bankStatement.completed}
+            prefillData={steps.fetchDocument.data}
+          />
+
+          <DisbursalBankDetails
+            onComplete={(data) =>
+              handleStepCompletion("disbursalBankDetail", true, data)
+            }
+            disabled={!steps.fetchDocument.completed}
+            prefillData={steps.disbursalBankDetail.data}
+          />
+        </Box>
       </Box>
     </>
   );

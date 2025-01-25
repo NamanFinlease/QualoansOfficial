@@ -27,14 +27,13 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
   const [completionModalOpen, setCompletionModalOpen] = useState(false); // For the new modal
   const navigate = useNavigate(); // To navigate to other pages
   const [formValues, setFormValues] = useState({
-    beneficiaryName:prefillData?.beneficiaryName||"",
+    beneficiaryName: prefillData?.beneficiaryName || "",
     accountNumber: prefillData?.accountNumber || "",
     confirmAccountNo: prefillData?.confirmAccountNo || "",
     ifscCode: prefillData?.ifscCode || "",
-    branchName:prefillData?.branchName||"",
+    branchName: prefillData?.branchName || "",
     bankName: prefillData?.bankName || "",
     accountType: prefillData?.accountType || "",
-
   });
 
   useEffect(() => {
@@ -52,7 +51,13 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
     const { accountNumber, confirmAccountNo, ifscCode, bankName, accountType } =
       formValues;
 
-    if (!accountNumber || !confirmAccountNo || !ifscCode || !bankName || !accountType) {
+    if (
+      !accountNumber ||
+      !confirmAccountNo ||
+      !ifscCode ||
+      !bankName ||
+      !accountType
+    ) {
       MySwal.fire({
         icon: "error",
         title: "Oops!",
@@ -110,32 +115,60 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
   return (
     <>
       <Box
+        // sx={{
+        //   display: "flex",
+        //   flexDirection: "column",
+        //   alignItems: "flex-start",
+        //   padding: 3,
+        //   border: "1px solid #ddd",
+        //   borderRadius: 3,
+        //   background: disabled
+        //     ? "#ccc"
+        //     : stepCompleted
+        //     ? "green"
+        //     : "linear-gradient(45deg, #4D4D4E, orange)",
+        //   cursor: disabled ? "not-allowed" : "pointer",
+        //   height: 150,
+        //   width: "100%",
+        //   maxWidth: 350,
+        //   transition: "all 0.3s",
+        //   boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+        //   "&:hover": {
+        //     backgroundColor: disabled
+        //       ? "#ccc"
+        //       : stepCompleted
+        //       ? "green"
+        //       : "orange",
+        //     color: disabled ? "white" : "black",
+        //     transform: disabled ? "none" : "scale(1.03)",
+        //   },
+        // }}
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
-          padding: 3,
-          border: "1px solid #ddd",
+          justifyContent: "center",
+          padding: 2,
+          borderColor:
+            // completed ? "green" :
+            disabled ? "#1c1c1c" : "#F26722",
           borderRadius: 3,
-          background: disabled
-            ? "#ccc"
-            : stepCompleted
-            ? "green"
-            : "linear-gradient(45deg, #4D4D4E, orange)",
+          margin: 1,
+          width: "25%",
+          minWidth: 200,
           cursor: disabled ? "not-allowed" : "pointer",
-          height: 150,
-          width: "100%",
-          maxWidth: 350,
-          transition: "all 0.3s",
-          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-          "&:hover": {
-            backgroundColor: disabled
-              ? "#ccc"
-              : stepCompleted
-              ? "green"
-              : "orange",
-            color: disabled ? "white" : "black",
-            transform: disabled ? "none" : "scale(1.03)",
+          textAlign: "left",
+          background:
+            //  completed
+            //   ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
+            //   :
+            disabled ? "#d9d9d9" : "#F26722",
+          color:
+            //  completed ||
+            !disabled ? "white" : "#1c1c1c",
+          "@media (max-width: 600px)": {
+            width: "80%",
+            margin: "auto",
           },
         }}
         onClick={!disabled ? () => setOpenModal(true) : null}
@@ -157,11 +190,13 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
           )}
         </IconButton>
         <Box sx={{ textAlign: "left", width: "100%" }}>
-          <Typography sx={{ fontWeight: "bold", marginBottom: 1, color: "white" }}>
-             Bank Details
+          <Typography
+            sx={{ fontWeight: "bold", marginBottom: 1, color: "white" }}
+          >
+            Bank Details
           </Typography>
           <Typography variant="body2" sx={{ color: "white" }}>
-            Share your  bank details
+            Share your bank details
           </Typography>
         </Box>
       </Box>
@@ -184,13 +219,15 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
           <Typography sx={{ mb: 2 }}> Bank Details</Typography>
 
           <TextField
-          fullWidth
-          label="Beneficiary Name"
-          name="beneficiaryName"
-          value={formValues.beneficiaryName || prefillData?.beneficiaryName || ""}
-          onChange={handleInputChange}
-          sx={{ mb: 2 }}
-        />
+            fullWidth
+            label="Beneficiary Name"
+            name="beneficiaryName"
+            value={
+              formValues.beneficiaryName || prefillData?.beneficiaryName || ""
+            }
+            onChange={handleInputChange}
+            sx={{ mb: 2 }}
+          />
 
           <TextField
             fullWidth
@@ -254,10 +291,11 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
               variant="contained"
               onClick={handleSubmit}
               sx={{
-                backgroundColor: "orange",
-                "&:hover": {
-                  backgroundColor: "#ff7f00",
-                },
+                backgroundColor: "#F26722",
+                color: "white",
+                // "&:hover": {
+                //   backgroundColor: "#ff7f00",
+                // },
               }}
             >
               Submit

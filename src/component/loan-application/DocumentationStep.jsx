@@ -44,32 +44,61 @@ const DocumentationStep = ({ onComplete, disabled, prefillData }) => {
   return (
     <>
       <Box
+        // sx={{
+        //   display: "flex",
+        //   flexDirection: "column",
+        //   alignItems: "flex-start",
+        //   padding: 3,
+        //   border: "1px solid #ddd",
+        //   borderRadius: 3,
+        //   background: disabled
+        //     ? "#ccc"
+        //     : stepCompleted
+        //     ? "green" // Change the background color to green when the step is completed
+        //     : "linear-gradient(45deg, #4D4D4E, orange)",
+        //   cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
+        //   height: 150,
+        //   width: "100%",
+        //   maxWidth: 350,
+        //   transition: "all 0.3s",
+        //   boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+        //   "&:hover": {
+        //     backgroundColor: disabled
+        //       ? "#ccc"
+        //       : stepCompleted
+        //       ? "green" // Keep the green background on hover if the step is completed
+        //       : "orange",
+        //     color: disabled ? "white" : "black",
+        //     transform: disabled ? "none" : "scale(1.03)",
+        //   },
+        // }}
+
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
-          padding: 3,
-          border: "1px solid #ddd",
+          justifyContent: "center",
+          padding: 2,
+          borderColor:
+            // completed ? "green" :
+            disabled ? "#1c1c1c" : "#F26722",
           borderRadius: 3,
-          background: disabled
-            ? "#ccc"
-            : stepCompleted
-            ? "green" // Change the background color to green when the step is completed
-            : "linear-gradient(45deg, #4D4D4E, orange)",
-          cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
-          height: 150,
-          width: "100%",
-          maxWidth: 350,
-          transition: "all 0.3s",
-          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-          "&:hover": {
-            backgroundColor: disabled
-              ? "#ccc"
-              : stepCompleted
-              ? "green" // Keep the green background on hover if the step is completed
-              : "orange",
-            color: disabled ? "white" : "black",
-            transform: disabled ? "none" : "scale(1.03)",
+          margin: 1,
+          width: "25%",
+          minWidth: 200,
+          cursor: disabled ? "not-allowed" : "pointer",
+          textAlign: "left",
+          background:
+            //  completed
+            //   ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
+            //   :
+            disabled ? "#d9d9d9" : "#F26722",
+          color:
+            //  completed ||
+            !disabled ? "white" : "#1c1c1c",
+          "@media (max-width: 600px)": {
+            width: "80%",
+            margin: "auto",
           },
         }}
         onClick={!disabled ? handleDocumentationUpload : null}

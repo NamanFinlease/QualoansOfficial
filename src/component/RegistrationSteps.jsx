@@ -10,9 +10,12 @@ import IncomeInfoForm from "./registration/IncomeInfoForm";
 import SelfieVerification from "./registration/SelfieVerification";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
+import { useSidebar } from "../context/SidebarContext";
 
 const RegistrationSteps = () => {
   const navigate = useNavigate();
+  const { sidebarOpen, sidebarExpanded } = useSidebar();
+
   const totalSteps = 6; // Total steps in the registration process
 
   const [steps, setSteps] = useState(() => {
@@ -129,8 +132,6 @@ const RegistrationSteps = () => {
   };
 
   const handleStepCompletion = (step, data) => {
-    console.log("step", step);
-    console.log("data", data);
     const updatedSteps = {
       ...steps,
       [step]: { completed: true, data },
@@ -150,32 +151,54 @@ const RegistrationSteps = () => {
       <Dashboard />
       <Box
         sx={{
-          padding: 4,
+          paddingX: 6,
           margin: "auto",
           textAlign: "center",
-          border: "2px solid #ccc",
-          borderRadius: 3,
-          boxShadow: 4,
-          background: "linear-gradient(135deg, #f0f4ff, #ffffff)",
           marginTop: "80px",
-          maxWidth: "80%",
+          maxWidth: "100%",
+          width: `calc(100% - ${
+            sidebarOpen ? (sidebarExpanded ? 240 : 70) : 0
+          }px)`,
+          marginLeft: `${sidebarOpen ? (sidebarExpanded ? 240 : 70) : 0}px`,
+          transition: "width 0.3s ease, margin-left 0.3s ease",
         }}
       >
-        <Grid
-          container
-          spacing={2}
-          alignItems="center"
-          sx={{ marginBottom: 4 }}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: 2,
+            width: "100%",
+            "@media (min-width: 600px)": {
+              flexDirection: "row",
+              justifyContent: "space-between",
+            },
+          }}
         >
-          <Grid item xs={12} md={6}>
-            <Typography
-              variant="h4"
-              sx={{ fontWeight: "bold", color: "#4D4D4E" }}
-            >
-              Complete Your Profile Registration
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={6}>
+          <span
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.35rem",
+              color: "#333",
+              width: "100%",
+              marginLeft: "50px",
+              fontFamily: '"Roboto", "Helvetica", "Arial", "sans-serif"',
+              textAlign: "left",
+              "@media (min-width: 600px)": {
+                width: "50%",
+              },
+            }}
+          >
+            Complete Your Profile Registration
+          </span>
+          <Box
+            sx={{
+              width: "100%",
+              marginTop: 2,
+              "@media (min-width: 600px)": { marginTop: 0 },
+            }}
+          >
             <LinearProgress
               variant="determinate"
               value={calculateProgress()}
@@ -183,17 +206,26 @@ const RegistrationSteps = () => {
                 height: 30,
                 borderRadius: 5,
                 "& .MuiLinearProgress-bar": {
-                  backgroundColor: "green",
+                  backgroundColor: "#4caf50",
                 },
               }}
             />
-            <Typography variant="body2" sx={{ marginTop: 1, color: "#555" }}>
+            <Typography variant="body2" sx={{ marginTop: 1, color: "#666" }}>
               {Math.round(calculateProgress())}% Complete
             </Typography>
-          </Grid>
-        </Grid>
-
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-around",
+            gap: 2,
+            marginTop: { xs: 0, md: 10 },
+            marginBottom: { xs: 5, md: 0 },
+            width: "100%",
+          }}
+        >
           <MobileVerification
             onComplete={(data) =>
               handleStepCompletion("mobileVerification", data)
@@ -212,6 +244,7 @@ const RegistrationSteps = () => {
             disabled={!steps.panVerification.completed}
             prefillData={steps.personalInfo.data}
           />
+          {console.log("steps", steps)}
           <AddressInfo
             onComplete={(data) => handleStepCompletion("addressInfo", data)}
             disabled={!steps.personalInfo.completed}

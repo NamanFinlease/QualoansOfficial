@@ -17,6 +17,8 @@ import { BASE_URL } from "../../baseURL";
 import yourImage from "../../assets/image/vidu-general-4-2025-01-18T06_43_27Z (1).gif"; // Import your image
 
 const SelfieVerification = ({ onComplete, disabled }) => {
+  console.log("oncomplete >>> ", onComplete);
+  console.log("disabled >>> ", disabled);
   const [openModal, setOpenModal] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -25,6 +27,11 @@ const SelfieVerification = ({ onComplete, disabled }) => {
   const [isCameraOpen, setIsCameraOpen] = useState(false); // Track if camera is open
   const webcamRef = useRef(null);
   const navigate = useNavigate();
+
+  const handleCompleteStep = async () => {
+    if (disabled) return;
+    setOpenModal(true);
+  };
 
   const capturePhoto = () => {
     if (webcamRef.current) {
@@ -40,8 +47,8 @@ const SelfieVerification = ({ onComplete, disabled }) => {
       uploadSelfieToBackend(file);
     }
   };
-  const style = document.createElement('style');
-style.innerHTML = `
+  const style = document.createElement("style");
+  style.innerHTML = `
   @keyframes blink {
     0% { opacity: 1; }
     50% { opacity: 0; }
@@ -51,11 +58,11 @@ style.innerHTML = `
     animation: blink 1s infinite;
   }
 `;
-document.head.appendChild(style);
+  document.head.appendChild(style);
 
   const uploadSelfieToBackend = async (imageSrcOrFile) => {
     try {
-      setIsUploading(true);
+      // setIsUploading(true);
 
       const formData = new FormData();
 
@@ -77,53 +84,56 @@ document.head.appendChild(style);
         }
       );
 
-      setIsUploading(false);
+      // setIsUploading(false);
+      console.log("response sel >>> ", response);
 
       if (response.status === 200) {
-        {stepCompleted && (
-          <Typography variant="body2" color="green">
-            Upload Complete! 🎉
-          </Typography>
-        )}
-        
-        
+        {
+          stepCompleted && (
+            <Typography variant="body2" color="green">
+              Upload Complete! 🎉
+            </Typography>
+          );
+        }
+
         setIsCameraOpen(false);
+        setStepCompleted(true);
         setOpenModal(false);
+        onComplete({ capturedImage });
         Swal.fire("Success", "Selfie uploaded successfully!", "success").then(
           () => {
             Swal.fire({
               title: "You have successfully registered to Qualoan!",
               html: `<span class="blink-text">Complete your loan application process.</span>`,
               imageUrl: yourImage,
-              imageWidth: '100%', // Set image width to 100% of the popup
-              imageHeight: 'auto', // Maintain aspect ratio
+              imageWidth: "100%", // Set image width to 100% of the popup
+              imageHeight: "auto", // Maintain aspect ratio
               confirmButtonText: "Go to Loan Application",
-              confirmButtonColor: '#FFA500', // Set button color to orange
+              confirmButtonColor: "#FFA500", // Set button color to orange
 
-              width: '40%', // Set the width of the popup
+              width: "40%", // Set the width of the popup
               customClass: {
-                popup: 'custom-popup',
-                confirmButton: 'confirm-button-orange',
+                popup: "custom-popup",
+                confirmButton: "confirm-button-orange",
               },
               didOpen: () => {
                 // Apply custom styles after the popup has opened
-                const popup = document.querySelector('.swal2-popup');
-                const image = document.querySelector('.swal2-image');
-                const content = document.querySelector('.swal2-html-container');
-            
+                const popup = document.querySelector(".swal2-popup");
+                const image = document.querySelector(".swal2-image");
+                const content = document.querySelector(".swal2-html-container");
+
                 if (popup && image && content) {
                   // Reduce padding inside the popup
-                  popup.style.padding = '10px';
-            
+                  popup.style.padding = "10px";
+
                   // Remove margin from the image
-                  image.style.margin = '0';
-            
+                  image.style.margin = "0";
+
                   // Reduce margin between the image and the text
-                  content.style.marginTop = '5px';
+                  content.style.marginTop = "5px";
                 }
-              }
+              },
             }).then((result) => {
-      
               if (result.isConfirmed) {
                 navigate("/loan-application");
               }
@@ -156,19 +166,17 @@ document.head.appendChild(style);
         alignItems: "flex-start",
         justifyContent: "center",
         padding: 2,
-        borderColor: completed ? "green" : disabled ? "grey" : "orange",
+        borderColor: completed ? "green" : disabled ? "#1c1c1c" : "#F26722",
         borderRadius: 3,
         margin: 1,
-        width: "30%",
+        width: "25%",
         minWidth: 200,
         cursor: disabled || completed ? "not-allowed" : "pointer",
         textAlign: "left",
-        background: completed
-          ? "linear-gradient(45deg, #28a745, #218838)"
-          : disabled
-          ? "lightgrey"
-          : "linear-gradient(45deg, #4D4D4E, orange)",
-        color: completed || !disabled ? "white" : "darkgrey",
+        background:
+          //completed ? "linear-gradient(45deg, #28a745, #218838)" :
+          disabled ? "#d9d9d9" : "#F26722",
+        color: completed || !disabled ? "white" : "#1c1c1c",
         "@media (max-width: 600px)": {
           width: "80%",
           margin: "auto",
@@ -176,7 +184,10 @@ document.head.appendChild(style);
       }}
     >
       <IconButton
-        sx={{ color: completed ? "white" : disabled ? "grey" : "white", ml: 1 }}
+        sx={{
+          color: completed ? "white" : disabled ? "#1c1c1c" : "white",
+          ml: 1,
+        }}
       >
         {completed ? <CheckCircle style={{ fontSize: "24px" }} /> : icon}
       </IconButton>
@@ -193,139 +204,163 @@ document.head.appendChild(style);
         icon={<InfoIcon />}
         title="Selfie Verification"
         description="Verify your identity by uploading a selfie."
+        onClick={() => setOpenModal(true)} // Open modal on StepBox click
         disabled={disabled || stepCompleted}
         completed={stepCompleted}
-        onClick={() => setOpenModal(true)} // Open modal on StepBox click
       />
-        <Modal open={openModal} onClose={() => setOpenModal(false)}>
-          <Box
+      <Modal open={openModal} onClose={() => setOpenModal(false)}>
+        <Box
+          sx={{
+            backgroundColor: "white",
+            borderRadius: 4,
+            boxShadow: 24,
+            padding: 4,
+            maxWidth: 500,
+            margin: "auto",
+            marginTop: "1%",
+            marginBottom: "60px", // Set margin bottom to 30px
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 3,
+          }}
+        >
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ fontWeight: "bold", color: "#333" }}
+          >
+            {isCameraOpen
+              ? "Take a Picture"
+              : "Choose an Option to Upload Your Selfie"}
+          </Typography>
+
+          {isCameraOpen ? (
+            <>
+              <Webcam
+                ref={webcamRef}
+                audio={false}
+                screenshotFormat="image/jpeg"
+                style={{
+                  width: "50%",
+                  borderRadius: "8px",
+                  border: "2px solid #ccc",
+                  marginBottom: "0px",
+                }}
+              />
+              {capturedImage && (
+                <Box sx={{ width: "50%", marginTop: 2, textAlign: "center" }}>
+                  <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                    Preview:
+                  </Typography>
+                  <img
+                    src={capturedImage}
+                    alt="Captured"
+                    style={{
+                      width: "50%",
+                      borderRadius: "8px",
+                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                    }}
+                  />
+                </Box>
+              )}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={
+                  capturedImage
+                    ? () => uploadSelfieToBackend(capturedImage)
+                    : capturePhoto
+                }
+                disabled={isUploading}
+                sx={{ width: "20%", marginTop: 2 }}
+              >
+                {isUploading ? (
+                  <CircularProgress size={24} />
+                ) : capturedImage ? (
+                  "Upload"
+                ) : (
+                  "Capture"
+                )}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsCameraOpen(true)}
+                sx={{
+                  width: "100%",
+                  padding: "10px",
+                  textTransform: "none",
+                  fontSize: "16px",
+                  backgroundColor: "#F26722",
+                  color: "white",
+                }}
+              >
+                Take a Picture
+              </Button>
+              <Button
+                variant="outlined"
+                component="label"
+                sx={{
+                  width: "100%",
+                  padding: "10px",
+                  textTransform: "none",
+                  fontSize: "16px",
+                  borderColor: "#ccc",
+                  color: "#333",
+                }}
+              >
+                Upload from Device
+                <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={handleFileUpload}
+                />
+              </Button>
+              {capturedImage && (
+                <Box sx={{ width: "100%", marginTop: 2, textAlign: "center" }}>
+                  <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                    Preview:
+                  </Typography>
+                  <img
+                    src={capturedImage}
+                    alt="Selected"
+                    style={{
+                      width: "100%",
+                      borderRadius: "8px",
+                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                    }}
+                  />
+                </Box>
+              )}
+            </>
+          )}
+
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => {
+              setIsCameraOpen(false);
+              setOpenModal(false);
+            }}
             sx={{
-              backgroundColor: 'white',
-              borderRadius: 4,
-              boxShadow: 24,
-              padding: 4,
-              maxWidth: 500,
-              margin: 'auto',
-              marginTop: '1%',
-              marginBottom: '60px', // Set margin bottom to 30px
-              textAlign: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 3,
-              
+              width: "20%",
+              padding: "10px",
+              textTransform: "none",
+              fontSize: "16px",
+              borderColor: "#ccc",
+              color: "#333",
             }}
           >
-            <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', color: '#333' }}>
-              {isCameraOpen ? 'Take a Picture' : 'Choose an Option to Upload Your Selfie'}
-            </Typography>
-
-            {isCameraOpen ? (
-              <>
-                <Webcam
-                  ref={webcamRef}
-                  audio={false}
-                  screenshotFormat="image/jpeg"
-                  style={{
-                    width: '50%',
-                    borderRadius: '8px',
-                    border: '2px solid #ccc',
-                    marginBottom: '0px',
-                  }}
-                />
-                {capturedImage && (
-                  <Box sx={{ width: '50%', marginTop: 2, textAlign: 'center' }}>
-                    <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                      Preview:
-                    </Typography>
-                    <img
-                      src={capturedImage}
-                      alt="Captured"
-                      style={{
-                        width: '50%',
-                        borderRadius: '8px',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                      }}
-                    />
-                  </Box>
-                )}
-              <Button
-            variant="contained"
-            color="primary"
-            onClick={capturedImage ? () => uploadSelfieToBackend(capturedImage) : capturePhoto}
-            disabled={isUploading}
-            sx={{ width: '20%', marginTop: 2 }}
-          >
-            {isUploading ? <CircularProgress size={24} /> : capturedImage ? 'Upload' : 'Capture'}
+            Cancel
           </Button>
-
-              </>
-            ) : (
-              <>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setIsCameraOpen(true)}
-                  sx={{ width: '100%', padding: '10px', textTransform: 'none', fontSize: '16px' }}
-                >
-                  Take a Picture
-                </Button>
-                <Button
-                  variant="outlined"
-                  component="label"
-                  sx={{
-                    width: '100%',
-                    padding: '10px',
-                    textTransform: 'none',
-                    fontSize: '16px',
-                    borderColor: '#ccc',
-                    color: '#333',
-                  }}
-                >
-                  Upload from Device
-                  
-                  <input type="file" accept="image/*" hidden onChange={handleFileUpload} />
-                </Button>
-                {capturedImage && (
-                  <Box sx={{ width: '100%', marginTop: 2, textAlign: 'center' }}>
-                    <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                      Preview:
-                    </Typography>
-                    <img
-                      src={capturedImage}
-                      alt="Selected"
-                      style={{
-                        width: '100%',
-                        borderRadius: '8px',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                      }}
-                    />
-                  </Box>
-                )}
-              </>
-            )}
-
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={() => {
-                setIsCameraOpen(false);
-                setOpenModal(false);
-              }}
-              sx={{
-                width: "20%",
-                padding: "10px",
-                textTransform: "none",
-                fontSize: "16px",
-                borderColor: "#ccc",
-                color: "#333",
-              }}
-            >
-              Cancel
-            </Button>
-          </Box>
-        </Modal>
-
+        </Box>
+      </Modal>
     </>
   );
 };

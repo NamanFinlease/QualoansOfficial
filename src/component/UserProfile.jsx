@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { 
-  Box, 
-  Typography, 
-  Grid, 
-  Avatar, 
+import {
+  Box,
+  Typography,
+  Grid,
+  Avatar,
   Divider,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 import { BASE_URL } from "../baseURL";
 import { sharedStyles } from "./shared/styles";
 
 // Define the UserProfile component
 const UserProfile = () => {
-
   // State to store user data
   const [user, setUser] = useState({
     profileImage: "",
@@ -79,7 +78,11 @@ const UserProfile = () => {
 
   // If no user data, show a message
   if (!user) {
-    return <Typography variant="h6" align="center">No user data found.</Typography>;
+    return (
+      <Typography variant="h6" align="center">
+        No user data found.
+      </Typography>
+    );
   }
 
   return (
@@ -93,7 +96,12 @@ const UserProfile = () => {
         <Avatar
           alt={user.fullName}
           src={user.profileImage}
-          sx={{ width: 120, height: 120, border: "3px solid white" }}
+          sx={{
+            width: 120,
+            height: 120,
+            border: "3px solid white",
+            boxShadow: 3,
+          }}
         />
       </Box>
 
@@ -103,7 +111,7 @@ const UserProfile = () => {
           ...sharedStyles.fieldValue,
           textAlign: "center",
           mb: 2,
-          fontWeight: "500"
+          fontWeight: "500",
         }}
       >
         {user.fullName}
@@ -111,28 +119,89 @@ const UserProfile = () => {
 
       <Divider sx={sharedStyles.divider} />
 
-      <Grid container sx={sharedStyles.gridContainer}>
-        <Grid item xs={12}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-            <Typography sx={sharedStyles.fieldLabel}>PAN Number:</Typography>
-            <Typography sx={sharedStyles.fieldValue}>{user.PAN}</Typography>
-          </Box>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-            <Typography sx={sharedStyles.fieldLabel}>Aadhaar Number:</Typography>
-            <Typography sx={sharedStyles.fieldValue}>{user.aadhaarNumber}</Typography>
-          </Box>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-            <Typography sx={sharedStyles.fieldLabel}>Mobile Number:</Typography>
-            <Typography sx={sharedStyles.fieldValue}>{user.mobile}</Typography>
-          </Box>
-        </Grid>
-      </Grid>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Box sx={{ width: "50%", overflowX: "auto", mt: 2 }}>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              backgroundColor: "white",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            }}
+          >
+            <tbody>
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    width: "40%",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  PAN Number
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "#F26722",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {user.PAN}
+                </td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  Aadhaar Number
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "#F26722",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {user.aadhaarNumber}
+                </td>
+              </tr>
+              <tr>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  Mobile Number
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "#F26722",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {user.mobile}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </Box>
+      </div>
     </Box>
   );
 };

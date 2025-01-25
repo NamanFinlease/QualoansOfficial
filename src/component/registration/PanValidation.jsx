@@ -17,6 +17,8 @@ import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
 const PANValidation = ({ onComplete, disabled, prefillData }) => {
+  console.log("onComplete Pan >>> ", onComplete);
+  console.log("disabled Pan >>> ", disabled);
   console.log("PANValidation -> prefillData", prefillData);
   const [openDialog, setOpenDialog] = useState(false);
   const [pan, setPan] = useState("");
@@ -26,8 +28,7 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
 
   // Prefill PAN data if available
   useEffect(() => {
-    if (prefillData && prefillData.pan) {
-      setPan(prefillData.pan);
+    if (prefillData) {
       setIsPanValidated(true);
     }
   }, [prefillData]);
@@ -44,7 +45,7 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
   };
 
   const handlePanChange = (e) => {
-    setPan(e.target.value);
+    setPan(e.target.value.toUpperCase().trim());
     setError("");
   };
 
@@ -94,16 +95,16 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
           padding: 2,
           borderRadius: 3,
           margin: 1,
-          width: "30%",
+          width: "25%",
           minWidth: 200,
           cursor: disabled ? "not-allowed" : "pointer",
           textAlign: "left",
-          background: isPanValidated
-            ? "linear-gradient(45deg, #28a745, #218838)"
-            : disabled
-            ? "linear-gradient(45deg, #b5b5b5, #d6d6d6)"
-            : "linear-gradient(45deg, #4D4D4E, orange)",
-          color: disabled || isPanValidated ? "white" : "black",
+          background:
+            // isPanValidated ? "linear-gradient(45deg, #28a745, #218838)":
+            disabled ? "#d9d9d9" : "#F26722",
+          color:
+            // isPanValidated ||
+            disabled ? "white" : "#1c1c1c",
           // "&:hover": {
           //   background: disabled
           //     ? "linear-gradient(45deg, #b5b5b5, #d6d6d6)"
@@ -117,25 +118,32 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
         }}
       >
         <IconButton
-          sx={{ color: disabled || isPanValidated ? "white" : "black", ml: 1 }}
+          sx={{
+            color:
+              //  isPanValidated ||
+              disabled ? "white" : "#1c1c1c",
+            ml: 1,
+          }}
           disabled={disabled}
         >
           {isPanValidated ? (
             <CheckCircleIcon sx={{ color: "white" }} />
           ) : (
-            <DescriptionIcon sx={{ color: disabled ? "#7f7f7f" : "white" }} />
+            <DescriptionIcon sx={{ color: disabled ? "#1c1c1c" : "white" }} />
           )}
         </IconButton>
         <Box sx={{ ml: 2, flexGrow: 1 }}>
           <Typography
-            sx={{ fontWeight: "bold", color: disabled ? "#7f7f7f" : "white" }}
+            sx={{ fontWeight: "bold", color: disabled ? "#1c1c1c" : "white" }}
           >
             PAN Verification
           </Typography>
           <Typography
             variant="body2"
             sx={{
-              color: isPanValidated ? "white" : disabled ? "#7f7f7f" : "white",
+              color:
+                // isPanValidated ? "white" :
+                disabled ? "#1c1c1c" : "white",
             }}
           >
             Verify your PAN card number
@@ -156,11 +164,14 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
           },
         }}
       >
-        <DialogTitle sx={{ color: "black", textAlign: "left" }}>
+        <DialogTitle sx={{ color: "#1c1c1c", textAlign: "left" }}>
           Enter your PAN Number
         </DialogTitle>
         <DialogContent>
-          <Typography variant="body2" sx={{ color: "black", marginBottom: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{ color: "#1c1c1c", marginBottom: 2 }}
+          >
             Please enter your PAN number to verify it.
           </Typography>
           <TextField
@@ -173,10 +184,10 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
             placeholder="Enter your PAN number"
             sx={{
               marginBottom: 2,
-              input: { color: "black" },
+              input: { color: "#1c1c1c" },
               "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "black" },
-                "&:hover fieldset": { borderColor: "#ffcc00" },
+                "& fieldset": { borderColor: "#1c1c1c" },
+                "&:hover fieldset": { borderColor: "#F26722" },
               },
             }}
           />
@@ -194,14 +205,14 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
               <Button
                 variant="outlined"
                 onClick={handleCloseDialog}
-                sx={{ color: "black", borderColor: "black" }}
+                sx={{ color: "#1c1c1c", borderColor: "#1c1c1c" }}
               >
                 Cancel
               </Button>
               <Button
                 variant="contained"
                 onClick={handleSubmitPan}
-                sx={{ backgroundColor: "#ffcc00", color: "black" }}
+                sx={{ backgroundColor: "#F26722", color: "white" }}
               >
                 Submit
               </Button>

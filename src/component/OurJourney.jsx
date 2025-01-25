@@ -12,6 +12,7 @@ import SecurityIcon from "@mui/icons-material/Security";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import { useSidebar } from "../context/SidebarContext";
+import StepperComponent from "./StepperComponent";
 
 const OurJourney = () => {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ const OurJourney = () => {
   const features = [
     {
       title: "Quick Disbursement",
-      description: "Get funds in your account within 24 hours",
+      description: "Get funds in your account within 30 minutes",
       icon: <SpeedIcon sx={{ fontSize: 40, color: "#F26722" }} />,
     },
     {
@@ -87,7 +88,6 @@ const OurJourney = () => {
           }px)`,
           marginLeft: `${sidebarOpen ? (sidebarExpanded ? 240 : 70) : 0}px`,
           transition: "width 0.3s ease, margin-left 0.3s ease",
-         
         }}
       >
         <Box
@@ -153,7 +153,7 @@ const OurJourney = () => {
                 sx={{
                   backgroundColor: "#ffff",
                   color: "#000",
-                  px: 4,  
+                  px: 4,
                   py: 1,
                   fontWeight: 600,
                   "&:hover": {
@@ -190,6 +190,8 @@ const OurJourney = () => {
             </Box>
           </Box>
         </Box>
+
+        {!isRegistration && <StepperComponent />}
 
         {/* Features Grid - Updated with Material icons and better styling */}
         <Box
@@ -312,6 +314,7 @@ const OurJourney = () => {
             backgroundColor: "white",
             borderRadius: "16px",
             padding: 4,
+            paddingLeft: { xs: 4, md: 20 },
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
             alignItems: "center",
@@ -329,17 +332,20 @@ const OurJourney = () => {
             </Typography>
             <Box sx={{ mb: 3 }}>
               <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                John Doe - Senior Credit Executive
+                Email- credit@qualoan.com
+              </Typography>
+              <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                Contact no - +917338437609
               </Typography>
               <Typography color="text.secondary">
-                Available Mon-Fri, 9AM-6PM
+                Available Mon-Sat, 9AM-6PM
               </Typography>
             </Box>
             <Box sx={{ display: "flex", gap: 2 }}>
               <Button
                 variant="contained"
                 startIcon={<span>📞</span>}
-                onClick={() => (window.location.href = "tel:+919876543210")}
+                onClick={() => (window.location.href = "tel:+917338437609")}
                 sx={{
                   backgroundColor: "#F26722",
                   "&:hover": { backgroundColor: "#1C1C1C" },
@@ -351,7 +357,7 @@ const OurJourney = () => {
                 variant="outlined"
                 startIcon={<span>✉️</span>}
                 onClick={() =>
-                  (window.location.href = "mailto:johndoe@example.com")
+                  (window.location.href = "mailto:credit@qualoan.com")
                 }
                 sx={{
                   color: "#F26722",
@@ -363,7 +369,7 @@ const OurJourney = () => {
           </Box>
           <Box
             sx={{
-              width: { xs: "100%", md: "300px" },
+              width: { xs: "100%", md: "600px" },
               height: "300px",
               overflow: "hidden",
               borderRadius: "12px",

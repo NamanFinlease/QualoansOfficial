@@ -18,6 +18,7 @@ import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
 const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
+  // console.log("diss sss perison ", disabled);
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [personalDetails, setPersonalDetails] = useState(null);
@@ -32,6 +33,11 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
   const [stepCompleted, setStepCompleted] = useState(false); // Track step completion
   const [error, setError] = useState("");
   const [isPersonalInfoUpdated, setIsPersonalInfoUpdated] = useState(false);
+  const [isDisable, setIsDisable] = useState(disabled);
+
+  useEffect(() => {
+    console.log("dididi ss ><><><><");
+  }, [isDisable]);
 
   useEffect(() => {
     if (prefillData) {
@@ -52,19 +58,21 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
         alignItems: "flex-start",
         justifyContent: "center",
         padding: 2,
-        borderColor: completed ? "green" : disabled ? "grey" : "orange",
+        borderColor:
+          //completed ? "green" :
+          disabled ? "#1c1c1c" : "#F26722",
         borderRadius: 3,
         margin: 1,
-        width: "30%",
+        width: "25%",
         minWidth: 200,
         cursor: disabled ? "not-allowed" : "pointer",
         textAlign: "left",
-        background: completed
-          ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
-          : disabled
-          ? "lightgrey"
-          : "linear-gradient(45deg, #4D4D4E, orange)",
-        color: completed || !disabled ? "white" : "darkgrey",
+        background:
+          // completed ? "linear-gradient(45deg, #28a745, #218838)" :
+          disabled ? "#D9D9D9" : "#F26722",
+        color:
+          //completed ||
+          !disabled ? "white" : "#1c1c1c",
         "@media (max-width: 600px)": {
           width: "80%",
           margin: "auto",
@@ -73,7 +81,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
     >
       <IconButton
         sx={{
-          color: completed ? "white" : disabled ? "grey" : "white",
+          color: completed ? "white" : disabled ? "#1c1c1c" : "white",
           ml: 1,
         }}
       >
@@ -117,6 +125,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
           spouseName: data.personalDetails.spouseName || "",
           dob: data.personalDetails.dob || "",
         });
+        setIsDisable(false);
         setOpenModal(true);
       } else {
         setError("Unable to retrieve personal details.");
@@ -133,7 +142,6 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
     setFormValues((prev) => ({ ...prev, [field]: value }));
     setError("");
   };
-
   const handleSubmit = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formValues.personalEmail)) {
@@ -165,9 +173,10 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
 
       if (response.status === 200) {
         Swal.fire("Success", "Details updated successfully!", "success");
-        setStepCompleted(true); // Mark step as completed
-        setOpenModal(false);
-        onComplete(); // Notify parent component
+        setOpenModal(false); // Close the modal
+        console.log("personalDetails <><<><><>> ", personalDetails);
+        onComplete({ personalDetails }); // Notify parent component
+        // Do not update `stepCompleted` here to keep the box active
       } else {
         setError("Failed to update details.");
       }
@@ -180,6 +189,53 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
     }
   };
 
+  // const handleSubmit = async () => {
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   if (!emailRegex.test(formValues.personalEmail)) {
+  //     setError("Please enter a valid email address.");
+  //     return;
+  //   }
+
+  //   const updatedDetails = {
+  //     fullName: formValues.fullName,
+  //     gender: formValues.gender,
+  //     dob: formValues.dob,
+  //     personalEmail: formValues.personalEmail,
+  //     maritalStatus: formValues.maritalStatus,
+  //     spouseName:
+  //       formValues.maritalStatus === "MARRIED" ? formValues.spouseName : null,
+  //   };
+
+  //   setIsFetching(true);
+
+  //   try {
+  //     const response = await axios.patch(
+  //       `${BASE_URL}/api/user/personalInfo`,
+  //       updatedDetails,
+  //       {
+  //         headers: { "Content-Type": "application/json" },
+  //         withCredentials: true,
+  //       }
+  //     );
+
+  //     if (response.status === 200) {
+  //       Swal.fire("Success", "Details updated successfully!", "success");
+  //       setStepCompleted(true); // Mark step as completed
+  //       setOpenModal(false);
+  //       console.log("personalDetails <><<><><>> ", personalDetails);
+  //       onComplete({ personalDetails }); // Notify parent component
+  //     } else {
+  //       setError("Failed to update details.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating details:", error.response || error.message);
+  //     setError("Failed to update personal details.");
+  //     Swal.fire("Error", "Unable to fetch or update your details.", "error");
+  //   } finally {
+  //     setIsFetching(false);
+  //   }
+  // };
+
   return (
     <>
       <StepBox
@@ -187,7 +243,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
         title="Personal Information"
         description="Please update your personal details."
         onClick={() => setOpenModal(true)}
-        disabled={disabled || stepCompleted}
+        disabled={disabled} // Remove `stepCompleted` here
         completed={isPersonalInfoUpdated}
       />
 
@@ -233,6 +289,13 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
             disabled
             sx={{ marginBottom: 2 }}
           />
+          {/* <TextField
+            label="Gender"
+            value={formValues.gender}
+            fullWidth
+            disabled
+            sx={{ marginBottom: 2 }}
+          /> */}
 
           <FormControl fullWidth sx={{ marginBottom: 2 }}>
             <InputLabel>Gender</InputLabel>
@@ -241,12 +304,12 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
               onChange={(e) => handleFormChange("gender", e.target.value)}
               label="Gender"
               sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: formValues.gender ? 'transparent' : 'gray', // Custom border color
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: formValues.gender ? "transparent" : "gray", // Custom border color
                   },
-                  '&:hover fieldset': {
-                    borderColor: 'orange', // Border color on hover
+                  "&:hover fieldset": {
+                    borderColor: "orange", // Border color on hover
                   },
                 },
               }}
@@ -257,20 +320,23 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
             </Select>
           </FormControl>
 
-
           <FormControl fullWidth sx={{ marginBottom: 2 }}>
             <InputLabel>Marital Status</InputLabel>
             <Select
               value={formValues.maritalStatus}
-              onChange={(e) => handleFormChange("maritalStatus", e.target.value)}
+              onChange={(e) =>
+                handleFormChange("maritalStatus", e.target.value)
+              }
               label="Marital Status"
               sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: formValues.maritalStatus ? 'transparent' : 'gray', // Custom border color
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: formValues.maritalStatus
+                      ? "transparent"
+                      : "#1c1c1c", // Custom border color
                   },
-                  '&:hover fieldset': {
-                    borderColor: 'orange', // Border color on hover
+                  "&:hover fieldset": {
+                    borderColor: "#F26722", // Border color on hover
                   },
                 },
               }}
@@ -296,6 +362,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
               variant="outlined"
               color="secondary"
               onClick={() => setOpenModal(false)}
+              sx={{ color: "#1c1c1c", borderColor: "#1c1c1c" }}
             >
               Cancel
             </Button>
@@ -303,6 +370,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
               variant="contained"
               onClick={handleSubmit}
               disabled={isFetching}
+              sx={{ backgroundColor: "#F26722", color: "white" }}
             >
               {isFetching ? <CircularProgress size={24} /> : "Submit"}
             </Button>

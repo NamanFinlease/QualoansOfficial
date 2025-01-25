@@ -138,7 +138,7 @@ const Dashboard = () => {
         overflow: "hidden",
         flexDirection: "column",
         backgroundColor: "#f9f9f9",
-        width: "30%",
+        width: "25%",
       }}
     >
       <AppBar
@@ -251,7 +251,6 @@ const Dashboard = () => {
                       sx={{
                         color: "#fff",
                         minWidth: sidebarExpanded ? 40 : "auto",
-                        
                       }}
                     >
                       {option.icon}
