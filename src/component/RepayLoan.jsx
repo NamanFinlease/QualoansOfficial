@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import WarningIcon from "@mui/icons-material/Warning"; // Import Warning icon
-import AXIS from "../assets/image/axis (1).png";
+import HDFC from "../assets/image/download (1) (1).png";
 import repayaImage from "../assets/image/Qua-Repayment.jpg";
 import { Grid, Box, Typography, Button, Divider } from "@mui/material";
 import Header from "../navbar/Header";
@@ -203,12 +203,12 @@ const RepayLoan = () => {
                   }}
                 >
                   <img
-                    src={AXIS}
+                    src={HDFC}
                     alt="AXIS Bank"
                     style={{ width: "50px", marginBottom: "8px" }}
                   />
                   <Typography variant="h6" sx={{ color: "white" }}>
-                    AXIS Bank
+                    HDFC Bank
                   </Typography>
                 </Box>
 
@@ -293,7 +293,7 @@ const RepayLoan = () => {
                     </Typography>
                   </Typography>
 
-                  <Typography
+                  {/* <Typography
                     variant="body1"
                     sx={{ mb: 2, display: "flex", alignItems: "center" }}
                   >
@@ -306,10 +306,10 @@ const RepayLoan = () => {
                     >
                       Branch Name
                     </Box>
-                    {/* <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
+                    <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
               Saket, New Delhi 110017, India
-            </Typography> */}
-                  </Typography>
+            </Typography>
+                  </Typography> */}
 
                   <Typography
                     variant="body1"
