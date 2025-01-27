@@ -167,7 +167,7 @@ const RepayLoan = () => {
                 Please share a screenshot of your transfer <br />
                 from your bank/Google Pay to <br />
                 <strong style={{ color: "#fc8403" }}>
-                  recovery@qualoan.com
+                  collection@qualoan.com
                 </strong>
                 .
               </Typography>
