@@ -13,6 +13,8 @@ import {
   IconButton,
 } from "@mui/material";
 import { LocationOn } from "@mui/icons-material"; // For Address Info Icon
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+
 import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
@@ -33,21 +35,15 @@ const StepBox = ({
       alignItems: "flex-start",
       justifyContent: "center",
       padding: 2,
-      borderColor:
-        //completed ? "green" :
-        disabled ? "#1c1c1c" : "#F26722",
+      borderColor: disabled ? "#1c1c1c" : "#F26722",
       borderRadius: 3,
       margin: 1,
       width: "25%",
       minWidth: 200,
       cursor: disabled ? "not-allowed" : "pointer",
       textAlign: "left",
-      background:
-        // completed ? "linear-gradient(45deg, #28a745, #218838)":
-        disabled ? "#d9d9d9" : "#F26722",
-      color:
-        //completed ||
-        !disabled ? "white" : "#1c1c1c",
+      background: disabled ? "#d9d9d9" : "#F26722",
+      color: !disabled ? "white" : "#1c1c1c",
       "@media (max-width: 600px)": {
         width: "80%",
         margin: "auto",
@@ -55,6 +51,16 @@ const StepBox = ({
     }}
   >
     <IconButton
+      sx={{
+        color:
+          // completed ? "white" :
+          disabled ? "grey" : "white",
+        ml: 1,
+      }}
+    >
+      {completed ? <CheckCircleIcon /> : icon}
+    </IconButton>
+    {/* <IconButton
       sx={{
         color: completed ? "white" : disabled ? "#1c1c1c" : "white",
         ml: 1,
@@ -65,7 +71,7 @@ const StepBox = ({
       ) : (
         icon
       )}
-    </IconButton>
+    </IconButton> */}
     <Box sx={{ ml: 2, flexGrow: 1 }}>
       <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
       <Typography variant="body2">{description}</Typography>
@@ -74,12 +80,10 @@ const StepBox = ({
 );
 
 const AddressInfo = ({ onComplete, disabled, prefillData }) => {
-  console.log("prefillData", prefillData);
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [stepCompleted, setStepCompleted] = useState(false);
-  const [state, setState] = useState("");
-  const [city, setCity] = useState("");
   const [formValues, setFormValues] = useState({
     address: "",
     landmark: "",
@@ -89,13 +93,9 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
     residenceType: "OWNED",
   });
   const [error, setError] = useState("");
-
-  // useEffect(() => {
-  //   if (prefillData && prefillData.pan) {
-  //     setPan(prefillData.pan);
-  //     setIsPanValidated(true);
-  //   }
-  // }, [prefillData]);
+  const [isAddressVerified, setIsAddressVerified] = useState(false);
+  const [isMobileVerified, setIsMobileVerified] = useState(false);
+  const [mobile, setMobile] = useState("");
 
   const handleFormChange = (key, value) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
@@ -105,18 +105,14 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
   const handlePincodeChange = async (e) => {
     const value = e.target.value;
 
-    // Only allow numeric input and ensure the pincode has no more than 6 digits
     if (/^\d{0,6}$/.test(value)) {
       setFormValues({ ...formValues, pincode: value });
 
-      // If the pincode has exactly 6 digits, fetch city and state
       if (value.length === 6) {
         try {
           const response = await fetch(
             `https://api.postalpincode.in/pincode/${value}`
           );
-          console.log("response", response);
-
           const data = await response.json();
 
           if (data[0].Status === "Success") {
@@ -126,9 +122,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
               city: Block,
               state: State,
             }));
-            console.log("City:", Block, "State:", State);
           } else {
-            // Handle invalid pin code case
             setFormValues((prev) => ({
               ...prev,
               city: "",
@@ -149,7 +143,6 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
           });
         }
       } else {
-        // Reset city and state if pincode is incomplete
         setFormValues((prev) => ({
           ...prev,
           city: "",
@@ -157,10 +150,10 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
         }));
       }
     } else {
-      // Clear the pincode and reset city/state if input is invalid
       setFormValues({ ...formValues, pincode: "", city: "", state: "" });
     }
   };
+
   const handleSubmit = async () => {
     if (Object.values(formValues).some((val) => !val)) {
       setError("Please fill out all fields.");
@@ -181,7 +174,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
       if (response.status === 200) {
         Swal.fire("Address details updated successfully!");
         setOpenModal(false);
-        // Do not set stepCompleted here
+        setStepCompleted(true);
         onComplete({ formValues });
       } else {
         setError("Failed to update address details.");
@@ -194,56 +187,87 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
     }
   };
 
-  // const handleSubmit = async () => {
-  //   if (Object.values(formValues).some((val) => !val)) {
-  //     setError("Please fill out all fields.");
-  //     return;
-  //   }
+  const handleModalClick = async () => {
+    setOpenModal(true);
+    setIsLoading(true);
 
-  //   setIsFetching(true);
-  //   try {
-  //     const response = await axios.patch(
-  //       `${BASE_URL}/api/user/currentResidence`,
-  //       formValues,
-  //       {
-  //         headers: { "Content-Type": "application/json" },
-  //         withCredentials: true,
-  //       }
-  //     );
+    try {
+      const getDashboardDetailsResponse = await axios.get(
+        `${BASE_URL}/api/user/getDashboardDetails`,
+        {
+          withCredentials: true,
+        }
+      );
 
-  //     if (response.status === 200) {
-  //       Swal.fire("Address details updated successfully!");
-  //       setOpenModal(false);
-  //       setStepCompleted(true);
-  //       onComplete({ formValues });
-  //     } else {
-  //       setError("Failed to update address details.");
-  //     }
-  //   } catch (error) {
-  //     console.error("API Error:", error);
-  //     setError("Error submitting address details. Please try again.");
-  //   } finally {
-  //     setIsFetching(false);
-  //   }
-  // };
+      console.log(
+        "getDashboardDetailsResponse >>> ",
+        getDashboardDetailsResponse
+      );
+
+      if (getDashboardDetailsResponse.status === 200) {
+        setIsLoading(false);
+        const { isCurrentResidence } = getDashboardDetailsResponse.data;
+
+        console.log("isCurrentResidence:", isCurrentResidence);
+
+        // Set the value of isAddressVerified based on the fetched response
+        setIsAddressVerified(isCurrentResidence);
+
+        if (isCurrentResidence) {
+          const getProfileDetailsResponse = await axios.get(
+            `${BASE_URL}/api/user/getProfileDetails`,
+            {
+              withCredentials: true,
+            }
+          );
+
+          console.log(
+            "getProfileDetailsResponse >>> ",
+            getProfileDetailsResponse
+          );
+
+          const residenceData =
+            getProfileDetailsResponse?.data?.data?.residence;
+
+          // Update formValues with residenceData
+          setFormValues({
+            address: residenceData?.address || "",
+            landmark: residenceData?.landmark || "",
+            city: residenceData?.city || "",
+            state: residenceData?.state || "",
+            pincode: residenceData?.pincode || "",
+            residenceType: residenceData?.residenceType || "OWNED",
+          });
+        }
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (prefillData && prefillData.address) {
+      setFormValues({
+        address: prefillData.address || "",
+        landmark: prefillData.landmark || "",
+        pincode: prefillData.pincode || "",
+        city: prefillData.city || "",
+        state: prefillData.state || "",
+        residenceType: prefillData.residenceType || "OWNED",
+      });
+    }
+  }, [prefillData]);
 
   return (
     <>
-      {/* <StepBox
-        icon={<LocationOn />}
-        title="Address Information"
-        description="Update your current residence details."
-        onClick={() => setOpenModal(true)}
-        disabled={disabled || stepCompleted}
-        completed={stepCompleted}
-      /> */}
       <StepBox
         icon={<LocationOn />}
         title="Address Information"
         description="Update your current residence details."
-        onClick={() => setOpenModal(true)}
-        disabled={disabled} // Remove the `stepCompleted` condition here
-        completed={stepCompleted} // Keep completed logic if necessary
+        onClick={handleModalClick}
+        disabled={disabled}
+        completed={isAddressVerified}
       />
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
@@ -256,8 +280,8 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
             maxWidth: 400,
             margin: "auto",
             marginTop: "5%",
-            maxHeight: "90vh", // Set the maximum height
-            overflowY: "auto", // Enable vertical scrolling
+            maxHeight: "90vh",
+            overflowY: "auto",
           }}
         >
           <Typography sx={{ marginBottom: 2 }}>
@@ -288,7 +312,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
               onChange={(e) =>
                 handleFormChange("residenceType", e.target.value)
               }
-              label="Residence Type" // Ensure this matches the InputLabel text
+              label="Residence Type"
             >
               {[
                 "OWNED",

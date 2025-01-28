@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -16,12 +16,16 @@ import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
 
-const availableOptions = ["Residential Address", "Electricity Bill", "Gas Connection"];
+const availableOptions = [
+  "Residential Address",
+  "Electricity Bill",
+  "Gas Connection",
+];
 const MySwal = withReactContent(Swal);
 
-const DocumentUploadModal = ({ prefillData }) => {
+const DocumentUploadModal = ({ prefillData, isUploaded }) => {
   const [formValues, setFormValues] = useState({
-    salarySlip: prefillData?.salarySlip || null,
+    salarySlip: [null, null, null],
     aadhaarFront: prefillData?.aadhaarFront || null,
     aadhaarBack: prefillData?.aadhaarBack || null,
     panCard: prefillData?.panCard || null,
@@ -31,16 +35,35 @@ const DocumentUploadModal = ({ prefillData }) => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
+  useEffect(async () => {
+    if (isUploaded) {
+      // Fetch document list
+      const documentListResponse = await axios.get(
+        `${BASE_URL}/api/loanApplication/getDocumentList`,
+        { withCredentials: true }
+      );
+      console.log(
+        "documentListResponse zsdss",
+        documentListResponse.data.documents
+      );
+      setFormValues({ salarySlip });
+    }
+  }, []);
+
   const getAvailableOptions = (index) => {
     const uploadedDocuments = formValues.otherDocuments.map((doc, idx) =>
       idx === index ? "" : doc.type
     );
-    return availableOptions.filter((option) => !uploadedDocuments.includes(option));
+    return availableOptions.filter(
+      (option) => !uploadedDocuments.includes(option)
+    );
   };
 
   const handleFileChange = (field, file, index = 0) => {
     const updatedFormValues = { ...formValues };
-    if (field === "otherDocuments") {
+    if (field === "salarySlip") {
+      updatedFormValues.salarySlip[index] = file;
+    } else if (field === "otherDocuments") {
       updatedFormValues.otherDocuments[index].files = file;
     } else {
       updatedFormValues[field] = file;
@@ -57,7 +80,9 @@ const DocumentUploadModal = ({ prefillData }) => {
 
   const deleteUploadedFile = (field, index = 0) => {
     const updatedFormValues = { ...formValues };
-    if (field === "otherDocuments") {
+    if (field === "salarySlip") {
+      updatedFormValues.salarySlip[index] = null;
+    } else if (field === "otherDocuments") {
       updatedFormValues.otherDocuments[index].files = null;
     } else {
       updatedFormValues[field] = null;
@@ -67,6 +92,9 @@ const DocumentUploadModal = ({ prefillData }) => {
 
   const validateForm = () => {
     const newErrors = {};
+    if (!formValues.salarySlip.every((file) => file)) {
+      newErrors.salarySlip = "All three salary slips are required.";
+    }
     if (!formValues.salarySlip) newErrors.salarySlip = "Required";
     if (!formValues.aadhaarFront) newErrors.aadhaarFront = "Required";
     if (!formValues.aadhaarBack) newErrors.aadhaarBack = "Required";
@@ -86,6 +114,9 @@ const DocumentUploadModal = ({ prefillData }) => {
 
     // Prepare form-data
     const formData = new FormData();
+    formValues.salarySlip.forEach((file, index) => {
+      formData.append(`salarySlip`, file);
+    });
     formData.append("salarySlip", formValues.salarySlip);
     formData.append("aadhaarFront", formValues.aadhaarFront);
     formData.append("aadhaarBack", formValues.aadhaarBack);
@@ -98,9 +129,6 @@ const DocumentUploadModal = ({ prefillData }) => {
     setLoading(true);
 
     try {
-      // const token =
-      //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
-
       // Fetch the API using axios
       const response = await axios.patch(
         `${BASE_URL}/api/loanApplication/uploadDocuments`,
@@ -113,7 +141,7 @@ const DocumentUploadModal = ({ prefillData }) => {
           withCredentials: true, // Ensures that cookies are included with the request
         }
       );
-
+      console.log("response ><<>> ", response);
       MySwal.fire({
         icon: "success",
         title: "Documents uploaded successfully",
@@ -166,7 +194,38 @@ const DocumentUploadModal = ({ prefillData }) => {
         Upload Documents
       </Typography>
       <Grid container spacing={2}>
-        {["salarySlip", "aadhaarFront", "aadhaarBack", "panCard"].map((field, index) => (
+        {[0, 1, 2].map((index) => (
+          <Grid item xs={12} sm={4} key={`salarySlip-${index}`}>
+            <TextField
+              fullWidth
+              type="file"
+              inputProps={{ accept: ".pdf,image/*" }}
+              label={`Upload Salary Slip ${index + 1}`}
+              error={!!errors.salarySlip && !formValues.salarySlip[index]}
+              helperText={
+                errors.salarySlip && !formValues.salarySlip[index]
+                  ? "Required"
+                  : ""
+              }
+              InputLabelProps={{ shrink: true }}
+              InputProps={{
+                endAdornment: formValues.salarySlip[index] && (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => deleteUploadedFile("salarySlip", index)}
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              onChange={(e) =>
+                handleFileChange("salarySlip", e.target.files[0], index)
+              }
+            />
+          </Grid>
+        ))}
+        {["aadhaarFront", "aadhaarBack", "panCard"].map((field, index) => (
           <Grid item xs={12} sm={6} key={index}>
             <TextField
               fullWidth
@@ -220,13 +279,19 @@ const DocumentUploadModal = ({ prefillData }) => {
                 InputProps={{
                   endAdornment: doc.files && (
                     <InputAdornment position="end">
-                      <IconButton onClick={() => deleteUploadedFile("otherDocuments", index)}>
+                      <IconButton
+                        onClick={() =>
+                          deleteUploadedFile("otherDocuments", index)
+                        }
+                      >
                         <ClearIcon />
                       </IconButton>
                     </InputAdornment>
                   ),
                 }}
-                onChange={(e) => handleFileChange("otherDocuments", e.target.files[0], index)}
+                onChange={(e) =>
+                  handleFileChange("otherDocuments", e.target.files[0], index)
+                }
               />
             </Grid>
           </React.Fragment>
@@ -235,7 +300,9 @@ const DocumentUploadModal = ({ prefillData }) => {
           <Button
             variant="outlined"
             onClick={addMoreDocumentFields}
-            disabled={formValues.otherDocuments.length >= availableOptions.length}
+            disabled={
+              formValues.otherDocuments.length >= availableOptions.length
+            }
           >
             Add More Documents
           </Button>

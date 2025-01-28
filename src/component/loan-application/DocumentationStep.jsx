@@ -6,10 +6,17 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import SweetAlert from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import DocumentUploadModal from "../DocumentUploadModal";
+import { BASE_URL } from "../../baseURL";
+import axios from "axios";
 
 const MySwal = withReactContent(SweetAlert);
 
-const DocumentationStep = ({ onComplete, disabled, prefillData }) => {
+const DocumentationStep = ({
+  onComplete,
+  disabled,
+  prefillData,
+  isUploaded,
+}) => {
   const [stepCompleted, setStepCompleted] = useState(false); // Add this line to define stepCompleted state
 
   const handleDocumentationUpload = async () => {
@@ -18,7 +25,7 @@ const DocumentationStep = ({ onComplete, disabled, prefillData }) => {
 
     // Render the React component into the container
     ReactDOM.render(
-      <DocumentUploadModal prefillData={prefillData} />,
+      <DocumentUploadModal prefillData={prefillData} isUploaded={isUploaded} />,
       container
     );
 

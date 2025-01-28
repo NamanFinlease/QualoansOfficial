@@ -12,16 +12,14 @@ import {
   CircularProgress,
   IconButton,
 } from "@mui/material";
-import { Person, CheckCircle } from "@mui/icons-material"; // Green tick icon
+import { Person, CheckCircle } from "@mui/icons-material";
 import axios from "axios";
-import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
+import { BASE_URL } from "../../baseURL";
 
 const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
-  // console.log("diss sss perison ", disabled);
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
-  const [personalDetails, setPersonalDetails] = useState(null);
   const [formValues, setFormValues] = useState({
     fullName: "",
     gender: "",
@@ -30,14 +28,8 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
     spouseName: "",
     dob: "",
   });
-  const [stepCompleted, setStepCompleted] = useState(false); // Track step completion
   const [error, setError] = useState("");
   const [isPersonalInfoUpdated, setIsPersonalInfoUpdated] = useState(false);
-  const [isDisable, setIsDisable] = useState(disabled);
-
-  useEffect(() => {
-    console.log("dididi ss ><><><><");
-  }, [isDisable]);
 
   useEffect(() => {
     if (prefillData) {
@@ -45,65 +37,9 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
     }
   }, [prefillData]);
 
-  // StepBox Component
-
-  const StepBox = ({ icon, title, description, disabled, completed }) => (
-    <Box
-      onClick={
-        !disabled && !completed ? () => handleCompleteStep("personal") : null
-      }
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        padding: 2,
-        borderColor:
-          //completed ? "green" :
-          disabled ? "#1c1c1c" : "#F26722",
-        borderRadius: 3,
-        margin: 1,
-        width: "25%",
-        minWidth: 200,
-        cursor: disabled ? "not-allowed" : "pointer",
-        textAlign: "left",
-        background:
-          // completed ? "linear-gradient(45deg, #28a745, #218838)" :
-          disabled ? "#D9D9D9" : "#F26722",
-        color:
-          //completed ||
-          !disabled ? "white" : "#1c1c1c",
-        "@media (max-width: 600px)": {
-          width: "80%",
-          margin: "auto",
-        },
-      }}
-    >
-      <IconButton
-        sx={{
-          color: completed ? "white" : disabled ? "#1c1c1c" : "white",
-          ml: 1,
-        }}
-      >
-        {completed ? <CheckCircle /> : icon}
-      </IconButton>
-
-      <Box sx={{ ml: 2, flexGrow: 1 }}>
-        <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
-        <Typography variant="body2">{description}</Typography>
-      </Box>
-    </Box>
-  );
-
-  const handleCompleteStep = async (step) => {
-    if (step === "personal") {
-      await showPersonalInfoForm();
-    }
-  };
-
-  const showPersonalInfoForm = async () => {
-    setIsFetching(true);
+  const handleCompleteStep = async () => {
     try {
+      setIsFetching(true);
       const response = await axios.get(
         `${BASE_URL}/api/user/getProfileDetails`,
         {
@@ -111,28 +47,23 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
         }
       );
 
-      if (response.status !== 200)
-        throw new Error("Failed to fetch profile details.");
-
-      const { success, data } = response.data;
-      if (success && data?.personalDetails) {
-        setPersonalDetails(data.personalDetails);
+      if (response.status === 200 && response.data.success) {
+        const data = response.data.data.personalDetails;
         setFormValues({
-          fullName: data.personalDetails.fullName || "",
-          gender: data.personalDetails.gender || "",
-          personalEmail: data.personalDetails.personalEmail || "",
-          maritalStatus: data.personalDetails.maritalStatus || "",
-          spouseName: data.personalDetails.spouseName || "",
-          dob: data.personalDetails.dob || "",
+          fullName: data.fullName || "",
+          gender: data.gender || "",
+          personalEmail: data.personalEmail || "",
+          maritalStatus: data.maritalStatus || "",
+          spouseName: data.spouseName || "",
+          dob: data.dob || "",
         });
-        setIsDisable(false);
         setOpenModal(true);
       } else {
-        setError("Unable to retrieve personal details.");
+        Swal.fire("Error", "Unable to fetch profile details.", "error");
       }
     } catch (error) {
-      console.error("Error:", error);
-      setError("Error fetching personal details.");
+      console.error("Error fetching details:", error);
+      Swal.fire("Error", "An error occurred while fetching details.", "error");
     } finally {
       setIsFetching(false);
     }
@@ -142,6 +73,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
     setFormValues((prev) => ({ ...prev, [field]: value }));
     setError("");
   };
+
   const handleSubmit = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formValues.personalEmail)) {
@@ -159,9 +91,8 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
         formValues.maritalStatus === "MARRIED" ? formValues.spouseName : null,
     };
 
-    setIsFetching(true);
-
     try {
+      setIsFetching(true);
       const response = await axios.patch(
         `${BASE_URL}/api/user/personalInfo`,
         updatedDetails,
@@ -173,79 +104,52 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
 
       if (response.status === 200) {
         Swal.fire("Success", "Details updated successfully!", "success");
-        setOpenModal(false); // Close the modal
-        console.log("personalDetails <><<><><>> ", personalDetails);
-        onComplete({ personalDetails }); // Notify parent component
-        // Do not update `stepCompleted` here to keep the box active
+        setOpenModal(false);
+        onComplete({ personalDetails: updatedDetails });
       } else {
-        setError("Failed to update details.");
+        Swal.fire("Error", "Failed to update details.", "error");
       }
     } catch (error) {
-      console.error("Error updating details:", error.response || error.message);
-      setError("Failed to update personal details.");
-      Swal.fire("Error", "Unable to fetch or update your details.", "error");
+      console.error("Error updating details:", error);
+      Swal.fire("Error", "An error occurred while updating details.", "error");
     } finally {
       setIsFetching(false);
     }
   };
 
-  // const handleSubmit = async () => {
-  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   if (!emailRegex.test(formValues.personalEmail)) {
-  //     setError("Please enter a valid email address.");
-  //     return;
-  //   }
-
-  //   const updatedDetails = {
-  //     fullName: formValues.fullName,
-  //     gender: formValues.gender,
-  //     dob: formValues.dob,
-  //     personalEmail: formValues.personalEmail,
-  //     maritalStatus: formValues.maritalStatus,
-  //     spouseName:
-  //       formValues.maritalStatus === "MARRIED" ? formValues.spouseName : null,
-  //   };
-
-  //   setIsFetching(true);
-
-  //   try {
-  //     const response = await axios.patch(
-  //       `${BASE_URL}/api/user/personalInfo`,
-  //       updatedDetails,
-  //       {
-  //         headers: { "Content-Type": "application/json" },
-  //         withCredentials: true,
-  //       }
-  //     );
-
-  //     if (response.status === 200) {
-  //       Swal.fire("Success", "Details updated successfully!", "success");
-  //       setStepCompleted(true); // Mark step as completed
-  //       setOpenModal(false);
-  //       console.log("personalDetails <><<><><>> ", personalDetails);
-  //       onComplete({ personalDetails }); // Notify parent component
-  //     } else {
-  //       setError("Failed to update details.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating details:", error.response || error.message);
-  //     setError("Failed to update personal details.");
-  //     Swal.fire("Error", "Unable to fetch or update your details.", "error");
-  //   } finally {
-  //     setIsFetching(false);
-  //   }
-  // };
-
   return (
     <>
-      <StepBox
-        icon={<Person />}
-        title="Personal Information"
-        description="Please update your personal details."
-        onClick={() => setOpenModal(true)}
-        disabled={disabled} // Remove `stepCompleted` here
-        completed={isPersonalInfoUpdated}
-      />
+      <Box
+        onClick={!disabled && handleCompleteStep}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          padding: 2,
+          borderColor: disabled ? "#1c1c1c" : "#F26722",
+          borderRadius: 3,
+          margin: 1,
+          width: "25%",
+          minWidth: 200,
+          cursor: disabled ? "not-allowed" : "pointer",
+          textAlign: "left",
+          background: disabled ? "#D9D9D9" : "#F26722",
+          color: "white",
+        }}
+      >
+        <IconButton sx={{ color: "white", ml: 1 }}>
+          {isPersonalInfoUpdated ? <CheckCircle /> : <Person />}
+        </IconButton>
+        <Box sx={{ ml: 2, flexGrow: 1 }}>
+          <Typography sx={{ fontWeight: "bold" }}>
+            Personal Information
+          </Typography>
+          <Typography variant="body2">
+            Please update your personal details.
+          </Typography>
+        </Box>
+      </Box>
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Box
@@ -256,8 +160,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
             padding: 3,
             maxWidth: 400,
             margin: "auto",
-            marginTop: "1%",
-            marginBottom: "30%",
+            marginTop: "5%",
           }}
         >
           <Typography sx={{ marginBottom: 2 }}>Share Your Details</Typography>
@@ -269,19 +172,15 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
             disabled
             sx={{ marginBottom: 2 }}
           />
-
           <TextField
             label="Email"
             value={formValues.personalEmail}
             onChange={(e) => handleFormChange("personalEmail", e.target.value)}
             fullWidth
             sx={{ marginBottom: 2 }}
-            error={!!error && !formValues.personalEmail.includes("@")}
-            helperText={
-              !!error && !formValues.personalEmail.includes("@") ? error : ""
-            }
+            error={!!error}
+            helperText={error}
           />
-
           <TextField
             label="Date of Birth"
             value={formValues.dob}
@@ -289,37 +188,18 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
             disabled
             sx={{ marginBottom: 2 }}
           />
-          {/* <TextField
-            label="Gender"
-            value={formValues.gender}
-            fullWidth
-            disabled
-            sx={{ marginBottom: 2 }}
-          /> */}
-
           <FormControl fullWidth sx={{ marginBottom: 2 }}>
             <InputLabel>Gender</InputLabel>
             <Select
               value={formValues.gender}
               onChange={(e) => handleFormChange("gender", e.target.value)}
               label="Gender"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: formValues.gender ? "transparent" : "gray", // Custom border color
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "orange", // Border color on hover
-                  },
-                },
-              }}
             >
               <MenuItem value="M">Male</MenuItem>
               <MenuItem value="F">Female</MenuItem>
               <MenuItem value="O">Other</MenuItem>
             </Select>
           </FormControl>
-
           <FormControl fullWidth sx={{ marginBottom: 2 }}>
             <InputLabel>Marital Status</InputLabel>
             <Select
@@ -328,18 +208,6 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
                 handleFormChange("maritalStatus", e.target.value)
               }
               label="Marital Status"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: formValues.maritalStatus
-                      ? "transparent"
-                      : "#1c1c1c", // Custom border color
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#F26722", // Border color on hover
-                  },
-                },
-              }}
             >
               <MenuItem value="SINGLE">Single</MenuItem>
               <MenuItem value="MARRIED">Married</MenuItem>

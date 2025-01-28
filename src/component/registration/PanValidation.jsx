@@ -15,23 +15,23 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
-
+import axios from "axios";
 const PANValidation = ({ onComplete, disabled, prefillData }) => {
-  console.log("onComplete Pan >>> ", onComplete);
-  console.log("disabled Pan >>> ", disabled);
-  console.log("PANValidation -> prefillData", prefillData);
   const [openDialog, setOpenDialog] = useState(false);
   const [pan, setPan] = useState("");
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState("");
+  const [formValues, setFormValues] = useState({ pan: "" });
+
   const [isPanValidated, setIsPanValidated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Prefill PAN data if available
-  useEffect(() => {
-    if (prefillData) {
-      setIsPanValidated(true);
-    }
-  }, [prefillData]);
+  // useEffect(() => {
+  //   if (prefillData) {
+  //     setIsPanValidated(true);
+  //   }
+  // }, [prefillData]);
 
   const handleCompleteStep = async () => {
     if (disabled) return;
@@ -83,10 +83,52 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
     }
   };
 
+  const handleModalClick = async () => {
+    setOpenDialog(true);
+    setIsLoading(true);
+
+    try {
+      const getDashboardDetailsResponse = await axios.get(
+        `${BASE_URL}/api/user/getDashboardDetails`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (getDashboardDetailsResponse.status === 200) {
+        const { isPanVerify } = getDashboardDetailsResponse.data;
+        setIsPanValidated(isPanVerify);
+
+        if (isPanVerify) {
+          const getProfileDetailsResponse = await axios.get(
+            `${BASE_URL}/api/user/getProfileDetails`,
+            { withCredentials: true }
+          );
+
+          // Retrieve the PAN number from the response
+          const panNumber = getProfileDetailsResponse?.data?.data?.PAN;
+          console.log("vvvv>>>>", panNumber);
+
+          if (panNumber) {
+            setPan(panNumber); // Set the PAN number here
+            console.log("PAN set: ", panNumber); // Log for debugging
+          } else {
+            console.error("PAN number is not available in profile data.");
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false); // Reset loading state after API call completes
+    }
+  };
+
   return (
     <>
       <Box
-        onClick={handleCompleteStep}
+        onClick={handleModalClick}
+        // onClick={handleCompleteStep}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -176,7 +218,7 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
           </Typography>
           <TextField
             label="PAN Number"
-            value={pan}
+            value={pan} // Bind to the pan state
             onChange={handlePanChange}
             disabled={isFetching || disabled}
             fullWidth
@@ -191,6 +233,7 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
               },
             }}
           />
+
           {error && (
             <Typography variant="body2" sx={{ color: "red", marginTop: 2 }}>
               {error}

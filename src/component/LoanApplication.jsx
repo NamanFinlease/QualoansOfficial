@@ -22,6 +22,9 @@ const LoanApplication = () => {
     disbursalBankDetail: { completed: false, data: null },
   });
   const [loading, setLoading] = useState(true);
+  const [isUploaded, setIsUploaded] = useState({
+    isDocumentUploaded: false,
+  });
 
   // Fetch progress status from API
   useEffect(() => {
@@ -35,8 +38,9 @@ const LoanApplication = () => {
         );
         if (response.data.success) {
           if (!response.data.isRegistration) {
-            const { progressStatus } = response.data;
+            const { progressStatus, isDocumentUploaded } = response.data;
 
+            setIsUploaded({ isDocumentUploaded: isDocumentUploaded });
             // Map progressStatus to step completion
             const updatedSteps = {
               loanCalculator: {
@@ -226,6 +230,7 @@ const LoanApplication = () => {
             }
             disabled={!steps.bankStatement.completed}
             prefillData={steps.fetchDocument.data}
+            isUploaded={isUploaded.isDocumentUploaded}
           />
 
           <DisbursalBankDetails

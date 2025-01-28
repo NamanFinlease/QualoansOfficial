@@ -90,11 +90,13 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
       // Set the box color to green after successful submission
       setIsComplete(true);
 
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: response.data.message,
-      });
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: response.data.message,
+        });
+      }
     } catch (error) {
       console.error("Error applying for loan:", error);
       Swal.fire({
@@ -117,41 +119,73 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
     });
   };
 
+  const handleModalClick = async () => {
+    openLoanCalculatorModal(true);
+    setIsLoading(true);
+
+    try {
+      const getDashboardDetailsResponse = await axios.get(
+        `${BASE_URL}/api/user/getDashboardDetails`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      // console.log(
+      //   "getDashboardDetailsResponse >>> ",
+      //   getDashboardDetailsResponse
+      // );
+
+      if (getDashboardDetailsResponse.status === 200) {
+        setIsLoading(false);
+        console.log(
+          "getDashboardDetailsResponse >>> ",
+          getDashboardDetailsResponse
+        );
+        const { isLoanCalculated } = getDashboardDetailsResponse.data;
+
+        // console.log("isLoanCalculated>>>>:", getDashboardDetailsResponse);
+
+        // Set the value of isAddressVerified based on the fetched response
+        setIsComplete(isLoanCalculated);
+
+        if (isLoanCalculated) {
+          const getProfileDetailsResponse = await axios.get(
+            `${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=loanDetails`,
+            {
+              withCredentials: true,
+            }
+          );
+
+          console.log(
+            "getProfileDetailsResponse >>> ",
+            getProfileDetailsResponse
+          );
+
+          const LoanData =
+            getProfileDetailsResponse?.data?.data?.isLoanCalculated;
+
+          // Update formValues with residenceData
+          setFormValues({
+            principal: residenceData?.address || "",
+            landmark: residenceData?.landmark || "",
+            city: residenceData?.city || "",
+            state: residenceData?.state || "",
+            pincode: residenceData?.pincode || "",
+            residenceType: residenceData?.residenceType || "OWNED",
+          });
+        }
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error fetching data:", error);
+    }
+  };
+
   return (
     <>
       <Box
-        // sx={{
-        //   display: "flex",
-        //   flexDirection: "column",
-        //   alignItems: "flex-start",
-        //   justifyContent: "center",
-        //   padding: 2,
-        //   // border: "1px solid #ddd",
-        //   borderRadius: 3,
-        //   background:
-        //     //  isComplete ? "green" :
-        //     disabled ? "#1c1c1c" : "#F26722",
-        //   cursor: disabled ? "not-allowed" : "pointer",
-        //   // height: 150,
-        //   width: "25%",
-        //   maxWidth: 200,
-        //   transition: "all 0.3s",
-        //   // boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-        //   // "&:hover": {
-        //   //   backgroundColor: disabled
-        //   //     ? "#ccc"
-        //   //     : isComplete
-        //   //     ? "green"
-        //   //     : "orange",
-        //   //   color: disabled ? "white" : "black",
-        //   //   transform: disabled ? "none" : "scale(1.03)",
-        //   // },
-        //   "@media (max-width: 600px)": {
-        //     width: "80%",
-        //     margin: "auto",
-        //   },
-        // }}
-
+        onClick={handleModalClick}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -180,7 +214,6 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
             margin: "auto",
           },
         }}
-        onClick={!disabled ? openLoanCalculatorModal : null}
       >
         <IconButton
           disabled={disabled || isComplete}
@@ -399,7 +432,6 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                     onClick={handleSubmit}
                     disabled={isLoading}
                     sx={{ backgroundColor: "#F26722", color: "white" }}
-
                   >
                     {isLoading ? "Submitting..." : "Submit"}
                   </Button>

@@ -15,7 +15,7 @@ import PhoneIcon from "@mui/icons-material/PhoneIphone";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Swal from "sweetalert2";
 import { BASE_URL } from "../../baseURL";
-
+import axios from "axios";
 const InputField = ({ label, value, onChange, placeholder }) => (
   <TextField
     fullWidth
@@ -34,20 +34,46 @@ const InputField = ({ label, value, onChange, placeholder }) => (
   />
 );
 
-const MobileVerification = ({ onComplete, disabled, prefillData }) => {
+const MobileVerification = ({
+  onComplete,
+  disabled,
+  prefillData,
+  // isVerified,
+}) => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [mobile, setMobile] = useState(prefillData?.mobile || "");
+  const [mobile, setMobile] = useState("");
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState("mobile");
   const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [isMobileVerified, setIsMobileVerified] = useState(false);
+  // const [formValues, setFormValues] = useState({
+  //   mobile: null,
+  // });
+  // useEffect(() => {
+  //   if (prefillData && prefillData.mobile && prefillData.verified) {
+  //     setMobile(prefillData.mobile);
+  //     setIsOtpVerified(true);
+  //   }
+  // }, [prefillData]);
 
-  useEffect(() => {
-    if (prefillData && prefillData.mobile && prefillData.verified) {
-      setMobile(prefillData.mobile);
-      setIsOtpVerified(true);
-    }
-  }, [prefillData]);
+  // useEffect(async () => {
+  //   // const fetchProfileDetails = async () => {
+  //   // try {
+  //   if (isVerified) {
+  //     const response = await axios.get(
+  //       `${BASE_URL}/api/loanApplication/getProfileDetails`,
+  //       { withCredentials: true }
+  //     );
+  //     console.log("mobbbb sdfsdfsd>>><<<<<", response.data.documents);
+  //     // setFormValues({ mobile });
+  //   }
+  //   // } catch (error) {
+  //   //   console.error("Error fetching profile details:", error);
+  //   // }
+  //   // };
+  //   // fetchProfileDetails();
+  // }, []);
 
   const sendOTP = async (mobileNumber) => {
     try {
@@ -76,6 +102,7 @@ const MobileVerification = ({ onComplete, disabled, prefillData }) => {
   const verifyOTP = async (mobileNumber, otpCode) => {
     try {
       setIsLoading(true);
+
       const response = await fetch(`${BASE_URL}/api/verify/mobile/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -110,6 +137,53 @@ const MobileVerification = ({ onComplete, disabled, prefillData }) => {
         "Please enter a mobile number to resend OTP.",
         "warning"
       );
+    }
+  };
+
+  const handleModalClick = async () => {
+    setOpenDialog(true);
+    setIsLoading(true);
+
+    try {
+      // Fetch dashboard details
+      const getDashboardDetailsResponse = await axios.get(
+        `${BASE_URL}/api/user/getDashboardDetails`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (getDashboardDetailsResponse.status === 200) {
+        const { isMobileVerify } = getDashboardDetailsResponse.data;
+        setIsMobileVerified(isMobileVerify);
+
+        if (isMobileVerify) {
+          // Fetch profile details if mobile is verified
+          const getProfileDetailsResponse = await axios.get(
+            `${BASE_URL}/api/user/getProfileDetails`,
+            { withCredentials: true }
+          );
+
+          // Update mobile number if available in response
+          const mobileNumber = getProfileDetailsResponse?.data?.data?.mobile;
+          if (mobileNumber) {
+            setMobile(mobileNumber);
+            console.log("Mobile set: ", mobileNumber);
+          } else {
+            console.error("Mobile number is not available in profile data.");
+          }
+        } else {
+          console.log(
+            "Mobile is not verified. Skipping profile details fetch."
+          );
+        }
+      } else {
+        console.error("Failed to fetch dashboard details.");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -175,7 +249,7 @@ const MobileVerification = ({ onComplete, disabled, prefillData }) => {
         icon={<PhoneIcon />}
         title="Mobile Verification"
         description="Verify your mobile number"
-        onClick={() => setOpenDialog(true)}
+        onClick={handleModalClick}
         disabled={disabled}
         completed={isOtpVerified}
       />

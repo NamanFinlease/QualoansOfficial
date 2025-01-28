@@ -44,9 +44,19 @@ const SelfieVerification = ({ onComplete, disabled }) => {
     const file = event.target.files[0];
     if (file) {
       setCapturedImage(URL.createObjectURL(file)); // Show preview
-      uploadSelfieToBackend(file);
+      uploadSelfieToBackend(file); // Call API for the uploaded file
     }
+    // Keep the input field accessible for multiple uploads
+    event.target.value = null; // Reset the input value to allow re-upload of the same file
   };
+
+  // const handleFileUpload = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     setCapturedImage(URL.createObjectURL(file)); // Show preview
+  //     uploadSelfieToBackend(file);
+  //   }
+  // };
   const style = document.createElement("style");
   style.innerHTML = `
   @keyframes blink {

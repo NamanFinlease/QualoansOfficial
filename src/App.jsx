@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import Header from "./navbar/Header";
 import Footer from "./component/Footer";
+
 import MainContent from "./navbar/MainContent";
 import AboutUs from "./component/AboutUs";
 import ContactUs from "./component/ContactUs";
@@ -31,7 +32,6 @@ const MinimalLayout = ({ children }) => <div>{children}</div>;
 
 function App() {
   const location = useLocation();
-
 
   // Routes where Header and Footer should appear
   const routesWithHeaderFooter = [

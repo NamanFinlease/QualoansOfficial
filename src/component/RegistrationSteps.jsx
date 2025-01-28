@@ -15,7 +15,13 @@ import { useSidebar } from "../context/SidebarContext";
 const RegistrationSteps = () => {
   const navigate = useNavigate();
   const { sidebarOpen, sidebarExpanded } = useSidebar();
-
+  const [isVerified, setIsVerified] = useState({
+    isMobileVerified: false,
+    isPanVerified: false,
+    isPersonalInfoVerified: false,
+    isAddressVerified: false,
+    isIncomeInfoVerified: false,
+  });
   const totalSteps = 6; // Total steps in the registration process
 
   const [steps, setSteps] = useState(() => {
@@ -45,8 +51,8 @@ const RegistrationSteps = () => {
         console.log("response das>><<<< ", response);
         if (response.data.success) {
           if (response.data.isRegistration) {
-            const { registrationStatus } = response.data;
-
+            const { registrationStatus, isMobileVerify } = response.data;
+            setIsVerified({ isMobileVerified: isMobileVerify });
             // Map registrationStatus to step completion
             const updatedSteps = {
               mobileVerification: {
@@ -232,28 +238,33 @@ const RegistrationSteps = () => {
             }
             disabled={false}
             prefillData={steps.mobileVerification.data}
+            isVerified={isVerified.isMobileVerified}
           />
           <PANValidation
             onComplete={(data) => handleStepCompletion("panVerification", data)}
             disabled={!steps.mobileVerification.completed}
             prefillData={steps.panVerification.data}
+            isVerified={isVerified.isPanVerified}
           />
           {console.log("steps", steps)}
           <PersonalInfo
             onComplete={(data) => handleStepCompletion("personalInfo", data)}
             disabled={!steps.panVerification.completed}
             prefillData={steps.personalInfo.data}
+            isVerified={isVerified.isPersonalInfoVerified}
           />
           {console.log("steps", steps)}
           <AddressInfo
             onComplete={(data) => handleStepCompletion("addressInfo", data)}
             disabled={!steps.personalInfo.completed}
             prefillData={steps.addressInfo.data}
+            isVerified={isVerified.isAddressVerified}
           />
           <IncomeInfoForm
             onComplete={(data) => handleStepCompletion("incomeDetails", data)}
             disabled={!steps.addressInfo.completed}
             prefillData={steps.incomeDetails.data}
+            isVerified={isVerified.isIncomeInfoVerified}
           />
           <SelfieVerification
             onComplete={(data) =>

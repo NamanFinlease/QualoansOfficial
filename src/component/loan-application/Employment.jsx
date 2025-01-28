@@ -156,6 +156,67 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
       console.error("Error:", error);
     }
   };
+   const handleModalClick = async () => {
+    openLoanCalculatorModal(true);
+    setIsLoading(true);
+
+    try {
+      const getDashboardDetailsResponse = await axios.get(
+        `${BASE_URL}/api/user/getDashboardDetails`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      // console.log(
+      //   "getDashboardDetailsResponse >>> ",
+      //   getDashboardDetailsResponse
+      // );
+
+      if (getDashboardDetailsResponse.status === 200) {
+        setIsLoading(false);
+        console.log(
+          "getDashboardDetailsResponse >>> ",
+          getDashboardDetailsResponse
+        );
+        const { isLoanCalculated } = getDashboardDetailsResponse.data;
+
+        console.log("isLoanCalculated>>>>:", isLoanCalculated);
+
+        // Set the value of isAddressVerified based on the fetched response
+        setIsComplete(isLoanCalculated);
+
+        if (isLoanCalculated) {
+          const getProfileDetailsResponse = await axios.get(
+            `${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=loanDetails`,
+            {
+              withCredentials: true,
+            }
+          );
+
+          console.log(
+            "getProfileDetailsResponse >>> ",
+            getProfileDetailsResponse
+          );
+
+          const LoanData = getProfileDetailsResponse?.data?.data?.residence;
+
+          // Update formValues with residenceData
+          setFormValues({
+            address: residenceData?.address || "",
+            landmark: residenceData?.landmark || "",
+            city: residenceData?.city || "",
+            state: residenceData?.state || "",
+            pincode: residenceData?.pincode || "",
+            residenceType: residenceData?.residenceType || "OWNED",
+          });
+        }
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
     if (prefillData) {
