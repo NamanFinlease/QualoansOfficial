@@ -13,6 +13,8 @@ import {
 import ClearIcon from "@mui/icons-material/Clear";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
 
@@ -21,9 +23,10 @@ const availableOptions = [
   "Electricity Bill",
   "Gas Connection",
 ];
+
 const MySwal = withReactContent(Swal);
 
-const DocumentUploadModal = ({ prefillData, isUploaded }) => {
+const DocumentUploadModal = ({ prefillData }) => {
   const [formValues, setFormValues] = useState({
     salarySlip: [null, null, null],
     aadhaarFront: prefillData?.aadhaarFront || null,
@@ -34,21 +37,66 @@ const DocumentUploadModal = ({ prefillData, isUploaded }) => {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isDocUploaded, setIsDocUploaded] = useState(false);
+  const [firstOccurrences, setFirstOccurrences] = useState([]);
 
-  useEffect(async () => {
-    if (isUploaded) {
-      // Fetch document list
-      const documentListResponse = await axios.get(
-        `${BASE_URL}/api/loanApplication/getDocumentList`,
+  useEffect(() => {
+    const getPreviousData = async () => {
+      const getDashboardDetailsResponse = await axios.get(
+        `${BASE_URL}/api/user/getDashboardDetails`,
         { withCredentials: true }
       );
       console.log(
-        "documentListResponse zsdss",
-        documentListResponse.data.documents
+        "doccccc srssss ress <>>>> ",
+        getDashboardDetailsResponse.data
       );
-      setFormValues({ salarySlip });
-    }
+
+      if (getDashboardDetailsResponse.data.success) {
+        const { isDocumentUploaded } = getDashboardDetailsResponse.data;
+        setIsDocUploaded(isDocumentUploaded);
+      }
+    };
+    getPreviousData();
   }, []);
+
+  // Handle logic after isDocUploaded changes
+  useEffect(() => {
+    if (isDocUploaded) {
+      const fetchDocumentList = async () => {
+        const documentListResponse = await axios.get(
+          `${BASE_URL}/api/loanApplication/getDocumentList`,
+          { withCredentials: true }
+        );
+        console.log(
+          "documentListResponse zsdss",
+          documentListResponse.data.documents
+        );
+        const data = documentListResponse.data.documents;
+        const result = {};
+        const requiredNames = ["salarySlip_1", "salarySlip_2", "salarySlip_3"];
+
+        for (const item of data) {
+          if (requiredNames.includes(item.name) && !result[item.name]) {
+            result[item.name] = item;
+          }
+        }
+
+        const firstOccurrencesArray = Object.values(result);
+        setFirstOccurrences(firstOccurrencesArray);
+
+        setFormValues((prev) => ({
+          ...prev,
+          salarySlip: firstOccurrencesArray.map((doc) => doc || null),
+          aadhaarFront: data.find((doc) => doc.type === "aadhaarFront"),
+          aadhaarBack: data.find((doc) => doc.type === "aadhaarBack"),
+          panCard: data.find((doc) => doc.type === "panCard"),
+        }));
+      };
+      fetchDocumentList();
+    }
+  }, [isDocUploaded]);
+
+  // console.log("formValues >>> ", formValues);
 
   const getAvailableOptions = (index) => {
     const uploadedDocuments = formValues.otherDocuments.map((doc, idx) =>
@@ -61,8 +109,14 @@ const DocumentUploadModal = ({ prefillData, isUploaded }) => {
 
   const handleFileChange = (field, file, index = 0) => {
     const updatedFormValues = { ...formValues };
+    const filePreview = file ? URL.createObjectURL(file) : null;
+
     if (field === "salarySlip") {
+      console.log("handleFileChange slip field >>> ", field);
+      console.log("handleFileChange slip index >>> ", index);
+      console.log("handleFileChange slip file >>> ", file);
       updatedFormValues.salarySlip[index] = file;
+      console.log("formValues.salarySlip[index] >>> ", formValues.salarySlip);
     } else if (field === "otherDocuments") {
       updatedFormValues.otherDocuments[index].files = file;
     } else {
@@ -81,6 +135,8 @@ const DocumentUploadModal = ({ prefillData, isUploaded }) => {
   const deleteUploadedFile = (field, index = 0) => {
     const updatedFormValues = { ...formValues };
     if (field === "salarySlip") {
+      console.log("slip index >>> ", index);
+      console.log("slip field >>> ", field);
       updatedFormValues.salarySlip[index] = null;
     } else if (field === "otherDocuments") {
       updatedFormValues.otherDocuments[index].files = null;
@@ -114,6 +170,14 @@ const DocumentUploadModal = ({ prefillData, isUploaded }) => {
 
     // Prepare form-data
     const formData = new FormData();
+
+    if (formValues.selectedOption && formValues.selectedFile) {
+      const selectedKey = optionKeyMap[formValues.selectedOption];
+      if (selectedKey) {
+        formData.append(selectedKey, formValues.selectedFile);
+      }
+    }
+
     formValues.salarySlip.forEach((file, index) => {
       formData.append(`salarySlip`, file);
     });
@@ -136,9 +200,8 @@ const DocumentUploadModal = ({ prefillData, isUploaded }) => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            // Authorization: `Bearer ${token}`, // Uncomment if token is needed
           },
-          withCredentials: true, // Ensures that cookies are included with the request
+          withCredentials: true,
         }
       );
       console.log("response ><<>> ", response);
@@ -166,7 +229,7 @@ const DocumentUploadModal = ({ prefillData, isUploaded }) => {
 
   const isSubmitDisabled = () => {
     const requiredFields = [
-      formValues.salarySlip,
+      // formValues.salarySlip,
       formValues.aadhaarFront,
       formValues.aadhaarBack,
       formValues.panCard,
@@ -176,6 +239,35 @@ const DocumentUploadModal = ({ prefillData, isUploaded }) => {
     );
 
     return requiredFields.some((field) => !field) || !otherDocsComplete;
+  };
+
+  const handlePreview = async (docId, docType) => {
+    // const docType = "salarySlip";
+    const apiUrl = `http://localhost:8081/api/loanApplication/documentPreview?docType=${docType}&docId=${docId}`;
+    try {
+      const response = await axios.get(apiUrl, { withCredentials: true });
+      console.log("Preview data:", response.data);
+      if (response.data && response.data.url) {
+        // Redirect to the URL
+        // window.location.href = response.data.url;
+        window.open(response.data.url, "_blank");
+      } else {
+        throw new Error("URL not found in the response");
+      }
+    } catch (error) {
+      console.error("Error fetching document preview:", error);
+      MySwal.fire({
+        icon: "error",
+        title: "Failed to load document preview",
+        text: error.response?.data?.message || "Something went wrong",
+      });
+    }
+  };
+
+  const handleDelete = (field) => {
+    const updatedFormValues = { ...formValues };
+    updatedFormValues[field] = null;
+    setFormValues(updatedFormValues);
   };
 
   return (
@@ -194,38 +286,61 @@ const DocumentUploadModal = ({ prefillData, isUploaded }) => {
         Upload Documents
       </Typography>
       <Grid container spacing={2}>
+        {console.log("firstOccurrences <<>>> ", firstOccurrences)}
         {[0, 1, 2].map((index) => (
           <Grid item xs={12} sm={4} key={`salarySlip-${index}`}>
-            <TextField
-              fullWidth
-              type="file"
-              inputProps={{ accept: ".pdf,image/*" }}
-              label={`Upload Salary Slip ${index + 1}`}
-              error={!!errors.salarySlip && !formValues.salarySlip[index]}
-              helperText={
-                errors.salarySlip && !formValues.salarySlip[index]
-                  ? "Required"
-                  : ""
-              }
-              InputLabelProps={{ shrink: true }}
-              InputProps={{
-                endAdornment: formValues.salarySlip[index] && (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => deleteUploadedFile("salarySlip", index)}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              onChange={(e) =>
-                handleFileChange("salarySlip", e.target.files[0], index)
-              }
-            />
+            {console.log("firstOccurrences <<<<>>>>>c ", firstOccurrences)}
+            {formValues.salarySlip[index] ? (
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Typography
+                  sx={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    fontSize: "0.9rem",
+                    color: "blue",
+                  }}
+                  onClick={() =>
+                    firstOccurrences[index]
+                      ? handlePreview(
+                          firstOccurrences[index].id,
+                          firstOccurrences[index].type
+                        )
+                      : null
+                  }
+                >
+                  View Uploaded File
+                </Typography>
+                <IconButton
+                  onClick={() => deleteUploadedFile("salarySlip", index)}
+                >
+                  <ClearIcon sx={{ color: "red" }} />
+                </IconButton>
+              </Box>
+            ) : (
+              <TextField
+                fullWidth
+                type="file"
+                inputProps={{ accept: ".pdf,image/*" }}
+                label={`Upload Salary Slip ${index + 1}`}
+                error={!!errors.salarySlip && !formValues.salarySlip[index]}
+                helperText={
+                  errors.salarySlip && !formValues.salarySlip[index]
+                    ? "Required"
+                    : ""
+                }
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) =>
+                  handleFileChange("salarySlip", e.target.files[0], index)
+                }
+              />
+            )}
           </Grid>
         ))}
-        {["aadhaarFront", "aadhaarBack", "panCard"].map((field, index) => (
+        {/* {["aadhaarFront", "aadhaarBack", "panCard"].map((field, index) => (
           <Grid item xs={12} sm={6} key={index}>
             <TextField
               fullWidth
@@ -247,8 +362,106 @@ const DocumentUploadModal = ({ prefillData, isUploaded }) => {
               onChange={(e) => handleFileChange(field, e.target.files[0])}
             />
           </Grid>
-        ))}
+        ))} */}
 
+        {["aadhaarFront", "aadhaarBack", "panCard"].map((field) => {
+          const document = formValues[field];
+          console.log("document >>> ", document);
+          return (
+            <Box
+              key={field}
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              mb={2}
+            >
+              {document ? (
+                <>
+                  <Typography
+                    onClick={() => handlePreview(document.id, document.type)}
+                    style={{ cursor: "pointer", textDecoration: "underline" }}
+                  >
+                    {document.name}
+                  </Typography>
+                  <Box>
+                    <IconButton
+                      onClick={() => handlePreview(document.id, document.type)}
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(field)}>
+                      <ClearIcon />
+                    </IconButton>
+                  </Box>
+                </>
+              ) : (
+                <TextField
+                  fullWidth
+                  type="file"
+                  inputProps={{ accept: ".pdf,image/*" }}
+                  label={`Upload ${field.replace(/([A-Z])/g, " $1")}`}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(e) =>
+                    handleFileChange("salarySlip", e.target.files[0], index)
+                  }
+                />
+              )}
+            </Box>
+          );
+        })}
+        {/* {formValues.otherDocuments.map((doc, index) => (
+          <React.Fragment key={index}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                select
+                fullWidth
+                label="Select Document Type"
+                value={doc.type || ""}
+                onChange={(e) => handleDropdownChange(e, index)}
+                error={!!errors[`otherType-${index}`]}
+                helperText={errors[`otherType-${index}`]}
+              >
+                {[
+                  "Residential Address",
+                  "Electricity Bill",
+                  "Gas Connection",
+                ].map((option, idx) => (
+                  <MenuItem key={idx} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                type="file"
+                label="Upload Document"
+                error={!!errors[`otherFiles-${index}`]}
+                helperText={errors[`otherFiles-${index}`]}
+                InputLabelProps={{ shrink: true }}
+                InputProps={{
+                  endAdornment: doc.files && (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() =>
+                          deleteUploadedFile("otherDocuments", index)
+                        }
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                onChange={(e) =>
+                  handleFileChange("otherDocuments", e.target.files[0], index)
+                }
+              />
+            </Grid>
+          </React.Fragment>
+        ))} */}
+
+        {/* old */}
         {formValues.otherDocuments.map((doc, index) => (
           <React.Fragment key={index}>
             <Grid item xs={12} sm={6}>
