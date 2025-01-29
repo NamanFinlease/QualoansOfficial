@@ -4,7 +4,7 @@ import WarningIcon from "@mui/icons-material/Warning"; // Import Warning icon
 import HDFC from "../assets/image/download (1) (1).png";
 import repayaImage from "../assets/image/Qua-Repayment.jpg";
 import { Grid, Box, Typography, Button, Divider } from "@mui/material";
-import Header from "../navbar/Header";
+import qrCode1 from "../assets/image/WhatsApp Image 2025-01-28 at 3.51.13 AM.jpeg"; // Import QR code image 1
 
 const RepayLoan = () => {
   return (
@@ -18,11 +18,10 @@ const RepayLoan = () => {
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           minHeight: "100vh",
-          padding: { xs: "20px", sm: "45px" }, // Adjust padding for small screens
+          padding: { xs: "20px", sm: "45px" },
         }}
       >
         {/* Image Section */}
-
         <Box
           sx={{
             position: "relative",
@@ -46,6 +45,7 @@ const RepayLoan = () => {
             }}
           />
         </Box>
+
         {/* Marquee Section */}
         <Box
           sx={{
@@ -53,7 +53,6 @@ const RepayLoan = () => {
             whiteSpace: "nowrap",
             width: "100%",
             backgroundColor: "#f9f9f9",
-            border: "none !important",
             py: 1,
           }}
         >
@@ -72,19 +71,17 @@ const RepayLoan = () => {
             loan payments. Qua Loan is not responsible for payments made to
             other accounts."
           </Typography>
-
-          {/* Keyframe animation using Material-UI */}
           <style>
             {`
-            @keyframes scroll-text {
-              from {
-                transform: translateX(100%);
-              }
-              to {
-                transform: translateX(-100%);
-              }
-            }
-          `}
+        @keyframes scroll-text {
+          from {
+            transform: translateX(100%);
+          }
+          to {
+            transform: translateX(-100%);
+          }
+        }
+      `}
           </style>
         </Box>
 
@@ -104,7 +101,7 @@ const RepayLoan = () => {
             color="black"
             sx={{
               fontFamily: "Inter",
-              fontSize: { xs: "22px", sm: "30px" }, // Adjust font size for small screens
+              fontSize: { xs: "22px", sm: "30px" },
               lineHeight: "50px",
               letterSpacing: "-0.408px",
               mb: 2,
@@ -113,9 +110,8 @@ const RepayLoan = () => {
             <strong style={{ fontSize: "30px", color: "#fc8403" }}>
               Warning:
             </strong>{" "}
-            We are not liable for any payments made in <br />
-            personal accounts of employees. Please make all <br />
-            payments in the company’s account only.
+            We are not liable for any payments made in personal accounts of
+            employees. Please make all payments in the company’s account only.
           </Typography>
 
           <Box
@@ -135,7 +131,7 @@ const RepayLoan = () => {
               mt: 1,
               color: "#fc8403",
               fontFamily: "Inter",
-              fontSize: { xs: "16px", sm: "25px" }, // Adjust font size for small screens
+              fontSize: { xs: "16px", sm: "25px" },
               lineHeight: "36px",
               letterSpacing: "-0.408px",
               mb: 5,
@@ -152,7 +148,6 @@ const RepayLoan = () => {
           sx={{ background: "#D9D9D9", borderRadius: "30px", margin: 1 }}
         >
           <Grid container spacing={4} alignItems="center">
-            {/* Heading Section */}
             <Grid item xs={12} md={4}>
               <Typography
                 variant="h5"
@@ -160,12 +155,12 @@ const RepayLoan = () => {
                 sx={{
                   fontWeight: 500,
                   mb: 4,
-                  textAlign: { xs: "center", md: "left" }, // Center on small screens, left-align on larger screens
+                  textAlign: { xs: "center", md: "left" },
                   paddingX: { xs: "20px", sm: "50px" },
                 }}
               >
                 Please share a screenshot of your transfer <br />
-                from your bank/Google Pay to <br />
+                from your bank/Google Pay to{" "}
                 <strong style={{ color: "#fc8403" }}>
                   collection@qualoan.com
                 </strong>
@@ -173,162 +168,224 @@ const RepayLoan = () => {
               </Typography>
             </Grid>
 
-            {/* Account Details Section */}
             <Grid item xs={12} md={8} sx={{ marginLeft: { xs: 3, md: 0 } }}>
-              <Box
-                component="form"
-                sx={{
-                  marginRight: 3.5,
-                  marginBottom: 3.5,
-                  display: "flex",
-                  flexDirection: { xs: "column", sm: "row" },
-                  alignItems: "center",
-                  padding: "20px",
-                  borderRadius: "20px",
-                  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
-                  background:
-                    "linear-gradient(180deg, #AE285D 0%, #5B437C 100%)",
-                }}
-              >
-                {/* Left Side - Centered Bank Image and Name */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    color: "white",
-                    mr: 3,
-                    textAlign: "center",
-                    mb: { xs: 3, sm: 0 },
-                  }}
-                >
-                  <img
-                    src={HDFC}
-                    alt="AXIS Bank"
-                    style={{ width: "50px", marginBottom: "8px" }}
-                  />
-                  <Typography variant="h6" sx={{ color: "white" }}>
-                    HDFC Bank
-                  </Typography>
-                </Box>
-
-                {/* Vertical Divider */}
-                <Divider
-                  orientation="vertical"
-                  flexItem
-                  sx={{ backgroundColor: "white", mx: 5 }}
-                />
-
-                {/* Right Side - Bank Details */}
-                <Box sx={{ color: "white" }}>
-                  <Typography
-                    variant="body1"
-                    sx={{ mb: 2, display: "flex", alignItems: "center" }}
-                  >
-                    <Box
-                      component="span"
+              <Box className="inner-page-line" mt={10}>
+                <Grid container spacing={6} justifyContent="center">
+                  <Grid container spacing={6}>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={6}
+                      md={3}
+                      textAlign="center"
                       sx={{
-                        fontWeight: "bold",
-                        minWidth: { xs: "100px", sm: "130px" },
+                        marginLeft: { xs: 6, md: 5 },
+                        marginRight: { xs: 6, md: 15 },
+                        mb: 10,
+                        // justifyContent: "center",
                       }}
                     >
-                      Bank Name
-                    </Box>
-                    <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
-                      HDFC
-                    </Typography>
-                  </Typography>
-
-                  <Typography
-                    variant="body1"
-                    sx={{ mb: 2, display: "flex", alignItems: "center" }}
-                  >
+                      <Box>
+                        <Typography variant="h6" gutterBottom>
+                          Scan the QR Code for Faster Payment:
+                        </Typography>
+                        <img
+                          src={qrCode1}
+                          alt="QR Code"
+                          style={{
+                            width: "250px",
+                            height: "auto",
+                            borderRadius: "8px",
+                          }}
+                        />
+                      </Box>
+                    </Grid>
                     <Box
-                      component="span"
                       sx={{
-                        fontWeight: "bold",
-                        minWidth: { xs: "100px", sm: "130px" },
+                        marginRight: { xs: 0, sm: 3.5 }, // Remove right margin for small screens, keep it for larger screens
+                        marginBottom: { xs: 6, sm: 10 }, // Adjust bottom margin for smaller screens
+                        marginTop: { xs: 6, sm: 15 }, // Adjust top margin for smaller screens
+
+                        display: "flex",
+                        flexDirection: "column", // Keep vertical alignment
+                        alignItems: "center", // Center horizontally
+                        justifyContent: "center", // Center vertically
+                        padding: { xs: "8px", sm: "10px" }, // Adjust padding for smaller screens
+
+                        borderRadius: "20px",
+                        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+                        background:
+                          "linear-gradient(180deg, #AE285D 0%, #5B437C 100%)",
+
+                        width: { xs: "100%", sm: "auto" }, // Full width for mobile screens, auto width for larger ones
+                        mx: "auto", // Centers the box horizontally on smaller screens
                       }}
                     >
-                      Name
-                    </Box>
-                    <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
-                      Naman Finlease Private Limited
-                    </Typography>
-                  </Typography>
+                      {/* Logo Section */}
+                      <Grid item xs={12} sm={12} md={12}>
+                        <Box
+                          component="img"
+                          src={HDFC} // Using the imported logo
+                          alt="Company Logo"
+                          sx={{
+                            width: { xs: "120px", sm: "250px" }, // Adjust logo size for different screen sizes
+                            height: "auto",
+                            mb: 1, // Reduced margin at the bottom for less space
+                          }}
+                        />
+                        {/* Divider After Logo */}
+                        <Divider
+                          sx={{
+                            borderColor: "#ffffff", // White color for the divider
+                            opacity: 0.5, // Transparency
+                            width: { xs: "120px", sm: "250px" }, // Same width as the logo
+                            my: 0, // No vertical margin, tight to logo
+                          }}
+                        />
+                      </Grid>
 
-                  <Typography
-                    variant="body1"
-                    sx={{ mb: 2, display: "flex", alignItems: "center" }}
-                  >
-                    <Box
-                      component="span"
-                      sx={{
-                        fontWeight: "bold",
-                        minWidth: { xs: "100px", sm: "130px" },
-                      }}
-                    >
-                      Account Number
+                      {/* Account Details Section */}
+                      <Box sx={{ mt: 0 }}>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            mb: 2,
+                            display: "flex",
+                            alignItems: "center",
+                            color: "#ffffff", // White text color
+                          }}
+                        >
+                          <Box
+                            component="span"
+                            sx={{
+                              fontWeight: "bold",
+                              minWidth: { xs: "100px", sm: "130px" },
+                            }}
+                          >
+                            Bank Name
+                          </Box>
+                          <Typography
+                            sx={{
+                              marginLeft: { xs: 2, md: 3 },
+                              color: "#ffffff",
+                            }}
+                          >
+                            HDFC
+                          </Typography>
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            mb: 2,
+                            display: "flex",
+                            alignItems: "center",
+                            color: "#ffffff", // White text color
+                          }}
+                        >
+                          <Box
+                            component="span"
+                            sx={{
+                              fontWeight: "bold",
+                              minWidth: { xs: "100px", sm: "130px" },
+                            }}
+                          >
+                            Name
+                          </Box>
+                          <Typography
+                            sx={{
+                              marginLeft: { xs: 2, md: 3 },
+                              color: "#ffffff",
+                            }}
+                          >
+                            Naman Finlease Private Limited
+                          </Typography>
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            mb: 2,
+                            display: "flex",
+                            alignItems: "center",
+                            color: "#ffffff", // White text color
+                          }}
+                        >
+                          <Box
+                            component="span"
+                            sx={{
+                              fontWeight: "bold",
+                              minWidth: { xs: "100px", sm: "130px" },
+                            }}
+                          >
+                            Account Number
+                          </Box>
+                          <Typography
+                            sx={{
+                              marginLeft: { xs: 2, md: 3 },
+                              color: "#ffffff",
+                            }}
+                          >
+                            50200105867815
+                          </Typography>
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            mb: 2,
+                            display: "flex",
+                            alignItems: "center",
+                            color: "#ffffff", // White text color
+                          }}
+                        >
+                          <Box
+                            component="span"
+                            sx={{
+                              fontWeight: "bold",
+                              minWidth: { xs: "100px", sm: "130px" },
+                            }}
+                          >
+                            IFSC Code
+                          </Box>
+                          <Typography
+                            sx={{
+                              marginLeft: { xs: 2, md: 3 },
+                              color: "#ffffff",
+                            }}
+                          >
+                            HDFC0001203
+                          </Typography>
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            mb: 2,
+                            display: "flex",
+                            alignItems: "center",
+                            color: "#ffffff", // White text color
+                          }}
+                        >
+                          <Box
+                            component="span"
+                            sx={{
+                              fontWeight: "bold",
+                              minWidth: { xs: "100px", sm: "130px" },
+                            }}
+                          >
+                            Account Type
+                          </Box>
+                          <Typography
+                            sx={{
+                              marginLeft: { xs: 2, md: 3 },
+                              color: "#ffffff",
+                            }}
+                          >
+                            Current Account
+                          </Typography>
+                        </Typography>
+                      </Box>
                     </Box>
-                    <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
-                      50200105867815
-                    </Typography>
-                  </Typography>
-
-                  <Typography
-                    variant="body1"
-                    sx={{ mb: 2, display: "flex", alignItems: "center" }}
-                  >
-                    <Box
-                      component="span"
-                      sx={{
-                        fontWeight: "bold",
-                        minWidth: { xs: "100px", sm: "130px" },
-                      }}
-                    >
-                      IFSC Code
-                    </Box>
-                    <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
-                      HDFC0001203
-                    </Typography>
-                  </Typography>
-
-                  {/* <Typography
-                    variant="body1"
-                    sx={{ mb: 2, display: "flex", alignItems: "center" }}
-                  >
-                    <Box
-                      component="span"
-                      sx={{
-                        fontWeight: "bold",
-                        minWidth: { xs: "100px", sm: "130px" },
-                      }}
-                    >
-                      Branch Name
-                    </Box>
-                    <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
-              Saket, New Delhi 110017, India
-            </Typography>
-                  </Typography> */}
-
-                  <Typography
-                    variant="body1"
-                    sx={{ mb: 2, display: "flex", alignItems: "center" }}
-                  >
-                    <Box
-                      component="span"
-                      sx={{
-                        fontWeight: "bold",
-                        minWidth: { xs: "100px", sm: "130px" },
-                      }}
-                    >
-                      Account Type
-                    </Box>
-                    <Typography sx={{ marginLeft: { xs: 2, md: 3 } }}>
-                      Current Account
-                    </Typography>
-                  </Typography>
-                </Box>
+                  </Grid>
+                </Grid>
+                {/* </Box> */}
               </Box>
             </Grid>
           </Grid>

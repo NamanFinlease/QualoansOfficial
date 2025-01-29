@@ -1,57 +1,142 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import WarningIcon from "@mui/icons-material/Warning"; // Import Warning icon
-import HDFC from "../assets/image/download (1) (1).png";
+
 import repayaImage from "../assets/image/Qua-Repayment.jpg";
+
 import {
   Grid,
   Box,
   Typography,
   Button,
-  Divider,
   TextField,
+  CircularProgress,
 } from "@mui/material";
-import Header from "../navbar/Header";
 import Swal from "sweetalert2";
 
 const RepaymentLoan = () => {
   const [pan, setPan] = useState("");
   const [isPanValid, setIsPanValid] = useState(false);
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [loanNo, setLoanNo] = useState("");
-  const [repaymentAmount, setRepaymentAmount] = useState("");
-  const [isPaymentStep, setIsPaymentStep] = useState(false);
+  const [mobileNo, setMobileNo] = useState("");
+  const [name, setName] = useState("");
+  const [loanAmount, setLoanAmount] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
 
   const handlePanChange = (e) => {
-    const value = e.target.value.trim();
+    const value = e.target.value;
     setPan(value);
-
-    // PAN validation (simplified for the demo)
-    const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/; // Example format
-    if (panRegex.test(value)) {
-      setIsPanValid(true);
-      setIsSubmitEnabled(true);
-    } else {
-      setIsPanValid(false);
-      setIsSubmitEnabled(false);
-    }
+    const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/; // PAN format
+    setIsPanValid(panRegex.test(value));
+    setIsSubmitEnabled(panRegex.test(value));
   };
 
   const handleSubmit = async () => {
-    if (isPanValid) {
-      // Make your API call for PAN submission
-      Swal.fire("PAN Verified", "Proceed to loan details", "success");
-      setIsPaymentStep(true); // Show the next step
-    } else {
-      Swal.fire("Invalid PAN", "Please enter a valid PAN number.", "error");
+    setLoading(true);
+    try {
+      // Fetch user details by PAN
+      const response = await fetch(
+        `https://staging.qualoan.com/api/repayment/getLoanNumber/${pan}`
+      );
+
+      const data = await response.json();
+
+      // Concatenate fName, mName, and lName to form the full name
+      const fullName = `${data.fName || ""} ${data.mName || ""} ${
+        data.lName || ""
+      }`.trim();
+
+      // Update state with fetched data
+      setName(fullName || "John Doe");
+      setMobileNo(data.mobile || "1234567890");
+      setLoanNo(data.loanNo || "Not Found");
+      setEmail(data.personalEmail || "Not Found");
+      setIsSubmitted(true); // Enable the next step (payment)
+    } catch (error) {
+      console.error("Error fetching loan details:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handlePaymentSubmit = () => {
-    // Make API call for payment details
-    Swal.fire("Payment Successful", "Loan details submitted!", "success");
-  };
+  const handlePaymentSubmit = async () => {
+    // Validate loan amount
+    if (!loanAmount || isNaN(loanAmount) || parseFloat(loanAmount) <= 0) {
+      Swal.fire("Invalid Amount", "Please enter a valid loan amount.", "error");
+      return;
+    }
 
+    // Prepare data for payment API
+    const paymentData = {
+      amount: parseFloat(loanAmount), // Amount should be a number
+      fName: name.split(" ")[0], // Extract first name from full name
+      mName: name.split(" ")[1] || "", // Extract middle name if available
+      lName: name.split(" ")[2] || "", // Extract last name if available
+      email: email, // User email from state
+      phone: mobileNo, // User phone number
+      pan: pan, // User PAN
+      loanNo: loanNo, // Loan number
+    };
+
+    setLoading(true);
+    try {
+      // Make API call to the payNow endpoint
+      const response = await fetch(
+        "https://staging.qualoan.com/api/repayment/payNow",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(paymentData),
+        }
+      );
+      console.log("gjhjh>>", response);
+
+      // Check if the response is successful
+      if (!response.ok) {
+        throw new Error(
+          `Payment API call failed with status ${response.status}`
+        );
+      }
+
+      const data = await response.json();
+      if (data.status) {
+        const paytring = new Paytring({
+          order_id: data.order_id,
+          success: (orderId) => {
+            alert(`Payment Successful! Order ID: ${orderId}`);
+          },
+          failed: (orderId) => {
+            alert(`Payment Failed! Order ID: ${orderId}`);
+          },
+          onClose: (orderId) => {
+            alert(`Payment Popup Closed! Order ID: ${orderId}`);
+          },
+          events: (event) => {
+            console.log(
+              `Event Triggered: ${event.event_name} - ${event.event_value}`
+            );
+          },
+        });
+
+        paytring.open();
+
+        console.log("paytring", paytring);
+      }
+    } catch (error) {
+      // Handle error response
+      console.error("Error processing payment:", error);
+      Swal.fire(
+        "Error",
+        "Failed to process the payment. Please try again.",
+        "error"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       {/* <Header/> */}
@@ -165,178 +250,153 @@ const RepaymentLoan = () => {
         </Box>
         <Box
           sx={{
-            width: "100%",
-            maxWidth: "500px",
-            margin: "auto",
-            padding: 3,
-            boxShadow: 2,
-            borderRadius: 2,
-            backgroundColor: "#fff",
+            background: "#f9f9f9",
+            minHeight: "100vh",
+            padding: { xs: "20px", sm: "45px" },
           }}
         >
-
-
-
-          {/* PAN Input Box */}
-          <TextField
-            label="Enter Your name"
-            variant="outlined"
-            value={pan}
-            onChange={handlePanChange}
-            fullWidth
+          <Box
             sx={{
-              marginBottom: 2,
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: isPanValid ? "#F26722" : "#ccc",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#F26722",
-                },
-              },
-            }}
-            helperText={isPanValid ? "PAN is valid" : "Invalid PAN format"}
-            error={!isPanValid && pan.length > 0}
-          />
-                    <Typography variant="h5" sx={{ marginBottom: 2, color: "#333" }}>
-            Enter Your PAN
-          </Typography>
-
-          {/* PAN Input Box */}
-          <TextField
-            label="Enter Your PAN"
-            variant="outlined"
-            value={pan}
-            onChange={handlePanChange}
-            fullWidth
-            sx={{
-              marginBottom: 2,
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: isPanValid ? "#F26722" : "#ccc",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#F26722",
-                },
-              },
-            }}
-            helperText={isPanValid ? "PAN is valid" : "Invalid PAN format"}
-            error={!isPanValid && pan.length > 0}
-          />
-          <Typography variant="h5" sx={{ marginBottom: 2, color: "#333" }}>
-            Enter Your PAN
-          </Typography>
-
-          {/* PAN Input Box */}
-          <TextField
-            label="Enter Your PAN"
-            variant="outlined"
-            value={pan}
-            onChange={handlePanChange}
-            fullWidth
-            sx={{
-              marginBottom: 2,
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: isPanValid ? "#F26722" : "#ccc",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#F26722",
-                },
-              },
-            }}
-            helperText={isPanValid ? "PAN is valid" : "Invalid PAN format"}
-            error={!isPanValid && pan.length > 0}
-          />
-
-          {/* Submit Button */}
-          <Button
-            onClick={handleSubmit}
-            disabled={!isSubmitEnabled}
-            sx={{
-              backgroundColor: isSubmitEnabled ? "#F26722" : "#D3D3D3",
-              color: "white",
               width: "100%",
-              padding: "12px",
-              borderRadius: 1,
-              "&:hover": {
-                backgroundColor: isSubmitEnabled ? "#FF7F32" : "#D3D3D3",
-              },
+              maxWidth: "500px",
+              margin: "auto",
+              padding: 3,
+              boxShadow: 2,
+              borderRadius: 2,
+              backgroundColor: "#fff",
             }}
           >
-            Submit
-          </Button>
+            {/* PAN Input */}
+            {!isSubmitted && (
+              <>
+                <Typography
+                  variant="h5"
+                  sx={{ marginBottom: 2, color: "#333" }}
+                >
+                  Enter Your PAN
+                </Typography>
+                <TextField
+                  label="Enter Your PAN"
+                  variant="outlined"
+                  value={pan}
+                  onChange={handlePanChange}
+                  fullWidth
+                  sx={{
+                    marginBottom: 2,
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: isPanValid ? "#F26722" : "#ccc",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#F26722",
+                      },
+                    },
+                  }}
+                  helperText={
+                    isPanValid ? "PAN is valid" : "Invalid PAN format"
+                  }
+                  error={!isPanValid && pan.length > 0}
+                />
 
-          {/* Second Step: Loan Details Form */}
-          {/* Second Step: Loan Details Form */}
-          {isPaymentStep && (
-            <Box sx={{ marginTop: 3 }}>
-              <Typography variant="h6" sx={{ marginBottom: 2, color: "#333" }}>
-                Enter Loan Details
-              </Typography>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={!isSubmitEnabled}
+                  sx={{
+                    backgroundColor: isSubmitEnabled ? "#F26722" : "#D3D3D3",
+                    color: "white",
+                    width: "100%",
+                    padding: "12px",
+                    borderRadius: 1,
+                    "&:hover": {
+                      backgroundColor: isSubmitEnabled ? "#FF7F32" : "#D3D3D3",
+                    },
+                  }}
+                >
+                  {loading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    "Submit"
+                  )}
+                </Button>
+              </>
+            )}
 
-              {/* Loan Number Input (only numbers) */}
-              <TextField
-                label="Loan Number"
-                variant="outlined"
-                value={loanNo}
-                onChange={(e) => handleNumericInputChange(e, setLoanNo)}
-                fullWidth
-                sx={{
-                  marginBottom: 2,
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#F26722",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#F26722",
-                    },
-                  },
-                }}
-              />
+            {/* Loan Details */}
+            {isSubmitted && (
+              <Box>
+                <Typography
+                  variant="h6"
+                  sx={{ marginBottom: 2, color: "#333" }}
+                >
+                  Loan Details
+                </Typography>
 
-              {/* Repayment Amount Input (only numbers) */}
-              <TextField
-                label="Repayment Amount"
-                variant="outlined"
-                value={repaymentAmount}
-                onChange={(e) =>
-                  handleNumericInputChange(e, setRepaymentAmount)
-                }
-                fullWidth
-                sx={{
-                  marginBottom: 2,
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#F26722",
+                <TextField
+                  label="Name"
+                  value={name}
+                  disabled
+                  fullWidth
+                  sx={{ marginBottom: 2 }}
+                />
+
+                <TextField
+                  label="Mobile Number"
+                  value={mobileNo}
+                  disabled
+                  fullWidth
+                  sx={{ marginBottom: 2 }}
+                />
+                <TextField
+                  label="Email"
+                  value={email}
+                  disabled
+                  fullWidth
+                  sx={{ marginBottom: 2 }}
+                />
+                <TextField
+                  label="Loan Number"
+                  value={loanNo}
+                  disabled
+                  fullWidth
+                  sx={{ marginBottom: 2 }}
+                />
+
+                <TextField
+                  label="Loan Amount"
+                  value={loanAmount}
+                  onChange={(e) => setLoanAmount(e.target.value)}
+                  fullWidth
+                  sx={{
+                    marginBottom: 2,
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#F26722",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#F26722",
+                      },
                     },
-                    "&:hover fieldset": {
-                      borderColor: "#F26722",
+                  }}
+                />
+
+                <Button
+                  onClick={handlePaymentSubmit}
+                  sx={{
+                    backgroundColor: "#F26722",
+                    color: "white",
+                    width: "100%",
+                    padding: "12px",
+                    borderRadius: 1,
+                    "&:hover": {
+                      backgroundColor: "#FF7F32",
                     },
-                  },
-                }}
-              />
-              {/* Payment Button */}
-              <Button
-                onClick={handlePaymentSubmit}
-                disabled={!loanNo || !repaymentAmount}
-                sx={{
-                  backgroundColor:
-                    loanNo && repaymentAmount ? "#F26722" : "#D3D3D3",
-                  color: "white",
-                  width: "100%",
-                  padding: "12px",
-                  borderRadius: 1,
-                  "&:hover": {
-                    backgroundColor:
-                      loanNo && repaymentAmount ? "#FF7F32" : "#D3D3D3",
-                  },
-                }}
-              >
-                Payment
-              </Button>
-            </Box>
-          )}
+                  }}
+                >
+                  Proceed
+                </Button>
+              </Box>
+            )}
+          </Box>
         </Box>
       </Box>
     </>
