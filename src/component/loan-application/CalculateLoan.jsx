@@ -131,10 +131,10 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
         }
       );
 
-      // console.log(
-      //   "getDashboardDetailsResponse >>> ",
-      //   getDashboardDetailsResponse
-      // );
+      console.log(
+        "getDashboardDetailsResponse >>> ",
+        getDashboardDetailsResponse
+      );
 
       if (getDashboardDetailsResponse.status === 200) {
         setIsLoading(false);

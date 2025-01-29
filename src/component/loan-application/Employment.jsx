@@ -23,6 +23,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
   const [addressValues, setAddressValues] = useState({});
   const [stepData, setStepData] = useState({});
   const [stepCompleted, setStepCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const openEmploymentModal = () => {
     if (disabled) return;
@@ -121,6 +122,10 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
         !formValues.companyType ||
         !formValues.designation ||
         !formValues.officeEmail
+        // !formValues.officeAddrress ||
+        // !formValues.city ||
+        // !formValues.state ||
+        // formValues.pincode
       ) {
         Swal.fire("All fields are required.");
         return;
@@ -156,8 +161,8 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
       console.error("Error:", error);
     }
   };
-   const handleModalClick = async () => {
-    openLoanCalculatorModal(true);
+  const handleModalClick = async () => {
+    openEmploymentModal(true);
     setIsLoading(true);
 
     try {
@@ -168,47 +173,50 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
         }
       );
 
-      // console.log(
-      //   "getDashboardDetailsResponse >>> ",
-      //   getDashboardDetailsResponse
-      // );
+      console.log(
+        "getDashboardDetailsResponse >>> ",
+        getDashboardDetailsResponse
+      );
 
       if (getDashboardDetailsResponse.status === 200) {
         setIsLoading(false);
-        console.log(
-          "getDashboardDetailsResponse >>> ",
-          getDashboardDetailsResponse
-        );
-        const { isLoanCalculated } = getDashboardDetailsResponse.data;
+        // console.log(
+        //   "getDashboardDetailsResponse >>> ",
+        //   getDashboardDetailsResponse
+        // );
+        const { isEmploymentDetailsSaved } = getDashboardDetailsResponse.data;
 
-        console.log("isLoanCalculated>>>>:", isLoanCalculated);
+        // console.log("isEmploymentDetailsSaved>>>>:", isEmploymentDetailsSaved);
 
         // Set the value of isAddressVerified based on the fetched response
-        setIsComplete(isLoanCalculated);
+        setStepCompleted(isEmploymentDetailsSaved);
 
-        if (isLoanCalculated) {
+        if (isEmploymentDetailsSaved) {
+          console.log("isEmploymentDetailsSaved", isEmploymentDetailsSaved);
+
           const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=loanDetails`,
+            `${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=employeeDetails`,
             {
               withCredentials: true,
             }
           );
 
-          console.log(
-            "getProfileDetailsResponse >>> ",
-            getProfileDetailsResponse
-          );
-
-          const LoanData = getProfileDetailsResponse?.data?.data?.residence;
+          const EmpData =
+            getProfileDetailsResponse?.data?.data?.employeeDetails;
+          console.log("getProfileDetailsResponse", getProfileDetailsResponse);
 
           // Update formValues with residenceData
           setFormValues({
-            address: residenceData?.address || "",
-            landmark: residenceData?.landmark || "",
-            city: residenceData?.city || "",
-            state: residenceData?.state || "",
-            pincode: residenceData?.pincode || "",
-            residenceType: residenceData?.residenceType || "OWNED",
+            workFrom: EmpData?.workFrom || "",
+            companyName: EmpData?.companyName || "",
+            companyType: EmpData?.companyType || "",
+            designation: EmpData?.designation || "",
+            officeEmail: EmpData?.officeEmail || "",
+            officeAddrress: EmpData?.officeAddrress || "",
+            landmark: EmpData?.landmark || "",
+            city: EmpData?.city || "",
+            state: EmpData?.state || "",
+            pincode: EmpData?.pincode || "",
           });
         }
       }
@@ -284,7 +292,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
             margin: "auto",
           },
         }}
-        onClick={openEmploymentModal}
+        onClick={handleModalClick}
       >
         <IconButton
           sx={{

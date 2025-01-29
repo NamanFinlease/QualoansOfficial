@@ -64,6 +64,8 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
         }
       );
 
+      console.log("hhhb", response);
+
       if (response.ok) {
         const responseData = await response.json();
         onComplete({ bankStatement }); // Notify parent that upload is complete
@@ -95,6 +97,57 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
   const handleDelete = () => {
     setBankStatement(null); // Reset uploaded file
     setStepCompleted(false); // Reset step completion
+  };
+
+  const handleModalClick = async () => {
+    setIsModalOpen(true);
+    setIsUploading(true);
+
+    try {
+      const getDashboardDetailsResponse = await axios.get(
+        `${BASE_URL}/api/user/getDashboardDetails`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log(
+        "getDashboardDetailsResponse >>> ",
+        getDashboardDetailsResponse
+      );
+
+      if (getDashboardDetailsResponse.status === 200) {
+        setIsUploading(false);
+
+        const { isEmploymentDetailsSaved } = getDashboardDetailsResponse.data;
+
+        setStepCompleted(isEmploymentDetailsSaved);
+
+        if (isEmploymentDetailsSaved) {
+          console.log("isEmploymentDetailsSaved", isEmploymentDetailsSaved);
+
+          const getProfileDetailsResponse = await axios.get(
+            `${BASE_URL}/api/loanApplication/getDocumentStatus`,
+            {
+              withCredentials: true,
+            }
+          );
+
+          // Axios does not use response.ok, check status instead
+          if (getProfileDetailsResponse.status !== 200) {
+            throw new Error("Failed to fetch document data");
+          }
+
+          // Extract data from the response
+          const data = getProfileDetailsResponse.data;
+
+          setFormValues(data.singleDocumentsStatus || []);
+        }
+      }
+    } catch (error) {
+      setIsUploading(false); // Change from setIsLoading(false) to setIsUploading(false) for consistency
+      console.error("Error fetching data:", error);
+    }
   };
 
   return (
@@ -158,7 +211,7 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
             margin: "auto",
           },
         }}
-        onClick={!disabled ? handleOpenModal : null} // Trigger modal on click instead of upload
+        onClick={handleModalClick} // Trigger modal on click instead of upload
       >
         <IconButton
           sx={{
