@@ -273,7 +273,7 @@ const Header = () => {
               </Link>
 
               <Link
-                to="/repay-now"
+                to="/repayment-loan"
                 onClick={scrollToTop}
                 style={{
                   color: "#0b2747",
