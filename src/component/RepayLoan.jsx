@@ -4,7 +4,7 @@ import WarningIcon from "@mui/icons-material/Warning"; // Import Warning icon
 import HDFC from "../assets/image/download (1) (1).png";
 import repayaImage from "../assets/image/Qua-Repayment.jpg";
 import { Grid, Box, Typography, Button, Divider } from "@mui/material";
-import qrCode1 from "../assets/image/WhatsApp Image 2025-01-28 at 3.51.13 AM.jpeg"; // Import QR code image 1
+import qrCode1 from "../assets/image/WhatsApp Image 2025-01-28 at 4.24.32 AM.jpeg"; // Import QR code image 1
 
 const RepayLoan = () => {
   return (
