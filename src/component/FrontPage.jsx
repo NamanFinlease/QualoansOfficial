@@ -32,7 +32,7 @@ const FrontPage = () => {
         <Typography
           variant="h2"
           sx={{
-            paddingTop:'40px',
+            paddingTop: "40px",
 
             fontWeight: "bold",
             color: "black",
@@ -49,8 +49,8 @@ const FrontPage = () => {
         >
           Quick, Urgent, Assured Loans
         </Typography>
-        <Typography sx={{
-
+        <Typography
+          sx={{
             fontWeight: "bold",
             color: "#fc8403",
             textTransform: "uppercase", // Ensures the text is in capital letters
@@ -62,14 +62,18 @@ const FrontPage = () => {
             [theme.breakpoints.up("md")]: {
               fontSize: "2rem",
             },
-          }}> Your Emergency, Our Priority</Typography>
+          }}
+        >
+          {" "}
+          Your Emergency, Our Priority
+        </Typography>
 
         {/* Button */}
         <Button
           variant="contained"
           href="/apply-now"
           sx={{
-            borderRadius:'80px',
+            borderRadius: "80px",
             backgroundColor: "black",
             color: "white",
             fontWeight: "bold",
@@ -91,36 +95,34 @@ const FrontPage = () => {
       </Box>
 
       {/* Banner Image Section */}
-            <Box
+      <Box
         sx={{
-          marginTop: '-10px',
-          paddingLeft: {md:0,md:'100px'},
-          paddingRight: {md:0,md:'100px'},
-          width: '100%',
-          textAlign: 'center',
-          mx:'90px',
-          maxHeight: '320px',
+          marginTop: "-10px",
+          paddingLeft: { xs: 0, md: "100px" },
+          paddingRight: { xs: 0, md: "100px" },
+          width: "100%",
+          textAlign: "center",
+          mx: "90px",
+          maxHeight: "320px",
 
-          backgroundColor: 'rgba(255, 255, 255, 0)',
-          borderRadius: '80px', // Parent border radius
-          overflow: 'hidden', // Add this if needed
+          backgroundColor: "rgba(255, 255, 255, 0)",
+          borderRadius: "80px", // Parent border radius
+          overflow: "hidden", // Add this if needed
         }}
       >
-      <Box
-        component="img"
-        src={bannerImage}
-        alt="Banner"
-        sx={{
-          marginTop: '10px',
-          width: '100%',
-          maxHeight: '320px',
-          objectFit: 'cover',
-          borderRadius: '80px', // Material-UI handles this directly
-        }}
-      />
-
+        <Box
+          component="img"
+          src={bannerImage}
+          alt="Banner"
+          sx={{
+            marginTop: "10px",
+            width: "100%",
+            maxHeight: "320px",
+            objectFit: "cover",
+            borderRadius: "80px", // Material-UI handles this directly
+          }}
+        />
       </Box>
-
     </Box>
   );
 };
