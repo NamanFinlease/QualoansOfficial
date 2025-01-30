@@ -245,7 +245,7 @@ const AboutUs = () => {
       >
         <Box
           component="iframe"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19678.719478847277!2d77.18276234589072!3d28.54183482360843!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce37ec98c1aa7%3A0x2ebe60805720953!2sJurist%20International%20Law%20firm!5e1!3m2!1sen!2sin!4v1735283145093!5m2!1sen!2sin"
+          src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13661.975507350297!2d77.0861006!3d28.4692952!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce38996fe5fd3%3A0x63f6c364121c8f56!2sVipul%20Agora%20Mall!5e1!3m2!1sen!2sin!4v1735284965571!5m2!1sen!2sin"
           allowFullScreen
           loading="lazy"
           sx={{
