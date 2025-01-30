@@ -112,7 +112,7 @@ const AboutUs = () => {
             >
               Location
             </Typography>
-            \{/* address */}
+            {/* address */}
             <Typography>
               Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road, Gurugram,
               122001.{" "}
