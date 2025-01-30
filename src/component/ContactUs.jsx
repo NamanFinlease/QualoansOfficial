@@ -91,7 +91,6 @@ const AboutUs = () => {
               Call Center
             </Typography>
             <Typography sx={{ mb: 1 }}>+917338437609</Typography>
-
             <Typography
               sx={{
                 fontWeight: "bold",
@@ -113,6 +112,7 @@ const AboutUs = () => {
             >
               Location
             </Typography>
+            \{/* address */}
             <Typography>
               Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road, Gurugram,
               122001.{" "}

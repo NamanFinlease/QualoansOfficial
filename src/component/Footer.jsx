@@ -243,6 +243,7 @@ const Footer = () => {
                           alignItems: "center",
                         }}
                       >
+                        {/* address */}
                         <LocationOn sx={{ mr: 1, mt: { xs: -5, md: -5 } }} />
                         Address: Office No. 229, 2nd Floor, Vipul Agora Mall, MG
                         Road, Gurugram, 122001.

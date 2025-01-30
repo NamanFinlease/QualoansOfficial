@@ -94,7 +94,7 @@ const PrivacyPolicy = () => {
         "If you have any questions, please contact us at:",
         "• Email: info@qualoan.com",
         "• Phone: +917338437609",
-        "• Address:Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road, Gurugram, 122001. ",
+        "• Address:Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road, Gurugram, 122001.",
       ],
     },
   ];
