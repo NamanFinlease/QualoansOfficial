@@ -11,8 +11,10 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const RepaymentLoan = () => {
+  const navigate = useNavigate();
   const [pan, setPan] = useState("");
   const [isPanValid, setIsPanValid] = useState(false);
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
@@ -106,17 +108,40 @@ const RepaymentLoan = () => {
         const paytring = new Paytring({
           order_id: data.order_id,
           success: (orderId) => {
-            alert(`Payment Successful! Order ID: ${orderId}`);
+            console.log("Payment success", orderId);
+            // alert(`Payment Success! Order ID: ${orderId}`);
+            Swal.fire({
+              title: "Payment Success!",
+              text: `Order ID: ${orderId}`,
+              icon: "success",
+              confirmButtonText: "OK",
+            });
+
+            navigate("/verify-repayment");
           },
           failed: (orderId) => {
-            alert(`Payment Failed! Order ID: ${orderId}`);
+            console.log("Payment Fail", orderId);
+
+            Swal.fire({
+              title: "Payment Failed!",
+              text: `Order ID: ${orderId}`,
+              icon: "error",
+              confirmButtonText: "Try Again",
+            });
           },
           onClose: (orderId) => {
-            alert(`Payment Popup Closed! Order ID: ${orderId}`);
+            console.log("Payment close", orderId);
+            Swal.fire({
+              title: "Payment Popup Closed!",
+              text: `Order ID: ${orderId}`,
+              icon: "info",
+              confirmButtonText: "OK",
+            });
           },
           events: (event) => {
             console.log(
-              `Event Triggered: ${event.event_name} - ${event.event_value}`
+              `Event Triggered: ${event.event_name} - ${event.event_value}`,
+              event
             );
           },
         });
@@ -362,7 +387,7 @@ const RepaymentLoan = () => {
                 />
 
                 <TextField
-                  label="Loan Amount"
+                  label="Enter your payment amount"
                   value={loanAmount}
                   onChange={(e) => setLoanAmount(e.target.value)}
                   fullWidth
