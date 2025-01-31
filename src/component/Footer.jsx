@@ -243,8 +243,10 @@ const Footer = () => {
                           alignItems: "center",
                         }}
                       >
+                        {/* address */}
                         <LocationOn sx={{ mr: 1, mt: { xs: -5, md: -5 } }} />
-                        Address: S-370, Panchsheel Park,Delhi-110017, India
+                        Address: Office No. 229, 2nd Floor, Vipul Agora Mall, MG
+                        Road, Gurugram, 122001.
                       </Link>
                     </li>
                   </Box>
