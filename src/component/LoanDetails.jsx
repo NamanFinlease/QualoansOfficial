@@ -10,10 +10,10 @@ const LoanDetails = () => {
 
   // State to store loan data
   const [loan, setLoan] = useState({
-    principal: "",
+    principle: "",
     totalPayble: "",
-    intrestPerMonth: "",
-    tenureMonth: "",
+    roi: "",
+    tenure: "",
     loanPurpose: "",
   });
   const [loading, setLoading] = useState(true);
@@ -49,10 +49,10 @@ const LoanDetails = () => {
         const data = await response.json();
 
         setLoan({
-          principal: data?.data?.principal,
+          principle: data?.data?.principle,
           totalPayble: data?.data?.totalPayble,
-          intrestPerMonth: data?.data?.intrestPerMonth, // Fixed field for Date of Birth
-          tenureMonth: data?.data?.tenureMonth,
+          roi: data?.data?.roi, // Fixed field for Date of Birth
+          tenure: data?.data?.tenure,
           loanPurpose: data?.data?.loanPurpose, // Corrected syntax issue
         });
       } catch (err) {
@@ -131,7 +131,7 @@ const LoanDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Principal
+                  Principle
                 </td>
                 <td
                   style={{
@@ -140,7 +140,7 @@ const LoanDetails = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {loan.principal}
+                  {loan.principle}
                 </td>
               </tr>
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
@@ -151,7 +151,7 @@ const LoanDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Interest Per Month
+                  Return on investment
                 </td>
                 <td
                   style={{
@@ -160,7 +160,7 @@ const LoanDetails = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {loan.intrestPerMonth}
+                  {loan.roi}
                 </td>
               </tr>
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
@@ -180,7 +180,7 @@ const LoanDetails = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {loan.tenureMonth}
+                  {loan.tenure}
                 </td>
               </tr>
               <tr>

@@ -64,10 +64,10 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
     }
 
     const payload = {
-      principal: loanAmount,
+      principle: loanAmount,
       totalPayble: totalAmount.toFixed(2),
-      intrestPerMonth: interestRate,
-      tenureMonth: loanTenure,
+      roi: interestRate,
+      tenure: loanTenure,
       loanPurpose: purpose.toUpperCase(),
     };
 
@@ -167,7 +167,7 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
 
           // Update formValues with residenceData
           setFormValues({
-            principal: residenceData?.address || "",
+            principle: residenceData?.address || "",
             landmark: residenceData?.landmark || "",
             city: residenceData?.city || "",
             state: residenceData?.state || "",

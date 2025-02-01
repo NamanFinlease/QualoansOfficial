@@ -282,6 +282,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
             </MenuItem>
             <MenuItem value="SAVINGS">Savings</MenuItem>
             <MenuItem value="CURRENT">Current</MenuItem>
+            <MenuItem value="OVERDRAFT">Overdraft</MenuItem>
           </Select>
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
             <Button variant="outlined" onClick={() => setOpenModal(false)}>
