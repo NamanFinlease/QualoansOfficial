@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import WarningIcon from "@mui/icons-material/Warning";
 import repayaImage from "../assets/image/Qua-Repayment.jpg";
 
 import {
@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import HDFC_QR from "../assets/image/HDFC_QR.jpg";
 
 const RepaymentLoan = () => {
   const navigate = useNavigate();
@@ -105,48 +106,9 @@ const RepaymentLoan = () => {
 
       const data = await response.json();
       if (data.status) {
-        const paytring = new Paytring({
-          order_id: data.order_id,
-          success: (orderId) => {
-            console.log("Payment success", orderId);
-            // alert(`Payment Success! Order ID: ${orderId}`);
-            Swal.fire({
-              title: "Payment Success!",
-              text: `Order ID: ${orderId}`,
-              icon: "success",
-              confirmButtonText: "OK",
-            });
-
-            navigate("/verify-repayment");
-          },
-          failed: (orderId) => {
-            console.log("Payment Fail", orderId);
-
-            Swal.fire({
-              title: "Payment Failed!",
-              text: `Order ID: ${orderId}`,
-              icon: "error",
-              confirmButtonText: "Try Again",
-            });
-          },
-          onClose: (orderId) => {
-            console.log("Payment close", orderId);
-            Swal.fire({
-              title: "Payment Popup Closed!",
-              text: `Order ID: ${orderId}`,
-              icon: "info",
-              confirmButtonText: "OK",
-            });
-          },
-          events: (event) => {
-            console.log(
-              `Event Triggered: ${event.event_name} - ${event.event_value}`,
-              event
-            );
-          },
-        });
-
-        paytring.open();
+        window.location.href =
+          "https://api.paytring.com/pay/token/" + data.order_id;
+        navigate("/verify-repayment");
 
         console.log("paytring", paytring);
       }
@@ -164,94 +126,61 @@ const RepaymentLoan = () => {
   };
   return (
     <>
+      {/* Marquee Section */}
+      <Box
+        sx={{
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          width: "100%",
+          padding: "8px 0",
+        }}
+      >
+        <Typography
+          component="div"
+          sx={{
+            display: "inline-block",
+            animation: "marquee 20s linear infinite",
+            fontWeight: "600",
+            color: "#F26722",
+            fontSize: "24px",
+            fontFamily: "Inter",
+          }}
+        >
+          ⚠️ Beware of fraud! Always use our secure Repayment Website Link for
+          payments. Qua Loan is not responsible for payments made to other
+          accounts.
+        </Typography>
+
+        <style>
+          {`
+              @keyframes marquee {
+                0% { transform: translateX(100%); }
+                100% { transform: translateX(-100%); }
+              }
+            `}
+        </style>
+      </Box>
       {/* <Header/> */}
 
       <Box
         sx={{
-          background: "#f9f9f9",
+          background: "#fff",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          minHeight: "100vh",
-          padding: { xs: "20px", sm: "45px" }, // Adjust padding for small screens
+          // minHeight: "100vh",  
+          padding: { xs: "20px", sm: "45px" },
         }}
       >
-        {/* Image Section */}
-
-        <Box
-          sx={{
-            position: "relative",
-            width: "100%",
-            height: { xs: "20vh", md: "60vh" },
-            overflow: "hidden",
-            borderRadius: "20px",
-            mb: 5,
-            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <Box
-            component="img"
-            src={repayaImage}
-            alt="Repay Loan"
-            sx={{
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </Box>
-        {/* Marquee Section */}
-        <Box
-          sx={{
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            width: "100%",
-            backgroundColor: "#f9f9f9",
-            border: "none !important",
-            py: 1,
-          }}
-        >
-          <Typography
-            variant="body1"
-            sx={{
-              display: "inline-block",
-              animation: "scroll-text 20s linear infinite",
-              fontSize: { xs: "14px", sm: "18px" },
-              color: "#B22222",
-              fontWeight: "bold",
-              textAlign: "center",
-            }}
-          >
-            "Beware of fraud! Always use our secure Repayment Website Link for
-            loan payments. Qua Loan is not responsible for payments made to
-            other accounts."
-          </Typography>
-
-          {/* Keyframe animation using Material-UI */}
-          <style>
-            {`
-            @keyframes scroll-text {
-              from {
-                transform: translateX(100%);
-              }
-              to {
-                transform: translateX(-100%);
-              }
-            }
-          `}
-          </style>
-        </Box>
-
         {/* Warning Message */}
         <Box
           sx={{
-            textAlign: "center",
-            borderRadius: "30px",
-            padding: "16px",
-            maxWidth: "80vw",
+            background: "#F5F5F5",
+            borderRadius: "16px",
+            padding: "20px",
+            maxWidth: "900px",
             margin: "0 auto",
-            mt: 6,
+            mb: 2,
           }}
         >
           <Typography
@@ -265,164 +194,453 @@ const RepaymentLoan = () => {
               mb: 2,
             }}
           >
-            <strong style={{ fontSize: "30px", color: "#fc8403" }}>
-              Warning:
-            </strong>{" "}
-            We are not liable for any payments made in <br />
-            personal accounts of employees. Please make all <br />
-            payments in the company’s account only.
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                mb: 1,
+              }}
+            >
+              <WarningIcon sx={{ color: "#F26722", fontSize: "32px" }} />
+            </Box>
+            <Typography
+              variant="body2"
+              sx={{
+                textAlign: "center",
+                color: "#1c1c1c",
+                fontSize: { xs: "14px", sm: "16px" },
+                fontFamily: "Inter",
+                //   mb: 2,
+              }}
+            >
+              We are not liable for any payments made in <br />
+              personal accounts of employees. Please make all <br />
+              payments in the company’s account only.
+            </Typography>
           </Typography>
         </Box>
-        <Box
-          sx={{
-            background: "#f9f9f9",
-            minHeight: "100vh",
-            padding: { xs: "20px", sm: "45px" },
-          }}
-        >
+        {!isSubmitted && (
           <Box
             sx={{
               width: "100%",
               maxWidth: "500px",
               margin: "auto",
               padding: 3,
-              boxShadow: 2,
+              // boxShadow: 2,
               borderRadius: 2,
-              backgroundColor: "#fff",
+              backgroundColor: "#f5f5f5",
             }}
           >
             {/* PAN Input */}
-            {!isSubmitted && (
-              <>
-                <Typography
-                  variant="h5"
-                  sx={{ marginBottom: 2, color: "#333" }}
-                >
-                  Enter Your PAN
-                </Typography>
-                <TextField
-                  label="Enter Your PAN"
-                  variant="outlined"
-                  value={pan}
-                  onChange={handlePanChange}
-                  fullWidth
-                  sx={{
-                    marginBottom: 2,
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: isPanValid ? "#F26722" : "#ccc",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#F26722",
-                      },
+
+            <>
+              <Typography variant="h5" sx={{ marginBottom: 2, color: "#333" }}>
+                Enter Your PAN
+              </Typography>
+              <TextField
+                label="Enter Your PAN"
+                variant="outlined"
+                value={pan}
+                onChange={handlePanChange}
+                fullWidth
+                sx={{
+                  marginBottom: 2,
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: isPanValid ? "#F26722" : "#ccc",
                     },
-                  }}
-                  helperText={
-                    isPanValid ? "PAN is valid" : "Invalid PAN format"
-                  }
-                  error={!isPanValid && pan.length > 0}
-                />
-
-                <Button
-                  onClick={handleSubmit}
-                  disabled={!isSubmitEnabled}
-                  sx={{
-                    backgroundColor: isSubmitEnabled ? "#F26722" : "#D3D3D3",
-                    color: "white",
-                    width: "100%",
-                    padding: "12px",
-                    borderRadius: 1,
-                    "&:hover": {
-                      backgroundColor: isSubmitEnabled ? "#FF7F32" : "#D3D3D3",
+                    "&:hover fieldset": {
+                      borderColor: "#F26722",
                     },
-                  }}
-                >
-                  {loading ? (
-                    <CircularProgress size={24} color="inherit" />
-                  ) : (
-                    "Submit"
-                  )}
-                </Button>
-              </>
-            )}
+                  },
+                }}
+                helperText={isPanValid ? "PAN is valid" : "Invalid PAN format"}
+                error={!isPanValid && pan.length > 0}
+              />
 
-            {/* Loan Details */}
-            {isSubmitted && (
-              <Box>
-                <Typography
-                  variant="h6"
-                  sx={{ marginBottom: 2, color: "#333" }}
-                >
-                  Loan Details
-                </Typography>
-
-                <TextField
-                  label="Name"
-                  value={name}
-                  disabled
-                  fullWidth
-                  sx={{ marginBottom: 2 }}
-                />
-
-                <TextField
-                  label="Mobile Number"
-                  value={mobileNo}
-                  disabled
-                  fullWidth
-                  sx={{ marginBottom: 2 }}
-                />
-                <TextField
-                  label="Email"
-                  value={email}
-                  disabled
-                  fullWidth
-                  sx={{ marginBottom: 2 }}
-                />
-                <TextField
-                  label="Loan Number"
-                  value={loanNo}
-                  disabled
-                  fullWidth
-                  sx={{ marginBottom: 2 }}
-                />
-
-                <TextField
-                  label="Enter your payment amount"
-                  value={loanAmount}
-                  onChange={(e) => setLoanAmount(e.target.value)}
-                  fullWidth
-                  sx={{
-                    marginBottom: 2,
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#F26722",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#F26722",
-                      },
-                    },
-                  }}
-                />
-
-                <Button
-                  onClick={handlePaymentSubmit}
-                  sx={{
-                    backgroundColor: "#F26722",
-                    color: "white",
-                    width: "100%",
-                    padding: "12px",
-                    borderRadius: 1,
-                    "&:hover": {
-                      backgroundColor: "#FF7F32",
-                    },
-                  }}
-                >
-                  Proceed
-                </Button>
-              </Box>
-            )}
+              <Button
+                onClick={handleSubmit}
+                disabled={!isSubmitEnabled}
+                sx={{
+                  backgroundColor: isSubmitEnabled ? "#F26722" : "#D3D3D3",
+                  color: "white",
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: 1,
+                  "&:hover": {
+                    backgroundColor: isSubmitEnabled ? "#FF7F32" : "#D3D3D3",
+                  },
+                }}
+              >
+                {loading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "Submit"
+                )}
+              </Button>
+            </>
           </Box>
-        </Box>
+        )}
+        {isSubmitted && (
+          <Box
+            sx={{
+              background: "#f9f9f9",
+              minHeight: "100vh",
+              // padding: { xs: "20px", sm: "45px" },
+              // marginTop: "4rem",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                // maxWidth: "500px",
+                margin: "auto",
+                padding: 3,
+                // boxShadow: 2,
+                borderRadius: 2,
+                backgroundColor: "#f5f5f5",
+              }}
+            >
+              {/* Loan Details */}
+
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  border: "2px solid red",
+                  padding: "20px",
+                }}
+              >
+                <Box sx={{ width: "50%" }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ marginBottom: 2, color: "#333" }}
+                  >
+                    Loan Details
+                  </Typography>
+
+                  <TextField
+                    label="Name"
+                    value={name}
+                    disabled
+                    fullWidth
+                    sx={{ marginBottom: 2 }}
+                  />
+
+                  <TextField
+                    label="Mobile Number"
+                    value={mobileNo}
+                    disabled
+                    fullWidth
+                    sx={{ marginBottom: 2 }}
+                  />
+                  <TextField
+                    label="Email"
+                    value={email}
+                    disabled
+                    fullWidth
+                    sx={{ marginBottom: 2 }}
+                  />
+                  <TextField
+                    label="Loan Number"
+                    value={loanNo}
+                    disabled
+                    fullWidth
+                    sx={{ marginBottom: 2 }}
+                  />
+
+                  <TextField
+                    label="Enter your payment amount"
+                    value={loanAmount}
+                    onChange={(e) => setLoanAmount(e.target.value)}
+                    fullWidth
+                    sx={{
+                      marginBottom: 2,
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "#F26722",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#F26722",
+                        },
+                      },
+                    }}
+                  />
+
+                  <Button
+                    onClick={handlePaymentSubmit}
+                    sx={{
+                      backgroundColor: "#F26722",
+                      color: "white",
+                      width: "100%",
+                      padding: "12px",
+                      borderRadius: 1,
+                      "&:hover": {
+                        backgroundColor: "#FF7F32",
+                      },
+                    }}
+                  >
+                    Proceed
+                  </Button>
+
+                  <Box
+                      sx={{
+                        textAlign: "center",
+                        padding: "20px",
+                        position: "relative",
+                        marginTop: "2rem",
+                        "&::before": {
+                          content: '""',
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background: "rgba(255, 142, 83, 0.05)",
+                          borderRadius: "12px",
+                        },
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 500,
+                          color: "black",
+                          fontSize: { xs: "24px", sm: "28px" },
+                          mb: 1,
+                          fontFamily: "Inter",
+                        }}
+                      >
+                        Share Your Payment Proof
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontSize: { xs: "18px", sm: "20px" },
+                          fontFamily: "Inter",
+                          color: "black",
+                          mb: 3,
+                        }}
+                      >
+                        Please send your transfer screenshot to:
+                      </Typography>
+
+                      <a
+                        href="mailto:collection@qualoan.com"
+                        style={{
+                          color: "#F26722",
+                          backgroundColor: "#fff",
+                          padding: "14px 34px",
+                          borderRadius: "11px",
+                          display: "inline-block",
+                          fontWeight: "500",
+                          fontSize: "20px",
+                          cursor: "pointer",
+                          textDecoration: "none",
+                          fontFamily: "Inter",
+                          animation: "pulse 2s infinite",
+                        }}
+                      >
+                        collection@qualoan.com
+                      </a>
+                    </Box>
+                </Box>
+                
+
+                <Box
+                  container
+                  spacing={3}
+                  alignItems="center"
+                  sx={{ width: "50%" }}
+                >
+                    <Grid
+                      container
+                      spacing={2}
+                      alignItems="center"
+                      mt={3}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                      }}
+                    >
+                      <Box item>
+                        <img
+                          src={HDFC_QR}
+                          alt="HDFC QR Code"
+                          style={{
+                            height: "33rem",
+                            // maxWidth: "200px",
+                            width: "20rem",
+                            borderRadius: "12px",
+                          }}
+                        />
+                      </Box>
+                      <Box item>
+                        <Typography
+                          variant="body1"
+                          sx={{ color: "black", fontFamily: "Inter" }}
+                        >
+                          <strong>Bank Name:</strong> HDFC
+                          <br />
+                          <strong>Name:</strong> Naman Finlease Private Limited
+                          <br />
+                          <strong>Account Number:</strong> 50200105867815
+                          <br />
+                          <strong>IFSC Code:</strong> HDFC0001203
+                          <br />
+                          <strong>UPI ID:</strong> vyapar.173031688235@hdfcbank
+                          <br />
+                          <strong>Account Type:</strong> Current Account
+                        </Typography>
+                      </Box>
+                    </Grid>
+                 
+                 
+                </Box>
+
+                <style>
+                  {`
+                  @keyframes scroll-text {
+                    from { transform: translateX(100%); }
+                    to { transform: translateX(-100%); }
+                  }
+                  @keyframes pulse {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                    100% { transform: scale(1); }
+                  }
+                `}
+                </style>
+              </div>
+
+              {/* {isSubmitted && (
+              <>
+                <Grid container spacing={3} alignItems="center">
+                  <Grid item xs={12} md={12}>
+                    <Grid
+                      container
+                      spacing={2}
+                      alignItems="center"
+                      mt={3}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                      }}
+                    >
+                      <Grid item>
+                        <img
+                          src={HDFC_QR}
+                          alt="HDFC QR Code"
+                          style={{
+                            height: "33rem",
+                            // maxWidth: "200px",
+                            width: "20rem",
+                            borderRadius: "12px",
+                          }}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Typography
+                          variant="body1"
+                          sx={{ color: "black", fontFamily: "Inter" }}
+                        >
+                          <strong>Bank Name:</strong> HDFC
+                          <br />
+                          <strong>Name:</strong> Naman Finlease Private Limited
+                          <br />
+                          <strong>Account Number:</strong> 50200105867815
+                          <br />
+                          <strong>IFSC Code:</strong> HDFC0001203
+                          <br />
+                          <strong>UPI ID:</strong> vyapar.173031688235@hdfcbank
+                          <br />
+                          <strong>Account Type:</strong> Current Account
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Box
+                      sx={{
+                        textAlign: "center",
+                        padding: "20px",
+                        position: "relative",
+                        marginTop: "2rem",
+                        "&::before": {
+                          content: '""',
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background: "rgba(255, 142, 83, 0.05)",
+                          borderRadius: "12px",
+                        },
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 500,
+                          color: "black",
+                          fontSize: { xs: "24px", sm: "28px" },
+                          mb: 1,
+                          fontFamily: "Inter",
+                        }}
+                      >
+                        Share Your Payment Proof
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontSize: { xs: "18px", sm: "20px" },
+                          fontFamily: "Inter",
+                          color: "black",
+                          mb: 3,
+                        }}
+                      >
+                        Please send your transfer screenshot to:
+                      </Typography>
+
+                      <a
+                        href="mailto:collection@qualoan.com"
+                        style={{
+                          color: "#F26722",
+                          backgroundColor: "#fff",
+                          padding: "14px 34px",
+                          borderRadius: "11px",
+                          display: "inline-block",
+                          fontWeight: "500",
+                          fontSize: "20px",
+                          cursor: "pointer",
+                          textDecoration: "none",
+                          fontFamily: "Inter",
+                          animation: "pulse 2s infinite",
+                        }}
+                      >
+                        collection@qualoan.com
+                      </a>
+                    </Box>
+                  </Grid>
+                </Grid>
+
+                <style>
+                  {`
+                  @keyframes scroll-text {
+                    from { transform: translateX(100%); }
+                    to { transform: translateX(-100%); }
+                  }
+                  @keyframes pulse {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                    100% { transform: scale(1); }
+                  }
+                `}
+                </style>
+              </>
+            )} */}
+            </Box>
+          </Box>
+        )}
       </Box>
     </>
   );
