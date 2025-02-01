@@ -308,7 +308,6 @@ const RepaymentLoan = () => {
                 style={{
                   display: "flex",
                   width: "100%",
-                  border: "2px solid red",
                   padding: "20px",
                 }}
               >
