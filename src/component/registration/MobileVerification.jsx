@@ -152,25 +152,33 @@ const MobileVerification = ({
           withCredentials: true,
         }
       );
+      console.log("Dashboard details: ", getDashboardDetailsResponse);
 
       if (getDashboardDetailsResponse.status === 200) {
+        console.log(getDashboardDetailsResponse.data);
+
         const { isMobileVerify } = getDashboardDetailsResponse.data;
+        console.log("Mobile verified: ", isMobileVerify);
+
         setIsMobileVerified(isMobileVerify);
 
+        // If mobile is verified, check if the mobile number is already set
         if (isMobileVerify) {
-          // Fetch profile details if mobile is verified
-          const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/api/user/getProfileDetails`,
-            { withCredentials: true }
-          );
+          if (!mobile) {
+            // Fetch profile details if the mobile is verified and not set
+            const getProfileDetailsResponse = await axios.get(
+              `${BASE_URL}/api/user/getProfileDetails`,
+              { withCredentials: true }
+            );
 
-          // Update mobile number if available in response
-          const mobileNumber = getProfileDetailsResponse?.data?.data?.mobile;
-          if (mobileNumber) {
-            setMobile(mobileNumber);
-            console.log("Mobile set: ", mobileNumber);
-          } else {
-            console.error("Mobile number is not available in profile data.");
+            // Update mobile number if available in response
+            const mobileNumber = getProfileDetailsResponse?.data?.data?.mobile;
+            if (mobileNumber) {
+              setMobile(mobileNumber);
+              console.log("Mobile set: ", mobileNumber);
+            } else {
+              console.error("Mobile number is not available in profile data.");
+            }
           }
         } else {
           console.log(

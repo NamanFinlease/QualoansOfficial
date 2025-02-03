@@ -24,6 +24,8 @@ const MySwal = withReactContent(SweetAlert);
 const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
   const [stepCompleted, setStepCompleted] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [completionModalOpen, setCompletionModalOpen] = useState(false); // For the new modal
   const navigate = useNavigate(); // To navigate to other pages
   const [formValues, setFormValues] = useState({
@@ -86,6 +88,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
           withCredentials: true,
         }
       );
+      console.log("response", response);
 
       if (response.status === 200) {
         setStepCompleted(true);
@@ -110,6 +113,57 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
   const handleModalClose = () => {
     setCompletionModalOpen(false);
     navigate("/ourjourney"); // Navigate to the desired page
+  };
+
+  const handleModalClick = async () => {
+    setOpenModal(true);
+    setIsLoading(true);
+
+    try {
+      const getDashboardDetailsResponse = await axios.get(
+        `${BASE_URL}/api/user/getDashboardDetails`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (getDashboardDetailsResponse.status === 200) {
+        setIsLoading(false);
+
+        const { isDisbursalDetailsSaved } = getDashboardDetailsResponse.data;
+
+        // Set the value of isAddressVerified based on the fetched response
+        setStepCompleted(isDisbursalDetailsSaved);
+
+        if (isDisbursalDetailsSaved) {
+          console.log("isDisbursalDetailsSaved", isDisbursalDetailsSaved);
+
+          const getProfileDetailsResponse = await axios.get(
+            `${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=disbursalBankDetails`,
+            {
+              withCredentials: true,
+            }
+          );
+
+          const EmpData = getProfileDetailsResponse?.data?.data;
+          console.log("getProfileDetailsResponse", EmpData);
+
+          // Update formValues with residenceData
+          setFormValues({
+            beneficiaryName: EmpData?.beneficiaryName || "",
+            accountNumber: EmpData?.accountNumber || "",
+            confirmAccountNo: EmpData?.confirmAccountNo || "",
+            ifscCode: EmpData?.ifscCode || "",
+            branchName: EmpData?.branchName || "",
+            bankName: EmpData?.bankName || "",
+            accountType: EmpData?.accountType || "",
+          });
+        }
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error fetching data:", error);
+    }
   };
 
   return (
@@ -171,7 +225,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
             margin: "auto",
           },
         }}
-        onClick={!disabled ? () => setOpenModal(true) : null}
+        onClick={handleModalClick}
       >
         <IconButton
           disabled={disabled || stepCompleted}

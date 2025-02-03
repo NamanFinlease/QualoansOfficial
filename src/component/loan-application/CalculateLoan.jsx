@@ -131,10 +131,10 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
         }
       );
 
-      console.log(
-        "getDashboardDetailsResponse >>> ",
-        getDashboardDetailsResponse
-      );
+      // console.log(
+      //   "getDashboardDetailsResponse111111 >>> ",
+      //   getDashboardDetailsResponse
+      // );
 
       if (getDashboardDetailsResponse.status === 200) {
         setIsLoading(false);
@@ -142,9 +142,9 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
           "getDashboardDetailsResponse >>> ",
           getDashboardDetailsResponse
         );
-        const { isLoanCalculated } = getDashboardDetailsResponse.data;
+        const { isLoanCalculated } = getDashboardDetailsResponse.data || {};
 
-        // console.log("isLoanCalculated>>>>:", getDashboardDetailsResponse);
+        // console.log("isLoanCalculated>>>>:", isLoanCalculated);
 
         // Set the value of isAddressVerified based on the fetched response
         setIsComplete(isLoanCalculated);
@@ -157,22 +157,20 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
             }
           );
 
-          console.log(
-            "getProfileDetailsResponse >>> ",
-            getProfileDetailsResponse
-          );
+          // console.log(
+          //   "getProfileDetailsResponse >>> ",
+          //   getProfileDetailsResponse
+          // );
 
-          const LoanData =
-            getProfileDetailsResponse?.data?.data?.isLoanCalculated;
+          const LoanData = getProfileDetailsResponse?.data?.data;
 
           // Update formValues with residenceData
           setFormValues({
-            principal: residenceData?.address || "",
-            landmark: residenceData?.landmark || "",
-            city: residenceData?.city || "",
-            state: residenceData?.state || "",
-            pincode: residenceData?.pincode || "",
-            residenceType: residenceData?.residenceType || "OWNED",
+            principal: LoanData?.principal || "",
+            totalPayble: LoanData?.totalPayble || "",
+            intrestPerMonth: LoanData?.intrestPerMonth || "",
+            tenureMonth: LoanData?.tenureMonth || "",
+            loanPurpose: LoanData?.loanPurpose || "",
           });
         }
       }

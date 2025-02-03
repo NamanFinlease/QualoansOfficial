@@ -74,26 +74,24 @@ export default function UserPreview() {
   const { sidebarOpen, sidebarExpanded } = useSidebar();
   const isSmallScreen = useMediaQuery("(max-width:600px)");
 
-
   const renderComponent = () => {
-
     switch (activeComponent) {
       case "user-profile":
-        return <UserProfile  />;
+        return <UserProfile />;
       case "basic-information":
         return <BasicInformation />;
       case "residential-address":
         return <ResidentialAddress />;
       case "income-details":
-        return <IncomeInformation/>;
+        return <IncomeInformation />;
       case "loan-details":
         return <LoanDetails />;
       case "employment-information":
-        return <EmploymentInformation/>
+        return <EmploymentInformation />;
       case "disbursal-bank-details":
-        return <DisbursalBankDetails/>;
+        return <DisbursalBankDetails />;
       case "documents":
-        return <DocumentUploadDetails/>;
+        return <DocumentUploadDetails />;
     }
   };
 
@@ -258,7 +256,7 @@ export default function UserPreview() {
             backgroundColor: "#fff",
             height: isSmallScreen ? "auto" : "80vh",
             position: "relative",
-            overflow: "hidden",
+            // overflow: "hidden",
           }}
         >
           {loading ? (
