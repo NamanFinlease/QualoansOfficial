@@ -102,7 +102,7 @@ export default function UserPreview() {
         <FormControl
           variant="outlined"
           sx={{
-            mt: 2,
+            mt: 4,
             width: `calc(90% - ${
               sidebarOpen ? (sidebarExpanded ? 240 : 70) : 0
             }px)`,
@@ -121,7 +121,8 @@ export default function UserPreview() {
                 color: "#1c1c1c", // Ensures the color remains #1c1c1c when focused
               },
               "&.MuiFormLabel-root.MuiInputLabel-shrink": {
-                color: "#1c1c1c", // Ensures the color remains #1c1c1c when the label shrinks
+                marginTop: 1, // Removes the margin when the label shrinks
+                color: "white", // Ensures the color remains #1c1c1c when the label shrinks
               },
             }}
           >
