@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import PaymentProof from "./PaymentProof";
 import BankDetails from "./BankDetails";
 import HDFC_QR from "./HDFC_QR";
-import MarqueeAlert from "./MarqueeAlert.JSX";
+import MarqueeAlert from "./MarqueeAlert.jsx";
 import WarningMessage from "./WarningMessage";
 
 const RepaymentLoan = () => {
@@ -45,7 +45,7 @@ const RepaymentLoan = () => {
         `https://staging.qualoan.com/api/repayment/getLoanNumber/${pan}`
       );
 
-      if (response.success) {
+      if (response.status === 200) {
         const data = await response.json();
 
         // Concatenate fName, mName, and lName to form the full name
