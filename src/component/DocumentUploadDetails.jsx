@@ -15,7 +15,7 @@ const DocumentUploadDetails = () => {
     const fetchDocumentStatus = async () => {
       try {
         const response = await fetch(
-          `${BASE_URL}/api/loanApplication/getDocumentStatus`,
+          `${BASE_URL}/getDocumentStatus`,
           {
             method: "GET",
             headers: {

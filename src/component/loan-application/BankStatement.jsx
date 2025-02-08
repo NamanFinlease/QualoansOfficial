@@ -55,14 +55,11 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
       const formData = new FormData();
       formData.append("bankStatement", bankStatement); // Key "bankStatement"
 
-      const response = await fetch(
-        `${BASE_URL}/api/loanApplication/uploadDocuments`,
-        {
-          method: "PATCH",
-          body: formData,
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${BASE_URL}/uploadDocuments`, {
+        method: "PATCH",
+        body: formData,
+        credentials: "include",
+      });
 
       console.log("hhhb", response);
 
@@ -105,7 +102,7 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
 
     try {
       const getDashboardDetailsResponse = await axios.get(
-        `${BASE_URL}/api/user/getDashboardDetails`,
+        `${BASE_URL}/getDashboardDetails`,
         {
           withCredentials: true,
         }
@@ -127,7 +124,7 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
           console.log("isEmploymentDetailsSaved", isEmploymentDetailsSaved);
 
           const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/api/loanApplication/getDocumentStatus`,
+            `${BASE_URL}/getDocumentStatus`,
             {
               withCredentials: true,
             }

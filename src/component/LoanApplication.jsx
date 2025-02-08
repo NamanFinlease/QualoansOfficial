@@ -31,7 +31,7 @@ const LoanApplication = () => {
     const fetchProgress = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/user/getDashboardDetails`,
+          `${BASE_URL}/getDashboardDetails`,
           {
             withCredentials: true,
           }

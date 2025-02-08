@@ -121,7 +121,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
     setIsFetching(true);
     try {
       const response = await axios.patch(
-        `${BASE_URL}/api/user/addIncomeDetails`,
+        `${BASE_URL}/addIncomeDetails`,
         {
           employementType,
           monthlyIncome,
@@ -157,7 +157,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
 
     try {
       const dashboardResponse = await axios.get(
-        `${BASE_URL}/api/user/getDashboardDetails`,
+        `${BASE_URL}/getDashboardDetails`,
         {
           withCredentials: true,
         }
@@ -171,7 +171,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
 
         if (isIncomDetails) {
           const profileResponse = await axios.get(
-            `${BASE_URL}/api/user/getProfileDetails`,
+            `${BASE_URL}/getProfileDetails`,
             {
               withCredentials: true,
             }

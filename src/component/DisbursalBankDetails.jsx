@@ -22,7 +22,7 @@ const DisbursalBankDetails = () => {
     const fetchDisbursalData = async () => {
       try {
         const response = await fetch(
-          `${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=disbursalBankDetails`,
+          `${BASE_URL}/getApplicationDetails?applicationStatus=disbursalBankDetails`,
           {
             method: "GET",
             headers: {

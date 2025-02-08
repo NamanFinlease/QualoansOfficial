@@ -43,7 +43,7 @@ const DocumentUploadModal = ({ prefillData }) => {
   useEffect(() => {
     const getPreviousData = async () => {
       const getDashboardDetailsResponse = await axios.get(
-        `${BASE_URL}/api/user/getDashboardDetails`,
+        `${BASE_URL}/getDashboardDetails`,
         { withCredentials: true }
       );
       console.log(
@@ -64,7 +64,7 @@ const DocumentUploadModal = ({ prefillData }) => {
     if (isDocUploaded) {
       const fetchDocumentList = async () => {
         const documentListResponse = await axios.get(
-          `${BASE_URL}/api/loanApplication/getDocumentList`,
+          `${BASE_URL}/getDocumentList`,
           { withCredentials: true }
         );
         console.log(
@@ -195,7 +195,7 @@ const DocumentUploadModal = ({ prefillData }) => {
     try {
       // Fetch the API using axios
       const response = await axios.patch(
-        `${BASE_URL}/api/loanApplication/uploadDocuments`,
+        `${BASE_URL}/uploadDocuments`,
         formData,
         {
           headers: {
@@ -243,7 +243,7 @@ const DocumentUploadModal = ({ prefillData }) => {
 
   const handlePreview = async (docId, docType) => {
     // const docType = "salarySlip";
-    const apiUrl = `http://localhost:8081/api/loanApplication/documentPreview?docType=${docType}&docId=${docId}`;
+    const apiUrl = `${BASE_URL}/documentPreview?docType=${docType}&docId=${docId}`;
     try {
       const response = await axios.get(apiUrl, { withCredentials: true });
       console.log("Preview data:", response.data);

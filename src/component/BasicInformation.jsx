@@ -34,7 +34,7 @@ const BasicInformation = () => {
         //   const token =
         //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
 
-        const response = await fetch(`${BASE_URL}/api/user/getProfileDetails`, {
+        const response = await fetch(`${BASE_URL}/getProfileDetails`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

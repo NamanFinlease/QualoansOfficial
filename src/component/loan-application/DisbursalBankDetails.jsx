@@ -77,7 +77,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
 
     try {
       const response = await axios.patch(
-        `${BASE_URL}/api/loanApplication/disbursalBankDetails`,
+        `${BASE_URL}/disbursalBankDetails`,
         formValues,
         {
           headers: {

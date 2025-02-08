@@ -83,14 +83,13 @@ const StepperComponent = () => {
   if (loading) {
     return (
       <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-    
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         <CircularProgress />
       </Box>
     );
@@ -106,7 +105,12 @@ const StepperComponent = () => {
 
   return (
     <Box sx={{ width: "100%", padding: "16px", marginBottom: "5rem" }}>
-      <Typography variant="h4" align="center" gutterBottom sx={{marginBottom: "3rem"}}>
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        sx={{ marginBottom: "3rem" }}
+      >
         Loan Application Progress
       </Typography>
       <Stepper
@@ -132,7 +136,7 @@ export default StepperComponent;
 //     const fetchJourneyData = async () => {
 //       try {
 //         const response = await axios.get(
-//           "http://localhost:8081/api/loanApplication/getJourney",
+//           `${BASE_URL}/getJourney`,
 //           {
 //             params: { userId: "USER_ID_HERE" }, // Replace with dynamic userId if needed
 //             withCredentials: true,

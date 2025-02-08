@@ -62,7 +62,7 @@ const MobileVerification = ({
   //   // try {
   //   if (isVerified) {
   //     const response = await axios.get(
-  //       `${BASE_URL}/api/loanApplication/getProfileDetails`,
+  //       `${BASE_URL}/getProfileDetails`,
   //       { withCredentials: true }
   //     );
   //     console.log("mobbbb sdfsdfsd>>><<<<<", response.data.documents);
@@ -79,7 +79,7 @@ const MobileVerification = ({
     try {
       setIsLoading(true);
       const response = await fetch(
-        `${BASE_URL}/api/verify/mobile/get-otp/${mobileNumber}`,
+        `${BASE_URL}/mobile/get-otp/${mobileNumber}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -103,7 +103,7 @@ const MobileVerification = ({
     try {
       setIsLoading(true);
 
-      const response = await fetch(`${BASE_URL}/api/verify/mobile/verify-otp`, {
+      const response = await fetch(`${BASE_URL}/mobile/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mobile: mobileNumber, otp: otpCode }),
@@ -147,7 +147,7 @@ const MobileVerification = ({
     try {
       // Fetch dashboard details
       const getDashboardDetailsResponse = await axios.get(
-        `${BASE_URL}/api/user/getDashboardDetails`,
+        `${BASE_URL}/getDashboardDetails`,
         {
           withCredentials: true,
         }
@@ -160,7 +160,7 @@ const MobileVerification = ({
         if (isMobileVerify) {
           // Fetch profile details if mobile is verified
           const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/api/user/getProfileDetails`,
+            `${BASE_URL}/getProfileDetails`,
             { withCredentials: true }
           );
 

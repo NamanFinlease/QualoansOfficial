@@ -86,7 +86,7 @@ const LoginForm = ({ setLoginComleted }) => {
 
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/user/aadhaar-login/${aadhaar}`
+        `${BASE_URL}/aadhaar-login/${aadhaar}`
         // { withCredentials: true }
       );
 
@@ -153,7 +153,7 @@ const LoginForm = ({ setLoginComleted }) => {
         console.log("Mobile OTP Request:", mobileOtpRequest);
 
         const mobileOtpResponse = await axios.post(
-          `${BASE_URL}/api/verify/mobile/verify-otp`,
+          `${BASE_URL}/mobile/verify-otp`,
           mobileOtpRequest,
           { withCredentials: true }
         );
@@ -195,7 +195,7 @@ const LoginForm = ({ setLoginComleted }) => {
         console.log("Aadhaar OTP Request Body:", requestBody);
 
         const response = await axios.post(
-          `${BASE_URL}/api/user/submit-aadhaar-otp`,
+          `${BASE_URL}/submit-aadhaar-otp`,
           requestBody,
           { withCredentials: true }
         );
@@ -280,7 +280,7 @@ const LoginForm = ({ setLoginComleted }) => {
           alignItems: "center",
           boxShadow: 4,
           borderTopLeftRadius: 40,
-          borderBottomRightRadius:40,
+          borderBottomRightRadius: 40,
           padding: 4,
           backgroundColor: "#ffffff",
           maxWidth: "900px",

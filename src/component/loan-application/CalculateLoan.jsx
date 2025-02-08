@@ -72,16 +72,12 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
     };
 
     try {
-      const response = await axios.post(
-        `${BASE_URL}/api/loanApplication/applyLoan`,
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
+      const response = await axios.post(`${BASE_URL}/applyLoan`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
 
       console.log("Loan Application Response:", response);
       onComplete({ success: true, data: payload });
@@ -125,7 +121,7 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
 
     try {
       const getDashboardDetailsResponse = await axios.get(
-        `${BASE_URL}/api/user/getDashboardDetails`,
+        `${BASE_URL}/getDashboardDetails`,
         {
           withCredentials: true,
         }
@@ -151,7 +147,7 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
 
         if (isLoanCalculated) {
           const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=loanDetails`,
+            `${BASE_URL}/getApplicationDetails?applicationStatus=loanDetails`,
             {
               withCredentials: true,
             }

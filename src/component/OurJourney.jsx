@@ -24,12 +24,9 @@ const OurJourney = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/api/user/getDashboardDetails`,
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axios.get(`${BASE_URL}/getDashboardDetails`, {
+          withCredentials: true,
+        });
         if (response.data.success) {
           setRegistration(response.data.isRegistration);
         }

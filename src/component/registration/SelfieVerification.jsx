@@ -86,7 +86,7 @@ const SelfieVerification = ({ onComplete, disabled }) => {
       }
 
       const response = await axios.patch(
-        `${BASE_URL}/api/user/uploadProfile`,
+        `${BASE_URL}/uploadProfile`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

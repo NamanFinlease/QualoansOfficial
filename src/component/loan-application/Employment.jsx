@@ -137,7 +137,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
       };
 
       const response = await axios.patch(
-        `${BASE_URL}/api/loanApplication/addEmploymentInfo`,
+        `${BASE_URL}/addEmploymentInfo`,
         apiData,
         {
           headers: { "Content-Type": "application/json" },
@@ -167,7 +167,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
 
     try {
       const getDashboardDetailsResponse = await axios.get(
-        `${BASE_URL}/api/user/getDashboardDetails`,
+        `${BASE_URL}/getDashboardDetails`,
         {
           withCredentials: true,
         }
@@ -195,7 +195,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
           console.log("isEmploymentDetailsSaved", isEmploymentDetailsSaved);
 
           const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=employeeDetails`,
+            `${BASE_URL}/getApplicationDetails?applicationStatus=employeeDetails`,
             {
               withCredentials: true,
             }

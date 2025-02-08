@@ -163,7 +163,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
     setIsFetching(true);
     try {
       const response = await axios.patch(
-        `${BASE_URL}/api/user/currentResidence`,
+        `${BASE_URL}/currentResidence`,
         formValues,
         {
           headers: { "Content-Type": "application/json" },
@@ -193,7 +193,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
 
     try {
       const getDashboardDetailsResponse = await axios.get(
-        `${BASE_URL}/api/user/getDashboardDetails`,
+        `${BASE_URL}/getDashboardDetails`,
         {
           withCredentials: true,
         }
@@ -215,7 +215,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
 
         if (isCurrentResidence) {
           const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/api/user/getProfileDetails`,
+            `${BASE_URL}/getProfileDetails`,
             {
               withCredentials: true,
             }
