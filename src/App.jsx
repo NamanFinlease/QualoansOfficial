@@ -27,6 +27,7 @@ import LoginForm from "./component/LoginForm";
 import RepayLoan from "./component/RepayLoan";
 import ProtectedRoute from "./ProtectedRoute";
 import { SidebarProvider } from "./context/SidebarContext";
+import LandingPage from "./component/LandingPage";
 
 const MinimalLayout = ({ children }) => <div>{children}</div>;
 
@@ -55,6 +56,7 @@ function App() {
         {showHeaderFooter && <Header />}
         <Routes>
           {/* Routes with Header and Footer */}
+          <Route path="/landing-page" element={<LandingPage />} />
           <Route path="/" element={<MainContent />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />

@@ -132,10 +132,19 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
           cursor: disabled ? "not-allowed" : "pointer",
           textAlign: "left",
           background: disabled ? "#D9D9D9" : "#F26722",
-          color: "white",
+          color:
+            //  completed ||
+            !disabled ? "white" : "#1c1c1c",
         }}
       >
-        <IconButton sx={{ color: "white", ml: 1 }}>
+        <IconButton
+          sx={{
+            color:
+              // completed ? "white" :
+              disabled ? "grey" : "white",
+            ml: 1,
+          }}
+        >
           {isPersonalInfoUpdated ? <CheckCircle /> : <Person />}
         </IconButton>
         <Box sx={{ ml: 2, flexGrow: 1 }}>

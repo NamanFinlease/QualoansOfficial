@@ -1,9 +1,9 @@
 // Create a new shared styles file
 export const sharedStyles = {
   containerBox: {
-    padding: 3,
+    padding:{xs:0,md:3} ,
     background: "#F0F0F0",
-    height: "100vh",
+    height: "auto",
   },
   title: {
     mb: 3,
@@ -16,6 +16,7 @@ export const sharedStyles = {
     marginBottom: 3,
   },
   fieldLabel: {
+    
     fontWeight: "500",
     color: "rgba(0, 0, 0, 0.9)",
   },

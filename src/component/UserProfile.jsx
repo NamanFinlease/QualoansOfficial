@@ -92,7 +92,13 @@ const UserProfile = () => {
       </Typography>
 
       {/* Profile Picture */}
-      <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mb: 3,
+        }}
+      >
         <Avatar
           alt={user.fullName}
           src={user.profileImage}
@@ -127,7 +133,17 @@ const UserProfile = () => {
           justifyContent: "center",
         }}
       >
-        <Box sx={{ width: "50%", overflowX: "auto", mt: 2 }}>
+        <Box
+          sx={{
+            width: { xs: "100%", md: "50%" },
+            maxHeight: "600px",
+            overflowY: "auto",
+            padding: 2,
+            borderRadius: "8px",
+            backgroundColor: "white",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          }}
+        >
           <table
             style={{
               width: "100%",

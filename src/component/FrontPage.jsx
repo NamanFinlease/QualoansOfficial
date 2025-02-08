@@ -36,7 +36,7 @@ const FrontPage = () => {
 
             fontWeight: "bold",
             color: "black",
-            textTransform: "uppercase", // Ensures the text is in capital letters
+            textTransform: "uppercase", // Ensures the text is in cwtal letters
 
             marginBottom: theme.spacing(2), // Space below heading
             [theme.breakpoints.down("sm")]: {

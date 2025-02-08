@@ -121,20 +121,16 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
         !formValues.companyName ||
         !formValues.companyType ||
         !formValues.designation ||
-        !formValues.officeEmail
-        // !formValues.officeAddrress ||
-        // !formValues.city ||
-        // !formValues.state ||
-        // formValues.pincode
+        !formValues.officeEmail ||
+        !formValues.designation
       ) {
         Swal.fire("All fields are required.");
         return;
       }
 
-      const apiData = {
-        ...formValues,
-        ...addressValues,
-      };
+      const apiData = { ...formValues, ...addressValues };
+
+      console.log("Submitting data:", apiData);
 
       const response = await axios.patch(
         `${BASE_URL}/addEmploymentInfo`,
@@ -144,6 +140,8 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
           withCredentials: true,
         }
       );
+
+      console.log("Response from backend:", response);
 
       if (response.status === 200) {
         Swal.fire("Employment information submitted successfully!");
@@ -161,6 +159,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
       console.error("Error:", error);
     }
   };
+
   const handleModalClick = async () => {
     openEmploymentModal(true);
     setIsLoading(true);
@@ -173,27 +172,27 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
         }
       );
 
-      console.log(
-        "getDashboardDetailsResponse >>> ",
-        getDashboardDetailsResponse
-      );
+      console.log("Dashboard Details Response:", getDashboardDetailsResponse);
 
       if (getDashboardDetailsResponse.status === 200) {
         setIsLoading(false);
-        // console.log(
-        //   "getDashboardDetailsResponse >>> ",
-        //   getDashboardDetailsResponse
-        // );
-        const { isEmploymentDetailsSaved } = getDashboardDetailsResponse.data;
+        console.log("Response Data:", getDashboardDetailsResponse?.data); // Check this in detail
 
-        // console.log("isEmploymentDetailsSaved>>>>:", isEmploymentDetailsSaved);
+        // Safely access employmentInfo to avoid destructuring errors
+        const { isEmploymentDetailsSaved } =
+          getDashboardDetailsResponse.data || {};
 
-        // Set the value of isAddressVerified based on the fetched response
-        setStepCompleted(isEmploymentDetailsSaved);
+        // Ensure we have a valid boolean value for isEmploymentDetailsSaved
+        if (typeof isEmploymentDetailsSaved !== "boolean") {
+          console.error("Invalid response format for isEmploymentDetailsSaved");
+          setStepCompleted(false);
+        } else {
+          setStepCompleted(isEmploymentDetailsSaved);
+        }
+
+        console.log("isEmploymentDetailsSaved:", isEmploymentDetailsSaved);
 
         if (isEmploymentDetailsSaved) {
-          console.log("isEmploymentDetailsSaved", isEmploymentDetailsSaved);
-
           const getProfileDetailsResponse = await axios.get(
             `${BASE_URL}/getApplicationDetails?applicationStatus=employeeDetails`,
             {
@@ -201,11 +200,11 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
             }
           );
 
-          const EmpData =
-            getProfileDetailsResponse?.data?.data?.employeeDetails;
-          console.log("getProfileDetailsResponse", getProfileDetailsResponse);
+          console.log("Profile Details Response:", getProfileDetailsResponse);
 
-          // Update formValues with residenceData
+          const EmpData = getProfileDetailsResponse?.data?.data;
+
+          // Update form values based on the fetched data
           setFormValues({
             workFrom: EmpData?.workFrom || "",
             companyName: EmpData?.companyName || "",
@@ -222,7 +221,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
       }
     } catch (error) {
       setIsLoading(false);
-      console.error("Error fetching data:", error);
+      console.error("Error fetching dashboard details:", error);
     }
   };
 
@@ -232,6 +231,10 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
       setStepCompleted(true);
     }
   }, [prefillData]);
+
+  useEffect(() => {
+    console.log("Updated Step Completed:", stepCompleted); // Check if state updates correctly
+  }, [stepCompleted]);
 
   return (
     <>

@@ -77,7 +77,7 @@ const DocumentUploadDetails = () => {
       >
         <Box
           sx={{
-            width: "50%",
+            width: { xs: "100%", md: "50%" },
             maxHeight: "600px",
             overflowY: "auto",
             padding: 2,
