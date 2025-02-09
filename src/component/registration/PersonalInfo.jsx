@@ -40,12 +40,9 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
   const handleCompleteStep = async () => {
     try {
       setIsFetching(true);
-      const response = await axios.get(
-        `${BASE_URL}/api/user/getProfileDetails`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`${BASE_URL}/getProfileDetails`, {
+        withCredentials: true,
+      });
 
       if (response.status === 200 && response.data.success) {
         const data = response.data.data.personalDetails;
@@ -94,7 +91,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
     try {
       setIsFetching(true);
       const response = await axios.patch(
-        `${BASE_URL}/api/user/personalInfo`,
+        `${BASE_URL}/personalInfo`,
         updatedDetails,
         {
           headers: { "Content-Type": "application/json" },
@@ -135,10 +132,24 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
           cursor: disabled ? "not-allowed" : "pointer",
           textAlign: "left",
           background: disabled ? "#D9D9D9" : "#F26722",
-          color: "white",
+          color:
+            //  completed ||
+            !disabled ? "white" : "#1c1c1c",
+
+          "@media (max-width: 600px)": {
+            width: "80%",
+            margin: "auto",
+          },
         }}
       >
-        <IconButton sx={{ color: "white", ml: 1 }}>
+        <IconButton
+          sx={{
+            color:
+              // completed ? "white" :
+              disabled ? "grey" : "white",
+            ml: 1,
+          }}
+        >
           {isPersonalInfoUpdated ? <CheckCircle /> : <Person />}
         </IconButton>
         <Box sx={{ ml: 2, flexGrow: 1 }}>

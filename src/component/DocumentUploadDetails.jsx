@@ -15,7 +15,7 @@ const DocumentUploadDetails = () => {
     const fetchDocumentStatus = async () => {
       try {
         const response = await fetch(
-          `${BASE_URL}/api/loanApplication/getDocumentStatus`,
+          `${BASE_URL}/getDocumentStatus`,
           {
             method: "GET",
             headers: {
@@ -77,7 +77,7 @@ const DocumentUploadDetails = () => {
       >
         <Box
           sx={{
-            width: "50%",
+            width: { xs: "100%", md: "50%" },
             maxHeight: "600px",
             overflowY: "auto",
             padding: 2,

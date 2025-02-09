@@ -74,26 +74,24 @@ export default function UserPreview() {
   const { sidebarOpen, sidebarExpanded } = useSidebar();
   const isSmallScreen = useMediaQuery("(max-width:600px)");
 
-
   const renderComponent = () => {
-
     switch (activeComponent) {
       case "user-profile":
-        return <UserProfile  />;
+        return <UserProfile />;
       case "basic-information":
         return <BasicInformation />;
       case "residential-address":
         return <ResidentialAddress />;
       case "income-details":
-        return <IncomeInformation/>;
+        return <IncomeInformation />;
       case "loan-details":
         return <LoanDetails />;
       case "employment-information":
-        return <EmploymentInformation/>
+        return <EmploymentInformation />;
       case "disbursal-bank-details":
-        return <DisbursalBankDetails/>;
+        return <DisbursalBankDetails />;
       case "documents":
-        return <DocumentUploadDetails/>;
+        return <DocumentUploadDetails />;
     }
   };
 
@@ -104,7 +102,7 @@ export default function UserPreview() {
         <FormControl
           variant="outlined"
           sx={{
-            mt: 2,
+            mt: 4,
             width: `calc(90% - ${
               sidebarOpen ? (sidebarExpanded ? 240 : 70) : 0
             }px)`,
@@ -123,7 +121,8 @@ export default function UserPreview() {
                 color: "#1c1c1c", // Ensures the color remains #1c1c1c when focused
               },
               "&.MuiFormLabel-root.MuiInputLabel-shrink": {
-                color: "#1c1c1c", // Ensures the color remains #1c1c1c when the label shrinks
+                marginTop: 1, // Removes the margin when the label shrinks
+                color: "white", // Ensures the color remains #1c1c1c when the label shrinks
               },
             }}
           >
@@ -258,7 +257,7 @@ export default function UserPreview() {
             backgroundColor: "#fff",
             height: isSmallScreen ? "auto" : "80vh",
             position: "relative",
-            overflow: "hidden",
+            // overflow: "hidden",
           }}
         >
           {loading ? (

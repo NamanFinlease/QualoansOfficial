@@ -72,16 +72,12 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
     };
 
     try {
-      const response = await axios.post(
-        `${BASE_URL}/api/loanApplication/applyLoan`,
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
+      const response = await axios.post(`${BASE_URL}/applyLoan`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
 
       console.log("Loan Application Response:", response);
       onComplete({ success: true, data: payload });
@@ -125,16 +121,16 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
 
     try {
       const getDashboardDetailsResponse = await axios.get(
-        `${BASE_URL}/api/user/getDashboardDetails`,
+        `${BASE_URL}/getDashboardDetails`,
         {
           withCredentials: true,
         }
       );
 
-      console.log(
-        "getDashboardDetailsResponse >>> ",
-        getDashboardDetailsResponse
-      );
+      // console.log(
+      //   "getDashboardDetailsResponse111111 >>> ",
+      //   getDashboardDetailsResponse
+      // );
 
       if (getDashboardDetailsResponse.status === 200) {
         setIsLoading(false);
@@ -142,37 +138,35 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
           "getDashboardDetailsResponse >>> ",
           getDashboardDetailsResponse
         );
-        const { isLoanCalculated } = getDashboardDetailsResponse.data;
+        const { isLoanCalculated } = getDashboardDetailsResponse.data || {};
 
-        // console.log("isLoanCalculated>>>>:", getDashboardDetailsResponse);
+        // console.log("isLoanCalculated>>>>:", isLoanCalculated);
 
         // Set the value of isAddressVerified based on the fetched response
         setIsComplete(isLoanCalculated);
 
         if (isLoanCalculated) {
           const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=loanDetails`,
+            `${BASE_URL}/getApplicationDetails?applicationStatus=loanDetails`,
             {
               withCredentials: true,
             }
           );
 
-          console.log(
-            "getProfileDetailsResponse >>> ",
-            getProfileDetailsResponse
-          );
+          // console.log(
+          //   "getProfileDetailsResponse >>> ",
+          //   getProfileDetailsResponse
+          // );
 
-          const LoanData =
-            getProfileDetailsResponse?.data?.data?.isLoanCalculated;
+          const LoanData = getProfileDetailsResponse?.data?.data;
 
           // Update formValues with residenceData
           setFormValues({
-            principle: residenceData?.address || "",
-            landmark: residenceData?.landmark || "",
-            city: residenceData?.city || "",
-            state: residenceData?.state || "",
-            pincode: residenceData?.pincode || "",
-            residenceType: residenceData?.residenceType || "OWNED",
+            principle: LoanData?.principle || "",
+            totalPayble: LoanData?.totalPayble || "",
+            roi: LoanData?.roi || "",
+            tenure: LoanData?.tenure || "",
+            loanPurpose: LoanData?.loanPurpose || "",
           });
         }
       }

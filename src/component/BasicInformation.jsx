@@ -34,7 +34,7 @@ const BasicInformation = () => {
         //   const token =
         //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
 
-        const response = await fetch(`${BASE_URL}/api/user/getProfileDetails`, {
+        const response = await fetch(`${BASE_URL}/getProfileDetails`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -117,7 +117,17 @@ const BasicInformation = () => {
           justifyContent: "center",
         }}
       >
-        <Box sx={{ width: "50%", overflowX: "auto", mt: 2 }}>
+        <Box
+          sx={{
+            width: { xs: "100%", md: "50%" },
+            maxHeight: "600px",
+            overflowY: "auto",
+            padding: 2,
+            borderRadius: "8px",
+            backgroundColor: "white",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          }}
+        >
           <table
             style={{
               width: "100%",

@@ -53,7 +53,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/user/getProfileDetails`, {
+        const response = await fetch(`${BASE_URL}/getProfileDetails`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -82,7 +82,7 @@ const Dashboard = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/api/user/logout`, {
+      const response = await fetch(`${BASE_URL}/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

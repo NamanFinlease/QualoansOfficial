@@ -17,8 +17,6 @@ import { BASE_URL } from "../../baseURL";
 import yourImage from "../../assets/image/vidu-general-4-2025-01-18T06_43_27Z (1).gif"; // Import your image
 
 const SelfieVerification = ({ onComplete, disabled }) => {
-  console.log("oncomplete >>> ", onComplete);
-  console.log("disabled >>> ", disabled);
   const [openModal, setOpenModal] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -86,7 +84,7 @@ const SelfieVerification = ({ onComplete, disabled }) => {
       }
 
       const response = await axios.patch(
-        `${BASE_URL}/api/user/uploadProfile`,
+        `${BASE_URL}/uploadProfile`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

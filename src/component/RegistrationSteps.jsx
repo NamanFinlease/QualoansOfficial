@@ -41,14 +41,10 @@ const RegistrationSteps = () => {
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/api/user/getDashboardDetails`,
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axios.get(`${BASE_URL}/getDashboardDetails`, {
+          withCredentials: true,
+        });
 
-        console.log("response das>><<<< ", response);
         if (response.data.success) {
           if (response.data.isRegistration) {
             const { registrationStatus, isMobileVerify } = response.data;
@@ -176,7 +172,7 @@ const RegistrationSteps = () => {
             alignItems: "center",
             padding: 2,
             width: "100%",
-            "@media (min-width: 600px)": {
+            "@media (minWidth: 600px)": {
               flexDirection: "row",
               justifyContent: "space-between",
             },
@@ -191,7 +187,7 @@ const RegistrationSteps = () => {
               marginLeft: "50px",
               fontFamily: '"Roboto", "Helvetica", "Arial", "sans-serif"',
               textAlign: "left",
-              "@media (min-width: 600px)": {
+              "@media (minWidth: 600px)": {
                 width: "50%",
               },
             }}
@@ -202,7 +198,7 @@ const RegistrationSteps = () => {
             sx={{
               width: "100%",
               marginTop: 2,
-              "@media (min-width: 600px)": { marginTop: 0 },
+              "@media (minWidth: 600px)": { marginTop: 0 },
             }}
           >
             <LinearProgress
@@ -246,14 +242,12 @@ const RegistrationSteps = () => {
             prefillData={steps.panVerification.data}
             isVerified={isVerified.isPanVerified}
           />
-          {console.log("steps", steps)}
           <PersonalInfo
             onComplete={(data) => handleStepCompletion("personalInfo", data)}
             disabled={!steps.panVerification.completed}
             prefillData={steps.personalInfo.data}
             isVerified={isVerified.isPersonalInfoVerified}
           />
-          {console.log("steps", steps)}
           <AddressInfo
             onComplete={(data) => handleStepCompletion("addressInfo", data)}
             disabled={!steps.personalInfo.completed}

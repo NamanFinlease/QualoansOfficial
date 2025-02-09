@@ -31,7 +31,7 @@ const EmploymentInformation = () => {
         //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
 
         const response = await fetch(
-          `${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=employeeDetails`,
+          `${BASE_URL}/getApplicationDetails?applicationStatus=employeeDetails`,
           {
             method: "GET",
             headers: {
@@ -41,6 +41,7 @@ const EmploymentInformation = () => {
             credentials: "include", // This sends cookies and credentials along with the request
           }
         );
+        console.log("response", response);
 
         // Check if the response status is OK
         if (!response.ok) {
@@ -119,7 +120,17 @@ const EmploymentInformation = () => {
           justifyContent: "center",
         }}
       >
-        <Box sx={{ width: "50%", overflowX: "auto", mt: 2 }}>
+        <Box
+          sx={{
+            width: { xs: "100%", md: "50%" },
+            maxHeight: "600px",
+            overflowY: "auto",
+            padding: 2,
+            borderRadius: "8px",
+            backgroundColor: "white",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          }}
+        >
           <table
             style={{
               width: "100%",

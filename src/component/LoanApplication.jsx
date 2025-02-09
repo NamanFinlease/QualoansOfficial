@@ -10,6 +10,7 @@ import Dashboard from "./Dashboard";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
 import { useSidebar } from "../context/SidebarContext";
+import { s } from "framer-motion/client";
 
 const LoanApplication = () => {
   const { sidebarOpen, sidebarExpanded } = useSidebar();
@@ -23,7 +24,11 @@ const LoanApplication = () => {
   });
   const [loading, setLoading] = useState(true);
   const [isUploaded, setIsUploaded] = useState({
+    isLoanCalculated: false,
+    isEmploymentDetailsSaved: false,
+    isBankStatementFetched: false,
     isDocumentUploaded: false,
+    isDisbursalDetailsSaved: false,
   });
 
   // Fetch progress status from API
@@ -31,16 +36,23 @@ const LoanApplication = () => {
     const fetchProgress = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/user/getDashboardDetails`,
+          `${BASE_URL}/getDashboardDetails`,
           {
             withCredentials: true,
           }
         );
+        console.log(response.data); // Add this line to inspect the response
+
         if (response.data.success) {
           if (!response.data.isRegistration) {
-            const { progressStatus, isDocumentUploaded } = response.data;
+            const {
+              progressStatus,
+              isDocumentUploaded,
+              isEmploymentDetailsSaved,
+            } = response.data;
 
-            setIsUploaded({ isDocumentUploaded: isDocumentUploaded });
+            setIsUploaded({ isDocumentUploaded, isEmploymentDetailsSaved }); // Ensure you're using this correctly
+
             // Map progressStatus to step completion
             const updatedSteps = {
               loanCalculator: {
@@ -64,6 +76,7 @@ const LoanApplication = () => {
                 ].includes(progressStatus),
                 data: null,
               },
+
               bankStatement: {
                 completed: [
                   "BANK_STATEMENT_FETCHED",
@@ -92,6 +105,7 @@ const LoanApplication = () => {
             setSteps(updatedSteps);
           }
         }
+        console.log("uhiuhujh>>>>", updatedSteps);
       } catch (error) {
         console.error("Error fetching progress status:", error);
       } finally {
@@ -108,13 +122,22 @@ const LoanApplication = () => {
     ).length;
     return (completedSteps / 5) * 100;
   };
-
   const handleStepCompletion = (stepName, isCompleted, data) => {
-    setSteps((prevSteps) => ({
-      ...prevSteps,
-      [stepName]: { completed: isCompleted, data },
-    }));
+    setSteps((prevSteps) => {
+      const updatedSteps = {
+        ...prevSteps,
+        [stepName]: { completed: isCompleted, data },
+      };
+      return updatedSteps;
+    });
   };
+
+  // const handleStepCompletion = (stepName, isCompleted, data) => {
+  //   setSteps((prevSteps) => ({
+  //     ...prevSteps,
+  //     [stepName]: { completed: isCompleted, data },
+  //   }));
+  // };
 
   if (loading) {
     return <Typography>Loading...</Typography>;
@@ -144,7 +167,7 @@ const LoanApplication = () => {
             alignItems: "center",
             padding: 2,
             width: "100%",
-            "@media (min-width: 600px)": {
+            "@media (minWidth: 600px)": {
               flexDirection: "row",
               justifyContent: "space-between",
             },
@@ -158,7 +181,7 @@ const LoanApplication = () => {
               width: "100%",
               textAlign: "left",
               fontFamily: '"Roboto", "Helvetica", "Arial", "sans-serif"',
-              "@media (min-width: 600px)": {
+              "@media (minWidth: 600px)": {
                 width: "50%",
               },
             }}
@@ -169,7 +192,7 @@ const LoanApplication = () => {
             sx={{
               width: "100%",
               marginTop: 2,
-              "@media (min-width: 600px)": { marginTop: 0 },
+              "@media (minWidth: 600px)": { marginTop: 0 },
             }}
           >
             <LinearProgress
@@ -206,6 +229,7 @@ const LoanApplication = () => {
             }
             disabled={false} // Always enabled initially
             prefillData={steps.loanCalculator.data}
+            isUploaded={isUploaded.isLoanCalculated}
           />
 
           <Employment
@@ -214,6 +238,7 @@ const LoanApplication = () => {
             }
             disabled={!steps.loanCalculator.completed}
             prefillData={steps.employmentInfo.data}
+            isUploaded={isUploaded.isEmploymentDetailsSaved}
           />
 
           <BankStatement
@@ -222,6 +247,7 @@ const LoanApplication = () => {
             }
             disabled={!steps.employmentInfo.completed}
             prefillData={steps.bankStatement.data}
+            isUploaded={isUploaded.isBankStatementFetched}
           />
 
           <DocumentationStep
@@ -239,6 +265,7 @@ const LoanApplication = () => {
             }
             disabled={!steps.fetchDocument.completed}
             prefillData={steps.disbursalBankDetail.data}
+            isUploaded={isUploaded.isDisbursalDetailsSaved}
           />
         </Box>
       </Box>

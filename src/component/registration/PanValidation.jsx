@@ -60,7 +60,7 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
     setError("");
 
     try {
-      const response = await fetch(`${BASE_URL}/api/verify/verifyPAN/${pan}`, {
+      const response = await fetch(`${BASE_URL}/verifyPAN/${pan}`, {
         method: "POST",
         credentials: "include",
       });
@@ -89,7 +89,7 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
 
     try {
       const getDashboardDetailsResponse = await axios.get(
-        `${BASE_URL}/api/user/getDashboardDetails`,
+        `${BASE_URL}/getDashboardDetails`,
         {
           withCredentials: true,
         }
@@ -101,7 +101,7 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
 
         if (isPanVerify) {
           const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/api/user/getProfileDetails`,
+            `${BASE_URL}/getProfileDetails`,
             { withCredentials: true }
           );
 

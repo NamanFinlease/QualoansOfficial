@@ -11,6 +11,9 @@ import {
   Typography,
   CircularProgress,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { BASE_URL } from "../../baseURL";
@@ -94,6 +97,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
   const [error, setError] = useState("");
 
   const handleFormChange = (key, value) => {
+    console.log("value <>>< < ", value);
     setFormValues((prev) => ({ ...prev, [key]: value }));
     if (error) setError("");
   };
@@ -121,7 +125,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
     setIsFetching(true);
     try {
       const response = await axios.patch(
-        `${BASE_URL}/api/user/addIncomeDetails`,
+        `${BASE_URL}/addIncomeDetails`,
         {
           employementType,
           monthlyIncome,
@@ -157,7 +161,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
 
     try {
       const dashboardResponse = await axios.get(
-        `${BASE_URL}/api/user/getDashboardDetails`,
+        `${BASE_URL}/getDashboardDetails`,
         {
           withCredentials: true,
         }
@@ -171,7 +175,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
 
         if (isIncomeDetails) {
           const profileResponse = await axios.get(
-            `${BASE_URL}/api/user/getProfileDetails`,
+            `${BASE_URL}/getProfileDetails`,
             {
               withCredentials: true,
             }
@@ -245,11 +249,10 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
           }}
         >
           <Typography sx={{ marginBottom: 2 }}>Income Information</Typography>
-
           <FormControl fullWidth sx={{ marginBottom: 2 }}>
-            <TextField
-              select
-              label="Employee Type"
+            <InputLabel id="employee-type-label">Employee Type</InputLabel>
+            <Select
+              labelId="employee-type-label"
               value={formValues.employementType}
               onChange={(e) =>
                 handleFormChange("employementType", e.target.value)
@@ -257,11 +260,11 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
               fullWidth
               required
               variant="outlined"
-              InputLabelProps={{ shrink: true }}
+              label="Employee Type" // Important to link with InputLabel
             >
-              <option value="SALARIED">Salaried</option>
-              <option value="SELF_EMPLOYED">Self-Employed</option>
-            </TextField>
+              <MenuItem value="SALARIED">Salaried</MenuItem>
+              <MenuItem value="SELF EMPLOYED">Self-Employed</MenuItem>
+            </Select>
           </FormControl>
 
           <TextField
@@ -273,7 +276,6 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
             sx={{ marginBottom: 2 }}
             required
           />
-
           <TextField
             label="Loan Amount"
             type="number"
@@ -283,7 +285,6 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
             sx={{ marginBottom: 2 }}
             required
           />
-
           <TextField
             label="Next Salary Date"
             type="date"
@@ -295,7 +296,6 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
             InputLabelProps={{ shrink: true }}
             inputProps={{ min: new Date().toISOString().split("T")[0] }}
           />
-
           <Typography variant="body1" sx={{ fontWeight: "bold", mb: 2 }}>
             Mode of Income Received
           </Typography>
@@ -317,9 +317,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
               label="Others"
             />
           </RadioGroup>
-
           {error && <Typography color="error">{error}</Typography>}
-
           <Box
             sx={{
               display: "flex",

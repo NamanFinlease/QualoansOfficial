@@ -59,7 +59,7 @@ const LoanCalculator = () => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `${BASE_URL}/api/loanApplication/applyLoan`,
+        `${BASE_URL}/applyLoan`,
         payload,
         {
           headers: {
