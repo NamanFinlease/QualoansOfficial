@@ -105,7 +105,6 @@ const LoanApplication = () => {
             setSteps(updatedSteps);
           }
         }
-        console.log("uhiuhujh>>>>", updatedSteps);
       } catch (error) {
         console.error("Error fetching progress status:", error);
       } finally {
@@ -167,7 +166,7 @@ const LoanApplication = () => {
             alignItems: "center",
             padding: 2,
             width: "100%",
-            "@media (min-width: 600px)": {
+            "@media (minWidth: 600px)": {
               flexDirection: "row",
               justifyContent: "space-between",
             },
@@ -181,7 +180,7 @@ const LoanApplication = () => {
               width: "100%",
               textAlign: "left",
               fontFamily: '"Roboto", "Helvetica", "Arial", "sans-serif"',
-              "@media (min-width: 600px)": {
+              "@media (minWidth: 600px)": {
                 width: "50%",
               },
             }}
@@ -192,7 +191,7 @@ const LoanApplication = () => {
             sx={{
               width: "100%",
               marginTop: 2,
-              "@media (min-width: 600px)": { marginTop: 0 },
+              "@media (minWidth: 600px)": { marginTop: 0 },
             }}
           >
             <LinearProgress

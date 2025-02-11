@@ -49,10 +49,10 @@ const LoanCalculator = () => {
     }
 
     const payload = {
-      principal: loanAmount,
+      principle: loanAmount,
       totalPayble: totalAmount.toFixed(2),
-      intrestPerMonth: interestRate,
-      tenureMonth: loanTenure,
+      roi: interestRate,
+      tenure: loanTenure,
       loanPurpose: purpose.toUpperCase(),
     };
 

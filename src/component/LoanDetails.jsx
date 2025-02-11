@@ -12,8 +12,8 @@ const LoanDetails = () => {
   const [loan, setLoan] = useState({
     principal: "",
     totalPayble: "",
-    intrestPerMonth: "",
-    tenureMonth: "",
+    roi: "",
+    tenure: "",
     loanPurpose: "",
   });
   const [loading, setLoading] = useState(true);
@@ -51,8 +51,8 @@ const LoanDetails = () => {
         setLoan({
           principal: data?.data?.principal,
           totalPayble: data?.data?.totalPayble,
-          intrestPerMonth: data?.data?.intrestPerMonth, // Fixed field for Date of Birth
-          tenureMonth: data?.data?.tenureMonth,
+          roi: data?.data?.roi, // Fixed field for Date of Birth
+          tenure: data?.data?.tenure,
           loanPurpose: data?.data?.loanPurpose, // Corrected syntax issue
         });
       } catch (err) {
@@ -161,7 +161,7 @@ const LoanDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Interest Per Month
+                  Return on investment
                 </td>
                 <td
                   style={{
@@ -170,7 +170,7 @@ const LoanDetails = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {loan.intrestPerMonth}
+                  {loan.roi}
                 </td>
               </tr>
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
@@ -190,7 +190,7 @@ const LoanDetails = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {loan.tenureMonth}
+                  {loan.tenure}
                 </td>
               </tr>
               <tr>

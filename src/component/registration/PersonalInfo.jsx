@@ -135,6 +135,11 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
           color:
             //  completed ||
             !disabled ? "white" : "#1c1c1c",
+
+          "@media (max-width: 600px)": {
+            width: "80%",
+            margin: "auto",
+          },
         }}
       >
         <IconButton

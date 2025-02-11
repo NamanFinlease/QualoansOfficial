@@ -86,7 +86,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isIncomDetails, setIsIncomDetails] = useState(false);
+  const [isIncomeDetails, setisIncomeDetails] = useState(false);
   const [formValues, setFormValues] = useState({
     employementType: "",
     monthlyIncome: "",
@@ -169,11 +169,11 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
       console.log(dashboardResponse);
 
       if (dashboardResponse.status === 200) {
-        const { isIncomDetails } = dashboardResponse.data;
-        setIsIncomDetails(isIncomDetails);
-        console.log(isIncomDetails);
+        const { isIncomeDetails } = dashboardResponse.data;
+        setisIncomeDetails(isIncomeDetails);
+        console.log(isIncomeDetails);
 
-        if (isIncomDetails) {
+        if (isIncomeDetails) {
           const profileResponse = await axios.get(
             `${BASE_URL}/getProfileDetails`,
             {
@@ -211,7 +211,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
   };
 
   useEffect(() => {
-    if (prefillData?.isIncomDetails) {
+    if (prefillData?.isIncomeDetails) {
       const profileData = prefillData.incomeDetails || {};
       setFormValues({
         employementType: profileData.employementType || "",
@@ -231,7 +231,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
         description="Please provide your income details."
         onClick={handleModalClick}
         disabled={disabled}
-        completed={isIncomDetails}
+        completed={isIncomeDetails}
       />
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>

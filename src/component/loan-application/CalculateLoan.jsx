@@ -66,8 +66,8 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
     const payload = {
       principal: loanAmount,
       totalPayble: totalAmount.toFixed(2),
-      intrestPerMonth: interestRate,
-      tenureMonth: loanTenure,
+      roi: interestRate,
+      tenure: loanTenure,
       loanPurpose: purpose.toUpperCase(),
     };
 
@@ -164,8 +164,8 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
           setFormValues({
             principal: LoanData?.principal || "",
             totalPayble: LoanData?.totalPayble || "",
-            intrestPerMonth: LoanData?.intrestPerMonth || "",
-            tenureMonth: LoanData?.tenureMonth || "",
+            roi: LoanData?.roi || "",
+            tenure: LoanData?.tenure || "",
             loanPurpose: LoanData?.loanPurpose || "",
           });
         }

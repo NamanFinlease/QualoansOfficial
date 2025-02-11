@@ -121,7 +121,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
 
     try {
       const getDashboardDetailsResponse = await axios.get(
-        `${BASE_URL}/api/user/getDashboardDetails`,
+        `${BASE_URL}/getDashboardDetails`,
         {
           withCredentials: true,
         }
@@ -139,7 +139,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
           console.log("isDisbursalDetailsSaved", isDisbursalDetailsSaved);
 
           const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=disbursalBankDetails`,
+            `${BASE_URL}/getApplicationDetails?applicationStatus=disbursalBankDetails`,
             {
               withCredentials: true,
             }
@@ -336,6 +336,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
             </MenuItem>
             <MenuItem value="SAVINGS">Savings</MenuItem>
             <MenuItem value="CURRENT">Current</MenuItem>
+            <MenuItem value="OVERDRAFT">Overdraft</MenuItem>
           </Select>
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
             <Button variant="outlined" onClick={() => setOpenModal(false)}>

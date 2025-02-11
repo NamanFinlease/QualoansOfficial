@@ -40,7 +40,7 @@ const DocumentUploadModal = ({ prefillData }) => {
   useEffect(() => {
     const getPreviousData = async () => {
       const getDashboardDetailsResponse = await axios.get(
-        `${BASE_URL}/api/user/getDashboardDetails`,
+        `${BASE_URL}/getDashboardDetails`,
         { withCredentials: true }
       );
 
@@ -213,7 +213,7 @@ const DocumentUploadModal = ({ prefillData }) => {
       <Grid container spacing={2}>
         {[0, 1, 2].map((index) => (
           <Grid item xs={12} sm={4} key={index}>
-             {formValues.salarySlip[index]?.file ? (
+            {formValues.salarySlip[index]?.file ? (
               <Box display="flex" flexDirection="column" alignItems="center">
                 {formValues.salarySlip[index].preview &&
                   formValues.salarySlip[index].file.type.startsWith(
@@ -255,7 +255,7 @@ const DocumentUploadModal = ({ prefillData }) => {
                 >
                   <ClearIcon sx={{ color: "red" }} />
                 </IconButton>
-              </Box> 
+              </Box>
             ) : (
               <TextField
                 fullWidth
@@ -281,11 +281,7 @@ const DocumentUploadModal = ({ prefillData }) => {
           </Grid>
         ))}
         <Grid item xs={12}>
-          <Button
-            variant="contained"
-            onClick={handleSubmit}
-            disabled={loading}
-          >
+          <Button variant="contained" onClick={handleSubmit} disabled={loading}>
             {loading ? "Submitting..." : "Submit"}
           </Button>
         </Grid>

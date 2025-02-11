@@ -91,6 +91,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
     city: "",
     state: "",
     residenceType: "OWNED",
+    residingSince: "",
   });
   const [error, setError] = useState("");
   const [isAddressVerified, setIsAddressVerified] = useState(false);
@@ -327,6 +328,16 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
               ))}
             </Select>
           </FormControl>
+
+          <TextField
+            label="Residing Since"
+            value={formValues.residingSince}
+            onChange={(e) => handleFormChange("residingSince", e.target.value)}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+            required
+            placeholder="DD-MM-YYYY"
+          />
 
           {error && <Typography color="error">{error}</Typography>}
 
