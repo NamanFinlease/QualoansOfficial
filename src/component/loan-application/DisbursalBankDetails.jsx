@@ -139,7 +139,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
           console.log("isDisbursalDetailsSaved", isDisbursalDetailsSaved);
 
           const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/api/loanApplication/getApplicationDetails?applicationStatus=disbursalBankDetails`,
+            `${BASE_URL}/getApplicationDetails?applicationStatus=disbursalBankDetails`,
             {
               withCredentials: true,
             }

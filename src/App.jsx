@@ -28,6 +28,7 @@ import RepayLoan from "./component/RepayLoan";
 import ProtectedRoute from "./ProtectedRoute";
 import { SidebarProvider } from "./context/SidebarContext";
 import LandingPage from "./component/LandingPage";
+import UploadDocuments from "./component/UploadDocuments";
 
 const MinimalLayout = ({ children }) => <div>{children}</div>;
 
@@ -67,6 +68,7 @@ function App() {
           <Route path="/calculator" element={<LoanCalculator />} />
           <Route path="/faq" element={<FAQs />} />
           <Route path="/login-form" element={<LoginForm />} />
+          <Route path="/upload-document" element={<UploadDocuments />} />
 
           {/* Protected Routes */}
           <Route

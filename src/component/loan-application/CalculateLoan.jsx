@@ -64,7 +64,7 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
     }
 
     const payload = {
-      principle: loanAmount,
+      principal: loanAmount,
       totalPayble: totalAmount.toFixed(2),
       roi: interestRate,
       tenure: loanTenure,
@@ -162,7 +162,7 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
 
           // Update formValues with residenceData
           setFormValues({
-            principle: LoanData?.principle || "",
+            principal: LoanData?.principal || "",
             totalPayble: LoanData?.totalPayble || "",
             roi: LoanData?.roi || "",
             tenure: LoanData?.tenure || "",

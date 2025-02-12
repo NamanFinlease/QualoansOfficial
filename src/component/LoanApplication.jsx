@@ -105,7 +105,6 @@ const LoanApplication = () => {
             setSteps(updatedSteps);
           }
         }
-        console.log("uhiuhujh>>>>", updatedSteps);
       } catch (error) {
         console.error("Error fetching progress status:", error);
       } finally {

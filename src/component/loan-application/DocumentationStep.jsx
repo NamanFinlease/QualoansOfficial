@@ -8,6 +8,7 @@ import withReactContent from "sweetalert2-react-content";
 import DocumentUploadModal from "../DocumentUploadModal";
 import { BASE_URL } from "../../baseURL";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const MySwal = withReactContent(SweetAlert);
 
@@ -17,35 +18,69 @@ const DocumentationStep = ({
   prefillData,
   isUploaded,
 }) => {
+  const navigate = useNavigate();
   const [stepCompleted, setStepCompleted] = useState(false); // Add this line to define stepCompleted state
 
+  // const handleDocumentationUpload = async () => {
+  //   // Create a container element
+  //   const container = document.createElement("div");
+
+  //   // Render the React component into the container
+  //   ReactDOM.render(
+  //     <DocumentUploadModal prefillData={prefillData} isUploaded={isUploaded} />,
+  //     container
+  //   );
+
+  //   // Use SweetAlert2 to display the container
+  //   MySwal.fire({
+  //     html: container,
+  //     showConfirmButton: false,
+  //     width: "800px",
+  //     margin: "0px",
+  //     padding: 0,
+  //     willClose: () => {
+  //       // Clean up React rendering when SweetAlert closes
+  //       ReactDOM.unmountComponentAtNode(container);
+  //     },
+  //   });
+
+  //   // After successful upload, mark the step as completed
+  //   setStepCompleted(true); // Set stepCompleted to true after the upload is handled
+
+  //   onComplete({ completed: true, data: prefillData });
+  // };
+
   const handleDocumentationUpload = async () => {
-    // Create a container element
-    const container = document.createElement("div");
+    navigate("/upload-document");
 
-    // Render the React component into the container
-    ReactDOM.render(
-      <DocumentUploadModal prefillData={prefillData} isUploaded={isUploaded} />,
-      container
-    );
+    // // Create a container element
+    // const container = document.createElement("div");
 
-    // Use SweetAlert2 to display the container
-    MySwal.fire({
-      html: container,
-      showConfirmButton: false,
-      width: "800px",
-      margin: "0px",
-      padding: 0,
-      willClose: () => {
-        // Clean up React rendering when SweetAlert closes
-        ReactDOM.unmountComponentAtNode(container);
-      },
-    });
+    // // Render the React component into the container
+    // ReactDOM.render(
+    //   // <DocumentUploadModal prefillData={prefillData} isUploaded={isUploaded} />,
+    //   <UploadDocuments />,
 
-    // After successful upload, mark the step as completed
-    setStepCompleted(true); // Set stepCompleted to true after the upload is handled
+    //   container
+    // );
 
-    onComplete({ completed: true, data: prefillData });
+    // // Use SweetAlert2 to display the container
+    // MySwal.fire({
+    //   html: container,
+    //   showConfirmButton: false,
+    //   width: "800px",
+    //   margin: "0px",
+    //   padding: 0,
+    //   willClose: () => {
+    //     // Clean up React rendering when SweetAlert closes
+    //     ReactDOM.unmountComponentAtNode(container);
+    //   },
+    // });
+
+    // // After successful upload, mark the step as completed
+    // setStepCompleted(true); // Set stepCompleted to true after the upload is handled
+
+    // onComplete({ completed: true, data: prefillData });
   };
 
   return (

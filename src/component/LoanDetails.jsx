@@ -10,7 +10,7 @@ const LoanDetails = () => {
 
   // State to store loan data
   const [loan, setLoan] = useState({
-    principle: "",
+    principal: "",
     totalPayble: "",
     roi: "",
     tenure: "",
@@ -49,7 +49,7 @@ const LoanDetails = () => {
         const data = await response.json();
 
         setLoan({
-          principle: data?.data?.principle,
+          principal: data?.data?.principal,
           totalPayble: data?.data?.totalPayble,
           roi: data?.data?.roi, // Fixed field for Date of Birth
           tenure: data?.data?.tenure,
@@ -141,7 +141,7 @@ const LoanDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Principle
+                  Principal
                 </td>
                 <td
                   style={{
@@ -150,7 +150,7 @@ const LoanDetails = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {loan.principle}
+                  {loan.principal}
                 </td>
               </tr>
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
