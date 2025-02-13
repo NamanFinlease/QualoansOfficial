@@ -87,11 +87,9 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
             });
           }
         } catch (error) {
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "An error occurred while fetching data. Please try again later.",
-          });
+          alert(
+            "An error occurred while fetching data. Please try again later."
+          );
         }
       } else {
         setFormValues((prev) => ({
@@ -155,8 +153,8 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
         Swal.fire("Error submitting employment information.");
       }
     } catch (error) {
-      Swal.fire("An error occurred while submitting the data.");
-      console.error("Error:", error);
+      alert(error.response.data.message);
+      setOpenModal(false);
     }
   };
 

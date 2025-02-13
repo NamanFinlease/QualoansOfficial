@@ -55,11 +55,7 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
 
   const handleSubmit = async () => {
     if (!purpose) {
-      Swal.fire({
-        icon: "warning",
-        title: "Missing Information",
-        text: "Please select a loan purpose!",
-      });
+      alert("Please select a loan purpose!");
       return;
     }
 
@@ -94,25 +90,18 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
         });
       }
     } catch (error) {
-      console.error("Error applying for loan:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Application Failed",
-        text: "Failed to apply for loan. Please try again later.",
-      });
+      alert(error.response.data.message);
+      setIsModalOpen(false);
     } finally {
       setIsLoading(false);
     }
   };
 
   const cancelLoanApplication = () => {
-    Swal.fire({
-      icon: "info",
-      title: "Process Cancelled",
-      text: "Your loan application process has been cancelled.",
-    }).then(() => {
-      setIsModalOpen(false);
-    });
+    alert(
+      "Process Cancelled: Your loan application process has been cancelled."
+    );
+    setIsModalOpen(false);
   };
 
   const handleModalClick = async () => {
