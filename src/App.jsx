@@ -18,10 +18,10 @@ import LoanApplication from "./component/LoanApplication";
 import Calculator from "./component/loan-application/CalculateLoan";
 import OurJourney from "./component/OurJourney";
 import UserPreview from "./component/UserPreview";
-import LoanRepaymentComponent from "./component/LoanRepaymentComponent";
-import LoanDetailsTable from "./component/LoanDetailsTable";
-import LoanStatus from "./component/LoanStatus";
-import PaymentOptions from "./component/PaymentOptions";
+// import LoanRepaymentComponent from "./component/LoanRepaymentComponent";
+// import LoanDetailsTable from "./component/LoanDetailsTable";
+// import LoanStatus from "./component/LoanStatus";
+// import PaymentOptions from "./component/PaymentOptions";
 import LoanCalculator from "./component/LoanCalculator";
 import LoginForm from "./component/LoginForm";
 import RepayLoan from "./component/RepayLoan";
@@ -57,6 +57,7 @@ function App() {
         {showHeaderFooter && <Header />}
         <Routes>
           {/* Routes with Header and Footer */}
+
           <Route path="/landing-page" element={<LandingPage />} />
           <Route path="/" element={<MainContent />} />
           <Route path="/about-us" element={<AboutUs />} />
@@ -68,7 +69,7 @@ function App() {
           <Route path="/calculator" element={<LoanCalculator />} />
           <Route path="/faq" element={<FAQs />} />
           <Route path="/login-form" element={<LoginForm />} />
-          <Route path="/upload-document" element={<UploadDocuments />} />
+          {/* <Route path="/upload-document" element={<UploadDocuments />} /> */}
 
           {/* Protected Routes */}
           <Route
@@ -99,6 +100,16 @@ function App() {
               <ProtectedRoute requiresLogin={true}>
                 <MinimalLayout>
                   <LoanApplication />
+                </MinimalLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/upload-document"
+            element={
+              <ProtectedRoute requiresLogin={true}>
+                <MinimalLayout>
+                  <UploadDocuments />
                 </MinimalLayout>
               </ProtectedRoute>
             }

@@ -66,13 +66,13 @@ const LoginForm = ({ setLoginComleted }) => {
     }
   };
 
-  const validateAadhaar = () => {
-    if (aadhaar.length !== 12 || !/^\d{12}$/.test(aadhaar)) {
-      setAadhaarError(true);
-      return false;
-    }
-    return true;
-  };
+  // const validateAadhaar = () => {
+  //   if (aadhaar.length !== 12 || !/^\d{12}$/.test(aadhaar)) {
+  //     setAadhaarError(true);
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
   const sendOtp = async () => {
     if (!aadhaar) {
@@ -81,7 +81,11 @@ const LoginForm = ({ setLoginComleted }) => {
     }
 
     setLoading(true);
+    if (setLoadingOtp) {
+      setOtp(["", "", "", "", "", ""]); // Clear OTP input fields
+    }
     setErrorMessage("");
+
     console.log("Sending OTP...");
 
     try {
@@ -139,6 +143,9 @@ const LoginForm = ({ setLoginComleted }) => {
 
     setLoading(true);
     setErrorMessage("");
+    if (setLoadingOtp) {
+      setOtp(["", "", "", "", "", ""]); // Clear OTP input fields
+    }
     setSuccessMessage("");
 
     try {

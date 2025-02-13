@@ -13,6 +13,7 @@ const ResidentialAddress = () => {
     state: "",
     pincode: "",
     residenceType: "",
+    residingSince: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -45,6 +46,7 @@ const ResidentialAddress = () => {
           state: data?.data?.residence?.state,
           pincode: data?.data?.residence?.pincode, // Corrected syntax issue
           residenceType: data?.data?.residence?.residenceType,
+          residingSince: data?.data?.residence?.residingSince,
         });
       } catch (err) {
         setError(err.message); // Handle any errors
@@ -201,7 +203,7 @@ const ResidentialAddress = () => {
                   {Residential.state}
                 </td>
               </tr>
-              <tr>
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
                 <td
                   style={{
                     padding: "16px",
@@ -219,6 +221,26 @@ const ResidentialAddress = () => {
                   }}
                 >
                   {Residential.residenceType}
+                </td>
+              </tr>
+              <tr>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  Residence Since
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "#F26722",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {Residential.residingSince}
                 </td>
               </tr>
             </tbody>

@@ -21,67 +21,6 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-const StepBox = ({
-  icon,
-  title,
-  description,
-  disabled,
-  completed,
-  onClick,
-}) => (
-  <Box
-    onClick={!disabled && !completed ? onClick : null}
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-start",
-      justifyContent: "center",
-      padding: 2,
-      borderColor: disabled ? "#1c1c1c" : "#F26722",
-      borderRadius: 3,
-      margin: 1,
-      width: "25%",
-      minWidth: 200,
-      cursor: disabled ? "not-allowed" : "pointer",
-      textAlign: "left",
-      background: disabled ? "#d9d9d9" : "#F26722",
-      color: !disabled ? "white" : "#1c1c1c",
-      "@media (max-width: 600px)": {
-        width: "80%",
-        margin: "auto",
-      },
-    }}
-  >
-    {/* <IconButton
-      sx={{
-        color: completed ? "white" : disabled ? "#1c1c1c" : "white",
-        ml: 1,
-      }}
-    >
-      {completed ? (
-        <i className="fas fa-check-circle" style={{ fontSize: "24px" }}></i>
-      ) : (
-        icon
-      )}
-    </IconButton> */}
-
-    <IconButton
-      sx={{
-        color:
-          // completed ? "white" :
-          disabled ? "grey" : "white",
-        ml: 1,
-      }}
-    >
-      {completed ? <CheckCircleIcon /> : icon}
-    </IconButton>
-    <Box sx={{ ml: 2, flexGrow: 1 }}>
-      <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
-      <Typography variant="body2">{description}</Typography>
-    </Box>
-  </Box>
-);
-
 const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
@@ -166,12 +105,10 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
           withCredentials: true,
         }
       );
-      console.log(dashboardResponse);
 
       if (dashboardResponse.status === 200) {
         const { isIncomeDetails } = dashboardResponse.data;
         setisIncomeDetails(isIncomeDetails);
-        console.log(isIncomeDetails);
 
         if (isIncomeDetails) {
           const profileResponse = await axios.get(
@@ -222,6 +159,67 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
       });
     }
   }, [prefillData]);
+
+  const StepBox = ({
+    icon,
+    title,
+    description,
+    disabled,
+    completed,
+    onClick,
+  }) => (
+    <Box
+      onClick={!disabled && !completed ? onClick : null}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        padding: 2,
+        borderColor: disabled ? "#1c1c1c" : "#F26722",
+        borderRadius: 3,
+        margin: 1,
+        width: "25%",
+        minWidth: 200,
+        cursor: disabled ? "not-allowed" : "pointer",
+        textAlign: "left",
+        background: disabled ? "#d9d9d9" : "#F26722",
+        color: !disabled ? "white" : "#1c1c1c",
+        "@media (max-width: 600px)": {
+          width: "80%",
+          margin: "auto",
+        },
+      }}
+    >
+      {/* <IconButton
+        sx={{
+          color: completed ? "white" : disabled ? "#1c1c1c" : "white",
+          ml: 1,
+        }}
+      >
+        {completed ? (
+          <i className="fas fa-check-circle" style={{ fontSize: "24px" }}></i>
+        ) : (
+          icon
+        )}
+      </IconButton> */}
+
+      <IconButton
+        sx={{
+          color:
+            // completed ? "white" :
+            disabled ? "grey" : "white",
+          ml: 1,
+        }}
+      >
+        {isIncomeDetails ? <CheckCircleIcon /> : icon}
+      </IconButton>
+      <Box sx={{ ml: 2, flexGrow: 1 }}>
+        <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
+        <Typography variant="body2">{description}</Typography>
+      </Box>
+    </Box>
+  );
 
   return (
     <>

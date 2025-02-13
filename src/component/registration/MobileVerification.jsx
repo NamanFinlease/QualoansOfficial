@@ -122,13 +122,14 @@ const MobileVerification = ({
         throw new Error("Invalid OTP. Please try again.");
       }
     } catch (error) {
-      Swal.fire("Error", error.message, "error");
+      alert("Error", error.message, "error");
     } finally {
       setIsLoading(false);
     }
   };
 
   const resendOTP = () => {
+    setOtp("");
     if (mobile) {
       sendOTP(mobile);
     } else {
@@ -309,7 +310,7 @@ const MobileVerification = ({
                     if (mobileRegex.test(mobile)) {
                       sendOTP(mobile);
                     } else {
-                      Swal.fire(
+                      alert(
                         "Invalid Input",
                         "Enter a valid 10-digit number.",
                         "warning"
@@ -319,7 +320,7 @@ const MobileVerification = ({
                     if (otp.length === 6) {
                       verifyOTP(mobile, otp);
                     } else {
-                      Swal.fire(
+                      alert(
                         "Invalid Input",
                         "Enter a valid 6-digit OTP.",
                         "warning"
@@ -331,6 +332,7 @@ const MobileVerification = ({
               >
                 {currentStep === "mobile" ? "Send OTP" : "Verify OTP"}
               </Button>
+
               {currentStep === "otp" && !isOtpVerified && (
                 <Button
                   variant="outlined"

@@ -21,10 +21,15 @@ const SelfieVerification = ({ onComplete, disabled }) => {
   const [capturedImage, setCapturedImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const [stepCompleted, setStepCompleted] = useState(false); // Track step completion
   const [isCameraOpen, setIsCameraOpen] = useState(false); // Track if camera is open
   const webcamRef = useRef(null);
   const navigate = useNavigate();
+  const [formValues, setFormValues] = useState({
+    profileImage: "",
+  });
 
   const handleCompleteStep = async () => {
     if (disabled) return;
@@ -70,7 +75,7 @@ const SelfieVerification = ({ onComplete, disabled }) => {
 
   const uploadSelfieToBackend = async (imageSrcOrFile) => {
     try {
-      // setIsUploading(true);
+      setIsUploading(true);
 
       const formData = new FormData();
 
@@ -118,7 +123,6 @@ const SelfieVerification = ({ onComplete, disabled }) => {
               imageHeight: "auto", // Maintain aspect ratio
               confirmButtonText: "Go to Loan Application",
               confirmButtonColor: "#FFA500", // Set button color to orange
-
               width: "40%", // Set the width of the popup
               customClass: {
                 popup: "custom-popup",
@@ -131,14 +135,17 @@ const SelfieVerification = ({ onComplete, disabled }) => {
                 const content = document.querySelector(".swal2-html-container");
 
                 if (popup && image && content) {
-                  // Reduce padding inside the popup
-                  popup.style.padding = "10px";
+                  // Add top margin to the popup
+                  popup.style.marginTop = "50px"; // Adjust this value as needed
+
+                  // Reduce padding inside the popup for a smaller height
+                  popup.style.padding = "10px"; // Adjust padding to reduce height
 
                   // Remove margin from the image
                   image.style.margin = "0";
 
                   // Reduce margin between the image and the text
-                  content.style.marginTop = "5px";
+                  content.style.marginTop = "10px"; // Adjust this value to control spacing
                 }
               },
             }).then((result) => {
@@ -206,13 +213,60 @@ const SelfieVerification = ({ onComplete, disabled }) => {
     </Box>
   );
 
+  const handleModalClick = async () => {
+    setOpenModal(true);
+    setIsLoading(true);
+
+    try {
+      const dashboardResponse = await axios.get(
+        `${BASE_URL}/api/user/getDashboardDetails`,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("dashboardResponse>>>>>", dashboardResponse);
+
+      if (dashboardResponse.status === 200) {
+        const { isProfileImage } = dashboardResponse.data;
+        setIsUploading(isProfileImage);
+
+        console.log("selfieVerification....>>>>", isProfileImage);
+
+        if (isProfileImage) {
+          const profileResponse = await axios.get(
+            `${BASE_URL}/api/user/getProfileDetails`,
+            {
+              withCredentials: true,
+            }
+          );
+
+          console.log("profileResponse", profileResponse);
+
+          if (profileResponse.status === 200) {
+            const profileData = profileResponse?.data?.data?.isProfileImage;
+
+            console.log("profileData", profileData);
+
+            setFormValues({
+              profileImage: profileData?.profileImage || "",
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <StepBox
         icon={<InfoIcon />}
         title="Selfie Verification"
         description="Verify your identity by uploading a selfie."
-        onClick={() => setOpenModal(true)} // Open modal on StepBox click
+        onClick={handleModalClick}
         disabled={disabled || stepCompleted}
         completed={stepCompleted}
       />

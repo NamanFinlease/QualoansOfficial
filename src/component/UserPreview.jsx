@@ -51,7 +51,7 @@ const items = [
   {
     label: "Income Details",
     value: "income-details",
-    icon: <AttachMoneyIcon />,
+    icon: <span style={{ fontSize: "1.5rem" }}>₹</span>,
   },
   { label: "Loan Details", value: "loan-details", icon: <DescriptionIcon /> },
   {

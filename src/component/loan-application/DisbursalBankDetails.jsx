@@ -18,6 +18,7 @@ import withReactContent from "sweetalert2-react-content";
 import { BASE_URL } from "../../baseURL";
 import CompletionImage from "../../assets/image/vidu-general-4-2025-01-18T06_43_27Z (1).gif";
 import { useNavigate } from "react-router-dom";
+import { animate } from "framer-motion";
 
 const MySwal = withReactContent(SweetAlert);
 
@@ -25,7 +26,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
   const [stepCompleted, setStepCompleted] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [error, setError] = useState(null);
   const [completionModalOpen, setCompletionModalOpen] = useState(false); // For the new modal
   const navigate = useNavigate(); // To navigate to other pages
   const [formValues, setFormValues] = useState({
@@ -60,11 +61,8 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
       !bankName ||
       !accountType
     ) {
-      MySwal.fire({
-        icon: "error",
-        title: "Oops!",
-        text: "All fields are required.",
-      });
+      alert("Oops! All fields are required.");
+
       return;
     }
 
@@ -95,18 +93,15 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
         setOpenModal(false);
         setCompletionModalOpen(true); // Open the completion modal
       } else {
-        MySwal.fire({
-          icon: "error",
-          title: "Error!",
-          text: "Failed to submit your bank details.",
-        });
+        alert("Error submitting bank details");
+        setOpenModal(false);
       }
     } catch (error) {
-      MySwal.fire({
-        icon: "error",
-        title: "Error",
-        text: "An error occurred while saving the bank details.",
-      });
+      // console.log("Error submitting bank details:", error);
+      // setError(error);
+      alert(error.response.data.message);
+
+      // Show error message
     }
   };
 
@@ -268,6 +263,8 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
             p: 4,
             borderRadius: 2,
             minWidth: 400,
+            maxHeight: "80vh", // Limit height to 80% of the viewport
+            overflow: "auto", // Enable scroll if content overflows
           }}
         >
           <Typography sx={{ mb: 2 }}> Bank Details</Typography>
@@ -368,6 +365,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
       >
         <Box
           sx={{
+            overflow: "auto", // Enable scroll if content overflows
             position: "absolute",
             top: "50%",
             left: "50%",
@@ -377,6 +375,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
             borderRadius: 4,
             boxShadow: 24,
             textAlign: "center",
+            maxHeight: "80vh", // Limit height to 80% of the viewport
           }}
         >
           <img

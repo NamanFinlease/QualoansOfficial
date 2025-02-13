@@ -19,66 +19,6 @@ import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
-const StepBox = ({
-  icon,
-  title,
-  description,
-  onClick,
-  disabled,
-  completed,
-}) => (
-  <Box
-    onClick={!disabled && !completed ? onClick : null}
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-start",
-      justifyContent: "center",
-      padding: 2,
-      borderColor: disabled ? "#1c1c1c" : "#F26722",
-      borderRadius: 3,
-      margin: 1,
-      width: "25%",
-      minWidth: 200,
-      cursor: disabled ? "not-allowed" : "pointer",
-      textAlign: "left",
-      background: disabled ? "#d9d9d9" : "#F26722",
-      color: !disabled ? "white" : "#1c1c1c",
-      "@media (max-width: 600px)": {
-        width: "80%",
-        margin: "auto",
-      },
-    }}
-  >
-    <IconButton
-      sx={{
-        color:
-          // completed ? "white" :
-          disabled ? "grey" : "white",
-        ml: 1,
-      }}
-    >
-      {completed ? <CheckCircleIcon /> : icon}
-    </IconButton>
-    {/* <IconButton
-      sx={{
-        color: completed ? "white" : disabled ? "#1c1c1c" : "white",
-        ml: 1,
-      }}
-    >
-      {completed ? (
-        <i className="fas fa-check-circle" style={{ fontSize: "24px" }}></i>
-      ) : (
-        icon
-      )}
-    </IconButton> */}
-    <Box sx={{ ml: 2, flexGrow: 1 }}>
-      <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
-      <Typography variant="body2">{description}</Typography>
-    </Box>
-  </Box>
-);
-
 const AddressInfo = ({ onComplete, disabled, prefillData }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
@@ -238,6 +178,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
             state: residenceData?.state || "",
             pincode: residenceData?.pincode || "",
             residenceType: residenceData?.residenceType || "OWNED",
+            residingSince: residenceData?.residingSince || "",
           });
         }
       }
@@ -256,9 +197,80 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
         city: prefillData.city || "",
         state: prefillData.state || "",
         residenceType: prefillData.residenceType || "OWNED",
+        residingSince: prefillData.residingSince || "",
       });
     }
   }, [prefillData]);
+
+  const StepBox = ({
+    icon,
+    title,
+    description,
+    onClick,
+    disabled,
+    completed,
+  }) => (
+    <Box
+      onClick={!disabled && !completed ? onClick : null}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        padding: 2,
+        borderColor: disabled ? "#1c1c1c" : "#F26722",
+        borderRadius: 3,
+        margin: 1,
+        width: "25%",
+        minWidth: 200,
+        cursor: disabled ? "not-allowed" : "pointer",
+        textAlign: "left",
+        background: disabled ? "#d9d9d9" : "#F26722",
+        color: !disabled ? "white" : "#1c1c1c",
+        "@media (max-width: 600px)": {
+          width: "80%",
+          margin: "auto",
+        },
+      }}
+    >
+      {/* <IconButton
+        sx={{
+          color:
+            // completed ? "white" :
+            disabled ? "grey" : "white",
+          ml: 1,
+        }}
+      >
+        {completed ? <CheckCircleIcon /> : icon}
+      </IconButton> */}
+      {/* <IconButton
+        sx={{
+          color: completed ? "white" : disabled ? "#1c1c1c" : "white",
+          ml: 1,
+        }}
+      >
+        {completed ? (
+          <i className="fas fa-check-circle" style={{ fontSize: "24px" }}></i>
+        ) : (
+          icon
+        )}
+      </IconButton> */}
+      <IconButton
+        sx={{
+          color:
+            // completed ? "white" :
+            disabled ? "grey" : "white",
+          ml: 1,
+        }}
+      >
+        {isAddressVerified ? <CheckCircleIcon /> : <LocationOn />}
+      </IconButton>
+      <Box sx={{ ml: 2, flexGrow: 1 }}>
+        <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
+        <Typography variant="body2">{description}</Typography>
+      </Box>
+    </Box>
+  );
 
   return (
     <>
@@ -330,13 +342,14 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
           </FormControl>
 
           <TextField
-            label="Residing Since"
+            type="date"
+            label="Residing Since Date"
             value={formValues.residingSince}
             onChange={(e) => handleFormChange("residingSince", e.target.value)}
             fullWidth
             sx={{ marginBottom: 2 }}
             required
-            placeholder="DD-MM-YYYY"
+            InputLabelProps={{ shrink: true }} // Ensures the label doesn't overlap with the input
           />
 
           {error && <Typography color="error">{error}</Typography>}

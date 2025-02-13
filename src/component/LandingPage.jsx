@@ -48,19 +48,19 @@ const LandingPage = () => {
     {
       title: "Smooth and Easy Application",
       description:
-        "The loan application is extremely easy, and it can be applied from anywhere. No need to visit the office physically, ensuring a hassle-free lending experience.",
+        "The loan application is extremely easy, and it can be applied from anywhere therefore, you don’t have to wait longer or visit the office physically. So, it imparts an easy and hassle-free lending experience.",
       icon: "📱", // Replace with an actual icon component if needed
     },
     {
       title: "Multipurpose Usage",
       description:
-        "The personal loan can be used for any purpose with no restrictions on expenses. Our easy loan applications help you get financial freedom anytime.",
+        "The personal loan can be used for any purpose and therefore, there are no restrictions on the expenses of the loan amount at all.Our easy loan applications help you get freedom from the cash crunch at any time.",
       icon: "💼",
     },
     {
       title: "Easy Repayment",
       description:
-        "Enhance your credit score with easy loan repayment. Our lending services provide an efficient way to manage your personal loan.",
+        "One of the best components to enhance the credit score is the easy repayment of personal loan and our lending services provide an efficient way to present the personal loan.",
       icon: "💰",
     },
   ];
@@ -73,17 +73,17 @@ const LandingPage = () => {
           Let’s decide your loan amount.
         </Typography>
         <Typography variant="h6">
-          Instant loan amount Upto Rs. 2 Lakh
+          Instant loan amount Upto Rs. 1 Lakh
         </Typography>
       </WhiteSection>
 
       {/* Trustworthy Lender Section */}
       <OrangeSection>
         <Typography variant="h4" fontWeight="bold">
-          Get connected with most trustworthy lender.
+          Fast, Secure, and Hassle-free loans!
         </Typography>
         <Typography variant="h6">
-          Get the approval and disbursal in a few minutes
+          Get connected with a trusted lender and receive funds in minutes.
         </Typography>
       </OrangeSection>
 
@@ -97,10 +97,8 @@ const LandingPage = () => {
           Application of Loan in Simple Steps
         </Typography>
         <Typography variant="h4" sx={{ marginBottom: 6 }}>
-          It’s easy to apply for a loan{" "}
-          <strong style={{ color: "orange" }}>
-            by following some simple steps
-          </strong>
+          It’s easy to apply for a loan by following{" "}
+          <strong style={{ color: "orange" }}>some simple steps</strong>
         </Typography>
         <Grid container spacing={4} justifyContent="center">
           <Grid item xs={12} md={4}>
@@ -143,7 +141,7 @@ const LandingPage = () => {
               <Card
                 sx={{
                   maxWidth: 345,
-                  height: 260, // Set a fixed height
+                  height: 300, // Set a fixed height
                   mx: "auto",
                   p: 3,
                   display: "flex",
@@ -184,10 +182,10 @@ const LandingPage = () => {
           {[
             { title: "Age", description: "21 - 60 years" },
             { title: "Employment", description: "Salaried Employees" },
-            { title: "CIBIL Score", description: "650 or above" },
+            // { title: "CIBIL Score", description: "650 or above" },
             {
               title: "Monthly Salary",
-              description: "Starting Rs. 40,000 or above",
+              description: "Starting Rs. 35,000 or above",
             },
           ].map((item, index) => (
             <Grid item key={index} xs={12} sm={6} md={3}>

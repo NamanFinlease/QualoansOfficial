@@ -35,12 +35,9 @@ const LoanApplication = () => {
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/getDashboardDetails`,
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axios.get(`${BASE_URL}/getDashboardDetails`, {
+          withCredentials: true,
+        });
         console.log(response.data); // Add this line to inspect the response
 
         if (response.data.success) {
@@ -49,9 +46,18 @@ const LoanApplication = () => {
               progressStatus,
               isDocumentUploaded,
               isEmploymentDetailsSaved,
+              isLoanCalculated,
+              isBankStatementFetched,
+              isDisbursalDetailsSaved,
             } = response.data;
 
-            setIsUploaded({ isDocumentUploaded, isEmploymentDetailsSaved }); // Ensure you're using this correctly
+            setIsUploaded({
+              isLoanCalculated,
+              isEmploymentDetailsSaved,
+              isBankStatementFetched,
+              isDocumentUploaded,
+              isDisbursalDetailsSaved,
+            }); // Ensure you're using this correctly
 
             // Map progressStatus to step completion
             const updatedSteps = {
@@ -162,36 +168,42 @@ const LoanApplication = () => {
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column",
+            flexDirection: { xs: "column", md: "row" }, // Column layout by default (for mobile)
             alignItems: "center",
             padding: 2,
             width: "100%",
             "@media (minWidth: 600px)": {
-              flexDirection: "row",
-              justifyContent: "space-between",
+              flexDirection: "row", // Row layout for larger screens
+              justifyContent: "space-between", // Spread out the elements
             },
           }}
         >
           <span
             style={{
-              fontWeight: "bold",
-              fontSize: "1.35rem",
+              fontWeight: 800,
+              fontSize: "1.40rem",
               color: "#333",
+
               width: "100%",
               textAlign: "left",
               fontFamily: '"Roboto", "Helvetica", "Arial", "sans-serif"',
+              marginBottom: "16px", // Add margin to separate text from progress bar in column layout
               "@media (minWidth: 600px)": {
-                width: "50%",
+                width: "60%", // Text takes 60% of the width on larger screens
+                marginBottom: "0", // Remove margin on larger screens
               },
             }}
           >
             Begin a Journey to Financial Empowerment
           </span>
+
           <Box
             sx={{
-              width: "100%",
-              marginTop: 2,
-              "@media (minWidth: 600px)": { marginTop: 0 },
+              width: "80%",
+              "@media (minWidth: 600px)": {
+                width: "40%", // Progress bar takes 40% width on larger screens
+                marginTop: 0, // No top margin on larger screens
+              },
             }}
           >
             <LinearProgress
@@ -210,6 +222,7 @@ const LoanApplication = () => {
             </Typography>
           </Box>
         </Box>
+
         <Box
           sx={{
             marginBottom: { xs: 5, md: 0 },

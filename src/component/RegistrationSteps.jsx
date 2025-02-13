@@ -21,6 +21,7 @@ const RegistrationSteps = () => {
     isPersonalInfoVerified: false,
     isAddressVerified: false,
     isIncomeInfoVerified: false,
+    selfieVerified: false,
   });
   const totalSteps = 6; // Total steps in the registration process
 
@@ -45,6 +46,7 @@ const RegistrationSteps = () => {
           withCredentials: true,
         });
 
+        // console.log("response das>><<<< ", response);
         if (response.data.success) {
           if (response.data.isRegistration) {
             const { registrationStatus, isMobileVerify } = response.data;
@@ -168,27 +170,29 @@ const RegistrationSteps = () => {
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column",
+            flexDirection: { xs: "column", md: "row" }, // Column layout by default (for mobile)
             alignItems: "center",
             padding: 2,
             width: "100%",
             "@media (minWidth: 600px)": {
-              flexDirection: "row",
-              justifyContent: "space-between",
+              flexDirection: "row", // Row layout for larger screens
+              justifyContent: "space-between", // Spread out the elements
             },
           }}
         >
           <span
             style={{
-              fontWeight: "bold",
-              fontSize: "1.35rem",
+              fontWeight: 800,
+              fontSize: "1.40rem",
               color: "#333",
+              paddingLeft: "20px",
               width: "100%",
-              marginLeft: "50px",
-              fontFamily: '"Roboto", "Helvetica", "Arial", "sans-serif"',
               textAlign: "left",
+              fontFamily: '"Roboto", "Helvetica", "Arial", "sans-serif"',
+              marginBottom: "16px", // Add margin to separate text from progress bar in column layout
               "@media (minWidth: 600px)": {
-                width: "50%",
+                width: "60%", // Text takes 60% of the width on larger screens
+                marginBottom: "0", // Remove margin on larger screens
               },
             }}
           >
@@ -196,9 +200,11 @@ const RegistrationSteps = () => {
           </span>
           <Box
             sx={{
-              width: "100%",
-              marginTop: 2,
-              "@media (minWidth: 600px)": { marginTop: 0 },
+              width: "80%",
+              "@media (minWidth: 600px)": {
+                width: "40%", // Progress bar takes 40% width on larger screens
+                marginTop: 0, // No top margin on larger screens
+              },
             }}
           >
             <LinearProgress
@@ -217,13 +223,14 @@ const RegistrationSteps = () => {
             </Typography>
           </Box>
         </Box>
+
         <Box
           sx={{
             display: "flex",
             flexWrap: "wrap",
             justifyContent: "space-around",
             gap: 2,
-            marginTop: { xs: 0, md: 10 },
+            marginTop: { xs: 0, md: 2 },
             marginBottom: { xs: 5, md: 0 },
             width: "100%",
           }}
@@ -266,6 +273,7 @@ const RegistrationSteps = () => {
             }
             disabled={!steps.incomeDetails.completed}
             prefillData={steps.selfieVerification.data}
+            isVerified={isVerified.selfieVerified}
           />
         </Box>
       </Box>

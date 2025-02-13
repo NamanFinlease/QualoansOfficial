@@ -27,16 +27,12 @@ const EmploymentInformation = () => {
   useEffect(() => {
     const fetchEmploymentData = async () => {
       try {
-        // const token =
-        //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
-
         const response = await fetch(
           `${BASE_URL}/getApplicationDetails?applicationStatus=employeeDetails`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              // Authorization: `Bearer ${token}`, // Uncomment and use if you need Authorization
             },
             credentials: "include", // This sends cookies and credentials along with the request
           }
@@ -50,6 +46,7 @@ const EmploymentInformation = () => {
 
         // Parse the JSON data from the response
         const data = await response.json();
+        console.log("data", data);
 
         setEmployment({
           workFrom: data?.data?.workFrom,

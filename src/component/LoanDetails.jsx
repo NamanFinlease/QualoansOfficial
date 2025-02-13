@@ -181,7 +181,7 @@ const LoanDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Tenure Month
+                  Tenure (Days)
                 </td>
                 <td
                   style={{

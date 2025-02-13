@@ -15,13 +15,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SweetAlert from "sweetalert2";
 import { BASE_URL } from "../../baseURL";
+// import VisibilityIcon from "@mui/icons-material/Visibility";
+import axios from "axios";
 
 const BankStatement = ({ onComplete, disabled, prefillData }) => {
   const [bankStatement, setBankStatement] = useState(prefillData || null);
   const [stepCompleted, setStepCompleted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-
+  const [formValues, setFormValues] = useState(false);
   const handleOpenModal = () => {
     if (!disabled) setIsModalOpen(true);
   };
@@ -34,6 +36,17 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
   const handleBankStatementUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
+      // Check file type
+      const validFileTypes = ["application/pdf"];
+      if (!validFileTypes.includes(file.type)) {
+        SweetAlert.fire(
+          "Error",
+          "Please upload a valid file (PDF, JPG, PNG).",
+          "error"
+        );
+        return;
+      }
+
       setBankStatement(file); // Set the uploaded file in the state
       setStepCompleted(true); // Mark the step as completed
     }
@@ -60,8 +73,6 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
         body: formData,
         credentials: "include",
       });
-
-      console.log("hhhb", response);
 
       if (response.ok) {
         const responseData = await response.json();
@@ -107,22 +118,18 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
           withCredentials: true,
         }
       );
-
       console.log(
-        "getDashboardDetailsResponse >>> ",
+        "getDashboardDetailsResponse.data",
         getDashboardDetailsResponse
-      );
+      ); // Add this line to inspect the response
 
       if (getDashboardDetailsResponse.status === 200) {
         setIsUploading(false);
 
         const { isEmploymentDetailsSaved } = getDashboardDetailsResponse.data;
-
         setStepCompleted(isEmploymentDetailsSaved);
 
         if (isEmploymentDetailsSaved) {
-          console.log("isEmploymentDetailsSaved", isEmploymentDetailsSaved);
-
           const getProfileDetailsResponse = await axios.get(
             `${BASE_URL}/getDocumentStatus`,
             {
@@ -130,79 +137,58 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
             }
           );
 
-          // Axios does not use response.ok, check status instead
           if (getProfileDetailsResponse.status !== 200) {
             throw new Error("Failed to fetch document data");
           }
 
-          // Extract data from the response
           const data = getProfileDetailsResponse.data;
-
           setFormValues(data.singleDocumentsStatus || []);
         }
       }
     } catch (error) {
-      setIsUploading(false); // Change from setIsLoading(false) to setIsUploading(false) for consistency
+      setIsUploading(false);
       console.error("Error fetching data:", error);
     }
   };
+
+  // const handlePreview = async (docId, docType) => {
+  //   const apiUrl = `${BASE_URL}/api/loanApplication/documentPreview?docType=${docType}&docId=${docId}`;
+
+  //   try {
+  //     const response = await axios.get(apiUrl, { withCredentials: true });
+  //     if (response.data && response.data.url) {
+  //       window.open(response.data.url, "_blank"); // Open document preview in new tab
+  //     } else {
+  //       throw new Error("URL not found in the response");
+  //     }
+  //   } catch (error) {
+  //     SweetAlert.fire({
+  //       icon: "error",
+  //       title: "Failed to load document preview",
+  //       text: error.response?.data?.message || "Something went wrong",
+  //     });
+  //   }
+  // };
 
   return (
     <>
       {/* Main Upload Box */}
       <Box
-        // sx={{
-        //   display: "flex",
-        //   flexDirection: "column",
-        //   alignItems: "flex-start",
-        //   padding: 3,
-        //   border: "1px solid #ddd",
-        //   borderRadius: 3,
-        //   background: disabled
-        //     ? "#ccc"
-        //     : stepCompleted
-        //     ? "green" // Change the background color to green when the step is completed
-        //     : "linear-gradient(45deg, #4D4D4E, orange)",
-        //   cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
-        //   height: 150,
-        //   width: "100%",
-        //   maxWidth: 350,
-        //   transition: "all 0.3s",
-        //   boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-        //   "&:hover": {
-        //     backgroundColor: disabled
-        //       ? "#ccc"
-        //       : stepCompleted
-        //       ? "green"
-        //       : "orange",
-        //     color: disabled ? "white" : "black",
-        //     transform: disabled ? "none" : "scale(1.03)",
-        //   },
-        // }}
-
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
           justifyContent: "center",
           padding: 2,
-          borderColor:
-            // completed ? "green" :
-            disabled ? "#1c1c1c" : "#F26722",
+          borderColor: disabled ? "#1c1c1c" : "#F26722",
           borderRadius: 3,
           margin: 1,
           width: "25%",
           minWidth: 200,
           cursor: disabled ? "not-allowed" : "pointer",
           textAlign: "left",
-          background:
-            //  completed
-            //   ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
-            //   :
-            disabled ? "#d9d9d9" : "#F26722",
-          color:
-            //  completed ||
-            !disabled ? "white" : "#1c1c1c",
+          background: disabled ? "#d9d9d9" : "#F26722",
+          color: !disabled ? "white" : "#1c1c1c",
           "@media (max-width: 600px)": {
             width: "80%",
             margin: "auto",
@@ -237,7 +223,7 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
             Upload Bank Statement
           </Typography>
           <Typography variant="body2" sx={{ color: "white" }}>
-            Share your bank statement(last 6 month)
+            Share your bank statement (last 6 months)
           </Typography>
         </Box>
       </Box>
@@ -273,7 +259,7 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
               type="file"
               hidden
               accept=".pdf,.jpg,.png"
-              onChange={handleBankStatementUpload} // Just handle the file selection
+              onChange={handleBankStatementUpload}
             />
           </Button>
           {bankStatement && (
@@ -285,6 +271,21 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
               >
                 Uploaded File: {bankStatement.name}
               </Typography>
+              {/* <IconButton
+                onClick={() => (
+                  <IconButton
+                    onClick={
+                      () => handlePreview(bankStatement.name, "pdf") // Adjust "pdf" based on the actual file type
+                    }
+                    color="primary"
+                  >
+                    <VisibilityIcon />
+                  </IconButton>
+                )}
+                color="primary"
+              >
+                <VisibilityIcon />
+              </IconButton> */}
               <IconButton onClick={handleDelete} color="error">
                 <DeleteIcon />
               </IconButton>
@@ -296,13 +297,13 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
             Cancel
           </Button>
           <Button
-            onClick={handleSubmit} // Call submit function here
+            onClick={handleSubmit}
             disabled={!bankStatement || isUploading}
             variant="contained"
             sx={{
               backgroundColor: "orange",
               "&:hover": {
-                backgroundColor: "#FF7043", // Optional: darker shade for hover effect
+                backgroundColor: "#FF7043",
               },
             }}
           >

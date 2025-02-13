@@ -23,6 +23,7 @@ import DocumentsTable from "./DocumentsTable";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
 import { useNavigate } from "react-router-dom";
+import Dashboard from "./Dashboard";
 
 const UploadDocuments = () => {
   const navigate = useNavigate();
@@ -277,6 +278,7 @@ const UploadDocuments = () => {
 
   return (
     <>
+      <Dashboard />
       <Box
         sx={{
           maxWidth: "1000px",
@@ -312,7 +314,7 @@ const UploadDocuments = () => {
             gap={2}
           >
             {[
-              "aadhaarFront", 
+              "aadhaarFront",
               "aadhaarBack",
               "panCard",
               "salarySlip",
