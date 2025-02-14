@@ -122,7 +122,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
         !formValues.officeEmail ||
         !formValues.designation
       ) {
-        Swal.fire("All fields are required.");
+        alert("All fields are required.");
         return;
       }
 
