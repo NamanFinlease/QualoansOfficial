@@ -16,7 +16,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 import axios from "axios";
-const PANValidation = ({ onComplete, disabled, prefillData }) => {
+const PANValidation = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [pan, setPan] = useState("");
   const [isFetching, setIsFetching] = useState(false);
@@ -127,7 +127,7 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
   return (
     <>
       <Box
-        onClick={handleModalClick}
+        onClick={!disabled && handleModalClick}
         // onClick={handleCompleteStep}
         sx={{
           display: "flex",
@@ -168,7 +168,7 @@ const PANValidation = ({ onComplete, disabled, prefillData }) => {
           }}
           disabled={disabled}
         >
-          {isPanValidated ? (
+          {isPanValidated || isVerified ? (
             <CheckCircleIcon sx={{ color: "white" }} />
           ) : (
             <DescriptionIcon sx={{ color: disabled ? "#1c1c1c" : "white" }} />

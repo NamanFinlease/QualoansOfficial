@@ -38,7 +38,7 @@ const MobileVerification = ({
   onComplete,
   disabled,
   prefillData,
-  // isVerified,
+  isVerified,
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [mobile, setMobile] = useState("");
@@ -235,7 +235,7 @@ const MobileVerification = ({
           ml: 1,
         }}
       >
-        {completed ? <CheckCircleIcon /> : icon}
+        {completed || isVerified ? <CheckCircleIcon /> : icon}
       </IconButton>
       <Box sx={{ ml: 2, flexGrow: 1 }}>
         <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>

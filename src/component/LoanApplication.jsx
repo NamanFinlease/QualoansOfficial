@@ -10,14 +10,14 @@ import Dashboard from "./Dashboard";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
 import { useSidebar } from "../context/SidebarContext";
-import { s } from "framer-motion/client";
+import { pre, s } from "framer-motion/client";
 
 const LoanApplication = () => {
   const { sidebarOpen, sidebarExpanded } = useSidebar();
 
   const [steps, setSteps] = useState({
-    loanCalculator: { completed: false, data: null },
     employmentInfo: { completed: false, data: null },
+    loanCalculator: { completed: false, data: null },
     bankStatement: { completed: false, data: null },
     fetchDocument: { completed: false, data: null },
     disbursalBankDetail: { completed: false, data: null },
@@ -38,7 +38,7 @@ const LoanApplication = () => {
         const response = await axios.get(`${BASE_URL}/getDashboardDetails`, {
           withCredentials: true,
         });
-        console.log(response.data); // Add this line to inspect the response
+        console.log("res loan app >>>? ?", response.data); // Add this line to inspect the response
 
         if (response.data.success) {
           if (!response.data.isRegistration) {
@@ -62,54 +62,99 @@ const LoanApplication = () => {
             // Map progressStatus to step completion
             const updatedSteps = {
               loanCalculator: {
-                completed: [
-                  "CALCULATED",
-                  "EMPLOYMENT_DETAILS_SAVED",
-                  "BANK_STATEMENT_FETCHED",
-                  "DOCUMENTS_SAVED",
-                  "DISBURSAL_DETAILS_SAVED",
-                  "COMPLETED",
-                ].includes(progressStatus),
+                completed: response.data.isLoanCalculated,
                 data: null,
               },
               employmentInfo: {
-                completed: [
-                  "EMPLOYMENT_DETAILS_SAVED",
-                  "BANK_STATEMENT_FETCHED",
-                  "DOCUMENTS_SAVED",
-                  "DISBURSAL_DETAILS_SAVED",
-                  "COMPLETED",
-                ].includes(progressStatus),
+                completed: response.data.isEmploymentDetailsSaved,
                 data: null,
               },
 
               bankStatement: {
-                completed: [
-                  "BANK_STATEMENT_FETCHED",
-                  "DOCUMENTS_SAVED",
-                  "DISBURSAL_DETAILS_SAVED",
-                  "COMPLETED",
-                ].includes(progressStatus),
+                completed: response.data.isBankStatementUploaded,
                 data: null,
               },
               fetchDocument: {
-                completed: [
-                  "DOCUMENTS_SAVED",
-                  "DISBURSAL_DETAILS_SAVED",
-                  "COMPLETED",
-                ].includes(progressStatus),
+                completed: response.data.isDocumentUploaded,
                 data: null,
               },
               disbursalBankDetail: {
-                completed: ["DISBURSAL_DETAILS_SAVED", "COMPLETED"].includes(
-                  progressStatus
-                ),
+                completed: response.data.isDisbursalDetailsSaved,
                 data: null,
               },
             };
 
             setSteps(updatedSteps);
           }
+          // if (!response.data.isRegistration) {
+          //   const {
+          //     progressStatus,
+          //     isDocumentUploaded,
+          //     isEmploymentDetailsSaved,
+          //   } = response.data;
+
+          //   setIsUploaded({ isDocumentUploaded, isEmploymentDetailsSaved }); // Ensure you're using this correctly
+
+          //   // Map progressStatus to step completion
+          //   const updatedSteps = {
+          //     loanCalculator: {
+          //       completed: [
+          //         "CALCULATED",
+          //         "EMPLOYMENT_DETAILS_SAVED",
+          //         "BANK_STATEMENT_FETCHED",
+          //         "DOCUMENTS_SAVED",
+          //         "DISBURSAL_DETAILS_SAVED",
+          //         "COMPLETED",
+          //       ].includes(progressStatus),
+          //       data: null,
+          //     },
+          //     employmentInfo: {
+          //       completed: [
+          //         "EMPLOYMENT_DETAILS_SAVED",
+          //         "BANK_STATEMENT_FETCHED",
+          //         "DOCUMENTS_SAVED",
+          //         "DISBURSAL_DETAILS_SAVED",
+          //         "COMPLETED",
+          //       ].includes(progressStatus),
+          //       data: null,
+          //     },
+
+          //     bankStatement: {
+          //       completed: [
+          //         "BANK_STATEMENT_FETCHED",
+          //         "DOCUMENTS_SAVED",
+          //         "DISBURSAL_DETAILS_SAVED",
+          //         "COMPLETED",
+          //       ].includes(progressStatus),
+          //       data: null,
+          //     },
+          //     fetchDocument: {
+          //       completed: [
+          //         "DOCUMENTS_SAVED",
+          //         "DISBURSAL_DETAILS_SAVED",
+          //         "COMPLETED",
+          //       ].includes(progressStatus),
+          //       data: null,
+          //     },
+          //     disbursalBankDetail: {
+          //       completed: ["DISBURSAL_DETAILS_SAVED", "COMPLETED"].includes(
+          //         progressStatus
+          //       ),
+          //       data: null,
+          //     },
+          //   };
+
+          //   setSteps(updatedSteps);
+          // }
+
+          setIsUploaded((prevState) => ({
+            ...prevState,
+            isLoanCalculated: response.data.isLoanCalculated,
+            isEmploymentDetailsSaved: response.data.isEmploymentDetailsSaved,
+            isBankStatementFetched: response.data.isBankStatementUploaded,
+            isDocumentUploaded: response.data.isDocumentUploaded,
+            isDisbursalDetailsSaved: response.data.isDisbursalDetailsSaved,
+          }));
         }
       } catch (error) {
         console.error("Error fetching progress status:", error);
@@ -119,7 +164,13 @@ const LoanApplication = () => {
     };
 
     fetchProgress();
-  }, []);
+  }, [
+    isUploaded.isLoanCalculated,
+    isUploaded.isEmploymentDetailsSaved,
+    isUploaded.isBankStatementFetched,
+    isUploaded.isDocumentUploaded,
+    isUploaded.isDisbursalDetailsSaved,
+  ]);
 
   const calculateProgress = () => {
     const completedSteps = Object.values(steps).filter(
@@ -143,6 +194,8 @@ const LoanApplication = () => {
   //     [stepName]: { completed: isCompleted, data },
   //   }));
   // };
+
+  console.log("isUploaded ??? ", isUploaded);
 
   if (loading) {
     return <Typography>Loading...</Typography>;
@@ -248,6 +301,7 @@ const LoanApplication = () => {
             onComplete={(data) =>
               handleStepCompletion("employmentInfo", true, data)
             }
+            // disabled={!isUploaded.isEmploymentDetailsSaved}
             disabled={!steps.loanCalculator.completed}
             prefillData={steps.employmentInfo.data}
             isUploaded={isUploaded.isEmploymentDetailsSaved}
@@ -257,6 +311,7 @@ const LoanApplication = () => {
             onComplete={(data) =>
               handleStepCompletion("bankStatement", true, data)
             }
+            // disabled={!isUploaded.isBankStatementFetched}
             disabled={!steps.employmentInfo.completed}
             prefillData={steps.bankStatement.data}
             isUploaded={isUploaded.isBankStatementFetched}
@@ -266,6 +321,7 @@ const LoanApplication = () => {
             onComplete={(data) =>
               handleStepCompletion("fetchDocument", true, data)
             }
+            // disabled={!isUploaded.isDocumentUploaded}
             disabled={!steps.bankStatement.completed}
             prefillData={steps.fetchDocument.data}
             isUploaded={isUploaded.isDocumentUploaded}
@@ -275,6 +331,7 @@ const LoanApplication = () => {
             onComplete={(data) =>
               handleStepCompletion("disbursalBankDetail", true, data)
             }
+            // disabled={!isUploaded.isDisbursalDetailsSaved}
             disabled={!steps.fetchDocument.completed}
             prefillData={steps.disbursalBankDetail.data}
             isUploaded={isUploaded.isDisbursalDetailsSaved}

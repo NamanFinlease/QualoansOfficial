@@ -29,6 +29,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import { SidebarProvider } from "./context/SidebarContext";
 import LandingPage from "./component/LandingPage";
 import UploadDocuments from "./component/UploadDocuments";
+import LoanTable from "./component/LoanTable";
+import VerifyRepayment from "./component/VerifyRepayment";
 
 const MinimalLayout = ({ children }) => <div>{children}</div>;
 
@@ -69,7 +71,8 @@ function App() {
           <Route path="/calculator" element={<LoanCalculator />} />
           <Route path="/faq" element={<FAQs />} />
           <Route path="/login-form" element={<LoginForm />} />
-          {/* <Route path="/upload-document" element={<UploadDocuments />} /> */}
+          <Route path="/upload-document" element={<UploadDocuments />} />
+          <Route path="/verify-repayment" element={<VerifyRepayment />} />
 
           {/* Protected Routes */}
           <Route
@@ -125,6 +128,17 @@ function App() {
               </ProtectedRoute>
             }
           /> */}
+
+          <Route
+            path="/manage-repayments"
+            element={
+              <ProtectedRoute requiresLogin={true}>
+                <MinimalLayout>
+                  <LoanTable />
+                </MinimalLayout>
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/ourjourney"

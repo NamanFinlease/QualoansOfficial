@@ -19,7 +19,68 @@ import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
-const AddressInfo = ({ onComplete, disabled, prefillData }) => {
+const StepBox = ({
+  icon,
+  title,
+  description,
+  onClick,
+  disabled,
+  completed,
+  isVerified,
+}) => (
+  <Box
+    onClick={onClick}
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      justifyContent: "center",
+      padding: 2,
+      borderColor: disabled ? "#1c1c1c" : "#F26722",
+      borderRadius: 3,
+      margin: 1,
+      width: "25%",
+      minWidth: 200,
+      cursor: disabled ? "not-allowed" : "pointer",
+      textAlign: "left",
+      background: disabled ? "#d9d9d9" : "#F26722",
+      color: !disabled ? "white" : "#1c1c1c",
+      "@media (max-width: 600px)": {
+        width: "80%",
+        margin: "auto",
+      },
+    }}
+  >
+    <IconButton
+      sx={{
+        color:
+          // completed ? "white" :
+          disabled ? "grey" : "white",
+        ml: 1,
+      }}
+    >
+      {completed || isVerified ? <CheckCircleIcon /> : icon}
+    </IconButton>
+    {/* <IconButton
+      sx={{
+        color: completed ? "white" : disabled ? "#1c1c1c" : "white",
+        ml: 1,
+      }}
+    >
+      {completed ? (
+        <i className="fas fa-check-circle" style={{ fontSize: "24px" }}></i>
+      ) : (
+        icon
+      )}
+    </IconButton> */}
+    <Box sx={{ ml: 2, flexGrow: 1 }}>
+      <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
+      <Typography variant="body2">{description}</Typography>
+    </Box>
+  </Box>
+);
+
+const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -278,9 +339,10 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
         icon={<LocationOn />}
         title="Address Information"
         description="Update your current residence details."
-        onClick={handleModalClick}
+        onClick={!disabled && handleModalClick}
         disabled={disabled}
         completed={isAddressVerified}
+        isVerified={isVerified}
       />
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
@@ -342,8 +404,8 @@ const AddressInfo = ({ onComplete, disabled, prefillData }) => {
           </FormControl>
 
           <TextField
+            label="Residing Since"
             type="date"
-            label="Residing Since Date"
             value={formValues.residingSince}
             onChange={(e) => handleFormChange("residingSince", e.target.value)}
             fullWidth

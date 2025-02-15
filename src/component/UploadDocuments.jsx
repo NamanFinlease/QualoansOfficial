@@ -52,6 +52,7 @@ const UploadDocuments = () => {
   const [isDocUploaded, setIsDocUploaded] = useState(false);
   const [isUploadSuccess, setIsUploadSuccess] = useState(0);
   const [firstOccurrences, setFirstOccurrences] = useState([]);
+  const [requiredSalarySlips] = useState(3);
 
   useEffect(() => {
     const getPreviousData = async () => {
@@ -192,40 +193,40 @@ const UploadDocuments = () => {
   };
 
   useEffect(() => {
-    if (isDocUploaded || isUploadSuccess) {
-      const fetchDocumentList = async () => {
-        const documentListResponse = await axios.get(
-          `${BASE_URL}/getDocumentList`,
-          { withCredentials: true }
-        );
-        console.log(
-          "documentListResponse zsdss",
-          documentListResponse.data.documents
-        );
-        const data = documentListResponse.data.documents;
-        const result = {};
-        // const requiredNames = ["salarySlip_1", "salarySlip_2", "salarySlip_3"];
+    // if (isDocUploaded || isUploadSuccess) {
+    const fetchDocumentList = async () => {
+      const documentListResponse = await axios.get(
+        `${BASE_URL}/getDocumentList`,
+        { withCredentials: true }
+      );
+      console.log(
+        "documentListResponse zsdss",
+        documentListResponse.data.documents
+      );
+      const data = documentListResponse.data.documents;
+      const result = {};
+      // const requiredNames = ["salarySlip_1", "salarySlip_2", "salarySlip_3"];
 
-        // for (const item of data) {
-        //   if (requiredNames.includes(item.name) && !result[item.name]) {
-        //     result[item.name] = item;
-        //   }
-        // }
+      // for (const item of data) {
+      //   if (requiredNames.includes(item.name) && !result[item.name]) {
+      //     result[item.name] = item;
+      //   }
+      // }
 
-        // const firstOccurrencesArray = Object.values(result);
-        // setFirstOccurrences(firstOccurrencesArray);
+      // const firstOccurrencesArray = Object.values(result);
+      // setFirstOccurrences(firstOccurrencesArray);
 
-        setFormValues((prev) => ({
-          ...prev,
-          salarySlip: data.filter((doc) => doc.type === "salarySlip"),
-          aadhaarFront: data.find((doc) => doc.type === "aadhaarFront"),
-          aadhaarBack: data.find((doc) => doc.type === "aadhaarBack"),
-          panCard: data.find((doc) => doc.type === "panCard"),
-          others: data.filter((doc) => doc.type === "others"),
-        }));
-      };
-      fetchDocumentList();
-    }
+      setFormValues((prev) => ({
+        ...prev,
+        salarySlip: data.filter((doc) => doc.type === "salarySlip"),
+        aadhaarFront: data.find((doc) => doc.type === "aadhaarFront"),
+        aadhaarBack: data.find((doc) => doc.type === "aadhaarBack"),
+        panCard: data.find((doc) => doc.type === "panCard"),
+        others: data.filter((doc) => doc.type === "others"),
+      }));
+    };
+    fetchDocumentList();
+    // }
   }, [isDocUploaded, isUploadSuccess]);
 
   console.log("formValues >>> ", formValues);
@@ -353,8 +354,16 @@ const UploadDocuments = () => {
                     fontSize: "14px",
                   }}
                 >
-                  {key.charAt(0).toUpperCase() +
-                    key.slice(1).replace(/([A-Z])/g, " $1")}
+                  {console.log("key before >>> ", key.charAt(0).toUpperCase())}
+                  {console.log(
+                    "key after >>> ",
+                    key.slice(1).replace(/([A-Z])/g, " $1")
+                  )}
+
+                  {key === "panCard"
+                    ? "panCard".replace(/panCard/g, "PAN Card")
+                    : key.charAt(0).toUpperCase() +
+                      key.slice(1).replace(/([A-Z])/g, " $1")}
                 </Typography>
               </Box>
             ))}
@@ -363,6 +372,16 @@ const UploadDocuments = () => {
           {selectedDocType && (
             <>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                {selectedDocType === "salarySlip" && (
+                  <Typography variant="subtitle2" sx={{ color: "#F26722" }}>
+                    Please upload {requiredSalarySlips} salary slips
+                  </Typography>
+                )}
+                {selectedDocType === "others" && (
+                  <Typography variant="subtitle2" sx={{ color: "#F26722" }}>
+                    Upload Gas Connection or Electricity Bill or Address Proof
+                  </Typography>
+                )}
                 {fileInputs.map((input, index) => (
                   <Box
                     key={index}
