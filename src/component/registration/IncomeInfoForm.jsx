@@ -21,7 +21,69 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
+const StepBox = ({
+  icon,
+  title,
+  description,
+  disabled,
+  completed,
+  onClick,
+  isVerified,
+}) => (
+  <Box
+    onClick={!disabled && !completed ? onClick : null}
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      justifyContent: "center",
+      padding: 2,
+      borderColor: disabled ? "#1c1c1c" : "#F26722",
+      borderRadius: 3,
+      margin: 1,
+      width: "25%",
+      minWidth: 200,
+      cursor: disabled ? "not-allowed" : "pointer",
+      textAlign: "left",
+      background: disabled ? "#d9d9d9" : "#F26722",
+      color: !disabled ? "white" : "#1c1c1c",
+      "@media (max-width: 600px)": {
+        width: "80%",
+        margin: "auto",
+      },
+    }}
+  >
+    {/* <IconButton
+      sx={{
+        color: completed ? "white" : disabled ? "#1c1c1c" : "white",
+        ml: 1,
+      }}
+    >
+      {completed ? (
+        <i className="fas fa-check-circle" style={{ fontSize: "24px" }}></i>
+      ) : (
+        icon
+      )}
+    </IconButton> */}
+
+    <IconButton
+      sx={{
+        color:
+          // completed ? "white" :
+          disabled ? "grey" : "white",
+        ml: 1,
+      }}
+    >
+      {completed || isVerified ? <CheckCircleIcon /> : icon}
+    </IconButton>
+    <Box sx={{ ml: 2, flexGrow: 1 }}>
+      <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
+      <Typography variant="body2">{description}</Typography>
+    </Box>
+  </Box>
+);
+
+const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -81,6 +143,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
       if (response.status === 200) {
         Swal.fire("Success", "Income details added successfully!", "success");
         setOpenModal(false);
+        setisIncomeDetails(true);
         if (onComplete) onComplete({ formValues });
       } else {
         setError(response?.data?.message || "Failed to add income details.");
@@ -110,7 +173,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
         const { isIncomeDetails } = dashboardResponse.data;
         setisIncomeDetails(isIncomeDetails);
 
-        if (isIncomeDetails) {
+        if (isVerified) {
           const profileResponse = await axios.get(
             `${BASE_URL}/getProfileDetails`,
             {
@@ -227,9 +290,10 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
         icon={<AccountBalanceWalletIcon />}
         title="Income Information"
         description="Please provide your income details."
-        onClick={handleModalClick}
+        onClick={!disabled && handleModalClick}
         disabled={disabled}
         completed={isIncomeDetails}
+        isVerified={isVerified}
       />
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
@@ -293,6 +357,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData }) => {
             required
             InputLabelProps={{ shrink: true }}
             inputProps={{ min: new Date().toISOString().split("T")[0] }}
+            placeholder="DD-MM-YYYY"
           />
           <Typography variant="body1" sx={{ fontWeight: "bold", mb: 2 }}>
             Mode of Income Received

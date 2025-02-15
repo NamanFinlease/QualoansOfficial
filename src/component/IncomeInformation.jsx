@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Divider } from "@mui/material";
 import { BASE_URL } from "../baseURL";
 import { sharedStyles } from "./shared/styles";
+import moment from "moment";
+
 // import { getToken } from "../../tokenManager";
 // Define the income Profile component
 const IncomeInformation = () => {
@@ -200,7 +202,7 @@ const IncomeInformation = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {income.nextSalaryDate}
+                  {moment(income.nextSalaryDate).format("DD-MM-YYYY")}
                 </td>
               </tr>
               <tr>

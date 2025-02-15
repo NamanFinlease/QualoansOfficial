@@ -17,13 +17,15 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
-const Employment = ({ onComplete, disabled, prefillData }) => {
+const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
   const [openModal, setOpenModal] = useState(false);
   const [formValues, setFormValues] = useState(prefillData || {});
   const [addressValues, setAddressValues] = useState({});
   const [stepData, setStepData] = useState({});
   const [stepCompleted, setStepCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isEmploymentDetailsSaved, setIsEmploymentDetailsSaved] =
+    useState(false);
 
   const openEmploymentModal = () => {
     if (disabled) return;
@@ -39,6 +41,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
       { label: "Company Type", name: "companyType", type: "text" },
       { label: "Your Designation", name: "designation", type: "text" },
       { label: "Office Email", name: "officeEmail", type: "email" },
+      { label: "Employed Since", name: "employedSince", type: "date" },
       { label: "Office Address", name: "officeAddrress", type: "text" },
       { label: "Landmark", name: "landmark", type: "text" },
       { label: "City", name: "city", type: "text" },
@@ -120,6 +123,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
         !formValues.companyType ||
         !formValues.designation ||
         !formValues.officeEmail ||
+        !formValues.employedSince ||
         !formValues.designation
       ) {
         alert("All fields are required.");
@@ -145,6 +149,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
         Swal.fire("Employment information submitted successfully!");
         setStepCompleted(true);
         setOpenModal(false);
+        setIsEmploymentDetailsSaved(true);
 
         if (onComplete) {
           onComplete(apiData); // Pass data back to the parent
@@ -190,32 +195,33 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
 
         console.log("isEmploymentDetailsSaved:", isEmploymentDetailsSaved);
 
-        if (isEmploymentDetailsSaved) {
-          const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/getApplicationDetails?applicationStatus=employeeDetails`,
-            {
-              withCredentials: true,
-            }
-          );
+        // if (isEmploymentDetailsSaved) {
+        const getProfileDetailsResponse = await axios.get(
+          `${BASE_URL}/getApplicationDetails?applicationStatus=employeeDetails`,
+          {
+            withCredentials: true,
+          }
+        );
 
-          console.log("Profile Details Response:", getProfileDetailsResponse);
+        console.log("Profile Details Response:", getProfileDetailsResponse);
 
-          const EmpData = getProfileDetailsResponse?.data?.data;
+        const EmpData = getProfileDetailsResponse?.data?.data;
 
-          // Update form values based on the fetched data
-          setFormValues({
-            workFrom: EmpData?.workFrom || "",
-            companyName: EmpData?.companyName || "",
-            companyType: EmpData?.companyType || "",
-            designation: EmpData?.designation || "",
-            officeEmail: EmpData?.officeEmail || "",
-            officeAddrress: EmpData?.officeAddrress || "",
-            landmark: EmpData?.landmark || "",
-            city: EmpData?.city || "",
-            state: EmpData?.state || "",
-            pincode: EmpData?.pincode || "",
-          });
-        }
+        // Update form values based on the fetched data
+        setFormValues({
+          workFrom: EmpData?.workFrom || "",
+          companyName: EmpData?.companyName || "",
+          companyType: EmpData?.companyType || "",
+          designation: EmpData?.designation || "",
+          officeEmail: EmpData?.officeEmail || "",
+          employedSince: EmpData?.employedSince || "",
+          officeAddrress: EmpData?.officeAddrress || "",
+          landmark: EmpData?.landmark || "",
+          city: EmpData?.city || "",
+          state: EmpData?.state || "",
+          pincode: EmpData?.pincode || "",
+        });
+        // }
       }
     } catch (error) {
       setIsLoading(false);
@@ -293,7 +299,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
             margin: "auto",
           },
         }}
-        onClick={handleModalClick}
+        onClick={!disabled && handleModalClick}
       >
         <IconButton
           sx={{
@@ -305,7 +311,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
           }}
           disabled={disabled}
         >
-          {stepCompleted ? (
+          {stepCompleted || isUploaded || isEmploymentDetailsSaved ? (
             <CheckCircleIcon sx={{ color: "white" }} />
           ) : (
             <AccountBalanceIcon />
@@ -344,6 +350,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
                       padding: "8px",
                       borderRadius: "4px",
                     }}
+                    required
                   >
                     <option value="" disabled selected>
                       {field.label}
@@ -364,6 +371,7 @@ const Employment = ({ onComplete, disabled, prefillData }) => {
                     variant="outlined"
                     margin="normal"
                     type={field.type}
+                    required
                   />
                 )}
               </Box>

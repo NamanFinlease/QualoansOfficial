@@ -13,6 +13,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import { useSidebar } from "../context/SidebarContext";
 import StepperComponent from "./StepperComponent";
+import LoanTable from "./LoanTable";
 
 const OurJourney = () => {
   const navigate = useNavigate();
@@ -20,6 +21,10 @@ const OurJourney = () => {
   const [selectedOption, setSelectedOption] = useState("Dashboard");
   const [isVideoPage, setIsVideoPage] = useState(false);
   const [isRegistration, setRegistration] = useState(true); // Track the current process
+  const [isLoanApplied, setLoanApplied] = useState(false);
+  const [isLoanTable, setLoanTable] = useState(false);
+  const [loans, setLoans] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,8 +32,9 @@ const OurJourney = () => {
         const response = await axios.get(`${BASE_URL}/getDashboardDetails`, {
           withCredentials: true,
         });
-        if (response.data.success) {
+        if (response.status === 200) {
           setRegistration(response.data.isRegistration);
+          setLoanApplied(response.data.isLoanApplied);
         }
       } catch (error) {
         console.error("Error fetching dashboard details:", error);
@@ -37,6 +43,34 @@ const OurJourney = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    fetchLoans();
+  }, []);
+
+  const fetchLoans = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/loanList`, {
+        withCredentials: true,
+      });
+      console.log("response", response?.data?.loanList);
+      //   if (!response.ok) {
+      //     throw new Error("Failed to fetch loans");
+      //   }
+      //   const data = await response.json();
+
+      //   console.log("data", data);
+      // Sort loans in descending order based on date
+      // const sortedLoans = response.data.loanList.sort(
+      //   (a, b) => new Date(b.date) - new Date(a.date)
+      // );
+      setLoans(response.data.loanList);
+    } catch (error) {
+      console.error("Error fetching loans:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleRedirectToVideo = () => {
     setIsVideoPage(true);
@@ -67,10 +101,12 @@ const OurJourney = () => {
     },
     {
       title: "Zero Collateral",
-      description: "No security deposit required",
+      description: "No collateral deposit required",
       icon: <SecurityIcon sx={{ fontSize: 40, color: "#F26722" }} />,
     },
   ];
+
+  console.log("loans our journey >> ", loans);
 
   return (
     <div>
@@ -184,11 +220,35 @@ const OurJourney = () => {
               >
                 Learn How to Apply
               </Button>
+              {loans.length > 0 && (
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    navigate("/manage-repayments");
+                  }}
+                  sx={{
+                    backgroundColor: "#fff",
+                    color: "#000",
+                    px: 4,
+                    py: 1,
+                    fontWeight: 600,
+                    "&:hover": {
+                      backgroundColor: "#8b8887",
+                    },
+                    // boxShadow: "0 4px 15px #8b8887",
+                    borderRadius: "30px",
+                  }}
+                >
+                  Manage Repayments
+                </Button>
+              )}
             </Box>
           </Box>
         </Box>
 
-        {!isRegistration && <StepperComponent />}
+        {isLoanTable && <LoanTable loans={loans} loading={loading} />}
+
+        {isLoanApplied && <StepperComponent />}
 
         {/* Features Grid - Updated with Material icons and better styling */}
         <Box

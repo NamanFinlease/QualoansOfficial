@@ -24,6 +24,7 @@ const RegistrationSteps = () => {
     selfieVerified: false,
   });
   const totalSteps = 6; // Total steps in the registration process
+  // const [isUploaded, setIsUploaded] = useState(false);
 
   const [steps, setSteps] = useState(() => {
     const savedSteps = localStorage.getItem("registrationSteps");
@@ -46,73 +47,94 @@ const RegistrationSteps = () => {
           withCredentials: true,
         });
 
-        // console.log("response das>><<<< ", response);
-        if (response.data.success) {
-          if (response.data.isRegistration) {
-            const { registrationStatus, isMobileVerify } = response.data;
-            setIsVerified({ isMobileVerified: isMobileVerify });
-            // Map registrationStatus to step completion
-            const updatedSteps = {
-              mobileVerification: {
-                completed: [
-                  "MOBILE_VERIFIED",
-                  "PAN_VERIFIED",
-                  "PERSONAL_DETAILS",
-                  "CURRENT_RESIDENCE",
-                  "INCOME_DETAILS",
-                  "UPLOAD_PROFILE",
-                  "COMPLETE_DETAILS",
-                ].includes(registrationStatus),
-                data: null,
-              },
-              panVerification: {
-                completed: [
-                  "PAN_VERIFIED",
-                  "PERSONAL_DETAILS",
-                  "CURRENT_RESIDENCE",
-                  "INCOME_DETAILS",
-                  "UPLOAD_PROFILE",
-                  "COMPLETE_DETAILS",
-                ].includes(registrationStatus),
-                data: null,
-              },
-              personalInfo: {
-                completed: [
-                  "PERSONAL_DETAILS",
-                  "CURRENT_RESIDENCE",
-                  "INCOME_DETAILS",
-                  "UPLOAD_PROFILE",
-                  "COMPLETE_DETAILS",
-                ].includes(registrationStatus),
-                data: null,
-              },
-              addressInfo: {
-                completed: [
-                  "CURRENT_RESIDENCE",
-                  "INCOME_DETAILS",
-                  "UPLOAD_PROFILE",
-                  "COMPLETE_DETAILS",
-                ].includes(registrationStatus),
-                data: null,
-              },
-              incomeDetails: {
-                completed: [
-                  "INCOME_DETAILS",
-                  "UPLOAD_PROFILE",
-                  "COMPLETE_DETAILS",
-                ].includes(registrationStatus),
-                data: null,
-              },
-              selfieVerification: {
-                completed: ["UPLOAD_PROFILE", "COMPLETE_DETAILS"].includes(
-                  registrationStatus
-                ),
-                data: null,
-              },
-            };
+        console.log("response regg >> ??", response);
 
-            setSteps(updatedSteps);
-          }
+        if (response.data.success) {
+          // if (response.data.isRegistration) {
+          //   const { registrationStatus, isMobileVerify } = response.data;
+          //   // setIsVerified({ isMobileVerified: isMobileVerify });
+          //   // Map registrationStatus to step completion
+          //   const updatedSteps = {
+          //     mobileVerification: {
+          //       completed: [
+          //         "MOBILE_VERIFIED",
+          //         "PAN_VERIFIED",
+          //         "PERSONAL_DETAILS",
+          //         "CURRENT_RESIDENCE",
+          //         "INCOME_DETAILS",
+          //         "UPLOAD_PROFILE",
+          //         "COMPLETE_DETAILS",
+          //       ].includes(registrationStatus),
+          //       data: null,
+          //     },
+          //     panVerification: {
+          //       completed: [
+          //         "PAN_VERIFIED",
+          //         "PERSONAL_DETAILS",
+          //         "CURRENT_RESIDENCE",
+          //         "INCOME_DETAILS",
+          //         "UPLOAD_PROFILE",
+          //         "COMPLETE_DETAILS",
+          //       ].includes(registrationStatus),
+          //       data: null,
+          //     },
+          //     personalInfo: {
+          //       completed: [
+          //         "PERSONAL_DETAILS",
+          //         "CURRENT_RESIDENCE",
+          //         "INCOME_DETAILS",
+          //         "UPLOAD_PROFILE",
+          //         "COMPLETE_DETAILS",
+          //       ].includes(registrationStatus),
+          //       data: null,
+          //     },
+          //     addressInfo: {
+          //       completed: [
+          //         "CURRENT_RESIDENCE",
+          //         "INCOME_DETAILS",
+          //         "UPLOAD_PROFILE",
+          //         "COMPLETE_DETAILS",
+          //       ].includes(registrationStatus),
+          //       data: null,
+          //     },
+          //     incomeDetails: {
+          //       completed: [
+          //         "INCOME_DETAILS",
+          //         "UPLOAD_PROFILE",
+          //         "COMPLETE_DETAILS",
+          //       ].includes(registrationStatus),
+          //       data: null,
+          //     },
+          //     selfieVerification: {
+          //       completed: ["UPLOAD_PROFILE", "COMPLETE_DETAILS"].includes(
+          //         registrationStatus
+          //       ),
+          //       data: null,
+          //     },
+          //   };
+
+          //   setSteps(updatedSteps);
+          // }
+
+          // setIsVerified(
+          //   (prevState = {
+          //     ...prevState,
+          //     isMobileVerified: response.data.isMobileVerify,
+          //     isPanVerified: response.data.isPanVerify,
+          //     isPersonalInfoVerified: response.data.isPersonalDetails,
+          //     isAddressVerified: response.data.isCurrentResidence,
+          //     isIncomeInfoVerified: response.data.isIncomeDetails,
+          //   })
+          // );
+
+          setIsVerified((prevState) => ({
+            ...prevState,
+            isMobileVerified: response.data.isMobileVerify,
+            isPanVerified: response.data.isPanVerify,
+            isPersonalInfoVerified: response.data.isPersonalDetails,
+            isAddressVerified: response.data.isCurrentResidence,
+            isIncomeInfoVerified: response.data.isIncomeDetails,
+          }));
         }
       } catch (error) {
         console.error("Error fetching progress status:", error);
@@ -122,7 +144,13 @@ const RegistrationSteps = () => {
     };
 
     fetchProgress();
-  }, []);
+  }, [
+    isVerified.isMobileVerified,
+    isVerified.isPanVerified,
+    isVerified.isPersonalInfoVerified,
+    isVerified.isAddressVerified,
+    isVerified.isIncomeInfoVerified,
+  ]);
 
   useEffect(() => {
     localStorage.setItem("registrationSteps", JSON.stringify(steps));
@@ -149,6 +177,8 @@ const RegistrationSteps = () => {
       navigate("/loan-application");
     }
   }, [steps, navigate]);
+
+  console.log("isVerified", isVerified);
 
   return (
     <>

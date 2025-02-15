@@ -16,22 +16,26 @@ import {
   FormControl,
   InputLabel,
   Button,
+  TextField,
 } from "@mui/material";
 import WorkIcon from "@mui/icons-material/Work";
 import loanImage from "../../assets/image/Untitled design.gif";
 import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { form } from "framer-motion/client";
 
-const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
-  const [loanAmount, setLoanAmount] = useState(5000);
-  const [loanTenure, setLoanTenure] = useState(1);
-  const [interestRate, setInterestRate] = useState(0.5);
-  const [totalAmount, setTotalAmount] = useState(0);
-  const [purpose, setPurpose] = useState("");
+const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isComplete, setIsComplete] = useState(false); // Add this state for completion tracking
+  const [formValues, setFormValues] = useState({
+    loanPurpose: "",
+    principal: 5000,
+    tenure: 1,
+    roi: 0.5,
+    totalPayble: 0,
+  });
 
   const openLoanCalculatorModal = () => {
     if (!disabled) {
@@ -43,28 +47,52 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
     setIsModalOpen(false);
   };
 
+  // const calculateTotalAmount = () => {
+  //   const totalInterest =
+  //     (formValues.principal * formValues.roi * formValues.tenure) / 100;
+  //   const total = formValues.principal + totalInterest;
+  //   // setTotalAmount(total);
+  //   setFormValues((prev) => ({ ...prev, totalPayble: total }));
+  // };
+
   const calculateTotalAmount = () => {
-    const totalInterest = (loanAmount * interestRate * loanTenure) / 100;
-    const total = loanAmount + totalInterest;
-    setTotalAmount(total);
+    const principal = parseFloat(formValues.principal) || 0;
+    const roi = parseFloat(formValues.roi) || 0;
+    const tenure = parseFloat(formValues.tenure) || 0;
+
+    const totalInterest = (principal * roi * tenure) / 100;
+    const total = principal + totalInterest;
+
+    setFormValues((prev) => ({ ...prev, totalPayble: total }));
   };
 
   useEffect(() => {
     calculateTotalAmount();
-  }, [loanAmount, loanTenure, interestRate]);
+  }, [
+    formValues.principal,
+    formValues.tenure,
+    formValues.roi,
+    formValues.totalPayble,
+  ]);
+
+  console.log("Loan Amount:", formValues.totalPayble);
 
   const handleSubmit = async () => {
-    if (!purpose) {
-      alert("Please select a loan purpose!");
+    if (!formValues.loanPurpose) {
+      Swal.fire({
+        icon: "warning",
+        title: "Missing Information",
+        text: "Please select a loan purpose!",
+      });
       return;
     }
 
     const payload = {
-      principal: loanAmount,
-      totalPayble: totalAmount.toFixed(2),
-      roi: interestRate,
-      tenure: loanTenure,
-      loanPurpose: purpose.toUpperCase(),
+      principal: formValues.principal,
+      totalPayble: formValues.totalPayble.toFixed(2),
+      roi: formValues.roi,
+      tenure: formValues.tenure,
+      loanPurpose: formValues.loanPurpose.toUpperCase(),
     };
 
     try {
@@ -123,10 +151,10 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
 
       if (getDashboardDetailsResponse.status === 200) {
         setIsLoading(false);
-        console.log(
-          "getDashboardDetailsResponse >>> ",
-          getDashboardDetailsResponse
-        );
+        // console.log(
+        //   "getDashboardDetailsResponse >>> ",
+        //   getDashboardDetailsResponse
+        // );
         const { isLoanCalculated } = getDashboardDetailsResponse.data || {};
 
         // console.log("isLoanCalculated>>>>:", isLoanCalculated);
@@ -134,30 +162,30 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
         // Set the value of isAddressVerified based on the fetched response
         setIsComplete(isLoanCalculated);
 
-        if (isLoanCalculated) {
-          const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/getApplicationDetails?applicationStatus=loanDetails`,
-            {
-              withCredentials: true,
-            }
-          );
+        //if (isLoanCalculated || isUploaded) {
+        const getProfileDetailsResponse = await axios.get(
+          `${BASE_URL}/getApplicationDetails?applicationStatus=loanDetails`,
+          {
+            withCredentials: true,
+          }
+        );
 
-          // console.log(
-          //   "getProfileDetailsResponse >>> ",
-          //   getProfileDetailsResponse
-          // );
+        console.log(
+          "getProfileDetailsResponse >>> ",
+          getProfileDetailsResponse?.data?.data
+        );
 
-          const LoanData = getProfileDetailsResponse?.data?.data;
+        const LoanData = getProfileDetailsResponse?.data?.data;
 
-          // Update formValues with residenceData
-          setFormValues({
-            principal: LoanData?.principal || "",
-            totalPayble: LoanData?.totalPayble || "",
-            roi: LoanData?.roi || "",
-            tenure: LoanData?.tenure || "",
-            loanPurpose: LoanData?.loanPurpose || "",
-          });
-        }
+        // Update formValues with residenceData
+        setFormValues({
+          principal: LoanData?.principal || "",
+          totalPayble: LoanData?.totalPayble || "",
+          roi: LoanData?.roi || "",
+          tenure: LoanData?.tenure || "",
+          loanPurpose: LoanData?.loanPurpose || "",
+        });
+        // }
       }
     } catch (error) {
       setIsLoading(false);
@@ -208,7 +236,7 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
             },
           }}
         >
-          {isComplete ? (
+          {isComplete || isUploaded ? (
             <CheckCircleIcon sx={{ color: "white" }} />
           ) : (
             <WorkIcon />
@@ -325,9 +353,14 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                 <FormControl required fullWidth sx={{ marginBottom: 3 }}>
                   <InputLabel>Purpose of Loan</InputLabel>
                   <Select
-                    value={purpose}
+                    value={formValues.loanPurpose}
                     label="Purpose of Loan"
-                    onChange={(e) => setPurpose(e.target.value)}
+                    onChange={(e) =>
+                      setFormValues({
+                        ...formValues,
+                        loanPurpose: e.target.value,
+                      })
+                    }
                   >
                     <MenuItem value="TRAVEL">TRAVEL</MenuItem>
                     <MenuItem value="MEDICAL">MEDICAL</MenuItem>
@@ -343,11 +376,34 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                   <Typography variant="subtitle1" gutterBottom>
                     Loan Amount (₹)
                   </Typography>
+                  <TextField
+                    fullWidth
+                    // label="Enter Loan Amount"
+                    value={formValues.principal}
+                    onChange={(e, newValue) => {
+                      const value = Number(e.target.value);
+                      if (value >= 5000 && value <= 100000) {
+                        setFormValues(() => ({
+                          ...formValues,
+                          principal: newValue,
+                        }));
+                      }
+                    }}
+                    variant="outlined"
+                    margin="normal"
+                    type="number"
+                  />
                   <Slider
-                    value={loanAmount}
+                    value={formValues.principal}
                     min={5000}
                     max={100000}
-                    onChange={(e, newValue) => setLoanAmount(newValue)}
+                    step={500}
+                    onChange={(e, newValue) =>
+                      setFormValues(() => ({
+                        ...formValues,
+                        principal: newValue,
+                      }))
+                    }
                     valueLabelDisplay="auto"
                     sx={{ color: "#fc8403" }}
                   />
@@ -357,11 +413,33 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                   <Typography variant="subtitle1" gutterBottom>
                     Loan Tenure (Days)
                   </Typography>
+                  <TextField
+                    fullWidth
+                    // label="Enter Loan Amount"
+                    value={formValues.tenure}
+                    onChange={(e, newValue) => {
+                      const value = Number(e.target.value);
+                      if (value >= 1 && value <= 90) {
+                        setFormValues(() => ({
+                          ...formValues,
+                          tenure: newValue,
+                        }));
+                      }
+                    }}
+                    variant="outlined"
+                    margin="normal"
+                    type="number"
+                  />
                   <Slider
-                    value={loanTenure}
+                    value={formValues.tenure}
                     min={1}
                     max={90}
-                    onChange={(e, newValue) => setLoanTenure(newValue)}
+                    onChange={(e, newValue) =>
+                      setFormValues(() => ({
+                        ...formValues,
+                        tenure: newValue,
+                      }))
+                    }
                     valueLabelDisplay="auto"
                     sx={{ color: "#fc8403" }}
                   />
@@ -371,12 +449,34 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                   <Typography variant="subtitle1" gutterBottom>
                     Interest Rate (%)
                   </Typography>
+                  <TextField
+                    fullWidth
+                    // label="Enter Loan Amount"
+                    value={formValues.roi}
+                    onChange={(e, newValue) => {
+                      const value = Number(e.target.value);
+                      if (newValue >= 0.5 && newValue <= 2) {
+                        setFormValues(() => ({
+                          ...formValues,
+                          roi: newValue,
+                        }));
+                      }
+                    }}
+                    variant="outlined"
+                    margin="normal"
+                    type="number"
+                  />
                   <Slider
-                    value={interestRate}
+                    value={formValues.roi}
                     min={0.5}
                     max={2}
                     step={0.1}
-                    onChange={(e, newValue) => setInterestRate(newValue)}
+                    onChange={(e, newValue) =>
+                      setFormValues(() => ({
+                        ...formValues,
+                        roi: newValue,
+                      }))
+                    }
                     valueLabelDisplay="auto"
                     sx={{ color: "#fc8403" }}
                   />
@@ -391,7 +491,7 @@ const LoanCalculator = ({ onComplete, disabled, prefillData }) => {
                       variant="body1"
                       sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
                     >
-                      {totalAmount.toFixed(2)}
+                      {formValues?.totalPayble}
                     </Typography>
                   </Grid>
                 </Grid>

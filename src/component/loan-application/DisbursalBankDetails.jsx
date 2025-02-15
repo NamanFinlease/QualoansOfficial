@@ -22,7 +22,12 @@ import { animate } from "framer-motion";
 
 const MySwal = withReactContent(SweetAlert);
 
-const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
+const DisbursalBankDetails = ({
+  onComplete,
+  disabled,
+  prefillData,
+  isUploaded,
+}) => {
   const [stepCompleted, setStepCompleted] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -130,30 +135,30 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
         // Set the value of isAddressVerified based on the fetched response
         setStepCompleted(isDisbursalDetailsSaved);
 
-        if (isDisbursalDetailsSaved) {
-          console.log("isDisbursalDetailsSaved", isDisbursalDetailsSaved);
+        // if (isDisbursalDetailsSaved) {
+        console.log("isDisbursalDetailsSaved", isDisbursalDetailsSaved);
 
-          const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/getApplicationDetails?applicationStatus=disbursalBankDetails`,
-            {
-              withCredentials: true,
-            }
-          );
+        const getProfileDetailsResponse = await axios.get(
+          `${BASE_URL}/getApplicationDetails?applicationStatus=disbursalBankDetails`,
+          {
+            withCredentials: true,
+          }
+        );
 
-          const EmpData = getProfileDetailsResponse?.data?.data;
-          console.log("getProfileDetailsResponse", EmpData);
+        const EmpData = getProfileDetailsResponse?.data?.data;
+        console.log("getProfileDetailsResponse", EmpData);
 
-          // Update formValues with residenceData
-          setFormValues({
-            beneficiaryName: EmpData?.beneficiaryName || "",
-            accountNumber: EmpData?.accountNumber || "",
-            confirmAccountNo: EmpData?.confirmAccountNo || "",
-            ifscCode: EmpData?.ifscCode || "",
-            branchName: EmpData?.branchName || "",
-            bankName: EmpData?.bankName || "",
-            accountType: EmpData?.accountType || "",
-          });
-        }
+        // Update formValues with residenceData
+        setFormValues({
+          beneficiaryName: EmpData?.beneficiaryName || "",
+          accountNumber: EmpData?.accountNumber || "",
+          confirmAccountNo: EmpData?.confirmAccountNo || "",
+          ifscCode: EmpData?.ifscCode || "",
+          branchName: EmpData?.branchName || "",
+          bankName: EmpData?.bankName || "",
+          accountType: EmpData?.accountType || "",
+        });
+        // }
       }
     } catch (error) {
       setIsLoading(false);
@@ -220,7 +225,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
             margin: "auto",
           },
         }}
-        onClick={handleModalClick}
+        onClick={!disabled && handleModalClick}
       >
         <IconButton
           disabled={disabled || stepCompleted}
@@ -232,7 +237,7 @@ const DisbursalBankDetails = ({ onComplete, disabled, prefillData }) => {
             },
           }}
         >
-          {stepCompleted ? (
+          {(stepCompleted || isUploaded) && !disabled ? (
             <CheckCircleIcon sx={{ color: "white" }} />
           ) : (
             <AccountBalanceWalletIcon />

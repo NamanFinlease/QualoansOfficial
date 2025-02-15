@@ -15,15 +15,16 @@ import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SweetAlert from "sweetalert2";
 import { BASE_URL } from "../../baseURL";
-// import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 
-const BankStatement = ({ onComplete, disabled, prefillData }) => {
+const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
   const [bankStatement, setBankStatement] = useState(prefillData || null);
   const [stepCompleted, setStepCompleted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [formValues, setFormValues] = useState(false);
+  const [bankStatementUploaded, setBankStatementUploaded] = useState(false);
+
   const handleOpenModal = () => {
     if (!disabled) setIsModalOpen(true);
   };
@@ -74,9 +75,12 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
         credentials: "include",
       });
 
-      if (response.ok) {
+      console.log("hhhb", response);
+
+      if (response.status === 200) {
         const responseData = await response.json();
         onComplete({ bankStatement }); // Notify parent that upload is complete
+        setBankStatementUploaded(true);
         SweetAlert.fire(
           "Success",
           "Bank statement uploaded successfully!",
@@ -129,21 +133,26 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
         const { isEmploymentDetailsSaved } = getDashboardDetailsResponse.data;
         setStepCompleted(isEmploymentDetailsSaved);
 
-        if (isEmploymentDetailsSaved) {
-          const getProfileDetailsResponse = await axios.get(
-            `${BASE_URL}/getDocumentStatus`,
-            {
-              withCredentials: true,
-            }
-          );
+        // if (isUploaded) {
+        console.log("isEmploymentDetailsSaved", isEmploymentDetailsSaved);
 
-          if (getProfileDetailsResponse.status !== 200) {
-            throw new Error("Failed to fetch document data");
+        const getProfileDetailsResponse = await axios.get(
+          `${BASE_URL}/getDocumentStatus`,
+          {
+            withCredentials: true,
           }
+        );
 
-          const data = getProfileDetailsResponse.data;
-          setFormValues(data.singleDocumentsStatus || []);
+        // Axios does not use response.ok, check status instead
+        if (getProfileDetailsResponse.status !== 200) {
+          throw new Error("Failed to fetch document data");
         }
+
+        // Extract data from the response
+        const data = getProfileDetailsResponse.data;
+
+        setFormValues(data.singleDocumentsStatus || []);
+        // }
       }
     } catch (error) {
       setIsUploading(false);
@@ -194,7 +203,7 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
             margin: "auto",
           },
         }}
-        onClick={handleModalClick} // Trigger modal on click instead of upload
+        onClick={!disabled && handleModalClick} // Trigger modal on click instead of upload
       >
         <IconButton
           sx={{
@@ -206,7 +215,7 @@ const BankStatement = ({ onComplete, disabled, prefillData }) => {
           }}
           disabled={disabled}
         >
-          {stepCompleted ? (
+          {isUploaded || bankStatementUploaded ? (
             <CheckCircleIcon sx={{ color: "white" }} />
           ) : (
             <DescriptionIcon />

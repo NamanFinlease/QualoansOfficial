@@ -21,6 +21,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import PolicyIcon from "@mui/icons-material/Policy";
 import GavelIcon from "@mui/icons-material/Gavel";
 import PersonIcon from "@mui/icons-material/Person";
+import TableViewIcon from "@mui/icons-material/TableView";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
@@ -128,6 +129,7 @@ const Dashboard = () => {
       link: "/terms-condition",
     },
     { text: "User Preview", icon: <PersonIcon />, link: "/user-preview" },
+    { text: "Manage Repayments", icon: <TableViewIcon />, link: "/manage-repayments" },
     { text: "Logout", icon: <LogoutIcon />, action: handleLogout },
   ];
 

@@ -17,7 +17,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { BASE_URL } from "../../baseURL";
 
-const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
+const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [formValues, setFormValues] = useState({
@@ -150,7 +150,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData }) => {
             ml: 1,
           }}
         >
-          {isPersonalInfoUpdated ? <CheckCircle /> : <Person />}
+          {isPersonalInfoUpdated || isVerified ? <CheckCircle /> : <Person />}
         </IconButton>
         <Box sx={{ ml: 2, flexGrow: 1 }}>
           <Typography sx={{ fontWeight: "bold" }}>
