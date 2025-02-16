@@ -16,6 +16,8 @@ import Footer from "./component/Footer";
 import FAQs from "./component/FAQs";
 import LoanCalculator from "./component/LoanCalculator";
 import RepaymentLoan from "./component/RepaymentLoan";
+import LandingPage from "./component/LandingPage";
+import SuccessPage from "./component/SuccessPage";
 // import Navbar from "./navbar/NavBar"
 
 function App() {
@@ -24,6 +26,9 @@ function App() {
       <Header /> {/* If you want Header to be shown on all pages */}
       {/* <Navbar /> */}
       <Routes>
+        <Route path="/landing-page" element={<LandingPage />} />
+        <Route path="/success" element={<SuccessPage />} />
+
         <Route path="/" element={<MainContent />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/contact-us" element={<ContactUs />} />
