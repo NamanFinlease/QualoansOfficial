@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-import repayaImage from "../assets/image/Qua-Repayment.jpg";
-
 import {
   Grid,
   Box,
@@ -11,8 +9,15 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import PaymentProof from "./PaymentProof";
+import BankDetails from "./BankDetails";
+import HDFC_QR from "./HDFC_QR";
+import MarqueeAlert from "./MarqueeAlert.jsx";
+import WarningMessage from "./WarningMessage";
 
 const RepaymentLoan = () => {
+  const navigate = useNavigate();
   const [pan, setPan] = useState("");
   const [isPanValid, setIsPanValid] = useState(false);
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
@@ -25,7 +30,7 @@ const RepaymentLoan = () => {
   const [email, setEmail] = useState("");
 
   const handlePanChange = (e) => {
-    const value = e.target.value;
+    const value = e.target.value.toUpperCase();
     setPan(value);
     const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/; // PAN format
     setIsPanValid(panRegex.test(value));
@@ -40,19 +45,27 @@ const RepaymentLoan = () => {
         `https://staging.qualoan.com/api/repayment/getLoanNumber/${pan}`
       );
 
-      const data = await response.json();
+      if (response.status === 200) {
+        const data = await response.json();
 
-      // Concatenate fName, mName, and lName to form the full name
-      const fullName = `${data.fName || ""} ${data.mName || ""} ${
-        data.lName || ""
-      }`.trim();
+        // Concatenate fName, mName, and lName to form the full name
+        const fullName = `${data.fName || ""} ${data.mName || ""} ${
+          data.lName || ""
+        }`.trim();
 
-      // Update state with fetched data
-      setName(fullName || "John Doe");
-      setMobileNo(data.mobile || "1234567890");
-      setLoanNo(data.loanNo || "Not Found");
-      setEmail(data.personalEmail || "Not Found");
-      setIsSubmitted(true); // Enable the next step (payment)
+        // Update state with fetched data
+        setName(fullName);
+        setMobileNo(data.mobile);
+        setLoanNo(data.loanNo);
+        setEmail(data.personalEmail);
+        setIsSubmitted(true);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid PAN",
+          text: "Please enter your valid PAN number",
+        });
+      }
     } catch (error) {
       console.error("Error fetching loan details:", error);
     } finally {
@@ -69,14 +82,14 @@ const RepaymentLoan = () => {
 
     // Prepare data for payment API
     const paymentData = {
-      amount: parseFloat(loanAmount), // Amount should be a number
-      fName: name.split(" ")[0], // Extract first name from full name
-      mName: name.split(" ")[1] || "", // Extract middle name if available
-      lName: name.split(" ")[2] || "", // Extract last name if available
-      email: email, // User email from state
-      phone: mobileNo, // User phone number
-      pan: pan, // User PAN
-      loanNo: loanNo, // Loan number
+      amount: parseFloat(loanAmount),
+      fName: name.split(" ")[0],
+      mName: name.split(" ")[1] || "",
+      lName: name.split(" ")[2] || "",
+      email: email,
+      phone: mobileNo,
+      pan: pan,
+      loanNo: loanNo,
     };
 
     setLoading(true);
@@ -92,7 +105,6 @@ const RepaymentLoan = () => {
           body: JSON.stringify(paymentData),
         }
       );
-      console.log("gjhjh>>", response);
 
       // Check if the response is successful
       if (!response.ok) {
@@ -103,25 +115,9 @@ const RepaymentLoan = () => {
 
       const data = await response.json();
       if (data.status) {
-        const paytring = new Paytring({
-          order_id: data.order_id,
-          success: (orderId) => {
-            alert(`Payment Successful! Order ID: ${orderId}`);
-          },
-          failed: (orderId) => {
-            alert(`Payment Failed! Order ID: ${orderId}`);
-          },
-          onClose: (orderId) => {
-            alert(`Payment Popup Closed! Order ID: ${orderId}`);
-          },
-          events: (event) => {
-            console.log(
-              `Event Triggered: ${event.event_name} - ${event.event_value}`
-            );
-          },
-        });
-
-        paytring.open();
+        window.location.href =
+          "https://api.paytring.com/pay/token/" + data.order_id;
+        navigate("/verify-repayment");
 
         console.log("paytring", paytring);
       }
@@ -137,137 +133,69 @@ const RepaymentLoan = () => {
       setLoading(false);
     }
   };
+
   return (
     <>
-      {/* <Header/> */}
+      <MarqueeAlert />
 
       <Box
         sx={{
-          background: "#f9f9f9",
+          background: "#fff",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          minHeight: "100vh",
-          padding: { xs: "20px", sm: "45px" }, // Adjust padding for small screens
+          padding: { xs: "20px", sm: "45px" },
         }}
       >
-        {/* Image Section */}
+        <WarningMessage />
+        {!isSubmitted && (
+          <>
+            <Box spacing={3} alignItems="center" sx={{ width: "100%" }}>
+              <Grid
+                container
+                spacing={2}
+                alignItems="center"
+                mt={3}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                }}
+              >
+                <HDFC_QR />
+                <div>
+                  <BankDetails />
+                  <PaymentProof />
+                </div>
+              </Grid>
+            </Box>
 
-        <Box
-          sx={{
-            position: "relative",
-            width: "100%",
-            height: { xs: "20vh", md: "60vh" },
-            overflow: "hidden",
-            borderRadius: "20px",
-            mb: 5,
-            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <Box
-            component="img"
-            src={repayaImage}
-            alt="Repay Loan"
-            sx={{
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </Box>
-        {/* Marquee Section */}
-        <Box
-          sx={{
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            width: "100%",
-            backgroundColor: "#f9f9f9",
-            border: "none !important",
-            py: 1,
-          }}
-        >
-          <Typography
-            variant="body1"
-            sx={{
-              display: "inline-block",
-              animation: "scroll-text 20s linear infinite",
-              fontSize: { xs: "14px", sm: "18px" },
-              color: "#B22222",
-              fontWeight: "bold",
-              textAlign: "center",
-            }}
-          >
-            "Beware of fraud! Always use our secure Repayment Website Link for
-            loan payments. Qua Loan is not responsible for payments made to
-            other accounts."
-          </Typography>
+            <style>
+              {`
+                  @keyframes scroll-text {
+                    from { transform: translateX(100%); }
+                    to { transform: translateX(-100%); }
+                  }
+                  @keyframes pulse {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                    100% { transform: scale(1); }
+                  }
+                `}
+            </style>
 
-          {/* Keyframe animation using Material-UI */}
-          <style>
-            {`
-            @keyframes scroll-text {
-              from {
-                transform: translateX(100%);
-              }
-              to {
-                transform: translateX(-100%);
-              }
-            }
-          `}
-          </style>
-        </Box>
+            <Box
+              sx={{
+                width: "100%",
+                maxWidth: "500px",
+                margin: "auto",
+                padding: 3,
+                borderRadius: 2,
+                backgroundColor: "#f5f5f5",
+                marginTop: "2rem",
+              }}
+            >
+              {/* PAN Input */}
 
-        {/* Warning Message */}
-        <Box
-          sx={{
-            textAlign: "center",
-            borderRadius: "30px",
-            padding: "16px",
-            maxWidth: "80vw",
-            margin: "0 auto",
-            mt: 6,
-          }}
-        >
-          <Typography
-            variant="h5"
-            color="black"
-            sx={{
-              fontFamily: "Inter",
-              fontSize: { xs: "22px", sm: "30px" }, // Adjust font size for small screens
-              lineHeight: "50px",
-              letterSpacing: "-0.408px",
-              mb: 2,
-            }}
-          >
-            <strong style={{ fontSize: "30px", color: "#fc8403" }}>
-              Warning:
-            </strong>{" "}
-            We are not liable for any payments made in <br />
-            personal accounts of employees. Please make all <br />
-            payments in the company’s account only.
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            background: "#f9f9f9",
-            minHeight: "100vh",
-            padding: { xs: "20px", sm: "45px" },
-          }}
-        >
-          <Box
-            sx={{
-              width: "100%",
-              maxWidth: "500px",
-              margin: "auto",
-              padding: 3,
-              boxShadow: 2,
-              borderRadius: 2,
-              backgroundColor: "#fff",
-            }}
-          >
-            {/* PAN Input */}
-            {!isSubmitted && (
               <>
                 <Typography
                   variant="h5"
@@ -319,85 +247,129 @@ const RepaymentLoan = () => {
                   )}
                 </Button>
               </>
-            )}
-
-            {/* Loan Details */}
-            {isSubmitted && (
-              <Box>
-                <Typography
-                  variant="h6"
-                  sx={{ marginBottom: 2, color: "#333" }}
-                >
-                  Loan Details
-                </Typography>
-
-                <TextField
-                  label="Name"
-                  value={name}
-                  disabled
-                  fullWidth
-                  sx={{ marginBottom: 2 }}
-                />
-
-                <TextField
-                  label="Mobile Number"
-                  value={mobileNo}
-                  disabled
-                  fullWidth
-                  sx={{ marginBottom: 2 }}
-                />
-                <TextField
-                  label="Email"
-                  value={email}
-                  disabled
-                  fullWidth
-                  sx={{ marginBottom: 2 }}
-                />
-                <TextField
-                  label="Loan Number"
-                  value={loanNo}
-                  disabled
-                  fullWidth
-                  sx={{ marginBottom: 2 }}
-                />
-
-                <TextField
-                  label="Loan Amount"
-                  value={loanAmount}
-                  onChange={(e) => setLoanAmount(e.target.value)}
-                  fullWidth
+            </Box>
+          </>
+        )}
+        {isSubmitted && (
+          <Box
+            sx={{
+              // background: "#f9f9f9",
+              minHeight: "100vh",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: { xs: 2, md: 4 },
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                maxWidth: "900px",
+                margin: "auto",
+                padding: { xs: 2, md: 3 },
+                borderRadius: 2,
+                backgroundColor: "#f5f5f5",
+              }}
+            >
+              {/* Loan Details */}
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: { xs: "column", md: "row" },
+                  width: "100%",
+                  justifyContent: { xs: "center" },
+                  // padding: "20px",
+                }}
+              >
+                {/* Left Section */}
+                <Box
                   sx={{
-                    marginBottom: 2,
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#F26722",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#F26722",
-                      },
-                    },
-                  }}
-                />
-
-                <Button
-                  onClick={handlePaymentSubmit}
-                  sx={{
-                    backgroundColor: "#F26722",
-                    color: "white",
-                    width: "100%",
-                    padding: "12px",
-                    borderRadius: 1,
-                    "&:hover": {
-                      backgroundColor: "#FF7F32",
-                    },
+                    width: { xs: "100%", md: "50%" },
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  Proceed
-                </Button>
+                  <HDFC_QR />
+                  <BankDetails />
+                </Box>
+
+                {/* Right Section */}
+                <Box sx={{ width: { xs: "100%", md: "50%" } }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ marginBottom: 2, color: "#333" }}
+                  >
+                    Loan Details
+                  </Typography>
+
+                  <TextField
+                    label="Name"
+                    value={name}
+                    disabled
+                    fullWidth
+                    sx={{ marginBottom: 2 }}
+                  />
+
+                  <TextField
+                    label="Mobile Number"
+                    value={mobileNo}
+                    disabled
+                    fullWidth
+                    sx={{ marginBottom: 2 }}
+                  />
+                  <TextField
+                    label="Email"
+                    value={email}
+                    disabled
+                    fullWidth
+                    sx={{ marginBottom: 2 }}
+                  />
+                  <TextField
+                    label="Loan Number"
+                    value={loanNo}
+                    disabled
+                    fullWidth
+                    sx={{ marginBottom: 2 }}
+                  />
+
+                  <TextField
+                    label="Enter your payment amount"
+                    value={loanAmount}
+                    onChange={(e) => setLoanAmount(e.target.value)}
+                    fullWidth
+                    sx={{
+                      marginBottom: 2,
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": { borderColor: "#F26722" },
+                        "&:hover fieldset": { borderColor: "#F26722" },
+                      },
+                    }}
+                  />
+
+                  <Button
+                    onClick={handlePaymentSubmit}
+                    sx={{
+                      backgroundColor: "#F26722",
+                      color: "white",
+                      width: "100%",
+                      padding: "12px",
+                      borderRadius: 1,
+                      "&:hover": {
+                        backgroundColor: "#FF7F32",
+                      },
+                    }}
+                  >
+                    Proceed
+                  </Button>
+
+                  <PaymentProof />
+                </Box>
               </Box>
-            )}
+            </Box>
           </Box>
-        </Box>
+        )}
       </Box>
     </>
   );
