@@ -103,6 +103,7 @@ function App() {
               <ProtectedRoute requiresLogin={true}>
                 <MinimalLayout>
                   <LoanApplication />
+                  {/* <RegistrationSteps /> */}
                 </MinimalLayout>
               </ProtectedRoute>
             }

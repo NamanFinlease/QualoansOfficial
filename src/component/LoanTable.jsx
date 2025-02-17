@@ -10,6 +10,8 @@ import {
   TableRow,
   Paper,
   Chip,
+  Typography,
+  Container,
 } from "@mui/material";
 import { BASE_URL } from "../baseURL";
 import axios from "axios";
@@ -163,118 +165,134 @@ const LoanTable = () => {
           transition: "width 0.3s ease, margin-left 0.3s ease",
         }}
       >
-        <TableContainer
-          component={Paper}
-          sx={{
-            boxShadow: 3,
-            borderRadius: 2,
-            position: "relative",
-            overflowX: "auto",
-          }}
-        >
-          <Table sx={{ minWidth: 650 }}>
-            <TableHead>
-              <TableRow sx={{ bgcolor: "grey.100" }}>
-                <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
-                  S. No.
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
-                  Loan No.
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
-                  Amount
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
-                  PAN
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
-                  Date
-                </TableCell>
-                <div></div>
-                <TableCell
-                  sx={{
-                    fontWeight: "bold",
-                    textAlign: "left",
-                    position: "sticky",
-                    right: 0,
-                    backgroundColor: "grey.100",
-                    zIndex: 2,
-                  }}
-                >
-                  Status
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {loans.map((loan, index) => (
-                <TableRow
-                  key={loan.sno || index}
-                  sx={{ "&:hover": { bgcolor: "grey.50" } }}
-                >
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{loan.loanNo}</TableCell>
-                  <TableCell>₹{loan.amount}</TableCell>
-                  <TableCell>{loan.pan}</TableCell>
-                  <TableCell>
-                    {moment(loan.repaymentDate).format("DD-MM-YYYY")}
+        {loans.length > 0 ? (
+          <TableContainer
+            component={Paper}
+            sx={{
+              boxShadow: 3,
+              borderRadius: 2,
+              position: "relative",
+              overflowX: "auto",
+            }}
+          >
+            <Table sx={{ minWidth: 650 }}>
+              <TableHead>
+                <TableRow sx={{ bgcolor: "grey.100" }}>
+                  <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
+                    S. No.
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
+                    Loan No.
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
+                    Amount
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
+                    PAN
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
+                    Date
                   </TableCell>
                   <div></div>
                   <TableCell
                     sx={{
+                      fontWeight: "bold",
+                      textAlign: "left",
                       position: "sticky",
                       right: 0,
-                      backgroundColor: "white",
-                      zIndex: 1,
+                      backgroundColor: "grey.100",
+                      zIndex: 2,
                     }}
                   >
-                    {loan.isDisbursed && loan.isActive ? (
-                      <Button
-                        onClick={() =>
-                          handlePaymentSubmit(loan.loanNo, loan.amount)
-                        }
-                        sx={{
-                          px: 2,
-                          py: 0.5,
-                          borderRadius: "30px",
-                          fontSize: "small",
-                          bgcolor: "#F26722",
-                          color: "#fff",
-                          "&:hover": { bgcolor: "#bf4102" },
-                        }}
-                      >
-                        Repay Now
-                      </Button>
-                    ) : !loan.isDisbursed && loan.isActive ? (
-                      <Chip
-                        sx={{
-                          px: 2,
-                          py: 0.5,
-                          borderRadius: "full",
-                          fontSize: "small",
-                          bgcolor: "error.100",
-                          color: "#0c6900",
-                        }}
-                        label="Active"
-                      />
-                    ) : (
-                      <Chip
-                        sx={{
-                          px: 2,
-                          py: 0.5,
-                          borderRadius: "full",
-                          fontSize: "small",
-                          bgcolor: "error.100",
-                          color: "#d10202",
-                        }}
-                        label="Closed"
-                      />
-                    )}
+                    Status
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {loans.map((loan, index) => (
+                  <TableRow
+                    key={loan.sno || index}
+                    sx={{ "&:hover": { bgcolor: "grey.50" } }}
+                  >
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{loan.loanNo}</TableCell>
+                    <TableCell>₹{loan.amount}</TableCell>
+                    <TableCell>{loan.pan}</TableCell>
+                    <TableCell>
+                      {moment(loan.repaymentDate).format("DD-MM-YYYY")}
+                    </TableCell>
+                    <div></div>
+                    <TableCell
+                      sx={{
+                        position: "sticky",
+                        right: 0,
+                        backgroundColor: "white",
+                        zIndex: 1,
+                      }}
+                    >
+                      {loan.isDisbursed && loan.isActive ? (
+                        <Button
+                          onClick={() =>
+                            handlePaymentSubmit(loan.loanNo, loan.amount)
+                          }
+                          sx={{
+                            px: 2,
+                            py: 0.5,
+                            borderRadius: "30px",
+                            fontSize: "small",
+                            bgcolor: "#F26722",
+                            color: "#fff",
+                            "&:hover": { bgcolor: "#bf4102" },
+                          }}
+                        >
+                          Repay Now
+                        </Button>
+                      ) : !loan.isDisbursed && loan.isActive ? (
+                        <Chip
+                          sx={{
+                            px: 2,
+                            py: 0.5,
+                            borderRadius: "full",
+                            fontSize: "small",
+                            bgcolor: "error.100",
+                            color: "#0c6900",
+                          }}
+                          label="Active"
+                        />
+                      ) : (
+                        <Chip
+                          sx={{
+                            px: 2,
+                            py: 0.5,
+                            borderRadius: "full",
+                            fontSize: "small",
+                            bgcolor: "error.100",
+                            color: "#d10202",
+                          }}
+                          label="Closed"
+                        />
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : (
+          <Container maxWidth="sm">
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              height="50vh"
+              textAlign="center"
+            >
+              <Typography variant="h6" color="textSecondary">
+                No loans found
+              </Typography>
+            </Box>
+          </Container>
+        )}
       </Box>
     </>
   );
