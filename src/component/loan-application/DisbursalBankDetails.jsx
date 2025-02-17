@@ -50,6 +50,25 @@ const DisbursalBankDetails = ({
     }
   }, [stepCompleted, formValues, onComplete]);
 
+  useEffect(() => {
+    if (formValues.ifscCode.length === 11) {
+      fetchBankDetails(formValues.ifscCode);
+    }
+  }, [formValues.ifscCode]);
+
+  const fetchBankDetails = async (ifscCode) => {
+    try {
+      const response = await axios.get(`https://ifsc.razorpay.com/${ifscCode}`);
+      setFormValues((prev) => ({
+        ...prev,
+        bankName: response.data.BANK,
+        branchName: response.data.BRANCH,
+      }));
+    } catch (error) {
+      console.error("Error fetching bank details", error);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
@@ -238,7 +257,7 @@ const DisbursalBankDetails = ({
           }}
         >
           {(stepCompleted || isUploaded) && !disabled ? (
-            <CheckCircleIcon sx={{ color: "white" }} />
+            <CheckCircleIcon sx={{ color: "#4caf50" }} />
           ) : (
             <AccountBalanceWalletIcon />
           )}

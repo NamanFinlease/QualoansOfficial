@@ -21,68 +21,6 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-const StepBox = ({
-  icon,
-  title,
-  description,
-  disabled,
-  completed,
-  onClick,
-  isVerified,
-}) => (
-  <Box
-    onClick={!disabled && !completed ? onClick : null}
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-start",
-      justifyContent: "center",
-      padding: 2,
-      borderColor: disabled ? "#1c1c1c" : "#F26722",
-      borderRadius: 3,
-      margin: 1,
-      width: "25%",
-      minWidth: 200,
-      cursor: disabled ? "not-allowed" : "pointer",
-      textAlign: "left",
-      background: disabled ? "#d9d9d9" : "#F26722",
-      color: !disabled ? "white" : "#1c1c1c",
-      "@media (max-width: 600px)": {
-        width: "80%",
-        margin: "auto",
-      },
-    }}
-  >
-    {/* <IconButton
-      sx={{
-        color: completed ? "white" : disabled ? "#1c1c1c" : "white",
-        ml: 1,
-      }}
-    >
-      {completed ? (
-        <i className="fas fa-check-circle" style={{ fontSize: "24px" }}></i>
-      ) : (
-        icon
-      )}
-    </IconButton> */}
-
-    <IconButton
-      sx={{
-        color:
-          // completed ? "white" :
-          disabled ? "grey" : "white",
-        ml: 1,
-      }}
-    >
-      {completed || isVerified ? <CheckCircleIcon /> : icon}
-    </IconButton>
-    <Box sx={{ ml: 2, flexGrow: 1 }}>
-      <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
-      <Typography variant="body2">{description}</Typography>
-    </Box>
-  </Box>
-);
-
 const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
@@ -94,6 +32,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
     obligations: "",
     nextSalaryDate: "",
     incomeMode: "",
+    workingSince: "",
   });
   const [error, setError] = useState("");
 
@@ -110,6 +49,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
       obligations,
       nextSalaryDate,
       incomeMode,
+      workingSince,
     } = formValues;
 
     if (
@@ -117,7 +57,8 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
       !monthlyIncome ||
       !obligations ||
       !nextSalaryDate ||
-      !incomeMode
+      !incomeMode ||
+      !workingSince
     ) {
       setError("Please fill out all fields.");
       return;
@@ -133,6 +74,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
           obligations,
           nextSalaryDate,
           incomeMode,
+          workingSince,
         },
         {
           headers: { "Content-Type": "application/json" },
@@ -198,6 +140,9 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
                     .split("T")[0]
                 : "",
               incomeMode: profileData?.incomeMode || "",
+              workingSince: profileData.workingSince
+                ? new Date(profileData.workingSince).toISOString().split("T")[0]
+                : "",
             });
             console.log("bhhjhjhb>>>", employementType);
           }
@@ -219,6 +164,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
         obligations: profileData.obligations || "",
         nextSalaryDate: profileData.nextSalaryDate || "",
         incomeMode: profileData.incomeMode || "",
+        workingSince: profileData.workingSince || "",
       });
     }
   }, [prefillData]);
@@ -230,9 +176,10 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
     disabled,
     completed,
     onClick,
+    isVerified,
   }) => (
     <Box
-      onClick={!disabled && !completed ? onClick : null}
+      onClick={onClick}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -380,6 +327,18 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
               label="Others"
             />
           </RadioGroup>
+          <TextField
+            label="Working Since"
+            type="date"
+            value={formValues.workingSince}
+            onChange={(e) => handleFormChange("workingSince", e.target.value)}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+            required
+            InputLabelProps={{ shrink: true }}
+            inputProps={{ max: new Date().toISOString().split("T")[0] }}
+            placeholder="DD-MM-YYYY"
+          />
           {error && <Typography color="error">{error}</Typography>}
           <Box
             sx={{
