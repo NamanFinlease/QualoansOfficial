@@ -59,7 +59,11 @@ const StepBox = ({
         ml: 1,
       }}
     >
-      {completed || isVerified ? <CheckCircleIcon /> : icon}
+      {completed || isVerified ? (
+        <CheckCircleIcon sx={{ color: "#4caf50" }} />
+      ) : (
+        icon
+      )}
     </IconButton>
     {/* <IconButton
       sx={{
@@ -270,9 +274,10 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
     onClick,
     disabled,
     completed,
+    isVerified,
   }) => (
     <Box
-      onClick={!disabled && !completed ? onClick : null}
+      onClick={onClick}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -302,7 +307,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
           ml: 1,
         }}
       >
-        {completed ? <CheckCircleIcon /> : icon}
+        {completed ? <CheckCircleIcon sx={{ color: "#4caf50" }} /> : icon}
       </IconButton> */}
       {/* <IconButton
         sx={{
@@ -324,7 +329,11 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
           ml: 1,
         }}
       >
-        {isAddressVerified ? <CheckCircleIcon /> : <LocationOn />}
+        {isAddressVerified || isVerified ? (
+          <CheckCircleIcon sx={{ color: "#4caf50" }} />
+        ) : (
+          <LocationOn />
+        )}
       </IconButton>
       <Box sx={{ ml: 2, flexGrow: 1 }}>
         <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>

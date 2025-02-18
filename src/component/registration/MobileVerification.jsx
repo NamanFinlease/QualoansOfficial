@@ -235,7 +235,11 @@ const MobileVerification = ({
           ml: 1,
         }}
       >
-        {completed || isVerified ? <CheckCircleIcon /> : icon}
+        {completed || isVerified ? (
+          <CheckCircleIcon sx={{ color: "#4caf50" }} />
+        ) : (
+          icon
+        )}
       </IconButton>
       <Box sx={{ ml: 2, flexGrow: 1 }}>
         <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
