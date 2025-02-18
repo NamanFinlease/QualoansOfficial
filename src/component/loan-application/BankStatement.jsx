@@ -94,33 +94,33 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
     // }
   }, []);
 
-  const handlePreview = async (docId, docType) => {
-    console.log("Previewing document:", docId, docType);
-    // const docType = "salarySlip";
-    const apiUrl = `${BASE_URL}/documentPreview?docType=${docType}&docId=${docId}`;
-    try {
-      const response = await axios.get(apiUrl, { withCredentials: true });
-      console.log("Preview data:", response.data);
-      if (response.data && response.data.url) {
-        // Redirect to the URL
-        // window.location.href = response.data.url;
-        window.open(response.data.url, "_blank");
-      } else {
-        throw new Error("URL not found in the response");
-      }
-    } catch (error) {
-      console.error("Error fetching document preview:", error);
-      MySwal.fire({
-        icon: "error",
-        title: "Failed to load document preview",
-        text: error.response?.data?.message || "Something went wrong",
-      });
-    }
-  };
+  // const handlePreview = async (docId, docType) => {
+  //   console.log("Previewing document:", docId, docType);
+  //   // const docType = "salarySlip";
+  //   const apiUrl = `${BASE_URL}/documentPreview?docType=${docType}&docId=${docId}`;
+  //   try {
+  //     const response = await axios.get(apiUrl, { withCredentials: true });
+  //     console.log("Preview data:", response.data);
+  //     if (response.data && response.data.url) {
+  //       // Redirect to the URL
+  //       // window.location.href = response.data.url;
+  //       window.open(response.data.url, "_blank");
+  //     } else {
+  //       throw new Error("URL not found in the response");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching document preview:", error);
+  //     MySwal.fire({
+  //       icon: "error",
+  //       title: "Failed to load document preview",
+  //       text: error.response?.data?.message || "Something went wrong",
+  //     });
+  //   }
+  // };
 
-  useEffect(() => {
-    handlePreview();
-  }, []);
+  // useEffect(() => {
+  //   handlePreview();
+  // }, []);
 
   const handleOpenModal = () => {
     if (!disabled) setIsModalOpen(true);

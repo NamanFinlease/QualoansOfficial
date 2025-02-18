@@ -195,7 +195,7 @@ const LoanApplication = () => {
   //   }));
   // };
 
-  console.log("isUploaded ??? ", isUploaded);
+  console.log("isUploaded 12343??? ", isUploaded);
 
   if (loading) {
     return <Typography>Loading...</Typography>;
