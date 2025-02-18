@@ -191,7 +191,7 @@ const Header = () => {
                 }}
               >
                 <ApplyNowIcon sx={{ mr: 1 }} />
-                {isLogin ? "Our Journey" : "Sign In"}
+                {isLogin ? "My Journey" : "Sign In"}
               </Link>
             </MenuItem>
           </MUI_Menu>
@@ -273,7 +273,7 @@ const Header = () => {
               </Link>
 
               <Link
-                to="/repayment-loan"
+                to="/repay-now"
                 onClick={scrollToTop}
                 style={{
                   color: "#0b2747",
@@ -333,7 +333,7 @@ const Header = () => {
                 },
               }}
             >
-              {isLogin ? "Our Journey" : "Sign In"}
+              {isLogin ? "My Journey" : "Sign In"}
             </Button>
           </Box>
         </Toolbar>

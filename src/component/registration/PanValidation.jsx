@@ -169,7 +169,7 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified }) => {
           disabled={disabled}
         >
           {isPanValidated || isVerified ? (
-            <CheckCircleIcon sx={{ color: "#4caf50" }} />
+            <CheckCircleIcon sx={{ color: "green" }} />
           ) : (
             <DescriptionIcon sx={{ color: disabled ? "#1c1c1c" : "white" }} />
           )}

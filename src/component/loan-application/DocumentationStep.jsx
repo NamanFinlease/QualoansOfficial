@@ -209,7 +209,7 @@ const DocumentationStep = ({
           disabled={disabled}
         >
           {stepCompleted || isUploaded ? (
-            <CheckCircleIcon sx={{ color: "#4caf50" }} />
+            <CheckCircleIcon sx={{ color: "green" }} />
           ) : (
             <AccountBalanceIcon />
           )}

@@ -23,14 +23,18 @@ const LoanDetails = () => {
   useEffect(() => {
     const fetchLoanData = async () => {
       try {
+        //   const token =
+        //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+
         const response = await fetch(
           `${BASE_URL}/getApplicationDetails?applicationStatus=loanDetails`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              // Authorization: `Bearer ${token}`, // Uncomment if token is needed
             },
-            credentials: "include",
+            credentials: "include", // Ensures that cookies are included with the request
           }
         );
 
@@ -157,7 +161,7 @@ const LoanDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Rate of interest (ROI)
+                  Return on interest (ROI)
                 </td>
                 <td
                   style={{

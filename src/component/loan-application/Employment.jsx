@@ -83,11 +83,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
               city: "",
               state: "",
             }));
-            Swal.fire({
-              icon: "error",
-              title: "Invalid Pincode",
-              text: "Please enter a valid pincode.",
-            });
+            alert("Please enter a valid pincode.");
           }
         } catch (error) {
           alert(
@@ -126,7 +122,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
         !formValues.employedSince ||
         !formValues.designation
       ) {
-        Swal.fire("All fields are required.");
+        alert("All fields are required.");
         return;
       }
 
@@ -155,7 +151,9 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           onComplete(apiData); // Pass data back to the parent
         }
       } else {
-        Swal.fire("Error submitting employment information.");
+        // Swal.fire("Error submitting employment information.");
+        alert(error.response.data.message);
+        setOpenModal(false);
       }
     } catch (error) {
       alert(error.response.data.message);
@@ -312,7 +310,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           disabled={disabled}
         >
           {stepCompleted || isUploaded || isEmploymentDetailsSaved ? (
-            <CheckCircleIcon sx={{ color: "#4caf50" }} />
+            <CheckCircleIcon sx={{ color: "green" }} />
           ) : (
             <AccountBalanceIcon />
           )}

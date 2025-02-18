@@ -231,7 +231,7 @@ const MobileVerification = ({
         sx={{
           color:
             // completed ? "white" :
-            disabled ? "grey" : "white",
+            disabled ? "grey" : "green",
           ml: 1,
         }}
       >

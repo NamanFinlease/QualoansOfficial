@@ -313,7 +313,7 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
           disabled={disabled}
         >
           {isUploaded || bankStatementUploaded ? (
-            <CheckCircleIcon sx={{ color: "#4caf50" }} />
+            <CheckCircleIcon sx={{ color: "green" }} />
           ) : (
             <DescriptionIcon />
           )}

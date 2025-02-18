@@ -18,6 +18,7 @@ const BasicInformation = () => {
   // State to store user data
   const [user, setUser] = useState({
     fullName: "",
+    mothersName: "",
     gender: "",
     dob: "",
     personalEmail: "",
@@ -31,7 +32,6 @@ const BasicInformation = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        
         const response = await fetch(`${BASE_URL}/getProfileDetails`, {
           method: "GET",
           headers: {
@@ -55,6 +55,7 @@ const BasicInformation = () => {
         setUser({
           fullName: data?.data?.personalDetails?.fullName,
           gender: data?.data?.personalDetails?.gender,
+          mothersName: data?.data?.personalDetails?.mothersName,
           dob: data?.data?.personalDetails?.dob, // Fixed field for Date of Birth
           personalEmail: data?.data?.personalDetails?.personalEmail,
           maritalStatus: data?.data?.personalDetails?.maritalStatus,
@@ -164,6 +165,26 @@ const BasicInformation = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
+                  Mothers Name
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "#F26722",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {user.mothersName}
+                </td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
                   Gender
                 </td>
                 <td
@@ -176,6 +197,7 @@ const BasicInformation = () => {
                   {user.gender}
                 </td>
               </tr>
+
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
                 <td
                   style={{

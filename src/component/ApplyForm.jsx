@@ -23,7 +23,7 @@ import {
   LocationOn,
 } from "@mui/icons-material";
 import Swal from "sweetalert2";
-import LoanImage from "../assets/image/Our-Mission.jpg"; // Import your image
+import LoanImage from "../assets/image/slide.gif"; // Import your image
 
 const ApplyForm = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -254,7 +254,7 @@ const ApplyForm = () => {
             state: state,
             city: city,
             termsAccepted,
-            source: "website",
+            source: "marketing",
           }),
         }
       );
@@ -515,9 +515,10 @@ const ApplyForm = () => {
       {/* Right Side - Image */}
       <Box
         sx={{
+          mb: { xs: 1, md: 1 }, // Add margin-bottom for small screens only
           mt: { xs: 5, md: 7 }, // Add margin-top for small screens only
           width: { xs: "100%", md: "40%" },
-          height: "100vh", // Set to 50% height when screen size is small
+          height: "auto", // Set to 50% height when screen size is small
           backgroundImage: `url(${LoanImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",

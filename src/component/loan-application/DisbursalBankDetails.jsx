@@ -91,11 +91,7 @@ const DisbursalBankDetails = ({
     }
 
     if (accountNumber !== confirmAccountNo) {
-      MySwal.fire({
-        icon: "error",
-        title: "Oops!",
-        text: "Account numbers do not match.",
-      });
+      alert("Account numbers do not match!");
       return;
     }
 
@@ -356,7 +352,7 @@ const DisbursalBankDetails = ({
               Select Account Type
             </MenuItem>
             <MenuItem value="SAVINGS">Savings</MenuItem>
-            <MenuItem value="CURRENT">Current</MenuItem>
+            {/* <MenuItem value="CURRENT">Current</MenuItem> */}
             <MenuItem value="OVERDRAFT">Overdraft</MenuItem>
           </Select>
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>

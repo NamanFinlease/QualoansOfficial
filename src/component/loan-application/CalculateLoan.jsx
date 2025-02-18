@@ -28,6 +28,8 @@ import { form } from "framer-motion/client";
 const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [othersInputs, setOthersInputs] = useState([""]); // start with one empty input
+
   const [isComplete, setIsComplete] = useState(false); // Add this state for completion tracking
   const [formValues, setFormValues] = useState({
     loanPurpose: "",
@@ -79,11 +81,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
 
   const handleSubmit = async () => {
     if (!formValues.loanPurpose) {
-      Swal.fire({
-        icon: "warning",
-        title: "Missing Information",
-        text: "Please select a loan purpose!",
-      });
+      alert("Please select a loan purpose!");
       return;
     }
 
@@ -92,7 +90,10 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
       totalPayble: formValues.totalPayble.toFixed(2),
       roi: formValues.roi,
       tenure: formValues.tenure,
-      loanPurpose: formValues.loanPurpose.toUpperCase(),
+      loanPurpose:
+        formValues.loanPurpose === "OTHERS"
+          ? othersInputs.filter((input) => input.trim() !== "")
+          : formValues.loanPurpose.toUpperCase(),
     };
 
     try {
@@ -237,7 +238,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
           }}
         >
           {isComplete || isUploaded ? (
-            <CheckCircleIcon sx={{ color: "#4caf50" }} />
+            <CheckCircleIcon sx={{ color: "green" }} />
           ) : (
             <WorkIcon />
           )}
@@ -327,7 +328,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                     boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.2)",
                   }}
                 >
-                  Processing Fee: 10%
+                  Charges as applicable
                 </Box>
 
                 <Typography
@@ -359,6 +360,11 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                       setFormValues({
                         ...formValues,
                         loanPurpose: e.target.value,
+                        // Optionally reset otherLoanPurpose when not "OTHERS"
+                        otherLoanPurpose:
+                          e.target.value === "OTHERS"
+                            ? formValues.otherLoanPurpose
+                            : "",
                       })
                     }
                   >
@@ -367,13 +373,84 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                     <MenuItem value="ACADEMICS">ACADEMICS</MenuItem>
                     <MenuItem value="OBLIGATIONS">OBLIGATIONS</MenuItem>
                     <MenuItem value="FESTIVAL">FESTIVAL</MenuItem>
-                    <MenuItem value="PURCHASE">PURCHASE</MenuItem>
                     <MenuItem value="OTHERS">OTHERS</MenuItem>
                   </Select>
                 </FormControl>
 
+                {/* Conditionally render the additional input field if "OTHERS" is selected */}
+                {formValues.loanPurpose === "OTHERS" && (
+                  <Box sx={{ marginBottom: 3 }}>
+                    {othersInputs.map((value, idx) => (
+                      <TextField
+                        key={idx}
+                        label="Purpose of Loan"
+                        fullWidth
+                        sx={{ marginBottom: 1 }}
+                        value={value}
+                        onChange={(e) => {
+                          const newOthers = [...othersInputs];
+                          newOthers[idx] = e.target.value;
+                          setOthersInputs(newOthers);
+                        }}
+                      />
+                    ))}
+                  </Box>
+                )}
                 <Box sx={{ marginBottom: 3 }}>
                   <Typography variant="subtitle1" gutterBottom>
+                    Principal (Amount)
+                  </Typography>
+                  <TextField
+                    type="text" // Set to "text" to prevent the browser's number input behavior
+                    value={formValues.principal || ""}
+                    // value={loanAmount || ""} // Ensure loanAmount is a valid number or empty string
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      if (value === "") {
+                        // Update just the principal field, not the entire state
+                        setFormValues({ ...formValues, principal: "" });
+                      } else if (/^\d+$/.test(value)) {
+                        const numericValue = Number(value);
+
+                        if (numericValue > 100000) {
+                          setFormValues({ ...formValues, principal: 100000 });
+                        } else {
+                          setFormValues({
+                            ...formValues,
+                            principal: numericValue,
+                          });
+                        }
+                      }
+                    }}
+                    variant="outlined"
+                    fullWidth
+                    sx={{
+                      marginBottom: 2,
+                      background: "transparent",
+                      borderRadius: "16px",
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "16px",
+                      },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "rgba(0, 0, 0, 0.23)", // Default border color
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#1976d2", // Border color on hover
+                      },
+                      // Remove spinner arrows
+                      '& input[type="text"]': {
+                        MozAppearance: "textfield", // For Firefox
+                      },
+                      '& input[type="text"]::-webkit-outer-spin-button, & input[type="text"]::-webkit-inner-spin-button':
+                        {
+                          WebkitAppearance: "none", // For Chrome, Safari, Edge
+                          margin: 0,
+                        },
+                    }}
+                  />
+
+                  {/* <Typography variant="subtitle1" gutterBottom>
                     Loan Amount (₹)
                   </Typography>
                   <TextField
@@ -392,8 +469,8 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                     variant="outlined"
                     margin="normal"
                     type="number"
-                  />
-                  <Slider
+                  /> */}
+                  {/* <Slider
                     value={formValues.principal}
                     min={5000}
                     max={100000}
@@ -404,7 +481,22 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                         principal: newValue,
                       }))
                     }
+                    valueLabelDisplay="auto" */}
+                  <Slider
+                    value={formValues.principal}
+                    min={5000}
+                    max={100000}
+                    onChange={(e, newValue) =>
+                      setFormValues(() => ({
+                        ...formValues,
+                        principal: newValue,
+                      }))
+                    }
                     valueLabelDisplay="auto"
+                    marks={[
+                      { value: 5000, label: "5K" },
+                      { value: 100000, label: "100K" },
+                    ]}
                     sx={{ color: "#fc8403" }}
                   />
                 </Box>
@@ -413,7 +505,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                   <Typography variant="subtitle1" gutterBottom>
                     Loan Tenure (Days)
                   </Typography>
-                  <TextField
+                  {/* <TextField
                     fullWidth
                     // label="Enter Loan Amount"
                     value={formValues.tenure}
@@ -439,8 +531,78 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                         ...formValues,
                         tenure: newValue,
                       }))
+                    } */}
+                  <TextField
+                    type="text"
+                    value={formValues.tenure || ""}
+                    onChange={(e) => {
+                      const inputValue = e.target.value; // Get the raw input string
+
+                      // Allow the input to be cleared (set tenure to empty string or a default value)
+                      if (inputValue === "") {
+                        setFormValues({ ...formValues, tenure: "" });
+                        return;
+                      }
+
+                      // Check if the input contains only digits
+                      if (/^\d+$/.test(inputValue)) {
+                        const numericValue = Number(inputValue);
+
+                        // Ensure the value is within the range (1 to 90)
+                        if (numericValue < 1) {
+                          setFormValues({ ...formValues, tenure: 1 });
+                        } else if (numericValue > 90) {
+                          setFormValues({ ...formValues, tenure: 90 });
+                        } else {
+                          setFormValues({
+                            ...formValues,
+                            tenure: numericValue,
+                          });
+                        }
+                      }
+                    }}
+                    variant="outlined"
+                    fullWidth
+                    sx={{
+                      marginBottom: 2,
+                      background: "transparent",
+                      borderRadius: "16px",
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "16px",
+                      },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "rgba(0, 0, 0, 0.23)",
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#1976d2",
+                      },
+                      '& input[type="text"]': {
+                        MozAppearance: "textfield",
+                      },
+                      '& input[type="text"]::-webkit-outer-spin-button, & input[type="text"]::-webkit-inner-spin-button':
+                        {
+                          WebkitAppearance: "none",
+                          margin: 0,
+                        },
+                    }}
+                  />
+
+                  <Slider
+                    value={
+                      typeof formValues.tenure === "number"
+                        ? formValues.tenure
+                        : 1
+                    }
+                    min={1}
+                    max={90}
+                    onChange={(e, newValue) =>
+                      setFormValues({ ...formValues, tenure: newValue })
                     }
                     valueLabelDisplay="auto"
+                    marks={[
+                      { value: 1, label: "1" },
+                      { value: 90, label: "90" },
+                    ]}
                     sx={{ color: "#fc8403" }}
                   />
                 </Box>
@@ -449,13 +611,13 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                   <Typography variant="subtitle1" gutterBottom>
                     Interest Rate (%)
                   </Typography>
-                  <TextField
+                  {/* <TextField
                     fullWidth
                     // label="Enter Loan Amount"
                     value={formValues.roi}
                     onChange={(e, newValue) => {
                       const value = Number(e.target.value);
-                      if (newValue >= 0.5 && newValue <= 2) {
+                      if (newValue >= 0.5 && newValue <= 2.75) {
                         setFormValues(() => ({
                           ...formValues,
                           roi: newValue,
@@ -465,11 +627,75 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                     variant="outlined"
                     margin="normal"
                     type="number"
+                  /> */}
+                  <TextField
+                    inputProps={{ maxLength: 4 }} // Limits input to 2 characters; adjust as needed
+                    type="text"
+                    value={formValues.roi || ""}
+                    onChange={(e) => {
+                      const inputValue = e.target.value; // work with the raw string
+
+                      // If the input is cleared, update just the roi field with an empty string (or a default value)
+                      if (inputValue === "") {
+                        setFormValues({ ...formValues, roi: "" });
+                        return;
+                      }
+
+                      // Check if the input is a valid number (allow decimals)
+                      if (/^\d*\.?\d*$/.test(inputValue)) {
+                        const numericValue = parseFloat(inputValue);
+
+                        // Enforce the maximum value
+                        if (numericValue > 2.75) {
+                          setFormValues({ ...formValues, roi: 2.75 });
+                        } else {
+                          // Update the state with the current input (keeping it as a string for now)
+                          setFormValues({ ...formValues, roi: inputValue });
+                        }
+                      }
+                    }}
+                    onBlur={() => {
+                      // When leaving the field, enforce the range properly
+                      const numericValue = parseFloat(formValues.roi);
+                      if (formValues.roi === "" || numericValue < 0.5) {
+                        setFormValues({ ...formValues, roi: 0.5 });
+                      } else if (numericValue > 2.75) {
+                        setFormValues({ ...formValues, roi: 2.75 });
+                      } else {
+                        // Format it as a number if needed
+                        setFormValues({ ...formValues, roi: numericValue });
+                      }
+                    }}
+                    variant="outlined"
+                    fullWidth
+                    sx={{
+                      marginBottom: 1,
+                      background: "transparent",
+                      borderRadius: "16px",
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "16px",
+                      },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "rgba(0, 0, 0, 0.23)",
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#1976d2",
+                      },
+                      "& input[type=text]": {
+                        MozAppearance: "textfield",
+                      },
+                      "& input[type=text]::-webkit-outer-spin-button, & input[type=text]::-webkit-inner-spin-button":
+                        {
+                          WebkitAppearance: "none",
+                          margin: 0,
+                        },
+                    }}
                   />
+
                   <Slider
                     value={formValues.roi}
                     min={0.5}
-                    max={2}
+                    max={2.75}
                     step={0.1}
                     onChange={(e, newValue) =>
                       setFormValues(() => ({
@@ -477,6 +703,10 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                         roi: newValue,
                       }))
                     }
+                    marks={[
+                      { value: 0.5, label: "0.5%" },
+                      { value: 2.75, label: "2.75%" },
+                    ]}
                     valueLabelDisplay="auto"
                     sx={{ color: "#fc8403" }}
                   />

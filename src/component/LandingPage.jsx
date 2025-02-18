@@ -20,6 +20,9 @@ import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { orange } from "@mui/material/colors";
 import ApplyForm from "./ApplyForm";
+import applyGif from "../assets/image/Apply online (1).gif"; // GIF for applying online
+import approvalGif from "../assets/image/Get the  approveal (2).gif"; // GIF for quick approval
+import disbursalGif from "../assets/image/Receive the loan amount.gif"; // GIF for loan disbursal
 
 const WhiteSection = styled(Box)({
   backgroundColor: "white",
@@ -39,6 +42,7 @@ const LoanFormSection = styled(Box)({
 });
 
 const LoanStepsSection = styled(Box)({
+  bgcolor: "#f9f9f9",
   padding: "40px",
   textAlign: "center",
 });
@@ -101,28 +105,42 @@ const LandingPage = () => {
           <strong style={{ color: "orange" }}>some simple steps</strong>
         </Typography>
         <Grid container spacing={4} justifyContent="center">
-          <Grid item xs={12} md={4}>
-            <AccountBalanceIcon fontSize="large" />
-            <Typography variant="h5">
+          <Grid item xs={12} md={4} textAlign="center">
+            <img
+              src={applyGif}
+              alt="Apply online and submit documents"
+              style={{ width: "50%", height: "50%" }}
+            />
+            <Typography variant="h5" sx={{ mt: 2 }}>
               Apply online and submit documents
             </Typography>
             <Typography sx={{ mt: 2 }}>
               Go through the loan application form and enter all the details.
             </Typography>
           </Grid>
-          <Grid item xs={12} md={4}>
-            <VerifiedUserIcon fontSize="large" />
-            <Typography variant="h5">
+          <Grid item xs={12} md={4} textAlign="center">
+            <img
+              src={approvalGif}
+              alt="Get the approval in a few hours"
+              style={{ width: "50%", height: "50%" }}
+            />
+            <Typography variant="h5" sx={{ mt: 2 }}>
               Get the approval in a few hours
             </Typography>
             <Typography sx={{ mt: 2 }}>
-              Once the documents get submitted, it takes very less time for
+              Once the documents are submitted, it takes very less time for
               approval.
             </Typography>
           </Grid>
-          <Grid item xs={12} md={4}>
-            <AttachMoneyIcon fontSize="large" />
-            <Typography variant="h5">Receive the loan amount</Typography>
+          <Grid item xs={12} md={4} textAlign="center">
+            <img
+              src={disbursalGif}
+              alt="Receive the loan amount"
+              style={{ width: "50%", height: "50%" }}
+            />
+            <Typography variant="h5" sx={{ mt: 2 }}>
+              Receive the loan amount
+            </Typography>
             <Typography sx={{ mt: 2 }}>
               Get the disbursal directly into your linked account and use it for
               expenses.
