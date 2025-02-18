@@ -71,6 +71,7 @@ function App() {
           <Route path="/calculator" element={<LoanCalculator />} />
           <Route path="/faq" element={<FAQs />} />
           <Route path="/login-form" element={<LoginForm />} />
+          {/* <Route path="/login-form" element={<LoanApplication />} /> */}
           <Route path="/upload-document" element={<UploadDocuments />} />
           <Route path="/verify-repayment" element={<VerifyRepayment />} />
 

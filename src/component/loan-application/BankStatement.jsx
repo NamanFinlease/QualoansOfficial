@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -8,14 +8,21 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  FormControlLabel,
+  Checkbox,
+  TextField,
 } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import withReactContent from "sweetalert2-react-content";
+
 import SweetAlert from "sweetalert2";
 import { BASE_URL } from "../../baseURL";
 import axios from "axios";
+
+const MySwal = withReactContent(SweetAlert);
 
 const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
   const [bankStatement, setBankStatement] = useState(prefillData || null);
@@ -24,6 +31,96 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [formValues, setFormValues] = useState(false);
   const [bankStatementUploaded, setBankStatementUploaded] = useState(false);
+
+  const [isPasswordProtected, setIsPasswordProtected] = useState(false);
+  const [password, setPassword] = useState("");
+
+  const handleCheckboxChange = (event) => {
+    setIsPasswordProtected(event.target.checked);
+    if (!event.target.checked) {
+      setPassword(""); // Reset password field if unchecked
+    }
+  };
+
+  useEffect(() => {
+    // if (isDocUploaded || isUploadSuccess) {
+    const fetchDocumentList = async () => {
+      const documentListResponse = await axios.get(
+        `${BASE_URL}/getDocumentList`,
+        { withCredentials: true }
+      );
+      console.log(
+        "documentListResponse zsdss",
+        documentListResponse.data.documents
+      );
+      const data = documentListResponse.data.documents;
+      const result = {};
+      console.log(" res asdasda >>> ?? ", data);
+
+      const requiredTypes = ["bankStatement"];
+
+      const hasAllRequired = requiredTypes.every((type) =>
+        data.some((item) => item.type === type)
+      );
+
+      console.log("hasAllRequired", hasAllRequired);
+
+      if (hasAllRequired) {
+        console.log("uploaded");
+        // onComplete({ success: true, data: null });
+      }
+
+      // const requiredNames = ["salarySlip_1", "salarySlip_2", "salarySlip_3"];
+
+      // for (const item of data) {
+      //   if (requiredNames.includes(item.name) && !result[item.name]) {
+      //     result[item.name] = item;
+      //   }
+      // }
+
+      // const firstOccurrencesArray = Object.values(result);
+      // setFirstOccurrences(firstOccurrencesArray);
+
+      // setFormValues((prev) => ({
+      //   ...prev,
+      //   salarySlip: data.filter((doc) => doc.type === "salarySlip"),
+      //   aadhaarFront: data.find((doc) => doc.type === "aadhaarFront"),
+      //   aadhaarBack: data.find((doc) => doc.type === "aadhaarBack"),
+      //   panCard: data.find((doc) => doc.type === "panCard"),
+      //   others: data.filter((doc) => doc.type === "others"),
+      // }));
+    };
+    fetchDocumentList();
+    // }
+  }, []);
+
+  const handlePreview = async (docId, docType) => {
+    console.log("Previewing document:", docId, docType);
+    // const docType = "salarySlip";
+    const apiUrl = `${BASE_URL}/documentPreview?docType=${docType}&docId=${docId}`;
+    try {
+      const response = await axios.get(apiUrl, { withCredentials: true });
+      console.log("Preview data:", response.data);
+      if (response.data && response.data.url) {
+        // Redirect to the URL
+        // window.location.href = response.data.url;
+        window.open(response.data.url, "_blank");
+      } else {
+        throw new Error("URL not found in the response");
+      }
+    } catch (error) {
+      console.error("Error fetching document preview:", error);
+      MySwal.fire({
+        icon: "error",
+        title: "Failed to load document preview",
+        text: error.response?.data?.message || "Something went wrong",
+      });
+    }
+  };
+
+  useEffect(() => {
+    handlePreview();
+  }, []);
 
   const handleOpenModal = () => {
     if (!disabled) setIsModalOpen(true);
@@ -216,7 +313,7 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
           disabled={disabled}
         >
           {isUploaded || bankStatementUploaded ? (
-            <CheckCircleIcon sx={{ color: "white" }} />
+            <CheckCircleIcon sx={{ color: "#4caf50" }} />
           ) : (
             <DescriptionIcon />
           )}
@@ -255,7 +352,7 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
         </DialogTitle>
         <DialogContent>
           <Typography variant="body1" sx={{ marginBottom: 2 }}>
-            Please upload your bank statement in PDF, JPG, or PNG format.
+            Please upload your bank statement in PDF format only.
           </Typography>
           <Button
             variant="contained"
@@ -267,7 +364,7 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
             <input
               type="file"
               hidden
-              accept=".pdf,.jpg,.png"
+              accept=".pdf"
               onChange={handleBankStatementUpload}
             />
           </Button>
@@ -299,6 +396,32 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
                 <DeleteIcon />
               </IconButton>
             </Box>
+          )}
+
+          {/* Password Protection Checkbox */}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isPasswordProtected}
+                onChange={handleCheckboxChange}
+                color="primary"
+              />
+            }
+            label="Is this file password protected?"
+            sx={{ marginTop: 2 }}
+          />
+
+          {/* Password Input Field (Visible only if checkbox is checked) */}
+          {isPasswordProtected && (
+            <TextField
+              label="Enter Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              fullWidth
+              sx={{ marginTop: 2 }}
+              required
+            />
           )}
         </DialogContent>
         <DialogActions>

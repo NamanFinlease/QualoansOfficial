@@ -37,9 +37,23 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [error, setError] = useState("");
 
   const handleFormChange = (key, value) => {
-    console.log("value <>>< < ", value);
     setFormValues((prev) => ({ ...prev, [key]: value }));
+
+    // Reset error when the user modifies input
     if (error) setError("");
+
+    // Loan amount validation
+    if (key === "obligations" && formValues.monthlyIncome) {
+      const loanAmount = parseFloat(value) || 0;
+      const monthlyIncome = parseFloat(formValues.monthlyIncome) || 0;
+      const maxLoanAmount = 0.4 * monthlyIncome; // 40% of monthly income
+
+      if (loanAmount > maxLoanAmount) {
+        setError(
+          `Loan amount should not exceed 40% of monthly income (₹${maxLoanAmount})`
+        );
+      }
+    }
   };
 
   const handleSubmit = async () => {
@@ -293,6 +307,8 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
             fullWidth
             sx={{ marginBottom: 2 }}
             required
+            error={!!error}
+            helperText={error}
           />
           <TextField
             label="Next Salary Date"

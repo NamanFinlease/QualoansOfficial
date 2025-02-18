@@ -237,7 +237,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
           }}
         >
           {isComplete || isUploaded ? (
-            <CheckCircleIcon sx={{ color: "white" }} />
+            <CheckCircleIcon sx={{ color: "#4caf50" }} />
           ) : (
             <WorkIcon />
           )}

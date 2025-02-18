@@ -312,7 +312,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           disabled={disabled}
         >
           {stepCompleted || isUploaded || isEmploymentDetailsSaved ? (
-            <CheckCircleIcon sx={{ color: "white" }} />
+            <CheckCircleIcon sx={{ color: "#4caf50" }} />
           ) : (
             <AccountBalanceIcon />
           )}
