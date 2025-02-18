@@ -8,13 +8,11 @@ import {
   Grid,
   CircularProgress,
   IconButton,
-  InputAdornment,
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
 
@@ -32,13 +30,17 @@ const DocumentUploadModal = ({ prefillData }) => {
     aadhaarFront: prefillData?.aadhaarFront || null,
     aadhaarBack: prefillData?.aadhaarBack || null,
     panCard: prefillData?.panCard || null,
-    otherDocuments: prefillData?.otherDocuments || [{ type: "", files: null }],
+    residential: null,
+    electricityBill: null,
+    gasConnection: null,
   });
-
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [isDocUploaded, setIsDocUploaded] = useState(false);
   const [firstOccurrences, setFirstOccurrences] = useState([]);
+  const [dropdownOptions, setDropdownOptions] = useState(availableOptions);
+  const [selectedOption, setSelectedOption] = useState("");
+  const [additionalFields, setAdditionalFields] = useState([]);
 
   useEffect(() => {
     const getPreviousData = async () => {
@@ -90,21 +92,24 @@ const DocumentUploadModal = ({ prefillData }) => {
           aadhaarFront: data.find((doc) => doc.type === "aadhaarFront"),
           aadhaarBack: data.find((doc) => doc.type === "aadhaarBack"),
           panCard: data.find((doc) => doc.type === "panCard"),
+          residential: data.find((doc) => doc.type === "residential"),
+          electricityBill: data.find((doc) => doc.type === "electricityBill"),
+          gasConnection: data.find((doc) => doc.type === "gasConnection"),
         }));
       };
       fetchDocumentList();
     }
   }, [isDocUploaded]);
 
-  // console.log("formValues >>> ", formValues);
+  const handleDropdownChange = (event) => {
+    const selectedField = event.target.value;
 
-  const getAvailableOptions = (index) => {
-    const uploadedDocuments = formValues.otherDocuments.map((doc, idx) =>
-      idx === index ? "" : doc.type
-    );
-    return availableOptions.filter(
-      (option) => !uploadedDocuments.includes(option)
-    );
+    if (selectedField) {
+      setAdditionalFields((prev) => [...prev, selectedField]);
+      setDropdownOptions((prev) =>
+        prev.filter((option) => option !== selectedField)
+      );
+    }
   };
 
   const handleFileChange = (field, file, index = 0) => {
@@ -112,38 +117,60 @@ const DocumentUploadModal = ({ prefillData }) => {
     const filePreview = file ? URL.createObjectURL(file) : null;
 
     if (field === "salarySlip") {
-      console.log("handleFileChange slip field >>> ", field);
-      console.log("handleFileChange slip index >>> ", index);
-      console.log("handleFileChange slip file >>> ", file);
       updatedFormValues.salarySlip[index] = file;
-      console.log("formValues.salarySlip[index] >>> ", formValues.salarySlip);
-    } else if (field === "otherDocuments") {
-      updatedFormValues.otherDocuments[index].files = file;
+      setFormValues(updatedFormValues);
     } else {
-      updatedFormValues[field] = file;
+      if (field === "Residential Address") {
+        setFormValues((prev) => ({
+          ...prev,
+          residential: file,
+        }));
+      } else if (field === "Electricity Bill") {
+        setFormValues((prev) => ({
+          ...prev,
+          electricityBill: file,
+        }));
+      } else if (field === "Gas Connection") {
+        setFormValues((prev) => ({
+          ...prev,
+          gasConnection: file,
+        }));
+      } else {
+        setFormValues((prev) => ({
+          ...prev,
+          [field]: file,
+        }));
+      }
     }
-    setFormValues(updatedFormValues);
-  };
-
-  const handleDropdownChange = (event, index) => {
-    const selectedType = event.target.value;
-    const updatedFormValues = { ...formValues };
-    updatedFormValues.otherDocuments[index].type = selectedType;
-    setFormValues(updatedFormValues);
+    // setFormValues(updatedFormValues);
   };
 
   const deleteUploadedFile = (field, index = 0) => {
     const updatedFormValues = { ...formValues };
     if (field === "salarySlip") {
-      console.log("slip index >>> ", index);
-      console.log("slip field >>> ", field);
       updatedFormValues.salarySlip[index] = null;
-    } else if (field === "otherDocuments") {
-      updatedFormValues.otherDocuments[index].files = null;
+      setFormValues(updatedFormValues);
     } else {
-      updatedFormValues[field] = null;
+      // updatedFormValues[field] = null;
+      setFormValues((prev) => ({
+        ...prev,
+        [field]: null,
+      }));
+      const fieldDisplayName = availableOptions.find(
+        (option) =>
+          field.toLowerCase() === option.toLowerCase().replace(" ", "")
+      );
+      // console.log("fieldDisplayName <<>> ", fieldDisplayName);
+      if (fieldDisplayName) {
+        setDropdownOptions((prev) => [...prev, fieldDisplayName]);
+      }
+
+      // Remove the field from additionalFields
+      setAdditionalFields((prev) =>
+        prev.filter((existingField) => existingField !== field)
+      );
     }
-    setFormValues(updatedFormValues);
+    // setFormValues(updatedFormValues);
   };
 
   const validateForm = () => {
@@ -156,17 +183,13 @@ const DocumentUploadModal = ({ prefillData }) => {
     if (!formValues.aadhaarBack) newErrors.aadhaarBack = "Required";
     if (!formValues.panCard) newErrors.panCard = "Required";
 
-    formValues.otherDocuments.forEach((doc, index) => {
-      if (!doc.type) newErrors[`otherType-${index}`] = "Required";
-      if (!doc.files) newErrors[`otherFiles-${index}`] = "Required";
-    });
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
+    console.log("formValues >>> ");
 
     // Prepare form-data
     const formData = new FormData();
@@ -185,15 +208,17 @@ const DocumentUploadModal = ({ prefillData }) => {
     formData.append("aadhaarFront", formValues.aadhaarFront);
     formData.append("aadhaarBack", formValues.aadhaarBack);
     formData.append("panCard", formValues.panCard);
-    if (formValues.otherType) {
-      formData.append("type", formValues.otherType);
-      formData.append("others", formValues.otherDocument);
-    }
+
+    if (formValues.residential)
+      formData.append("residential", formValues.residential);
+    if (formValues.electricityBill)
+      formData.append("electricityBill", formValues.electricityBill);
+    if (formValues.gasConnection)
+      formData.append("gasConnection", formValues.gasConnection);
 
     setLoading(true);
 
     try {
-      // Fetch the API using axios
       const response = await axios.patch(
         `${BASE_URL}/uploadDocuments`,
         formData,
@@ -204,7 +229,6 @@ const DocumentUploadModal = ({ prefillData }) => {
           withCredentials: true,
         }
       );
-      console.log("response ><<>> ", response);
       MySwal.fire({
         icon: "success",
         title: "Documents uploaded successfully",
@@ -220,13 +244,6 @@ const DocumentUploadModal = ({ prefillData }) => {
     }
   };
 
-  const addMoreDocumentFields = () => {
-    setFormValues({
-      ...formValues,
-      otherDocuments: [...formValues.otherDocuments, { type: "", files: null }],
-    });
-  };
-
   const isSubmitDisabled = () => {
     const requiredFields = [
       // formValues.salarySlip,
@@ -234,11 +251,8 @@ const DocumentUploadModal = ({ prefillData }) => {
       formValues.aadhaarBack,
       formValues.panCard,
     ];
-    const otherDocsComplete = formValues.otherDocuments.every(
-      (doc) => doc.type && doc.files
-    );
 
-    return requiredFields.some((field) => !field) || !otherDocsComplete;
+    return requiredFields.some((field) => !field);
   };
 
   const handlePreview = async (docId, docType) => {
@@ -246,10 +260,7 @@ const DocumentUploadModal = ({ prefillData }) => {
     const apiUrl = `${BASE_URL}/documentPreview?docType=${docType}&docId=${docId}`;
     try {
       const response = await axios.get(apiUrl, { withCredentials: true });
-      console.log("Preview data:", response.data);
       if (response.data && response.data.url) {
-        // Redirect to the URL
-        // window.location.href = response.data.url;
         window.open(response.data.url, "_blank");
       } else {
         throw new Error("URL not found in the response");
@@ -286,87 +297,184 @@ const DocumentUploadModal = ({ prefillData }) => {
         Upload Documents
       </Typography>
       <Grid container spacing={2}>
-        {console.log("firstOccurrences <<>>> ", firstOccurrences)}
-        {[0, 1, 2].map((index) => (
-          <Grid item xs={12} sm={4} key={`salarySlip-${index}`}>
-            {console.log("firstOccurrences <<<<>>>>>c ", firstOccurrences)}
-            {formValues.salarySlip[index] ? (
+        {[0, 1, 2].map((index) => {
+          return (
+            <Box
+              key={index}
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              mb={2}
+            >
+              {formValues.salarySlip[index] ? (
+                <>
+                  <Typography
+                    style={{ cursor: "pointer", textDecoration: "underline" }}
+                    onClick={() =>
+                      firstOccurrences[index]
+                        ? handlePreview(
+                            firstOccurrences[index].id,
+                            firstOccurrences[index].type
+                          )
+                        : null
+                    }
+                  >
+                    {index === 0
+                      ? "Salary Slip 1"
+                      : index === 1
+                      ? "Salary Slip 2"
+                      : "Salary Slip 3"}
+                  </Typography>
+                  <Box>
+                    <IconButton
+                      onClick={() => handlePreview(document.id, document.type)}
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => deleteUploadedFile("salarySlip", index)}
+                    >
+                      <ClearIcon sx={{ color: "red" }} />
+                    </IconButton>
+                  </Box>
+                </>
+              ) : (
+                <TextField
+                  fullWidth
+                  type="file"
+                  inputProps={{ accept: ".pdf,image/*" }}
+                  label={`Upload Salary Slip ${index + 1}`}
+                  error={!!errors.salarySlip && !formValues.salarySlip[index]}
+                  helperText={
+                    errors.salarySlip && !formValues.salarySlip[index]
+                      ? "Required"
+                      : ""
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(e) =>
+                    handleFileChange("salarySlip", e.target.files[0], index)
+                  }
+                />
+              )}
+            </Box>
+          );
+        })}
+
+        {["salarySlip", "aadhaarFront", "aadhaarBack", "panCard"].map(
+          (field) => {
+            const document = formValues[field];
+            return (
               <Box
+                key={field}
                 display="flex"
                 alignItems="center"
                 justifyContent="space-between"
+                mb={2}
               >
-                <Typography
-                  sx={{
-                    textDecoration: "underline",
-                    cursor: "pointer",
-                    fontSize: "0.9rem",
-                    color: "blue",
-                  }}
-                  onClick={() =>
-                    firstOccurrences[index]
-                      ? handlePreview(
-                          firstOccurrences[index].id,
-                          firstOccurrences[index].type
-                        )
-                      : null
-                  }
-                >
-                  View Uploaded File
-                </Typography>
-                <IconButton
-                  onClick={() => deleteUploadedFile("salarySlip", index)}
-                >
-                  <ClearIcon sx={{ color: "red" }} />
-                </IconButton>
+                {document ? (
+                  <>
+                    <Typography
+                      onClick={() => handlePreview(document.id, document.type)}
+                      style={{ cursor: "pointer", textDecoration: "underline" }}
+                    >
+                      {document.name}
+                    </Typography>
+                    <Box>
+                      <IconButton
+                        onClick={() =>
+                          handlePreview(document.id, document.type)
+                        }
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                      <IconButton onClick={() => handleDelete(field)}>
+                        <ClearIcon sx={{ color: "red" }} />
+                      </IconButton>
+                    </Box>
+                  </>
+                ) : (
+                  <TextField
+                    fullWidth
+                    type="file"
+                    inputProps={{ accept: ".pdf,image/*" }}
+                    label={`Upload ${field.replace(/([A-Z])/g, " $1")}`}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) =>
+                      handleFileChange(document.type, e.target.files[0], index)
+                    }
+                  />
+                )}
               </Box>
-            ) : (
-              <TextField
-                fullWidth
-                type="file"
-                inputProps={{ accept: ".pdf,image/*" }}
-                label={`Upload Salary Slip ${index + 1}`}
-                error={!!errors.salarySlip && !formValues.salarySlip[index]}
-                helperText={
-                  errors.salarySlip && !formValues.salarySlip[index]
-                    ? "Required"
-                    : ""
-                }
-                InputLabelProps={{ shrink: true }}
-                onChange={(e) =>
-                  handleFileChange("salarySlip", e.target.files[0], index)
-                }
-              />
-            )}
-          </Grid>
-        ))}
-        {/* {["aadhaarFront", "aadhaarBack", "panCard"].map((field, index) => (
-          <Grid item xs={12} sm={6} key={index}>
-            <TextField
-              fullWidth
-              type="file"
-              inputProps={{ accept: ".pdf,image/*" }}
-              label={`Upload ${field.replace(/([A-Z])/g, " $1")}`}
-              error={!!errors[field]}
-              helperText={errors[field]}
-              InputLabelProps={{ shrink: true }}
-              InputProps={{
-                endAdornment: formValues[field] && (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => deleteUploadedFile(field)}>
-                      <ClearIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              onChange={(e) => handleFileChange(field, e.target.files[0])}
-            />
-          </Grid>
-        ))} */}
+            );
+          }
+        )}
 
-        {["aadhaarFront", "aadhaarBack", "panCard"].map((field) => {
+        {dropdownOptions.length > 0 && (
+          <Grid item xs={12}>
+            <TextField
+              select
+              fullWidth
+              label="Select Document Type"
+              value=""
+              onChange={handleDropdownChange}
+              InputLabelProps={{ shrink: true }}
+            >
+              {dropdownOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+        )}
+
+        {/* {["residential", "electricityBill", "gasConnection"].map((field) => {
           const document = formValues[field];
-          console.log("document >>> ", document);
+          return (
+            <Box
+              key={field}
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              mb={2}
+            >
+              {document ? (
+                <>
+                  <Typography
+                    onClick={() => handlePreview(document.id, document.type)}
+                    style={{ cursor: "pointer", textDecoration: "underline" }}
+                  >
+                    {document.name}
+                  </Typography>
+                  <Box>
+                    <IconButton
+                      onClick={() => handlePreview(document.id, document.type)}
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(field)}>
+                      <ClearIcon sx={{ color: "red" }} />
+                    </IconButton>
+                  </Box>
+                </>
+              ) : (
+                <TextField
+                  fullWidth
+                  type="file"
+                  inputProps={{ accept: ".pdf,image/*" }}
+                  label={`Upload ${field
+                    .replace(/([A-Z])/g, " $1")
+                    .replace(/^./, (str) => str.toUpperCase())}`}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(e) => handleFileChange(field, e.target.files[0])}
+                />
+              )}
+            </Box>
+          );
+        })} */}
+
+        {additionalFields.map((field) => {
+          const document = formValues[field];
           return (
             <Box
               key={field}
@@ -399,127 +507,17 @@ const DocumentUploadModal = ({ prefillData }) => {
                   fullWidth
                   type="file"
                   inputProps={{ accept: ".pdf,image/*" }}
-                  label={`Upload ${field.replace(/([A-Z])/g, " $1")}`}
+                  label={`Upload ${field
+                    .replace(/([A-Z])/g, " $1")
+                    .replace(/^./, (str) => str.toUpperCase())}`}
                   InputLabelProps={{ shrink: true }}
-                  onChange={(e) =>
-                    handleFileChange("salarySlip", e.target.files[0], index)
-                  }
+                  onChange={(e) => handleFileChange(field, e.target.files[0])}
                 />
               )}
             </Box>
           );
         })}
-        {/* {formValues.otherDocuments.map((doc, index) => (
-          <React.Fragment key={index}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                select
-                fullWidth
-                label="Select Document Type"
-                value={doc.type || ""}
-                onChange={(e) => handleDropdownChange(e, index)}
-                error={!!errors[`otherType-${index}`]}
-                helperText={errors[`otherType-${index}`]}
-              >
-                {[
-                  "Residential Address",
-                  "Electricity Bill",
-                  "Gas Connection",
-                ].map((option, idx) => (
-                  <MenuItem key={idx} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                type="file"
-                label="Upload Document"
-                error={!!errors[`otherFiles-${index}`]}
-                helperText={errors[`otherFiles-${index}`]}
-                InputLabelProps={{ shrink: true }}
-                InputProps={{
-                  endAdornment: doc.files && (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() =>
-                          deleteUploadedFile("otherDocuments", index)
-                        }
-                      >
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                onChange={(e) =>
-                  handleFileChange("otherDocuments", e.target.files[0], index)
-                }
-              />
-            </Grid>
-          </React.Fragment>
-        ))} */}
 
-        {/* old */}
-        {formValues.otherDocuments.map((doc, index) => (
-          <React.Fragment key={index}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                select
-                fullWidth
-                label="Select Document Type"
-                value={doc.type}
-                onChange={(e) => handleDropdownChange(e, index)}
-                error={!!errors[`otherType-${index}`]}
-                helperText={errors[`otherType-${index}`]}
-              >
-                {getAvailableOptions(index).map((option, idx) => (
-                  <MenuItem key={idx} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                type="file"
-                label="Upload Document"
-                error={!!errors[`otherFiles-${index}`]}
-                helperText={errors[`otherFiles-${index}`]}
-                InputLabelProps={{ shrink: true }}
-                InputProps={{
-                  endAdornment: doc.files && (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() =>
-                          deleteUploadedFile("otherDocuments", index)
-                        }
-                      >
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                onChange={(e) =>
-                  handleFileChange("otherDocuments", e.target.files[0], index)
-                }
-              />
-            </Grid>
-          </React.Fragment>
-        ))}
-        <Grid item xs={12}>
-          <Button
-            variant="outlined"
-            onClick={addMoreDocumentFields}
-            disabled={
-              formValues.otherDocuments.length >= availableOptions.length
-            }
-          >
-            Add More Documents
-          </Button>
-        </Grid>
         <Grid item xs={12}>
           <Box mt={3} textAlign="center">
             <Button
@@ -532,11 +530,12 @@ const DocumentUploadModal = ({ prefillData }) => {
             <Button
               variant="contained"
               onClick={handleSubmit}
-              disabled={isSubmitDisabled() || loading}
+              // disabled={isSubmitDisabled() || loading}
               sx={{ backgroundColor: "orange", color: "white" }}
               startIcon={loading && <CircularProgress size={20} />}
             >
-              {loading ? "Submitting..." : "Submit"}
+              Submit
+              {/* {loading ? "Submitting..." : "Submit"} */}
             </Button>
           </Box>
         </Grid>

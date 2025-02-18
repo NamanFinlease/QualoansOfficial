@@ -167,6 +167,8 @@ const UploadDocuments = () => {
           withCredentials: true,
         }
       );
+      // console.log("Response data:", response.data);
+
       console.log("REs >>> ", response);
       if (response.status === 200) {
         setIsUploadSuccess(isUploadSuccess + 1);
@@ -183,11 +185,7 @@ const UploadDocuments = () => {
         setSelectedDocType(null);
       }
     } catch (error) {
-      Swal.fire(
-        "Error!",
-        "Failed to upload documents. Please try again.",
-        "error"
-      );
+      Swal.fire(error.response?.data?.message || "Error!");
       console.error("Upload error:", error); // Log error for debugging
     }
   };
@@ -246,6 +244,7 @@ const UploadDocuments = () => {
           name: `salarySlip ${index + 1}`,
           type: slip.type,
           url: slip.url,
+          remarks: fileInputs[index]?.remarks || "", // Add remarks
         });
       });
     }
@@ -270,6 +269,7 @@ const UploadDocuments = () => {
           name: documents[key].name,
           type: documents[key].type,
           url: documents[key].url,
+          remarks: fileInputs[0]?.remarks || "", // For non-array files, default to the first remarks input
         });
       }
     });

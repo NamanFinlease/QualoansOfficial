@@ -83,11 +83,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
               city: "",
               state: "",
             }));
-            Swal.fire({
-              icon: "error",
-              title: "Invalid Pincode",
-              text: "Please enter a valid pincode.",
-            });
+            alert("Please enter a valid pincode.");
           }
         } catch (error) {
           alert(
@@ -155,7 +151,9 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           onComplete(apiData); // Pass data back to the parent
         }
       } else {
-        Swal.fire("Error submitting employment information.");
+        // Swal.fire("Error submitting employment information.");
+        alert(error.response.data.message);
+        setOpenModal(false);
       }
     } catch (error) {
       alert(error.response.data.message);
@@ -312,7 +310,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           disabled={disabled}
         >
           {stepCompleted || isUploaded || isEmploymentDetailsSaved ? (
-            <CheckCircleIcon sx={{ color: "white" }} />
+            <CheckCircleIcon sx={{ color: "green" }} />
           ) : (
             <AccountBalanceIcon />
           )}

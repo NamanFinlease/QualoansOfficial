@@ -22,6 +22,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [formValues, setFormValues] = useState({
     fullName: "",
+    mothersName: "",
     gender: "",
     personalEmail: "",
     maritalStatus: "",
@@ -48,6 +49,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
         const data = response.data.data.personalDetails;
         setFormValues({
           fullName: data.fullName || "",
+          mothersName: data.mothersName || "",
           gender: data.gender || "",
           personalEmail: data.personalEmail || "",
           maritalStatus: data.maritalStatus || "",
@@ -80,6 +82,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
 
     const updatedDetails = {
       fullName: formValues.fullName,
+      mothersName: formValues.mothersName,
       gender: formValues.gender,
       dob: formValues.dob,
       personalEmail: formValues.personalEmail,
@@ -146,7 +149,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
           sx={{
             color:
               // completed ? "white" :
-              disabled ? "grey" : "white",
+              disabled ? "grey" : "green",
             ml: 1,
           }}
         >
@@ -172,6 +175,8 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             maxWidth: 400,
             margin: "auto",
             marginTop: "5%",
+            maxHeight: "80vh", // set a maximum height for the modal
+            overflowY: "auto", // enable vertical scrolling when content overflows
           }}
         >
           <Typography sx={{ marginBottom: 2 }}>Share Your Details</Typography>
@@ -187,6 +192,15 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             label="Email"
             value={formValues.personalEmail}
             onChange={(e) => handleFormChange("personalEmail", e.target.value)}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+            error={!!error}
+            helperText={error}
+          />
+          <TextField
+            label="Mother's Name"
+            value={formValues.mothersName}
+            onChange={(e) => handleFormChange("mothersName", e.target.value)}
             fullWidth
             sx={{ marginBottom: 2 }}
             error={!!error}

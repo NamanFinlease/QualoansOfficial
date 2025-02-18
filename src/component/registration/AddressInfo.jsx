@@ -320,7 +320,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
         sx={{
           color:
             // completed ? "white" :
-            disabled ? "grey" : "white",
+            disabled ? "grey" : "green",
           ml: 1,
         }}
       >

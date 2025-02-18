@@ -22,7 +22,7 @@ import { BASE_URL } from "../baseURL";
 import axios from "axios";
 import withReactContent from "sweetalert2-react-content";
 
-const DocumentsTable = ({ uploadedDocs }) => {
+const DocumentsTable = ({ uploadedDocs, remarks }) => {
   // const [getLeadDocs, { data, isSuccess, isError, error }] = useLazyGetLeadDocsQuery();
 
   // Color theme
@@ -75,7 +75,7 @@ const DocumentsTable = ({ uploadedDocs }) => {
 
   // }, [isSuccess, data])
   return (
-    <Box sx={{ overflowX: 'auto', width: '100%' }}>
+    <Box sx={{ overflowX: "auto", width: "100%" }}>
       <TableContainer
         component={Box}
         sx={{
@@ -84,12 +84,12 @@ const DocumentsTable = ({ uploadedDocs }) => {
           border: `1px solid #F26722`,
           overflow: "hidden",
           width: {
-            xs: '100%',  // full width on mobile
-            sm: '90%',   // 90% width on tablet
-            md: '80%',   // 80% width on desktop
-            lg: '70%'    // 70% width on larger screens
+            xs: "100%", // full width on mobile
+            sm: "90%", // 90% width on tablet
+            md: "80%", // 80% width on desktop
+            lg: "70%", // 70% width on larger screens
           },
-          mx: 'auto'      // center the table
+          mx: "auto", // center the table
         }}
       >
         <Table>
@@ -100,10 +100,18 @@ const DocumentsTable = ({ uploadedDocs }) => {
                 color: "#fff",
               }}
             >
-              <TableCell sx={{ fontWeight: "bold", whiteSpace: 'nowrap' }}>S.N</TableCell>
-              <TableCell sx={{ fontWeight: "bold", whiteSpace: 'nowrap' }}>Name</TableCell>
-              <TableCell sx={{ fontWeight: "bold", whiteSpace: 'nowrap' }}>Remark</TableCell>
-              <TableCell sx={{ fontWeight: "bold", whiteSpace: 'nowrap' }}>View</TableCell>
+              <TableCell sx={{ fontWeight: "bold", whiteSpace: "nowrap" }}>
+                S.N
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", whiteSpace: "nowrap" }}>
+                Name
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", whiteSpace: "nowrap" }}>
+                Remark
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", whiteSpace: "nowrap" }}>
+                View
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -111,7 +119,11 @@ const DocumentsTable = ({ uploadedDocs }) => {
               <TableRow key={doc?.id}>
                 <TableCell sx={{ color: "#00000" }}>{index + 1}</TableCell>
                 <TableCell sx={{ color: "#00000" }}>{doc?.name}</TableCell>
-                <TableCell sx={{ color: "#00000" }}>{doc?.remarks}</TableCell>
+                <TableCell sx={{ color: "#00000" }}>
+                  {doc?.remarks || "No remarks"}
+                </TableCell>
+                {/* <TableCell sx={{ color: "#00000" }}>{doc?.remarks}</TableCell> */}
+
                 <TableCell>
                   <IconButton
                     color="primary"

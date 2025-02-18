@@ -218,7 +218,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
         sx={{
           color:
             // completed ? "white" :
-            disabled ? "grey" : "white",
+            disabled ? "grey" : "green",
           ml: 1,
         }}
       >
@@ -306,6 +306,18 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
             inputProps={{ min: new Date().toISOString().split("T")[0] }}
             placeholder="DD-MM-YYYY"
           />
+          <TextField
+            label="Working Since"
+            type="date"
+            value={formValues.workingSince}
+            onChange={(e) => handleFormChange("workingSince", e.target.value)}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+            required
+            InputLabelProps={{ shrink: true }}
+            inputProps={{ max: new Date().toISOString().split("T")[0] }}
+            placeholder="DD-MM-YYYY"
+          />
           <Typography variant="body1" sx={{ fontWeight: "bold", mb: 2 }}>
             Mode of Income Received
           </Typography>
@@ -327,18 +339,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
               label="Others"
             />
           </RadioGroup>
-          <TextField
-            label="Working Since"
-            type="date"
-            value={formValues.workingSince}
-            onChange={(e) => handleFormChange("workingSince", e.target.value)}
-            fullWidth
-            sx={{ marginBottom: 2 }}
-            required
-            InputLabelProps={{ shrink: true }}
-            inputProps={{ max: new Date().toISOString().split("T")[0] }}
-            placeholder="DD-MM-YYYY"
-          />
+
           {error && <Typography color="error">{error}</Typography>}
           <Box
             sx={{

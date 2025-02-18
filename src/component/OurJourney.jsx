@@ -203,7 +203,7 @@ const OurJourney = () => {
                 variant="contained"
                 onClick={() => {
                   window.location.href =
-                    "https://www.youtube.com/watch?v=a3ICNMQW7Ok&ab_channel=TimotiusJoso"; // Replace with your video URL
+                    "https://www.youtube.com/watch?v=0aKwYTqEr80"; // Replace with your video URL
                 }}
                 sx={{
                   backgroundColor: "#fff",

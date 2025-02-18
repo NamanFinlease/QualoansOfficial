@@ -364,7 +364,7 @@ const SelfieVerification = ({ onComplete, disabled }) => {
               >
                 Take a Picture
               </Button>
-              <Button
+              {/* <Button
                 variant="outlined"
                 component="label"
                 sx={{
@@ -383,7 +383,7 @@ const SelfieVerification = ({ onComplete, disabled }) => {
                   hidden
                   onChange={handleFileUpload}
                 />
-              </Button>
+              </Button> */}
               {capturedImage && (
                 <Box sx={{ width: "100%", marginTop: 2, textAlign: "center" }}>
                   <Typography variant="body1" sx={{ marginBottom: 1 }}>
