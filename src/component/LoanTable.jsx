@@ -216,7 +216,7 @@ const LoanTable = () => {
                   >
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{loan.loanNo}</TableCell>
-                    <TableCell>₹{loan.amount}</TableCell>
+                    <TableCell>₹{loan.outstandingAmount}</TableCell>
                     <TableCell>{loan.pan}</TableCell>
                     <TableCell>
                       {moment(loan.repaymentDate).format("DD-MM-YYYY")}
@@ -233,7 +233,7 @@ const LoanTable = () => {
                       {loan.isDisbursed && loan.isActive ? (
                         <Button
                           onClick={() =>
-                            handlePaymentSubmit(loan.loanNo, loan.amount)
+                            handlePaymentSubmit(loan.loanNo, loan.outstandingAmount)
                           }
                           sx={{
                             px: 2,
