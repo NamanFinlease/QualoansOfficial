@@ -119,8 +119,8 @@ const SelfieVerification = ({ onComplete, disabled }) => {
               title: "You have successfully registered to Qualoan!",
               html: `<span class="blink-text">Complete your loan application process.</span>`,
               imageUrl: yourImage,
-              imageWidth: "100%", // Set image width to 100% of the popup
-              imageHeight: "auto", // Maintain aspect ratio
+              imageWidth: "60%", // Set image width to 100% of the popup
+              imageHeight: "60%", // Maintain aspect ratio
               confirmButtonText: "Go to Loan Application",
               confirmButtonColor: "#FFA500", // Set button color to orange
               width: "40%", // Set the width of the popup

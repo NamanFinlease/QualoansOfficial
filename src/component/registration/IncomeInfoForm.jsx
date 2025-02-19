@@ -158,7 +158,6 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
                 ? new Date(profileData.workingSince).toISOString().split("T")[0]
                 : "",
             });
-            console.log("bhhjhjhb>>>", employementType);
           }
         }
       }

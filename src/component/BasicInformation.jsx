@@ -165,7 +165,7 @@ const BasicInformation = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Mothers Name
+                  Mother's Name
                 </td>
                 <td
                   style={{

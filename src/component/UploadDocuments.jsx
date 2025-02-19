@@ -91,6 +91,8 @@ const UploadDocuments = () => {
     }));
   };
 
+  //
+
   // Handle remarks input
   const handleRemarksChange = (index, event) => {
     const { value } = event.target;
@@ -138,10 +140,6 @@ const UploadDocuments = () => {
     }
 
     const formData = new FormData();
-
-    console.log("fileInputs >>> ", fileInputs);
-    console.log("hasFileSelected >>> ", hasFileSelected);
-    console.log("selectedDocType >>> ", selectedDocType);
 
     // Prepare data to be sent to the FormData
     fileInputs.forEach((input, index) => {
@@ -244,7 +242,7 @@ const UploadDocuments = () => {
           name: `salarySlip ${index + 1}`,
           type: slip.type,
           url: slip.url,
-          remarks: fileInputs[index]?.remarks || "", // Add remarks
+          remarks: slip.remarks || "", // using backend value
         });
       });
     }
@@ -256,6 +254,7 @@ const UploadDocuments = () => {
           name: `others ${index + 1}`,
           type: slip.type,
           url: slip.url,
+          remarks: slip.remarks || "", // using backend value
         });
       });
     }
@@ -269,7 +268,7 @@ const UploadDocuments = () => {
           name: documents[key].name,
           type: documents[key].type,
           url: documents[key].url,
-          remarks: fileInputs[0]?.remarks || "", // For non-array files, default to the first remarks input
+          remarks: documents[key].remarks || "", // Access the remarks from the correct document
         });
       }
     });

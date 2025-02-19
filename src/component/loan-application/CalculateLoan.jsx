@@ -92,7 +92,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
       tenure: formValues.tenure,
       loanPurpose:
         formValues.loanPurpose === "OTHERS"
-          ? othersInputs.filter((input) => input.trim() !== "")
+          ? othersInputs.filter((input) => input.trim() !== "").join(", ")
           : formValues.loanPurpose.toUpperCase(),
     };
 

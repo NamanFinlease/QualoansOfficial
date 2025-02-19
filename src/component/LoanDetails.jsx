@@ -161,7 +161,7 @@ const LoanDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Return on interest (ROI)
+                  Rate of interest (ROI)
                 </td>
                 <td
                   style={{

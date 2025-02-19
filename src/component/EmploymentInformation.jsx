@@ -12,6 +12,7 @@ const EmploymentInformation = () => {
     workFrom: "",
     officeEmail: "",
     companyName: "",
+    employedSince: "",
     companyType: "",
     statedesignation: "",
     officeAddrress: "",
@@ -53,6 +54,7 @@ const EmploymentInformation = () => {
           officeEmail: data?.data?.officeEmail,
           companyName: data?.data?.companyName,
           companyType: data?.data?.companyType,
+          employedSince: data?.data?.employedSince,
           designation: data?.data?.designation,
           officeAddrress: data?.data?.officeAddrress,
           landmark: data?.data?.landmark,
@@ -178,6 +180,28 @@ const EmploymentInformation = () => {
                   {employment.officeEmail}
                 </td>
               </tr>
+
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  Employed Since
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "#F26722",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {employment.employedSince}
+                </td>
+              </tr>
+
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
                 <td
                   style={{
