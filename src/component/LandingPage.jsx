@@ -10,6 +10,7 @@ import {
   MenuItem,
   Typography,
   Box,
+  CardContent,
   FormControl,
   InputLabel,
   Card,
@@ -258,6 +259,72 @@ const LandingPage = () => {
           ))}
         </Grid>
       </Box>
+
+      <Box sx={{ textAlign: "center", my: 4, px: 2 }}>
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
+          <span style={{ color: "#f7941d" }}> RATES & CHARGES</span>
+        </Typography>
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item xs={12} md={5}>
+            <Card sx={{ boxShadow: 3, borderRadius: 2, height: "100%" }}>
+              <CardContent
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: "bold",
+                    color: "#007bff",
+                  }}
+                >
+                  1
+                </Typography>
+                <Typography>Minimum loan amount - ₹5,000/-</Typography>
+                <Typography>Maximum loan amount - ₹1,00,000/-</Typography>
+                <Typography>Tenure - Up to 90 Days.</Typography>
+                <Typography>Processing Fee - T&C Apply</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={5}>
+            <Card sx={{ boxShadow: 3, borderRadius: 2, height: "100%" }}>
+              <CardContent
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: "bold",
+                    color: "#007bff",
+                  }}
+                >
+                  2
+                </Typography>
+                <Typography>No pre-Closure Charges</Typography>
+                <Typography>No Prepayment Charges.</Typography>
+                <Typography>Cheque Bounce Charges - ₹1000/-</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
+
       {/* Grievance & Contact Information Section */}
       <Box
         sx={{ bgcolor: "orange", py: 4, textAlign: "center", color: "white" }}
@@ -334,7 +401,7 @@ const LandingPage = () => {
           transparent lending experience.
         </Typography>
         <Divider sx={{ borderColor: "white", my: 2, mx: 2 }} />
-        <Typography variant="body2">
+        {/* <Typography variant="body2">
           © {new Date().getFullYear()} qualoan.com - All Right Reserved
           <Link
             to="/terms-condition"
@@ -349,7 +416,7 @@ const LandingPage = () => {
           >
             Privacy Policy
           </Link>
-        </Typography>
+        </Typography> */}
       </Box>
       <Footer />
     </Box>
