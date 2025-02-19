@@ -163,8 +163,9 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified }) => {
           sx={{
             color:
               //  isPanValidated ||
-              disabled ? "white" : "#1c1c1c",
-            ml: 1,
+            
+              disabled ? "grey" : "white",      
+                    ml: 1,
           }}
           disabled={disabled}
         >

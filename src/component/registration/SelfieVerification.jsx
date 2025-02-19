@@ -8,13 +8,13 @@ import {
   IconButton,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import CheckCircle from "@mui/icons-material/CheckCircle";
 import Webcam from "react-webcam"; // Import Webcam for camera functionality
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import { BASE_URL } from "../../baseURL";
 import yourImage from "../../assets/image/vidu-general-4-2025-01-18T06_43_27Z (1).gif"; // Import your image
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const SelfieVerification = ({ onComplete, disabled }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -200,12 +200,29 @@ const SelfieVerification = ({ onComplete, disabled }) => {
     >
       <IconButton
         sx={{
+          color:
+            //  isPanValidated ||
+
+            disabled ? "grey" : "white",
+          ml: 1,
+        }}
+        disabled={disabled}
+      >
+        {isPanValidated || isVerified ? (
+          <CheckCircleIcon sx={{ color: "green" }} />
+        ) : (
+          icon
+        )}
+      </IconButton>
+
+      {/* <IconButton
+        sx={{
           color: completed ? "white" : disabled ? "#1c1c1c" : "white",
           ml: 1,
         }}
       >
         {completed ? <CheckCircle style={{ fontSize: "24px" }} /> : icon}
-      </IconButton>
+      </IconButton> */}
       <Box sx={{ ml: 2, flexGrow: 1 }}>
         <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
         <Typography variant="body2">{description}</Typography>
