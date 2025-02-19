@@ -208,7 +208,7 @@ const SelfieVerification = ({ onComplete, disabled }) => {
         }}
         disabled={disabled}
       >
-        {isPanValidated || isVerified ? (
+        {completed ? (
           <CheckCircleIcon sx={{ color: "green" }} />
         ) : (
           icon
