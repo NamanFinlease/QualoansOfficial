@@ -12,10 +12,11 @@ import {
   CircularProgress,
   IconButton,
 } from "@mui/material";
-import { Person, CheckCircle } from "@mui/icons-material";
+import { Person } from "@mui/icons-material";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { BASE_URL } from "../../baseURL";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -148,13 +149,20 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
         <IconButton
           sx={{
             color:
-              // completed ? "white" :
-              disabled ? "grey" : "green",
+              //  isPanValidated ||
+
+              disabled ? "grey" : "white",
             ml: 1,
           }}
+          disabled={disabled}
         >
-          {isPersonalInfoUpdated || isVerified ? <CheckCircle /> : <Person />}
+          {isPanValidated || isVerified ? (
+            <CheckCircleIcon sx={{ color: "green" }} />
+          ) : (
+            <Person sx={{ color: disabled ? "#1c1c1c" : "white" }} />
+          )}
         </IconButton>
+       
         <Box sx={{ ml: 2, flexGrow: 1 }}>
           <Typography sx={{ fontWeight: "bold" }}>
             Personal Information

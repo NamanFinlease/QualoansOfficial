@@ -122,14 +122,20 @@ const Dashboard = () => {
 
   const options = [
     { text: "Dashboard", icon: <DashboardIcon />, link: "/ourjourney" },
+
+    { text: "User Preview", icon: <PersonIcon />, link: "/user-preview" },
+    {
+      text: "Manage Repayments",
+      icon: <TableViewIcon />,
+      link: "/manage-repayments",
+    },
+
     { text: "Privacy Policy", icon: <PolicyIcon />, link: "/privacy-policy" },
     {
       text: "Terms & Conditions",
       icon: <GavelIcon />,
       link: "/terms-condition",
     },
-    { text: "User Preview", icon: <PersonIcon />, link: "/user-preview" },
-    { text: "Manage Repayments", icon: <TableViewIcon />, link: "/manage-repayments" },
     { text: "Logout", icon: <LogoutIcon />, action: handleLogout },
   ];
 

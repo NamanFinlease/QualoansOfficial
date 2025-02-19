@@ -230,13 +230,30 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
       <IconButton
         sx={{
           color:
+            //  isPanValidated ||
+
+            disabled ? "grey" : "white",
+          ml: 1,
+        }}
+        disabled={disabled}
+      >
+        {isPanValidated || isVerified ? (
+          <CheckCircleIcon sx={{ color: "green" }} />
+        ) : (
+          icon
+        )}
+      </IconButton>
+
+      {/* <IconButton
+        sx={{
+          color:
             // completed ? "white" :
             disabled ? "grey" : "green",
           ml: 1,
         }}
       >
         {isIncomeDetails ? <CheckCircleIcon /> : icon}
-      </IconButton>
+      </IconButton> */}
       <Box sx={{ ml: 2, flexGrow: 1 }}>
         <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
         <Typography variant="body2">{description}</Typography>

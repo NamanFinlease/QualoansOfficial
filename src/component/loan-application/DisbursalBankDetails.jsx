@@ -253,7 +253,7 @@ const DisbursalBankDetails = ({
           }}
         >
           {(stepCompleted || isUploaded) && !disabled ? (
-            <CheckCircleIcon sx={{ color: "#4caf50" }} />
+            <CheckCircleIcon sx={{ color: "green" }} />
           ) : (
             <AccountBalanceWalletIcon />
           )}

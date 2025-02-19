@@ -325,12 +325,12 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
         sx={{
           color:
             // completed ? "white" :
-            disabled ? "grey" : "green",
+            disabled ? "grey" : "white",
           ml: 1,
         }}
       >
         {isAddressVerified || isVerified ? (
-          <CheckCircleIcon sx={{ color: "#4caf50" }} />
+          <CheckCircleIcon sx={{ color: "green" }} />
         ) : (
           <LocationOn />
         )}

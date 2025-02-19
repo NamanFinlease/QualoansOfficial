@@ -231,12 +231,12 @@ const MobileVerification = ({
         sx={{
           color:
             // completed ? "white" :
-            disabled ? "grey" : "green",
+            disabled ? "grey" : "white",
           ml: 1,
         }}
       >
         {completed || isVerified ? (
-          <CheckCircleIcon sx={{ color: "#4caf50" }} />
+          <CheckCircleIcon sx={{ color: "green" }} />
         ) : (
           icon
         )}
