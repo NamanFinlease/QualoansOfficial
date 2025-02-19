@@ -299,7 +299,14 @@ const DisbursalBankDetails = ({
             onChange={handleInputChange}
             sx={{ mb: 2 }}
           />
-
+          <TextField
+            fullWidth
+            label="IFSC Code"
+            name="ifscCode"
+            value={formValues.ifscCode}
+            onChange={handleInputChange}
+            sx={{ mb: 2 }}
+          />
           <TextField
             fullWidth
             label="Account Number"
@@ -316,14 +323,7 @@ const DisbursalBankDetails = ({
             onChange={handleInputChange}
             sx={{ mb: 2 }}
           />
-          <TextField
-            fullWidth
-            label="IFSC Code"
-            name="ifscCode"
-            value={formValues.ifscCode}
-            onChange={handleInputChange}
-            sx={{ mb: 2 }}
-          />
+
           <TextField
             fullWidth
             label="Branch Name"

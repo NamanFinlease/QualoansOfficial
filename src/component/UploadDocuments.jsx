@@ -60,10 +60,10 @@ const UploadDocuments = () => {
         `${BASE_URL}/getDashboardDetails`,
         { withCredentials: true }
       );
-      console.log(
-        "doccccc srssss ress <>>>> ",
-        getDashboardDetailsResponse.data
-      );
+      // console.log(
+      //   "doccccc srssss ress <>>>> ",
+      //   getDashboardDetailsResponse.data
+      // );
 
       if (getDashboardDetailsResponse.data.success) {
         const { isDocumentUploaded } = getDashboardDetailsResponse.data;

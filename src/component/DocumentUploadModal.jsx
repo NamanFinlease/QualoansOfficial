@@ -42,64 +42,64 @@ const DocumentUploadModal = ({ prefillData }) => {
   const [selectedOption, setSelectedOption] = useState("");
   const [additionalFields, setAdditionalFields] = useState([]);
 
-  useEffect(() => {
-    const getPreviousData = async () => {
-      const getDashboardDetailsResponse = await axios.get(
-        `${BASE_URL}/getDashboardDetails`,
-        { withCredentials: true }
-      );
-      console.log(
-        "doccccc srssss ress <>>>> ",
-        getDashboardDetailsResponse.data
-      );
+  // useEffect(() => {
+  //   const getPreviousData = async () => {
+  //     const getDashboardDetailsResponse = await axios.get(
+  //       `${BASE_URL}/getDashboardDetails`,
+  //       { withCredentials: true }
+  //     );
+  //     console.log(
+  //       "doccccc srssss ress <>>>> ",
+  //       getDashboardDetailsResponse.data
+  //     );
 
-      if (getDashboardDetailsResponse.data.success) {
-        const { isDocumentUploaded } = getDashboardDetailsResponse.data;
-        setIsDocUploaded(isDocumentUploaded);
-      }
-    };
-    getPreviousData();
-  }, []);
+  //     if (getDashboardDetailsResponse.data.success) {
+  //       const { isDocumentUploaded } = getDashboardDetailsResponse.data;
+  //       setIsDocUploaded(isDocumentUploaded);
+  //     }
+  //   };
+  //   getPreviousData();
+  // }, []);
 
-  // Handle logic after isDocUploaded changes
-  useEffect(() => {
-    if (isDocUploaded) {
-      const fetchDocumentList = async () => {
-        const documentListResponse = await axios.get(
-          `${BASE_URL}/getDocumentList`,
-          { withCredentials: true }
-        );
-        console.log(
-          "documentListResponse zsdss",
-          documentListResponse.data.documents
-        );
-        const data = documentListResponse.data.documents;
-        const result = {};
-        const requiredNames = ["salarySlip_1", "salarySlip_2", "salarySlip_3"];
+  // // Handle logic after isDocUploaded changes
+  // useEffect(() => {
+  //   if (isDocUploaded) {
+  //     const fetchDocumentList = async () => {
+  //       const documentListResponse = await axios.get(
+  //         `${BASE_URL}/getDocumentList`,
+  //         { withCredentials: true }
+  //       );
+  //       console.log(
+  //         "documentListResponse zsdss",
+  //         documentListResponse.data.documents
+  //       );
+  //       const data = documentListResponse.data.documents;
+  //       const result = {};
+  //       const requiredNames = ["salarySlip_1", "salarySlip_2", "salarySlip_3"];
 
-        for (const item of data) {
-          if (requiredNames.includes(item.name) && !result[item.name]) {
-            result[item.name] = item;
-          }
-        }
+  //       for (const item of data) {
+  //         if (requiredNames.includes(item.name) && !result[item.name]) {
+  //           result[item.name] = item;
+  //         }
+  //       }
 
-        const firstOccurrencesArray = Object.values(result);
-        setFirstOccurrences(firstOccurrencesArray);
+  //       const firstOccurrencesArray = Object.values(result);
+  //       setFirstOccurrences(firstOccurrencesArray);
 
-        setFormValues((prev) => ({
-          ...prev,
-          salarySlip: firstOccurrencesArray.map((doc) => doc || null),
-          aadhaarFront: data.find((doc) => doc.type === "aadhaarFront"),
-          aadhaarBack: data.find((doc) => doc.type === "aadhaarBack"),
-          panCard: data.find((doc) => doc.type === "panCard"),
-          residential: data.find((doc) => doc.type === "residential"),
-          electricityBill: data.find((doc) => doc.type === "electricityBill"),
-          gasConnection: data.find((doc) => doc.type === "gasConnection"),
-        }));
-      };
-      fetchDocumentList();
-    }
-  }, [isDocUploaded]);
+  //       setFormValues((prev) => ({
+  //         ...prev,
+  //         salarySlip: firstOccurrencesArray.map((doc) => doc || null),
+  //         aadhaarFront: data.find((doc) => doc.type === "aadhaarFront"),
+  //         aadhaarBack: data.find((doc) => doc.type === "aadhaarBack"),
+  //         panCard: data.find((doc) => doc.type === "panCard"),
+  //         residential: data.find((doc) => doc.type === "residential"),
+  //         electricityBill: data.find((doc) => doc.type === "electricityBill"),
+  //         gasConnection: data.find((doc) => doc.type === "gasConnection"),
+  //       }));
+  //     };
+  //     fetchDocumentList();
+  //   }
+  // }, [isDocUploaded]);
 
   const handleDropdownChange = (event) => {
     const selectedField = event.target.value;

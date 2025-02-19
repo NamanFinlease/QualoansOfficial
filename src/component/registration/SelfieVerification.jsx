@@ -119,11 +119,11 @@ const SelfieVerification = ({ onComplete, disabled }) => {
               title: "You have successfully registered to Qualoan!",
               html: `<span class="blink-text">Complete your loan application process.</span>`,
               imageUrl: yourImage,
-              imageWidth: "60%", // Set image width to 100% of the popup
+              imageWidth: "10s0%", // Set image width to 100% of the popup
               imageHeight: "60%", // Maintain aspect ratio
               confirmButtonText: "Go to Loan Application",
               confirmButtonColor: "#FFA500", // Set button color to orange
-              width: "40%", // Set the width of the popup
+              width: "30%", // Set the width of the popup
               customClass: {
                 popup: "custom-popup",
                 confirmButton: "confirm-button-orange",
@@ -145,7 +145,7 @@ const SelfieVerification = ({ onComplete, disabled }) => {
                   image.style.margin = "0";
 
                   // Reduce margin between the image and the text
-                  content.style.marginTop = "10px"; // Adjust this value to control spacing
+                  content.style.marginTop = "2px"; // Adjust this value to control spacing
                 }
               },
             }).then((result) => {

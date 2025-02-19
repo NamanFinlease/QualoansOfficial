@@ -38,7 +38,6 @@ const LoanApplication = () => {
         const response = await axios.get(`${BASE_URL}/getDashboardDetails`, {
           withCredentials: true,
         });
-        console.log("res loan app >>>? ?", response.data); // Add this line to inspect the response
 
         if (response.data.success) {
           if (!response.data.isRegistration) {
@@ -195,7 +194,6 @@ const LoanApplication = () => {
   //   }));
   // };
 
-  console.log("isUploaded 12343??? ", isUploaded);
 
   if (loading) {
     return <Typography>Loading...</Typography>;
