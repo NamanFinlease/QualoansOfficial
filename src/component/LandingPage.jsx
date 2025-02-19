@@ -262,7 +262,11 @@ const LandingPage = () => {
         sx={{ bgcolor: "orange", py: 4, textAlign: "center", color: "white" }}
       >
         {" "}
-        <Typography variant="h6" fontWeight="bold" sx={{ mb: 1 }}>
+        <Typography
+          variant="h6"
+          fontWeight="bold"
+          sx={{ mb: 1, color: "black" }}
+        >
           Naman Finlease Private Limited
         </Typography>
         <Typography variant="body1" sx={{ mb: 1 }}>
@@ -283,7 +287,7 @@ const LandingPage = () => {
           📩 Email us at:{" "}
           <a
             href="mailto:Info@qualoan.com"
-            style={{ color: "#add8e6", textDecoration: "underline" }}
+            style={{ color: "#1E90FF", textDecoration: "underline" }}
           >
             Info@qualoan.com
           </a>
@@ -292,7 +296,7 @@ const LandingPage = () => {
           📞 Helpline:{" "}
           <a
             href="tel:+917338437609"
-            style={{ color: "#add8e6", textDecoration: "underline" }}
+            style={{ color: "#1E90FF", textDecoration: "underline" }}
           >
             +91 73384 37609
           </a>{" "}
@@ -300,7 +304,10 @@ const LandingPage = () => {
         </Typography>
         <Divider sx={{ borderColor: "white", my: 2, mx: 2 }} />
         {/* Bottom Footer-like Box */}
-        <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+        <Typography
+          variant="h6"
+          sx={{ mb: 2, fontWeight: "bold", color: "black" }}
+        >
           Important Notice
         </Typography>
         <Typography variant="body1" sx={{ px: 2, lineHeight: 1.6 }}>
@@ -311,7 +318,7 @@ const LandingPage = () => {
             href="https://www.qualoan.com"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "#add8e6", textDecoration: "underline" }}
+            style={{ color: "#1E90FF", textDecoration: "underline" }}
           >
             www.qualoan.com
           </a>{" "}
@@ -330,14 +337,14 @@ const LandingPage = () => {
           © {new Date().getFullYear()} qualoan.com - All Right Reserved
           <Link
             to="/terms-condition"
-            style={{ color: "#add8e6", textDecoration: "underline" }}
+            style={{ color: "#1E90FF", textDecoration: "underline" }}
           >
             Terms &amp; Conditions
           </Link>{" "}
           |{" "}
           <Link
             to="/privacy-policy"
-            style={{ color: "#add8e6", textDecoration: "underline" }}
+            style={{ color: "#1E90FF", textDecoration: "underline" }}
           >
             Privacy Policy
           </Link>
