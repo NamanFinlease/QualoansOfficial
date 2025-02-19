@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Button, LinearProgress } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import creditExecutiveImage from "../assets/image/1.gif";
-import journeryprocess from "../assets/image/Untitled design (1).gif";
 import Dashboard from "./Dashboard";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import SpeedIcon from "@mui/icons-material/Speed";
 import SecurityIcon from "@mui/icons-material/Security";
-import PhoneIcon from "@mui/icons-material/Phone";
-import EmailIcon from "@mui/icons-material/Email";
 import { useSidebar } from "../context/SidebarContext";
 import StepperComponent from "./StepperComponent";
 import LoanTable from "./LoanTable";
@@ -18,16 +15,18 @@ import LoanTable from "./LoanTable";
 const OurJourney = () => {
   const navigate = useNavigate();
   const { sidebarOpen, sidebarExpanded } = useSidebar();
-  const [selectedOption, setSelectedOption] = useState("Dashboard");
-  const [isVideoPage, setIsVideoPage] = useState(false);
   const [isRegistration, setRegistration] = useState(true); // Track the current process
   const [isLoanApplied, setLoanApplied] = useState(false);
   const [isLoanTable, setLoanTable] = useState(false);
   const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // State for journey data
+  const [journeyData, setJourneyData] = useState(null);
+  const [loadingJourney, setLoadingJourney] = useState(true);
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDashboardData = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/getDashboardDetails`, {
           withCredentials: true,
@@ -40,8 +39,7 @@ const OurJourney = () => {
         console.error("Error fetching dashboard details:", error);
       }
     };
-
-    fetchData();
+    fetchDashboardData();
   }, []);
 
   useEffect(() => {
@@ -53,17 +51,7 @@ const OurJourney = () => {
       const response = await axios.get(`${BASE_URL}/loanList`, {
         withCredentials: true,
       });
-      console.log("response", response?.data?.loanList);
-      //   if (!response.ok) {
-      //     throw new Error("Failed to fetch loans");
-      //   }
-      //   const data = await response.json();
-
-      //   console.log("data", data);
-      // Sort loans in descending order based on date
-      // const sortedLoans = response.data.loanList.sort(
-      //   (a, b) => new Date(b.date) - new Date(a.date)
-      // );
+      console.log("Loan list response:", response?.data?.loanList);
       setLoans(response.data.loanList);
     } catch (error) {
       console.error("Error fetching loans:", error);
@@ -72,19 +60,30 @@ const OurJourney = () => {
     }
   };
 
-  const handleRedirectToVideo = () => {
-    setIsVideoPage(true);
-  };
-
-  const handleBackButton = () => {
-    setIsVideoPage(false);
-  };
+  // Fetch journey data
+  useEffect(() => {
+    const fetchJourneyData = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/getJourney`, {
+          withCredentials: true,
+        });
+        if (response.status === 200) {
+          setJourneyData(response.data.journey);
+        }
+      } catch (error) {
+        console.error("Error fetching journey data:", error);
+      } finally {
+        setLoadingJourney(false);
+      }
+    };
+    fetchJourneyData();
+  }, []);
 
   const handleContinue = () => {
     if (isRegistration) {
-      navigate("/registration"); // Navigate to the registration page
+      navigate("/registration");
     } else {
-      navigate("/loan-application"); // Navigate to the loan application page
+      navigate("/loan-application");
     }
   };
 
@@ -106,8 +105,6 @@ const OurJourney = () => {
     },
   ];
 
-  console.log("loans our journey >> ", loans);
-
   return (
     <div>
       <Dashboard />
@@ -123,6 +120,7 @@ const OurJourney = () => {
           transition: "width 0.3s ease, margin-left 0.3s ease",
         }}
       >
+        {/* Banner Section */}
         <Box
           sx={{
             background: "linear-gradient(135deg, #1a237e 0%, #0d47a1 100%)",
@@ -189,10 +187,7 @@ const OurJourney = () => {
                   px: 4,
                   py: 1,
                   fontWeight: 600,
-                  "&:hover": {
-                    backgroundColor: "#8b8887",
-                  },
-                  // boxShadow: "0 4px 15px #8b8887",
+                  "&:hover": { backgroundColor: "#8b8887" },
                   borderRadius: "30px",
                   width: { xs: "100%", sm: "230px" },
                 }}
@@ -201,20 +196,18 @@ const OurJourney = () => {
               </Button>
               <Button
                 variant="contained"
-                onClick={() => {
-                  window.location.href =
-                    "https://www.youtube.com/watch?v=0aKwYTqEr80"; // Replace with your video URL
-                }}
+                onClick={() =>
+                  window.location.assign(
+                    "https://www.youtube.com/watch?v=0aKwYTqEr80"
+                  )
+                }
                 sx={{
                   backgroundColor: "#fff",
                   color: "#000",
                   px: 4,
                   py: 1,
                   fontWeight: 600,
-                  "&:hover": {
-                    backgroundColor: "#8b8887",
-                  },
-                  // boxShadow: "0 4px 15px #8b8887",
+                  "&:hover": { backgroundColor: "#8b8887" },
                   borderRadius: "30px",
                 }}
               >
@@ -223,19 +216,14 @@ const OurJourney = () => {
               {loans.length > 0 && (
                 <Button
                   variant="contained"
-                  onClick={() => {
-                    navigate("/manage-repayments");
-                  }}
+                  onClick={() => navigate("/manage-repayments")}
                   sx={{
                     backgroundColor: "#fff",
                     color: "#000",
                     px: 4,
                     py: 1,
                     fontWeight: 600,
-                    "&:hover": {
-                      backgroundColor: "#8b8887",
-                    },
-                    // boxShadow: "0 4px 15px #8b8887",
+                    "&:hover": { backgroundColor: "#8b8887" },
                     borderRadius: "30px",
                   }}
                 >
@@ -248,14 +236,29 @@ const OurJourney = () => {
 
         {isLoanTable && <LoanTable loans={loans} loading={loading} />}
 
-        {isLoanApplied && <StepperComponent />}
+        {isLoanApplied && (
+          <>
+            <StepperComponent journeyData={journeyData} />
+            {journeyData && Object.values(journeyData).includes("REJECTED") && (
+              <Typography
+                variant="h6"
+                align="center"
+                color="error"
+                sx={{ mt: -6 }}
+              >
+                Your application has been rejected.
+              </Typography>
+            )}
+          </>
+        )}
 
-        {/* Features Grid - Updated with Material icons and better styling */}
+        {/* Features Grid */}
         <Box
           sx={{
             display: "grid",
             gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" },
             gap: 4,
+            mt: 4,
             mb: 6,
           }}
         >
@@ -278,11 +281,7 @@ const OurJourney = () => {
               <Box sx={{ mb: 3 }}>{feature.icon}</Box>
               <Typography
                 variant="h6"
-                sx={{
-                  mb: 2,
-                  fontWeight: 600,
-                  color: "#1c1c1c",
-                }}
+                sx={{ mb: 2, fontWeight: 600, color: "#1c1c1c" }}
               >
                 {feature.title}
               </Typography>
@@ -293,7 +292,7 @@ const OurJourney = () => {
           ))}
         </Box>
 
-        {/* Loan Process Steps */}
+        {/* Simple 3-Step Process */}
         <Box
           sx={{
             backgroundColor: "white",
@@ -330,14 +329,7 @@ const OurJourney = () => {
               },
               { step: 3, title: "Get Money", desc: "Direct bank transfer" },
             ].map((step) => (
-              <Box
-                key={step.step}
-                sx={{
-                  textAlign: "center",
-                  position: "relative",
-                  flex: 1,
-                }}
-              >
+              <Box key={step.step} sx={{ textAlign: "center", flex: 1 }}>
                 <Typography
                   sx={{
                     width: 40,
@@ -365,7 +357,7 @@ const OurJourney = () => {
           </Box>
         </Box>
 
-        {/* Credit Executive Card - Modernized */}
+        {/* Credit Executive Card */}
         <Box
           sx={{
             backgroundColor: "white",
@@ -416,9 +408,7 @@ const OurJourney = () => {
                 onClick={() =>
                   (window.location.href = "mailto:credit@qualoan.com")
                 }
-                sx={{
-                  color: "#F26722",
-                }}
+                sx={{ color: "#F26722" }}
               >
                 Email
               </Button>
@@ -435,11 +425,7 @@ const OurJourney = () => {
             <img
               src={creditExecutiveImage}
               alt="Credit Executive"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </Box>
         </Box>

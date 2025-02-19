@@ -21,7 +21,7 @@ const RegistrationSteps = () => {
     isPersonalInfoVerified: false,
     isAddressVerified: false,
     isIncomeInfoVerified: false,
-    selfieVerified: false,
+    isSelfieVerified: false,
   });
   const totalSteps = 6; // Total steps in the registration process
   // const [isUploaded, setIsUploaded] = useState(false);
@@ -303,7 +303,7 @@ const RegistrationSteps = () => {
             }
             disabled={!steps.incomeDetails.completed}
             prefillData={steps.selfieVerification.data}
-            isVerified={isVerified.selfieVerified}
+            isVerified={isVerified.isSelfieVerified}
           />
         </Box>
       </Box>

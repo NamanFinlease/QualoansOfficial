@@ -237,7 +237,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
         }}
         disabled={disabled}
       >
-        {isPanValidated || isVerified ? (
+        {isIncomeDetails || isVerified ? (
           <CheckCircleIcon sx={{ color: "green" }} />
         ) : (
           icon

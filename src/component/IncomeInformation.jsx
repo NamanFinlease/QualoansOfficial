@@ -232,31 +232,85 @@ const IncomeInformation = () => {
               ) : (
                 <>
                   <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>Employment Type</td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        fontWeight: "bold",
+                        width: "40%",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      Employment Type
+                    </td>
                     <td style={styles.tableCell}>{income.employementType}</td>
                   </tr>
                   <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>Monthly Income</td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        fontWeight: "bold",
+                        width: "40%",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      Monthly Income
+                    </td>
                     <td style={styles.tableCell}>{income.monthlyIncome}</td>
                   </tr>
                   <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>Loan Amount</td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        fontWeight: "bold",
+                        width: "40%",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      Loan Amount
+                    </td>
                     <td style={styles.tableCell}>{income.obligations}</td>
                   </tr>
                   <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>Next Salary Date</td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        fontWeight: "bold",
+                        width: "40%",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      Next Salary Date
+                    </td>
                     <td style={styles.tableCell}>
                       {moment(income.nextSalaryDate).format("DD-MM-YYYY")}
                     </td>
                   </tr>
                   <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>Working Since</td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        fontWeight: "bold",
+                        width: "40%",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      Working Since
+                    </td>
                     <td style={styles.tableCell}>
                       {moment(income.workingSince).format("DD-MM-YYYY")}
                     </td>
                   </tr>
                   <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>Income Mode</td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        fontWeight: "bold",
+                        width: "40%",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      Income Mode
+                    </td>
                     <td style={styles.tableCell}>{income.incomeMode}</td>
                   </tr>
                 </>
@@ -296,9 +350,10 @@ const IncomeInformation = () => {
 
 const styles = {
   tableCell: {
+    color: "orange",
     padding: "16px",
     fontWeight: "bold",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "white",
   },
   tableRow: {
     borderBottom: "1px solid #e0e0e0",

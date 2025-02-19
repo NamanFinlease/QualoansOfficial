@@ -93,7 +93,7 @@ const MobileVerification = ({
         throw new Error("Failed to send OTP.");
       }
     } catch (error) {
-      Swal.fire("Error", "Failed to send OTP. Please try again.", "error");
+      alert("Error", error.message, "error");
     } finally {
       setIsLoading(false);
     }

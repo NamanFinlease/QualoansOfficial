@@ -77,7 +77,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
     formValues.totalPayble,
   ]);
 
-  console.log("Loan Amount:", formValues.totalPayble);
+  // console.log("Loan Amount:", formValues.totalPayble);
 
   const handleSubmit = async () => {
     if (!formValues.loanPurpose) {
@@ -104,7 +104,6 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
         withCredentials: true,
       });
 
-      console.log("Loan Application Response:", response);
       onComplete({ success: true, data: payload });
       setIsModalOpen(false);
 
@@ -171,10 +170,10 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
           }
         );
 
-        console.log(
-          "getProfileDetailsResponse >>> ",
-          getProfileDetailsResponse?.data?.data
-        );
+        // console.log(
+        //   "getProfileDetailsResponse >>> ",
+        //   getProfileDetailsResponse?.data?.data
+        // );
 
         const LoanData = getProfileDetailsResponse?.data?.data;
 

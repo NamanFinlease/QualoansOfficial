@@ -10,6 +10,7 @@ import {
 import { BASE_URL } from "../baseURL";
 import { sharedStyles } from "./shared/styles";
 import axios from "axios";
+import { color } from "framer-motion";
 
 // Define the ResidentialAddress component
 const ResidentialAddress = () => {
@@ -228,33 +229,96 @@ const ResidentialAddress = () => {
               ) : (
                 <>
                   <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>Address</td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        fontWeight: "bold",
+                        width: "40%",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      Address
+                    </td>
                     <td style={styles.tableCell}>{Residential.address}</td>
                   </tr>
                   <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>Landmark</td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        fontWeight: "bold",
+                        width: "40%",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      Landmark
+                    </td>
                     <td style={styles.tableCell}>{Residential.landmark}</td>
                   </tr>
                   <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>Pincode</td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        fontWeight: "bold",
+                        width: "40%",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      Pincode
+                    </td>
                     <td style={styles.tableCell}>{Residential.pincode}</td>
                   </tr>
                   <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>City</td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        fontWeight: "bold",
+                        width: "40%",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      City
+                    </td>
                     <td style={styles.tableCell}>{Residential.city}</td>
                   </tr>
                   <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>State</td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        fontWeight: "bold",
+                        width: "40%",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      State
+                    </td>
                     <td style={styles.tableCell}>{Residential.state}</td>
                   </tr>
                   <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>Residence Type</td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        fontWeight: "bold",
+                        width: "40%",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      Residence Type
+                    </td>
                     <td style={styles.tableCell}>
                       {Residential.residenceType}
                     </td>
                   </tr>
                   <tr style={styles.tableRow}>
-                    <td style={styles.tableCell}>Residence Since</td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        fontWeight: "bold",
+                        width: "40%",
+                        backgroundColor: "#f5f5f5",
+                      }}
+                    >
+                      Residence Since
+                    </td>
                     <td style={styles.tableCell}>
                       {Residential.residingSince}
                     </td>
@@ -297,9 +361,10 @@ const ResidentialAddress = () => {
 
 const styles = {
   tableCell: {
+    color: "orange",
     padding: "16px",
     fontWeight: "bold",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "white",
   },
   tableRow: {
     borderBottom: "1px solid #e0e0e0",
