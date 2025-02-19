@@ -23,6 +23,8 @@ import ApplyForm from "./ApplyForm";
 import applyGif from "../assets/image/Apply online (1).gif"; // GIF for applying online
 import approvalGif from "../assets/image/Get the  approveal (2).gif"; // GIF for quick approval
 import disbursalGif from "../assets/image/Receive the loan amount.gif"; // GIF for loan disbursal
+import { Divider } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const WhiteSection = styled(Box)({
   backgroundColor: "white",
@@ -254,6 +256,92 @@ const LandingPage = () => {
             </Grid>
           ))}
         </Grid>
+      </Box>
+      {/* Grievance & Contact Information Section */}
+      <Box
+        sx={{ bgcolor: "orange", py: 4, textAlign: "center", color: "white" }}
+      >
+        {" "}
+        <Typography variant="h6" fontWeight="bold" sx={{ mb: 1 }}>
+          Naman Finlease Private Limited
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 1 }}>
+          At Qualoan, we strictly adhere to RBI directives and have established
+          an effective Grievance Redressal Cell to address all customer concerns
+          efficiently.
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 1 }}>
+          We are committed to responsible lending, ensuring that loans are
+          disbursed based on your repayment capacity while maintaining ethical
+          recovery practices. We do not engage in coercive recovery methods.
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 1 }}>
+          If you have any complaints or grievances, we take them seriously and
+          aim to resolve the issue within 5 working days.
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 1 }}>
+          📩 Email us at:{" "}
+          <a
+            href="mailto:Info@qualoan.com"
+            style={{ color: "#add8e6", textDecoration: "underline" }}
+          >
+            Info@qualoan.com
+          </a>
+        </Typography>
+        <Typography variant="body1">
+          📞 Helpline:{" "}
+          <a
+            href="tel:+917338437609"
+            style={{ color: "#add8e6", textDecoration: "underline" }}
+          >
+            +91 73384 37609
+          </a>{" "}
+          (Timings: 10:00 AM - 6:30 PM)
+        </Typography>
+        <Divider sx={{ borderColor: "white", my: 2, mx: 2 }} />
+        {/* Bottom Footer-like Box */}
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+          Important Notice
+        </Typography>
+        <Typography variant="body1" sx={{ px: 2, lineHeight: 1.6 }}>
+          As an RBI-registered NBFC, Naman Finlease Private Limited follows all
+          regulatory guidelines and provides loans exclusively through our
+          website{" "}
+          <a
+            href="https://www.qualoan.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "#add8e6", textDecoration: "underline" }}
+          >
+            www.qualoan.com
+          </a>{" "}
+          and our internal CRM system.
+          <br />
+          🔹 Beware of fraudulent loan applications misusing our name and logo.
+          <br />
+          🔹 If you come across any unauthorized apps claiming to offer loans
+          under our name, please report them to us immediately.
+          <br />
+          We value your trust and are committed to providing a safe, secure, and
+          transparent lending experience.
+        </Typography>
+        <Divider sx={{ borderColor: "white", my: 2, mx: 2 }} />
+        <Typography variant="body2">
+          © {new Date().getFullYear()} qualoan.com - All Right Reserved
+          <Link
+            to="/terms-condition"
+            style={{ color: "#add8e6", textDecoration: "underline" }}
+          >
+            Terms &amp; Conditions
+          </Link>{" "}
+          |{" "}
+          <Link
+            to="/privacy-policy"
+            style={{ color: "#add8e6", textDecoration: "underline" }}
+          >
+            Privacy Policy
+          </Link>
+        </Typography>
       </Box>
     </Box>
   );
