@@ -1,4 +1,10 @@
-import { BrowserRouter as Router, Routes, Route, Outlet, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+  useLocation,
+} from "react-router-dom";
 import "./App.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -27,7 +33,7 @@ const Layout = () => {
     <>
       {/* Conditionally render Header */}
       {!hideHeaderFooterRoutes.includes(location.pathname) && <Header />}
-      
+
       {/* Render matched child route */}
       <Outlet />
 

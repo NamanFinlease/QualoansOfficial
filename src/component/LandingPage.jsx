@@ -25,6 +25,7 @@ import approvalGif from "../assets/image/Get the  approveal (2).gif"; // GIF for
 import disbursalGif from "../assets/image/Receive the loan amount.gif"; // GIF for loan disbursal
 import { Divider } from "@mui/material";
 import { Link } from "react-router-dom";
+import Footer from "./Footer";
 
 const WhiteSection = styled(Box)({
   backgroundColor: "white",
@@ -350,6 +351,7 @@ const LandingPage = () => {
           </Link>
         </Typography>
       </Box>
+      <Footer />
     </Box>
   );
 };
