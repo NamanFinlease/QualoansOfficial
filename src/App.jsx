@@ -32,6 +32,7 @@ import UploadDocuments from "./component/UploadDocuments";
 import LoanTable from "./component/LoanTable";
 import VerifyRepayment from "./component/VerifyRepayment";
 import SuccessPage from "./component/SuccessPage";
+import RepaymentLoan from "./component/RepaymentLoan";
 
 const MinimalLayout = ({ children }) => <div>{children}</div>;
 
@@ -68,7 +69,7 @@ function App() {
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/apply-now" element={<ApplyNow />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/repay-now" element={<RepayLoan />} />
+          <Route path="/repay-now" element={<RepaymentLoan />} />
           <Route path="/terms-condition" element={<TermsAndConditions />} />
           <Route path="/calculator" element={<LoanCalculator />} />
           <Route path="/faq" element={<FAQs />} />
