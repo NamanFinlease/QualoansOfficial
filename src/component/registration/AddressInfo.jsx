@@ -134,19 +134,14 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
               city: "",
               state: "",
             }));
-            Swal.fire({
-              icon: "error",
-              title: "Invalid Pincode",
-              text: "Please enter a valid pincode.",
-            });
+
+            alert("Please enter a valid pincode.");
           }
         } catch (error) {
-          console.error("Error fetching pincode data:", error);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "An error occurred while fetching data. Please try again later.",
-          });
+          alert("Error fetching pincode data:", error);
+          alet(
+            "An error occurred while fetching data. Please try again later."
+          );
         }
       } else {
         setFormValues((prev) => ({
@@ -227,10 +222,10 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             }
           );
 
-          console.log(
-            "getProfileDetailsResponse >>> ",
-            getProfileDetailsResponse
-          );
+          // console.log(
+          //   "getProfileDetailsResponse >>> ",
+          //   getProfileDetailsResponse
+          // );
 
           const residenceData =
             getProfileDetailsResponse?.data?.data?.residence;
@@ -249,7 +244,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
       }
     } catch (error) {
       setIsLoading(false);
-      console.error("Error fetching data:", error);
+      alert("Error fetching data:", error);
     }
   };
 
