@@ -246,7 +246,10 @@ const OurJourney = () => {
                 color="error"
                 sx={{ mt: -6 }}
               >
-                Your application has been rejected.
+                Thank you for your loan application with QUA Loan. After review,
+                we regret to inform you that it does not meet our current
+                eligibility criteria. We appreciate your interest and encourage
+                you to apply again in the future if your circumstances change.
               </Typography>
             )}
           </>

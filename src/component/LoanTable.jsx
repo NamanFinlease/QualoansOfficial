@@ -78,7 +78,7 @@ const LoanTable = () => {
     // );
 
     const response = await axios.post(
-      "https://preprod-crm.api.qualoan.com/api/user/payNow",
+      `${BASE_URL}/api/user/payNow`,
       paymentData, // Axios automatically stringifies JSON data
       {
         headers: {
