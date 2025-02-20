@@ -16,7 +16,7 @@ import { BASE_URL } from "../../baseURL";
 import yourImage from "../../assets/image/vidu-general-4-2025-01-18T06_43_27Z (1).gif"; // Import your image
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-const SelfieVerification = ({ onComplete, disabled }) => {
+const SelfieVerification = ({ onComplete, disabled, isVerified }) => {
   const [openModal, setOpenModal] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -119,8 +119,8 @@ const SelfieVerification = ({ onComplete, disabled }) => {
               title: "You have successfully registered to Qualoan!",
               html: `<span class="blink-text">Complete your loan application process.</span>`,
               imageUrl: yourImage,
-              imageWidth: "10s0%", // Set image width to 100% of the popup
-              imageHeight: "60%", // Maintain aspect ratio
+              imageWidth: "100%", // Set image width to 100% of the popup
+              imageHeight: "auto", // Maintain aspect ratio
               confirmButtonText: "Go to Loan Application",
               confirmButtonColor: "#FFA500", // Set button color to orange
               width: "30%", // Set the width of the popup
@@ -208,11 +208,7 @@ const SelfieVerification = ({ onComplete, disabled }) => {
         }}
         disabled={disabled}
       >
-        {completed ? (
-          <CheckCircleIcon sx={{ color: "green" }} />
-        ) : (
-          icon
-        )}
+        {isVerified ? <CheckCircleIcon sx={{ color: "green" }} /> : icon}
       </IconButton>
 
       {/* <IconButton

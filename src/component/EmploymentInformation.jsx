@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
 import { BASE_URL } from "../baseURL";
 import { getToken } from "../../tokenManager";
+import { format } from "date-fns";
+
 import { sharedStyles } from "./shared/styles";
 // Define the UserProfile component
 const EmploymentInformation = () => {
@@ -24,6 +26,12 @@ const EmploymentInformation = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A"; // Handle empty or null values
+    const parsedDate = new Date(dateString);
+    if (isNaN(parsedDate)) return "Invalid Date";
+    return format(parsedDate, "dd-MM-yyyy");
+  };
   // Fetch employment details from the backend API
   useEffect(() => {
     const fetchEmploymentData = async () => {
@@ -198,7 +206,7 @@ const EmploymentInformation = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {employment.employedSince}
+                  {formatDate(employment.employedSince)}
                 </td>
               </tr>
 

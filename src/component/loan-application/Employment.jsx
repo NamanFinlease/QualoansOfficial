@@ -334,7 +334,10 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
         <DialogContent>
           {stepData.fields
             ?.filter(
-              (field) => !["pincode", "city", "state"].includes(field.name)
+              (field) =>
+                !["pincode", "city", "state", "employedSince"].includes(
+                  field.name
+                )
             ) // Exclude pincode, city, and state if present in stepData.fields
             .map((field, index) => (
               <Box key={index} sx={{ marginBottom: 2 }}>
@@ -378,6 +381,18 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
             ))}
 
           {/* Editable Pincode, City, and State */}
+
+          <TextField
+            fullWidth
+            name="employedSince"
+            label="Employed Since"
+            type="date"
+            value={formValues.employedSince || ""}
+            onChange={handleInputChange}
+            InputLabelProps={{ shrink: true }}
+            sx={{ marginBottom: 2 }}
+            required
+          />
           <TextField
             label="Pincode"
             value={formValues.pincode || ""}

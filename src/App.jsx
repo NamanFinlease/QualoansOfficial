@@ -31,6 +31,7 @@ import LandingPage from "./component/LandingPage";
 import UploadDocuments from "./component/UploadDocuments";
 import LoanTable from "./component/LoanTable";
 import VerifyRepayment from "./component/VerifyRepayment";
+import SuccessPage from "./component/SuccessPage";
 
 const MinimalLayout = ({ children }) => <div>{children}</div>;
 
@@ -61,6 +62,7 @@ function App() {
           {/* Routes with Header and Footer */}
 
           <Route path="/landing-page" element={<LandingPage />} />
+          <Route path="/success" element={<SuccessPage />} />
           <Route path="/" element={<MainContent />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />

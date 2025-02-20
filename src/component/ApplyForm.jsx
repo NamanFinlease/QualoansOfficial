@@ -24,25 +24,22 @@ import {
 } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import LoanImage from "../assets/image/slide.gif"; // Import your image
+import { source } from "framer-motion/client";
+import { useNavigate } from "react-router-dom";
 
 const ApplyForm = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [formValues, setFormValues] = useState({
-    fName: "",
-    lName: " ",
-    gender: "",
+    fullName: "",
     pan: "",
-    aadhaar: "",
     mobile: "",
-    alternateMobile: "",
-    dob: "",
-    personalEmail: "",
-    officeEmail: "",
+    email: "",
     pinCode: "",
     salary: "",
     loanAmount: "",
+    source: "website",
   });
   const [formErrors, setFormErrors] = useState({});
   const [animationState, setAnimationState] = useState([]);
@@ -50,6 +47,7 @@ const ApplyForm = () => {
   const handleCheckboxChange = (event) => {
     setTermsAccepted(event.target.checked);
   };
+  const navigate = useNavigate(); // Initialize navigation
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -58,8 +56,7 @@ const ApplyForm = () => {
     // Validation for input fields (only block if invalid input is entered)
 
     // Mobile: Only digits and max 10 characters
-    if (name === "fName" && !/^[A-Za-z\s]*$/.test(value)) return;
-    if (name === "lName" && !/^[A-Za-z\s]*$/.test(value)) return;
+    if (name === "fullName" && !/^[A-Za-z\s]*$/.test(value)) return;
 
     if (name === "mobile" && (!/^\d*$/.test(value) || value.length > 10))
       return;
@@ -70,10 +67,6 @@ const ApplyForm = () => {
 
     // PinCode: Only digits and max 6 characters
     if (name === "pinCode" && (!/^\d*$/.test(value) || value.length > 6))
-      return;
-
-    // Aadhaar: Only digits and max 12 characters
-    if (name === "aadhaar" && (!/^\d*$/.test(value) || value.length > 12))
       return;
 
     //pan validation
@@ -103,36 +96,6 @@ const ApplyForm = () => {
     }
 
     // validation for dob
-    if (name === "dob") {
-      const birthDate = new Date(value); // Convert input to a date
-      const today = new Date();
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const monthDiff = today.getMonth() - birthDate.getMonth();
-
-      // Adjust age if the current month and day are before the birth month and day
-      if (
-        monthDiff < 0 ||
-        (monthDiff === 0 && today.getDate() < birthDate.getDate())
-      ) {
-        age--;
-      }
-
-      if (age < 18) {
-        setFormErrors((prevErrors) => ({
-          ...prevErrors,
-          dob: "You must be at least 18 years old.",
-        }));
-        return; // Prevent updating the value if invalid
-      }
-
-      if (age > 60) {
-        setFormErrors((prevErrors) => ({
-          ...prevErrors,
-          dob: "You cannot be older than 60 years.",
-        }));
-        return; // Prevent updating the value if invalid
-      }
-    }
 
     console.log("the pan value is ", value);
     // Update form values and reset errors for the specific field
@@ -144,13 +107,10 @@ const ApplyForm = () => {
     const errors = {};
     const mobileValid = /^\d{10}$/.test(formValues.mobile);
     const panValid = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(formValues.pan);
-    const aadhaarValid = /^\d{12}$/.test(formValues.aadhaar);
     const emailValid = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(
       formValues.personalEmail
     );
-    const officeEmailValid = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(
-      formValues.officeEmail
-    );
+
     const pinCodeValid = /^\d{6}$/.test(formValues.pinCode);
 
     Object.keys(formValues).forEach((field) => {
@@ -160,74 +120,19 @@ const ApplyForm = () => {
     });
 
     if (!mobileValid) errors.mobile = "Mobile number must be a 10-digit number";
-    if (!aadhaarValid)
-      errors.aadhaar = "Aadhaar number must be a 12-digit number";
+
     if (!panValid) errors.pan = "Invalid PAN format (e.g., ABCDE1234F)";
-    if (!emailValid) errors.personalEmail = "Invalid email format";
-    if (!officeEmailValid) errors.officeEmail = "Invalid office email format";
+    if (!emailValid) errors.email = "Invalid email format";
     if (!pinCodeValid) errors.pinCode = "pinCode must be 6 digits";
     if (!termsAccepted)
       errors.termsAccepted = "You must accept the Terms & Conditions";
-    if (!state) errors.state = "Please select a state";
-    if (!city) errors.city = "Please select a city";
 
     return errors;
   };
 
-  const handlePincodeChange = async (e) => {
-    const value = e.target.value;
-
-    // Only allow numeric input and ensure the pincode has no more than 6 digits
-    if (/^\d{0,6}$/.test(value)) {
-      setFormValues({ ...formValues, pinCode: value });
-
-      // If the pincode has exactly 6 digits, fetch city and state
-      if (value.length === 6) {
-        try {
-          const response = await fetch(
-            `https://api.postalpincode.in/pincode/${value}`
-          );
-          const data = await response.json();
-
-          if (data[0].Status === "Success") {
-            const { Block, State } = data[0].PostOffice[0];
-            setCity(Block);
-            setState(State);
-            console.log("City:", Block, "State:", State);
-          } else {
-            // Handle invalid pin code case
-            setCity("");
-            setState("");
-            Swal.fire({
-              icon: "error",
-              title: "Invalid Pincode",
-              text: "Please enter a valid pincode.",
-            });
-          }
-        } catch (error) {
-          console.error("Error fetching pincode data:", error);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "An error occurred while fetching data. Please try again later.",
-          });
-        }
-      } else {
-        // Reset city and state if pincode is incomplete
-        setCity("");
-        setState("");
-      }
-    } else {
-      // Clear the pincode and reset city/state if input is invalid
-      setFormValues({ ...formValues, pinCode: "" });
-      setCity("");
-      setState("");
-    }
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("gvvyhjgjhjh");
+    console.log("the values of object ", formValues);
 
     const errors = validateForm(); // Validate form and get errors
 
@@ -243,7 +148,8 @@ const ApplyForm = () => {
     // Proceed with form submission if there are no errors
     try {
       const response = await fetch(
-        `${BASE_URL}/api.salarysaathi.com/api/leads`,
+        `https://api.qualoan.com/api/leads/landingPageData`,
+
         {
           method: "POST",
           headers: {
@@ -251,43 +157,36 @@ const ApplyForm = () => {
           },
           body: JSON.stringify({
             ...formValues,
-            state: state,
-            city: city,
+
             termsAccepted,
-            source: "marketing",
+            source: "website",
           }),
         }
       );
+      console.log("the response is ", response);
 
       if (!response.ok) throw new Error("Network response was not ok");
 
       const result = await response.json();
 
-      Swal.fire({
-        title: "Success!",
-        text: "Our executive will call you or revert you back in 24 hours.",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
+      navigate("/success"); // Redirect to the success page
 
       // Reset form after successful submission
       setFormValues({
-        fName: "",
-        lName: "",
-        gender: "",
+        fullName: "",
+
         pan: "",
-        aadhaar: "",
+
         mobile: "",
-        dob: "",
-        personalEmail: "",
-        officeEmail: "",
+
+        email: "",
+
         pinCode: "",
         salary: "",
         loanAmount: "",
       });
       setTermsAccepted(false);
-      setState("");
-      setCity("");
+
       setFormErrors({}); // Reset form errors
     } catch (error) {
       Swal.fire({
@@ -330,32 +229,18 @@ const ApplyForm = () => {
             Apply For Loan
           </Typography>
 
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{ gap: 2 }}>
             {[
-              { label: "First Name", name: "fName", icon: <Person /> },
-              { label: "Last Name", name: "lName", icon: <Person /> },
-              {
-                label: "Gender",
-                name: "gender",
-                icon: <Person />,
-                type: "select",
-                options: ["M", "F", "Others"],
-              },
+              { label: "Full Name", name: "fullName", icon: <Person /> },
+
               { label: "PAN", name: "pan", icon: <Public /> },
-              { label: "Aadhaar", name: "aadhaar", icon: <Public /> },
               { label: "Mobile", name: "mobile", icon: <Phone /> },
-              {
-                label: "DOB",
-                name: "dob",
-                icon: <CalendarToday />,
-                type: "date",
-              },
+
               {
                 label: "Personal Email",
-                name: "personalEmail",
+                name: "email",
                 icon: <Email />,
               },
-              { label: "Office Email", name: "officeEmail", icon: <Email /> },
               {
                 label: "Monthly Salary",
                 name: "salary",
@@ -365,6 +250,11 @@ const ApplyForm = () => {
                 label: "Loan Amount Required",
                 name: "loanAmount",
                 icon: <CurrencyRupee />,
+              },
+              {
+                label: "PinCode ",
+                name: "pinCode",
+                icon: <PinDrop sx={{ color: "rgba(0, 0, 0, 0.6)" }} />,
               },
             ].map((field, index) => (
               <Grid key={index} item xs={12} md={4}>
@@ -386,81 +276,11 @@ const ApplyForm = () => {
                       </InputAdornment>
                     ),
                   }}
-                >
-                  {field.options &&
-                    field.options.map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option === "M"
-                          ? "Male"
-                          : option === "F"
-                          ? "Female"
-                          : "Other"}
-                      </MenuItem>
-                    ))}
-                </TextField>
+                ></TextField>
               </Grid>
             ))}
 
-            {/* Additional fields */}
             <Grid item xs={12} md={4}>
-              <TextField
-                fullWidth
-                required
-                name="pinCode"
-                label="Pincode"
-                value={formValues.pinCode}
-                onChange={handlePincodeChange}
-                error={!!formErrors.pinCode}
-                helperText={formErrors.pinCode || ""}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PinDrop sx={{ color: "rgba(0, 0, 0, 0.6)" }} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <TextField
-                fullWidth
-                required
-                name="city"
-                label="City"
-                value={city}
-                error={!!formErrors.city}
-                helperText={formErrors.city || ""}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LocationOn />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <TextField
-                fullWidth
-                required
-                name="state"
-                label="State"
-                value={state}
-                error={!!formErrors.state}
-                helperText={formErrors.state || ""}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LocationOn sx={{ color: "rgba(0, 0, 0, 0.6)" }} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -515,15 +335,14 @@ const ApplyForm = () => {
       {/* Right Side - Image */}
       <Box
         sx={{
-          mb: { xs: 1, md: 1 }, // Add margin-bottom for small screens only
-          mt: { xs: 5, md: 7 }, // Add margin-top for small screens only
-          width: { xs: "100%", md: "40%" },
-          height: "auto", // Set to 50% height when screen size is small
+          mb: { xs: 1, md: 1 }, // Margin-bottom remains
+          mt: { xs: 2, md: 7 }, // Margin-top remains
+          width: { xs: "100%", md: "40%" }, // Full width on mobile, 40% on larger screens
+          height: { xs: "50vh", md: "100vh" }, // Adjust height on mobile
           backgroundImage: `url(${LoanImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          borderTopRightRadius: 5,
-          borderBottomRightRadius: 5,
+          borderRadius: { xs: 2, md: 5 }, // Adjust border radius for mobile
         }}
       />
     </Box>

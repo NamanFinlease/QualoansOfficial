@@ -377,8 +377,21 @@ const UploadDocuments = () => {
                   </Typography>
                 )}
                 {selectedDocType === "others" && (
-                  <Typography variant="subtitle2" sx={{ color: "#F26722" }}>
-                    Upload Gas Connection or Electricity Bill or Address Proof
+                  <Typography variant="subtitle2">
+                    <span style={{ color: "#F26722", fontWeight: "bold" }}>
+                      Note:
+                    </span>{" "}
+                    You can upload one or more address proof documents, such as
+                    a{" "}
+                    <span style={{ color: "#1976D2" }}>
+                      Gas Connection Bill
+                    </span>
+                    , <span style={{ color: "#1976D2" }}>Electricity Bill</span>
+                    , or{" "}
+                    <span style={{ color: "#1976D2" }}>
+                      any other valid Address Proof
+                    </span>
+                    , along with remarks.
                   </Typography>
                 )}
                 {fileInputs.map((input, index) => (

@@ -19,70 +19,70 @@ import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
-const StepBox = ({
-  icon,
-  title,
-  description,
-  onClick,
-  disabled,
-  completed,
-  isVerified,
-}) => (
-  <Box
-    onClick={onClick}
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-start",
-      justifyContent: "center",
-      padding: 2,
-      borderColor: disabled ? "#1c1c1c" : "#F26722",
-      borderRadius: 3,
-      margin: 1,
-      width: "25%",
-      minWidth: 200,
-      cursor: disabled ? "not-allowed" : "pointer",
-      textAlign: "left",
-      background: disabled ? "#d9d9d9" : "#F26722",
-      color: !disabled ? "white" : "#1c1c1c",
-      "@media (max-width: 600px)": {
-        width: "80%",
-        margin: "auto",
-      },
-    }}
-  >
-    <IconButton
-      sx={{
-        color:
-          // completed ? "white" :
-          disabled ? "grey" : "white",
-        ml: 1,
-      }}
-    >
-      {completed || isVerified ? (
-        <CheckCircleIcon sx={{ color: "#4caf50" }} />
-      ) : (
-        icon
-      )}
-    </IconButton>
-    {/* <IconButton
-      sx={{
-        color: completed ? "white" : disabled ? "#1c1c1c" : "white",
-        ml: 1,
-      }}
-    >
-      {completed ? (
-        <i className="fas fa-check-circle" style={{ fontSize: "24px" }}></i>
-      ) : (
-        icon
-      )}
-    </IconButton> */}
-    <Box sx={{ ml: 2, flexGrow: 1 }}>
-      <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
-      <Typography variant="body2">{description}</Typography>
-    </Box>
-  </Box>
-);
+// const StepBox = ({
+//   icon,
+//   title,
+//   description,
+//   onClick,
+//   disabled,
+//   completed,
+//   isVerified,
+// }) => (
+//   <Box
+//     onClick={onClick}
+//     sx={{
+//       display: "flex",
+//       flexDirection: "column",
+//       alignItems: "flex-start",
+//       justifyContent: "center",
+//       padding: 2,
+//       borderColor: disabled ? "#1c1c1c" : "#F26722",
+//       borderRadius: 3,
+//       margin: 1,
+//       width: "25%",
+//       minWidth: 200,
+//       cursor: disabled ? "not-allowed" : "pointer",
+//       textAlign: "left",
+//       background: disabled ? "#d9d9d9" : "#F26722",
+//       color: !disabled ? "white" : "#1c1c1c",
+//       "@media (max-width: 600px)": {
+//         width: "80%",
+//         margin: "auto",
+//       },
+//     }}
+//   >
+//     <IconButton
+//       sx={{
+//         color:
+//           // completed ? "white" :
+//           disabled ? "grey" : "white",
+//         ml: 1,
+//       }}
+//     >
+//       {completed || isVerified ? (
+//         <CheckCircleIcon sx={{ color: "#4caf50" }} />
+//       ) : (
+//         icon
+//       )}
+//     </IconButton>
+//     {/* <IconButton
+//       sx={{
+//         color: completed ? "white" : disabled ? "#1c1c1c" : "white",
+//         ml: 1,
+//       }}
+//     >
+//       {completed ? (
+//         <i className="fas fa-check-circle" style={{ fontSize: "24px" }}></i>
+//       ) : (
+//         icon
+//       )}
+//     </IconButton> */}
+//     <Box sx={{ ml: 2, flexGrow: 1 }}>
+//       <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
+//       <Typography variant="body2">{description}</Typography>
+//     </Box>
+//   </Box>
+// );
 
 const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -134,19 +134,14 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
               city: "",
               state: "",
             }));
-            Swal.fire({
-              icon: "error",
-              title: "Invalid Pincode",
-              text: "Please enter a valid pincode.",
-            });
+
+            alert("Please enter a valid pincode.");
           }
         } catch (error) {
-          console.error("Error fetching pincode data:", error);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "An error occurred while fetching data. Please try again later.",
-          });
+          alert("Error fetching pincode data:", error);
+          alet(
+            "An error occurred while fetching data. Please try again later."
+          );
         }
       } else {
         setFormValues((prev) => ({
@@ -228,10 +223,10 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             }
           );
 
-          console.log(
-            "getProfileDetailsResponse >>> ",
-            getProfileDetailsResponse
-          );
+          // console.log(
+          //   "getProfileDetailsResponse >>> ",
+          //   getProfileDetailsResponse
+          // );
 
           const residenceData =
             getProfileDetailsResponse?.data?.data?.residence;
@@ -250,7 +245,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
       }
     } catch (error) {
       setIsLoading(false);
-      console.error("Error fetching data:", error);
+      alert("Error fetching data:", error);
     }
   };
 
