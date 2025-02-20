@@ -179,6 +179,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
 
       if (response.status === 200) {
         Swal.fire("Address details updated successfully!");
+        setIsAddressVerified(true);
         setOpenModal(false);
         setStepCompleted(true);
         onComplete({ formValues });
@@ -378,9 +379,10 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
               label={field.replace(/^\w/, (c) => c.toUpperCase())}
               value={formValues[field]}
               onChange={
-                field === "pincode"
-                  ? handlePincodeChange
-                  : (e) => handleFormChange(field, e.target.value)
+                // field === "pincode"
+                //   ? handlePincodeChange
+                //   :
+                (e) => handleFormChange(field, e.target.value)
               }
               fullWidth
               sx={{ marginBottom: 2 }}

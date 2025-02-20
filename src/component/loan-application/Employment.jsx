@@ -60,46 +60,46 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
   const handlePincodeChange = async (e) => {
     const value = e.target.value;
 
-    if (/^\d{0,6}$/.test(value)) {
-      setFormValues({ ...formValues, pincode: value });
+    setFormValues({ ...formValues, pincode: value });
+    // if (/^\d{0,6}$/.test(value)) {
 
-      if (value.length === 6) {
-        try {
-          const response = await fetch(
-            `https://api.postalpincode.in/pincode/${value}`
-          );
-          const data = await response.json();
+    //   if (value.length === 6) {
+    //     try {
+    //       const response = await fetch(
+    //         `https://api.postalpincode.in/pincode/${value}`
+    //       );
+    //       const data = await response.json();
 
-          if (data[0].Status === "Success") {
-            const { Block, State } = data[0].PostOffice[0];
-            setFormValues((prev) => ({
-              ...prev,
-              city: Block,
-              state: State,
-            }));
-          } else {
-            setFormValues((prev) => ({
-              ...prev,
-              city: "",
-              state: "",
-            }));
-            alert("Please enter a valid pincode.");
-          }
-        } catch (error) {
-          alert(
-            "An error occurred while fetching data. Please try again later."
-          );
-        }
-      } else {
-        setFormValues((prev) => ({
-          ...prev,
-          city: "",
-          state: "",
-        }));
-      }
-    } else {
-      setFormValues({ ...formValues, pincode: "", city: "", state: "" });
-    }
+    //       if (data[0].Status === "Success") {
+    //         const { Block, State } = data[0].PostOffice[0];
+    //         setFormValues((prev) => ({
+    //           ...prev,
+    //           city: Block,
+    //           state: State,
+    //         }));
+    //       } else {
+    //         setFormValues((prev) => ({
+    //           ...prev,
+    //           city: "",
+    //           state: "",
+    //         }));
+    //         alert("Please enter a valid pincode.");
+    //       }
+    //     } catch (error) {
+    //       alert(
+    //         "An error occurred while fetching data. Please try again later."
+    //       );
+    //     }
+    //   } else {
+    //     setFormValues((prev) => ({
+    //       ...prev,
+    //       city: "",
+    //       state: "",
+    //     }));
+    //   }
+    // } else {
+    //   setFormValues({ ...formValues, pincode: "", city: "", state: "" });
+    // }
   };
 
   const handleInputChange = (e) => {
@@ -123,7 +123,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
         !formValues.designation
       ) {
         alert("All fields are required.");
-        return;
+        // return;
       }
 
       const apiData = { ...formValues, ...addressValues };
@@ -370,6 +370,8 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
                     margin="normal"
                     type={field.type}
                     required
+                    InputLabelProps={{ shrink: true }}
+                    inputProps={{ max: new Date().toISOString().split("T")[0] }}
                   />
                 )}
               </Box>
