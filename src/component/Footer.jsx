@@ -151,12 +151,12 @@ const Footer = () => {
                       </Link>
                     </li>
                     <li>
-                      <Link href="apply-now" sx={linkStyle}>
+                      <Link href="login-form" sx={linkStyle}>
                         Apply Now
                       </Link>
                     </li>
                     <li>
-                      <Link href="loanRepayment" sx={linkStyle}>
+                      <Link href="repay-now" sx={linkStyle}>
                         Repay Now
                       </Link>
                     </li>
