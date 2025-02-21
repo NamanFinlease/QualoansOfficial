@@ -104,12 +104,12 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [mobile, setMobile] = useState("");
 
   const handleFormChange = (key, value) => {
-    setFormValues((prev) => ({ ...prev, [key]: value }));
+    setFormValues((prev) => ({ ...prev, [key]: value.trim() }));
     if (error) setError("");
   };
 
   const handlePincodeChange = async (e) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
 
     if (/^\d{0,6}$/.test(value)) {
       setFormValues({ ...formValues, pincode: value });
@@ -125,8 +125,8 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             const { Block, State } = data[0].PostOffice[0];
             setFormValues((prev) => ({
               ...prev,
-              city: Block,
-              state: State,
+              city: Block.trim(),
+              state: State.trim(),
             }));
           } else {
             setFormValues((prev) => ({

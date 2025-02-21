@@ -55,7 +55,7 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
       );
       const data = documentListResponse.data.documents;
       const result = {};
-      console.log(" res asdasda >>> ?? ", data);
+      // console.log(" res asdasda >>> ?? ", data);
 
       const requiredTypes = ["bankStatement"];
 
@@ -66,7 +66,7 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
       console.log("hasAllRequired", hasAllRequired);
 
       if (hasAllRequired) {
-        console.log("uploaded");
+        // console.log("uploaded");
         // onComplete({ success: true, data: null });
       }
 
@@ -172,17 +172,33 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
         credentials: "include",
       });
 
-      console.log("hhhb", response);
+      // console.log("hhhb", response);
 
       if (response.status === 200) {
         const responseData = await response.json();
         onComplete({ bankStatement }); // Notify parent that upload is complete
         setBankStatementUploaded(true);
-        SweetAlert.fire(
-          "Success",
-          "Bank statement uploaded successfully!",
-          "success"
-        );
+        Swal.fire({
+          title: "Success",
+          text: "Bank statement uploaded successfully!",
+          icon: "success",
+          width: window.innerWidth <= 600 ? "90%" : "30%", // 90% width on mobile, 30% on desktop
+          padding: window.innerWidth <= 600 ? "1rem" : "2rem", // Adjust padding for mobile
+          confirmButtonColor: "#FFA500", // Orange button
+          customClass: {
+            popup: "custom-popup-responsive",
+            confirmButton: "confirm-button-orange",
+          },
+          didOpen: () => {
+            const popup = document.querySelector(".swal2-popup");
+
+            if (popup) {
+              popup.style.marginTop =
+                window.innerWidth <= 600 ? "20px" : "50px"; // Top margin adjustment
+              popup.style.fontSize = window.innerWidth <= 600 ? "14px" : "16px"; // Font size for mobile
+            }
+          },
+        });
       } else {
         const errorData = await response.json();
         SweetAlert.fire(

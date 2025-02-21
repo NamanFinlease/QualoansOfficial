@@ -80,7 +80,7 @@ const LoginForm = ({ setLoginComleted }) => {
       return;
     }
 
-    setLoading(true);
+    setLoadingOtp(true); // Start resend loading
     if (setLoadingOtp) {
       setOtp(["", "", "", "", "", ""]); // Clear OTP input fields
     }
@@ -126,7 +126,7 @@ const LoginForm = ({ setLoginComleted }) => {
         error.response?.data?.message || "An error occurred while sending OTP."
       );
     } finally {
-      setLoading(false);
+      setLoadingOtp(false);
     }
   };
 
@@ -141,11 +141,12 @@ const LoginForm = ({ setLoginComleted }) => {
       return;
     }
 
-    setLoading(true);
+    setLoadingVerify(true);
+    // if (setLoadingVerify) {
+    //   setOtp(["", "", "", "", "", ""]); // Clear OTP input fields
+    // }
     setErrorMessage("");
-    if (setLoadingOtp) {
-      setOtp(["", "", "", "", "", ""]); // Clear OTP input fields
-    }
+
     setSuccessMessage("");
 
     try {
@@ -231,7 +232,7 @@ const LoginForm = ({ setLoginComleted }) => {
           "An error occurred while verifying OTP."
       );
     } finally {
-      setLoading(false);
+      setLoadingVerify(false);
     }
   };
 
@@ -387,9 +388,9 @@ const LoginForm = ({ setLoginComleted }) => {
                   "&:hover": { backgroundColor: "darkorange" },
                   fontWeight: "bold",
                 }}
-                disabled={loading}
+                disabled={loadingOtp}
               >
-                {loading ? <CircularProgress size={24} /> : "Send OTP"}
+                {loadingOtp ? <CircularProgress size={24} /> : "Send OTP"}
               </Button>
             </>
           ) : (
@@ -435,9 +436,13 @@ const LoginForm = ({ setLoginComleted }) => {
                       fontWeight: "bold",
                       "&:hover": { backgroundColor: "#FF8C00" },
                     }}
-                    disabled={loading}
+                    disabled={loadingOtp || loadingVerify} // Disable if either is loading
                   >
-                    {loading ? <CircularProgress size={24} /> : "Verify OTP"}
+                    {loadingVerify ? (
+                      <CircularProgress size={24} color="inherit" />
+                    ) : (
+                      "Verify OTP"
+                    )}
                   </Button>
                 </Grid>
                 <Grid item xs={6}>
@@ -451,9 +456,13 @@ const LoginForm = ({ setLoginComleted }) => {
                       fontWeight: "bold",
                       "&:hover": { backgroundColor: "#f1f1f1" },
                     }}
-                    disabled={loadingOtp}
+                    disabled={loadingVerify || loadingOtp} // Disable if either is loading
                   >
-                    {loadingOtp ? <CircularProgress size={24} /> : "Resend OTP"}
+                    {loadingOtp ? (
+                      <CircularProgress size={24} color="inherit" />
+                    ) : (
+                      "Resend OTP"
+                    )}
                   </Button>
                 </Grid>
               </Grid>

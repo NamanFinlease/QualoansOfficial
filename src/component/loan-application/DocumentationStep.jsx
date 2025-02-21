@@ -35,7 +35,6 @@ const DocumentationStep = ({
       );
       const data = documentListResponse.data.documents;
       const result = {};
-      console.log(" res asdasda >>> ?? ", data);
 
       const requiredTypes = ["aadhaarFront", "salarySlip", "panCard"];
 

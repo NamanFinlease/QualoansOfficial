@@ -120,7 +120,7 @@ const DocumentsTable = ({ uploadedDocs, remarks }) => {
                 <TableCell sx={{ color: "#00000" }}>{index + 1}</TableCell>
                 <TableCell sx={{ color: "#00000" }}>{doc?.name}</TableCell>
                 <TableCell sx={{ color: "#00000" }}>
-                  {doc?.remarks || "No remarks"}
+                  {(doc?.remarks && doc.remarks.trim()) || "No remarks"}
                 </TableCell>
                 {/* <TableCell sx={{ color: "#00000" }}>{doc?.remarks}</TableCell> */}
 

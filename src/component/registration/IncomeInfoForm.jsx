@@ -37,14 +37,15 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [error, setError] = useState("");
 
   const handleFormChange = (key, value) => {
-    setFormValues((prev) => ({ ...prev, [key]: value }));
+    const trimedValues = typeof value === "string" ? value.trim() : value;
+    setFormValues((prev) => ({ ...prev, [key]: trimedValues }));
 
     // Reset error when the user modifies input
     if (error) setError("");
 
     // Loan amount validation
     if (key === "obligations" && formValues.monthlyIncome) {
-      const loanAmount = parseFloat(value) || 0;
+      const loanAmount = parseFloat(trimmedValue) || 0;
       const monthlyIncome = parseFloat(formValues.monthlyIncome) || 0;
       const maxLoanAmount = 0.4 * monthlyIncome; // 40% of monthly income
 

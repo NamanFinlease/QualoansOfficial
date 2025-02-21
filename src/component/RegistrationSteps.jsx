@@ -134,6 +134,7 @@ const RegistrationSteps = () => {
             isPersonalInfoVerified: response.data.isPersonalDetails,
             isAddressVerified: response.data.isCurrentResidence,
             isIncomeInfoVerified: response.data.isIncomeDetails,
+            isSelfieVerified: response.data.selfieVerification,
           }));
         }
       } catch (error) {

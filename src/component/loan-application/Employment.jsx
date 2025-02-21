@@ -104,29 +104,33 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const trimedValues = value.trimStart();
     if (stepData.fields.some((field) => field.name === name)) {
-      setFormValues({ ...formValues, [name]: value });
+      setFormValues({ ...formValues, [name]: trimedValues });
     } else {
-      setAddressValues({ ...addressValues, [name]: value });
+      setAddressValues({ ...addressValues, [name]: trimedValues });
     }
   };
 
   const handleEmploymentSubmit = async () => {
     try {
+      const trimmedFormValues = Object.fromEntries(
+        Object.entries(formValues).map(([key, value]) => [key, value.trim()])
+      );
       if (
-        !formValues.workFrom ||
-        !formValues.companyName ||
-        !formValues.companyType ||
-        !formValues.designation ||
-        !formValues.officeEmail ||
-        !formValues.employedSince ||
-        !formValues.designation
+        !trimmedFormValues.workFrom ||
+        !trimmedFormValues.companyName ||
+        !trimmedFormValues.companyType ||
+        !trimmedFormValues.designation ||
+        !trimmedFormValues.officeEmail ||
+        !trimmedFormValues.employedSince ||
+        !trimmedFormValues.designation
       ) {
         alert("All fields are required.");
         // return;
       }
 
-      const apiData = { ...formValues, ...addressValues };
+      const apiData = { ...trimmedFormValues, ...addressValues };
 
       console.log("Submitting data:", apiData);
 
@@ -142,7 +146,27 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
       console.log("Response from backend:", response);
 
       if (response.status === 200) {
-        Swal.fire("Employment information submitted successfully!");
+        Swal.fire({
+          title: "Employment information submitted successfully!",
+          width: window.innerWidth <= 600 ? "90%" : "30%", // 90% width on mobile, 30% on desktop
+          padding: window.innerWidth <= 600 ? "1rem" : "2rem", // Adjust padding for mobile
+          confirmButtonColor: "#FFA500", // Button color (orange)
+          customClass: {
+            popup: "custom-popup-responsive",
+            confirmButton: "confirm-button-orange",
+          },
+          didOpen: () => {
+            const popup = document.querySelector(".swal2-popup");
+
+            if (popup) {
+              // Adjust popup styling for mobile
+              popup.style.marginTop =
+                window.innerWidth <= 600 ? "20px" : "50px";
+              popup.style.fontSize = window.innerWidth <= 600 ? "14px" : "16px"; // Smaller font on mobile
+            }
+          },
+        });
+
         setStepCompleted(true);
         setOpenModal(false);
         setIsEmploymentDetailsSaved(true);
