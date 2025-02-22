@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-
+import moment from "moment";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
@@ -126,7 +126,36 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
         // return;
       }
 
-      const apiData = { ...formValues, ...addressValues };
+      // Validate and Format Date
+      let formattedEmployedSince;
+      if (moment(formValues.employedSince, "YYYY-MM-DD", true).isValid()) {
+        formattedEmployedSince = moment(formValues.employedSince).toISOString();
+      } else {
+        alert("Invalid Date Format. Please enter a valid date.");
+        return;
+      }
+
+      const apiData = {
+        ...formValues,
+        ...addressValues,
+        employedSince: formattedEmployedSince, // Ensure correct date format
+      };
+
+      // const formattedEmployedSince = moment(
+      //   formValues.employedSince,
+      //   "YYYY-MM-DD",
+      //   true
+      // ).isValid()
+      //   ? moment(formValues.employedSince).toISOString() // Convert to ISO 8601 format
+      //   : moment(formValues.employedSince, "DD-MM-YYYY").toISOString();
+
+      // const apiData = {
+      //   ...formValues,
+      //   ...addressValues,
+      //   employedSince: formattedEmployedSince, // Ensure correct date format
+      // };
+
+      // const apiData = { ...formValues, ...addressValues };
 
       console.log("Submitting data:", apiData);
 

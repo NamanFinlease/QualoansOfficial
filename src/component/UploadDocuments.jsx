@@ -11,6 +11,7 @@ import {
   Tooltip,
   useTheme,
   Alert,
+  MenuItem,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
@@ -53,6 +54,7 @@ const UploadDocuments = () => {
   const [isUploadSuccess, setIsUploadSuccess] = useState(0);
   const [firstOccurrences, setFirstOccurrences] = useState([]);
   const [requiredSalarySlips] = useState(3);
+  const [requiredField, setRequiredField] = useState(false);
 
   useEffect(() => {
     const getPreviousData = async () => {
@@ -128,6 +130,7 @@ const UploadDocuments = () => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const hasFileSelected = fileInputs.some((input) => input.file);
 
     if (!hasFileSelected) {
@@ -181,6 +184,7 @@ const UploadDocuments = () => {
         });
         setFileInputs([{ file: null, remarks: "" }]); // Reset file inputs
         setSelectedDocType(null);
+        setIsLoading(false);
       }
     } catch (error) {
       Swal.fire(error.response?.data?.message || "Error!");
@@ -201,16 +205,18 @@ const UploadDocuments = () => {
       );
       const data = documentListResponse.data.documents;
       const result = {};
-      // const requiredNames = ["salarySlip_1", "salarySlip_2", "salarySlip_3"];
 
-      // for (const item of data) {
-      //   if (requiredNames.includes(item.name) && !result[item.name]) {
-      //     result[item.name] = item;
-      //   }
-      // }
+      const requiredTypes = ["aadhaarFront", "salarySlip", "panCard"];
 
-      // const firstOccurrencesArray = Object.values(result);
-      // setFirstOccurrences(firstOccurrencesArray);
+      const hasAllRequired = requiredTypes.every((type) =>
+        data.some((item) => item.type === type)
+      );
+
+      console.log("hasAllRequired", hasAllRequired);
+
+      if (hasAllRequired) {
+        setRequiredField(true);
+      }
 
       setFormValues((prev) => ({
         ...prev,
@@ -275,6 +281,18 @@ const UploadDocuments = () => {
 
     return result;
   }
+
+  const handleContinueBtn = () => {
+    if (requiredField) {
+      navigate(`/loan-application`);
+    } else {
+      Swal.fire(
+        "Warning!",
+        "Please upload all the required documents",
+        "warning"
+      );
+    }
+  };
 
   return (
     <>
@@ -373,7 +391,18 @@ const UploadDocuments = () => {
               <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                 {selectedDocType === "salarySlip" && (
                   <Typography variant="subtitle2" sx={{ color: "#F26722" }}>
-                    Please upload {requiredSalarySlips} salary slips
+                    Please upload {requiredSalarySlips} salary slips. Salary
+                    slips are required.
+                  </Typography>
+                )}
+                {selectedDocType === "aadhaarFront" && (
+                  <Typography variant="subtitle2" sx={{ color: "#F26722" }}>
+                    Aadhaar Front is required
+                  </Typography>
+                )}
+                {selectedDocType === "panCard" && (
+                  <Typography variant="subtitle2" sx={{ color: "#F26722" }}>
+                    PAN Card is required
                   </Typography>
                 )}
                 {selectedDocType === "others" && (
@@ -432,31 +461,71 @@ const UploadDocuments = () => {
                     </Button>
 
                     {/* Remarks Input */}
-                    <TextField
-                      label="Remarks"
-                      value={input.remarks}
-                      onChange={(event) => handleRemarksChange(index, event)}
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        flex: 1,
-                        "& .MuiInputBase-input": {
-                          color: "#F26722",
-                        },
-                        "& .MuiInputLabel-root": {
-                          color: "#F26722",
-                        },
-                        "& .MuiOutlinedInput-root": {
-                          "& fieldset": {
-                            borderColor: "#F26722",
-                            borderRadius: "10px",
+                    {selectedDocType === "others" ? (
+                      <TextField
+                        select
+                        label="Select Document Type"
+                        value={input.remarks}
+                        onChange={(event) => handleRemarksChange(index, event)}
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        sx={{
+                          flex: 1,
+                          "& .MuiInputBase-input": {
+                            color: "#F26722",
                           },
-                          "&:hover fieldset": {
-                            borderColor: "#F26722",
+                          "& .MuiInputLabel-root": {
+                            color: "#F26722",
                           },
-                        },
-                      }}
-                    />
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                              borderColor: "#F26722",
+                              borderRadius: "10px",
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "#F26722",
+                            },
+                          },
+                        }}
+                      >
+                        <MenuItem value="Electricity Bill">
+                          Electricity Bill
+                        </MenuItem>
+                        <MenuItem value="Gas Connection">
+                          Gas Connection
+                        </MenuItem>
+                        <MenuItem value="Residence Proof">
+                          Residence Proof
+                        </MenuItem>
+                      </TextField>
+                    ) : (
+                      <TextField
+                        label="Remarks"
+                        value={input.remarks}
+                        onChange={(event) => handleRemarksChange(index, event)}
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                          flex: 1,
+                          "& .MuiInputBase-input": {
+                            color: "#F26722",
+                          },
+                          "& .MuiInputLabel-root": {
+                            color: "#F26722",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                              borderColor: "#F26722",
+                              borderRadius: "10px",
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "#F26722",
+                            },
+                          },
+                        }}
+                      />
+                    )}
 
                     {/* View Button */}
                     {input.file && (
@@ -561,7 +630,7 @@ const UploadDocuments = () => {
               color: "#FFF",
             },
           }}
-          onClick={() => navigate("/loan-application")}
+          onClick={handleContinueBtn}
         >
           Continue to Loan Application
         </Button>

@@ -43,6 +43,10 @@ const DisbursalBankDetails = ({
     bankName: prefillData?.bankName || "",
     accountType: prefillData?.accountType || "",
   });
+  const [incomeDetails, setIncomeDetails] = useState({
+    employementType: "",
+    incomeMode: "",
+  });
 
   useEffect(() => {
     if (stepCompleted) {
@@ -74,7 +78,55 @@ const DisbursalBankDetails = ({
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
+  useEffect(() => {
+    const fetchIncomeData = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/getProfileDetails`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch income data");
+        }
+
+        const data = await response.json();
+        console.log("data >>> ", data);
+        console.log("res >>> ", response);
+        const { incomeDetails } = data?.data || {};
+        console.log(
+          "incomeDetails >>> ",
+          incomeDetails.employementType,
+          incomeDetails.incomeMode
+        );
+
+        setIncomeDetails({
+          employementType: incomeDetails.employementType,
+          incomeMode: incomeDetails.incomeMode,
+        });
+      } catch (err) {
+        // setError(err.message);
+      } finally {
+        // setLoading(false);
+      }
+    };
+    fetchIncomeData();
+  }, []);
+
   const handleSubmit = async () => {
+    if (
+      incomeDetails.employementType === "SELF EMPLOYED" ||
+      incomeDetails.incomeMode === "CASH"
+    ) {
+      MySwal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "You are not eligible for the loan",
+      });
+      return;
+    }
+
     const { accountNumber, confirmAccountNo, ifscCode, bankName, accountType } =
       formValues;
 
