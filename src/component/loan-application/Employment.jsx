@@ -11,9 +11,14 @@ import {
   DialogTitle,
   IconButton,
 } from "@mui/material";
+import { format } from "date-fns"; // Import date-fns format function
+
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-
+// import moment from "moment";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
@@ -117,6 +122,14 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
       const trimmedFormValues = Object.fromEntries(
         Object.entries(formValues).map(([key, value]) => [key, value.trim()])
       );
+
+      const formattedEmployedSince = format(
+        new Date(
+          trimmedFormValues.employedSince.split("-").reverse().join("-")
+        ),
+        "yyyy-MM-dd"
+      ); // Convert to ISO format
+
       if (
         !trimmedFormValues.workFrom ||
         !trimmedFormValues.companyName ||
@@ -130,7 +143,36 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
         // return;
       }
 
-      const apiData = { ...trimmedFormValues, ...addressValues };
+      // Validate and Format Date
+      // let formattedEmployedSince;
+      // if (moment(formValues.employedSince, "YYYY-MM-DD", true).isValid()) {
+      //   formattedEmployedSince = moment(formValues.employedSince).toISOString();
+      // } else {
+      //   alert("Invalid Date Format. Please enter a valid date.");
+      //   return;
+      // }
+
+      const apiData = {
+        ...trimmedFormValues,
+        ...addressValues,
+        employedSince: formattedEmployedSince, // Ensure correct date format
+      };
+
+      // const formattedEmployedSince = moment(
+      //   formValues.employedSince,
+      //   "YYYY-MM-DD",
+      //   true
+      // ).isValid()
+      //   ? moment(formValues.employedSince).toISOString() // Convert to ISO 8601 format
+      //   : moment(formValues.employedSince, "DD-MM-YYYY").toISOString();
+
+      // const apiData = {
+      //   ...formValues,
+      //   ...addressValues,
+      //   employedSince: formattedEmployedSince, // Ensure correct date format
+      // };
+
+      // const apiData = { ...formValues, ...addressValues };
 
       console.log("Submitting data:", apiData);
 
@@ -176,6 +218,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
         }
       } else {
         // Swal.fire("Error submitting employment information.");
+
         alert(error.response.data.message);
         setOpenModal(false);
       }
@@ -406,17 +449,22 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
 
           {/* Editable Pincode, City, and State */}
 
-          <TextField
-            fullWidth
-            name="employedSince"
-            label="Employed Since"
-            type="date"
-            value={formValues.employedSince || ""}
-            onChange={handleInputChange}
-            InputLabelProps={{ shrink: true }}
-            sx={{ marginBottom: 2 }}
-            required
-          />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Employed Since"
+              value={formValues.employedSince}
+              onChange={handleInputChange}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  sx: { marginBottom: 2 },
+                  variant: "outlined",
+                  required: true,
+                },
+              }}
+            />
+          </LocalizationProvider>
+
           <TextField
             label="Pincode"
             value={formValues.pincode || ""}

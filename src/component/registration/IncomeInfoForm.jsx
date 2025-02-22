@@ -15,6 +15,11 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
+import { format } from "date-fns"; // Import date-fns format function
+
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { BASE_URL } from "../../baseURL";
 import axios from "axios";
@@ -58,14 +63,32 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
   };
 
   const handleSubmit = async () => {
-    const {
-      employementType,
-      monthlyIncome,
-      obligations,
-      nextSalaryDate,
-      incomeMode,
-      workingSince,
-    } = formValues;
+    const trimmedValues = Object.fromEntries(
+      Object.entries(formValues).map(([key, value]) => [key, value.trim()])
+    );
+    const formatteNextSalary = format(
+      new Date(trimmedValues.nextSalaryDate.split("-").reverse().join("-")),
+      "yyyy-MM-dd"
+    );
+
+    const formattedWorkingSince = format(
+      new Date(trimmedValues.workingSince.split("-").reverse().join("-")),
+      "yyyy-MM-dd"
+    );
+
+    if (Object.values(trimmedValues).some((val) => !val)) {
+      setError("Please fill out all fields.");
+      return;
+    }
+
+    const updatedDetails = {
+      employementType: trimmedValues.employementType,
+      monthlyIncome: trimmedValues.monthlyIncome,
+      obligations: trimmedValues.obligations,
+      nextSalaryDate: formatteNextSalary,
+      incomeMode: trimmedValues.incomeMode,
+      workingSince: formattedWorkingSince,
+    };
 
     if (
       !employementType ||
@@ -83,14 +106,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
     try {
       const response = await axios.patch(
         `${BASE_URL}/addIncomeDetails`,
-        {
-          employementType,
-          monthlyIncome,
-          obligations,
-          nextSalaryDate,
-          incomeMode,
-          workingSince,
-        },
+        updatedDetails,
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -327,30 +343,53 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
             error={!!error}
             helperText={error}
           />
-          <TextField
-            label="Next Salary Date"
-            type="date"
-            value={formValues.nextSalaryDate}
-            onChange={(e) => handleFormChange("nextSalaryDate", e.target.value)}
-            fullWidth
-            sx={{ marginBottom: 2 }}
-            required
-            InputLabelProps={{ shrink: true }}
-            inputProps={{ min: new Date().toISOString().split("T")[0] }}
-            placeholder="DD-MM-YYYY"
-          />
-          <TextField
-            label="Working Since"
-            type="date"
-            value={formValues.workingSince}
-            onChange={(e) => handleFormChange("workingSince", e.target.value)}
-            fullWidth
-            sx={{ marginBottom: 2 }}
-            required
-            InputLabelProps={{ shrink: true }}
-            inputProps={{ max: new Date().toISOString().split("T")[0] }}
-            placeholder="DD-MM-YYYY"
-          />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Next Salary Date"
+              value={
+                formValues.nextSalaryDate
+                  ? new Date(formValues.nextSalaryDate)
+                  : null
+              }
+              onChange={(newValue) =>
+                handleFormChange(
+                  "nextSalaryDate",
+                  newValue.toISOString().split("T")[0]
+                )
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  fullWidth
+                  sx={{ marginBottom: 2 }}
+                  required
+                />
+              )}
+            />
+
+            <DatePicker
+              label="Working Since"
+              value={
+                formValues.workingSince
+                  ? new Date(formValues.workingSince)
+                  : null
+              }
+              onChange={(newValue) =>
+                handleFormChange(
+                  "workingSince",
+                  newValue.toISOString().split("T")[0]
+                )
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  fullWidth
+                  sx={{ marginBottom: 2 }}
+                  required
+                />
+              )}
+            />
+          </LocalizationProvider>
           <Typography variant="body1" sx={{ fontWeight: "bold", mb: 2 }}>
             Mode of Income Received
           </Typography>

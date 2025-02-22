@@ -39,6 +39,34 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
     totalPayble: 0,
   });
 
+  const [maxLoan, setMaxLoan] = useState(0);
+
+  const fetchIncomeData = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/getProfileDetails`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch income data");
+      }
+
+      const data = await response.json();
+      const { incomeDetails } = data?.data || {};
+      setFormValues((prev) => ({
+        ...prev,
+        principal: incomeDetails?.obligations || 5000,
+      }));
+      setMaxLoan(incomeDetails?.obligations);
+    } catch (err) {
+      // setError(err.message);
+    } finally {
+      // setLoading(false);
+    }
+  };
+
   const openLoanCalculatorModal = () => {
     if (!disabled) {
       setIsModalOpen(true);
@@ -59,8 +87,8 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
 
   const calculateTotalAmount = () => {
     const principal = parseFloat(formValues.principal) || 0;
-    const roi = parseFloat(formValues.roi) || 0;
-    const tenure = parseFloat(formValues.tenure) || 0;
+    const roi = parseFloat(formValues.roi) || 0.5;
+    const tenure = parseFloat(formValues.tenure) || 1;
 
     const totalInterest = (principal * roi * tenure) / 100;
     const total = principal + totalInterest;
@@ -179,12 +207,15 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
 
         // Update formValues with residenceData
         setFormValues({
-          principal: LoanData?.principal || "",
+          principal: LoanData?.principal || 5000,
           totalPayble: LoanData?.totalPayble || "",
-          roi: LoanData?.roi || "",
-          tenure: LoanData?.tenure || "",
+          roi: LoanData?.roi || 0.5,
+          tenure: LoanData?.tenure || 1,
           loanPurpose: LoanData?.loanPurpose || "",
         });
+
+        fetchIncomeData();
+
         // }
       }
     } catch (error) {
@@ -412,8 +443,8 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                       } else if (/^\d+$/.test(value)) {
                         const numericValue = Number(value);
 
-                        if (numericValue > 100000) {
-                          setFormValues({ ...formValues, principal: 100000 });
+                        if (numericValue > maxLoan) {
+                          setFormValues({ ...formValues, principal: maxLoan });
                         } else {
                           setFormValues({
                             ...formValues,
@@ -484,7 +515,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                   <Slider
                     value={formValues.principal}
                     min={5000}
-                    max={100000}
+                    max={maxLoan}
                     onChange={(e, newValue) =>
                       setFormValues(() => ({
                         ...formValues,
@@ -533,7 +564,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                     } */}
                   <TextField
                     type="text"
-                    value={formValues.tenure || ""}
+                    value={formValues.tenure || 1}
                     onChange={(e) => {
                       const inputValue = e.target.value; // Get the raw input string
 
@@ -630,7 +661,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                   <TextField
                     inputProps={{ maxLength: 4 }} // Limits input to 2 characters; adjust as needed
                     type="text"
-                    value={formValues.roi || ""}
+                    value={formValues.roi || 0.5}
                     onChange={(e) => {
                       const inputValue = e.target.value; // work with the raw string
 

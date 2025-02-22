@@ -191,12 +191,17 @@ const LoanTable = () => {
                     Repayment Amount
                   </TableCell>
                   <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
+                    Repayment Amount
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
+                    Outstanding Amount
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
                     PAN
                   </TableCell>
                   <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
                     Date
                   </TableCell>
-                  <div></div>
                   <TableCell
                     sx={{
                       fontWeight: "bold",
@@ -225,7 +230,6 @@ const LoanTable = () => {
                     <TableCell>
                       {moment(loan.repaymentDate).format("DD-MM-YYYY")}
                     </TableCell>
-                    <div></div>
                     <TableCell
                       sx={{
                         position: "sticky",

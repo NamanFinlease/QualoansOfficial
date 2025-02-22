@@ -10,7 +10,7 @@ import {
 import { BASE_URL } from "../baseURL";
 import { sharedStyles } from "./shared/styles";
 import axios from "axios";
-import { color } from "framer-motion";
+import { format } from "date-fns";
 
 // Define the ResidentialAddress component
 const ResidentialAddress = () => {
@@ -320,7 +320,12 @@ const ResidentialAddress = () => {
                       Residence Since
                     </td>
                     <td style={styles.tableCell}>
-                      {Residential.residingSince}
+                      {Residential.residingSince
+                        ? format(
+                            new Date(Residential.residingSince),
+                            "dd/MM/yyyy"
+                          )
+                        : "N/A"}{" "}
                     </td>
                   </tr>
                 </>

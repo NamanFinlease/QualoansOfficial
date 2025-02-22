@@ -18,6 +18,8 @@ const IncomeInformation = () => {
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isDisable, setIsDisable] = useState(true);
+  const [loanError, setLoanError] = useState("");
 
   // Fetch income details from the backend API
   useEffect(() => {
@@ -34,6 +36,7 @@ const IncomeInformation = () => {
         }
 
         const data = await response.json();
+
         setIncome({
           employementType: data?.data?.incomeDetails?.employementType,
           monthlyIncome: data?.data?.incomeDetails?.monthlyIncome,
@@ -54,16 +57,30 @@ const IncomeInformation = () => {
 
   // Handle input field changes
   const handleChange = (e) => {
+    setIsDisable(false);
     const { name, value } = e.target;
+
+    const numValue = Number(value);
+    const maxLoanAmount = Number(income.monthlyIncome) * 0.4;
+
+    if (name === "obligations") {
+      if (numValue > maxLoanAmount) {
+        setLoanError(
+          `Loan amount cannot exceed 40% of Monthly Income (${maxLoanAmount})`
+        );
+        return;
+      } else {
+        setLoanError(""); // Clear error if valid
+      }
+    }
+
     setIncome((prev) => ({ ...prev, [name]: value }));
   };
 
   // Handle save operation to update income information in the backend
   const handleSave = async () => {
+    setLoading(true);
     try {
-      // Convert nextSalaryDate and workingSince to a valid ISO format.
-      // If the user entered the date in YYYY-MM-DD (via type="date"), it should be valid.
-      // Otherwise, we attempt to parse it using moment.
       const formattedNextSalaryDate = moment(
         income.nextSalaryDate,
         "YYYY-MM-DD",
@@ -100,6 +117,8 @@ const IncomeInformation = () => {
       }
 
       setEditMode(false);
+      setLoading(false);
+      // setIsDisable(false);
     } catch (err) {
       setError(err.message);
     }
@@ -187,6 +206,9 @@ const IncomeInformation = () => {
                         name="obligations"
                         value={income.obligations}
                         onChange={handleChange}
+                        error={!!loanError}
+                        helperText={loanError}
+                        type="number"
                       />
                     </td>
                   </tr>
@@ -198,9 +220,11 @@ const IncomeInformation = () => {
                         fullWidth
                         name="nextSalaryDate"
                         type="date"
-                        value={moment(income.nextSalaryDate).format(
-                          "YYYY-MM-DD"
-                        )}
+                        value={
+                          income.nextSalaryDate
+                            ? moment(income.nextSalaryDate).format("YYYY-MM-DD")
+                            : ""
+                        }
                         onChange={handleChange}
                       />
                     </td>
@@ -212,7 +236,11 @@ const IncomeInformation = () => {
                         fullWidth
                         name="workingSince"
                         type="date"
-                        value={moment(income.workingSince).format("YYYY-MM-DD")}
+                        value={
+                          income.workingSince
+                            ? moment(income.workingSince).format("YYYY-MM-DD")
+                            : ""
+                        }
                         onChange={handleChange}
                       />
                     </td>
@@ -337,6 +365,7 @@ const IncomeInformation = () => {
                   ml: 2,
                 }}
                 onClick={handleSave}
+                disabled={isDisable}
               >
                 Save
               </Button>
