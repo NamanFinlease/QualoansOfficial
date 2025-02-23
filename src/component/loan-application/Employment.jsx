@@ -16,17 +16,39 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import moment from "moment";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import dayjs from "dayjs";
+
 
 const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
   const [openModal, setOpenModal] = useState(false);
-  const [formValues, setFormValues] = useState(prefillData || {});
+  let defaultvalue = {
+    workFrom: "",
+    companyName: "",
+    companyType: "",
+    designation: "",
+    officeEmail: "",
+    employedSince: dayjs(),
+    officeAddrress: "",
+    landmark: "",
+    city: "",
+    state: "",
+    pincode: "",
+  
+  }
+
+  // console.log('empty object',!isEmptyObject(prefillData))
+  const [formValues, setFormValues] = useState((prefillData && Object.keys(prefillData).length > 0) ?prefillData:defaultvalue );
   const [addressValues, setAddressValues] = useState({});
   const [stepData, setStepData] = useState({});
   const [stepCompleted, setStepCompleted] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   const [isLoading, setIsLoading] = useState(false);
-  const [isEmploymentDetailsSaved, setIsEmploymentDetailsSaved] =
-    useState(false);
+  const [isEmploymentDetailsSaved, setIsEmploymentDetailsSaved] = useState(false);
 
+  console.log('form values',formValues)
   const openEmploymentModal = () => {
     if (disabled) return;
 
@@ -157,7 +179,6 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
 
       // const apiData = { ...formValues, ...addressValues };
 
-      console.log("Submitting data:", apiData);
 
       const response = await axios.patch(
         `${BASE_URL}/addEmploymentInfo`,
@@ -168,7 +189,6 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
         }
       );
 
-      console.log("Response from backend:", response);
 
       if (response.status === 200) {
         Swal.fire("Employment information submitted successfully!");
@@ -202,11 +222,9 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
         }
       );
 
-      console.log("Dashboard Details Response:", getDashboardDetailsResponse);
 
       if (getDashboardDetailsResponse.status === 200) {
         setIsLoading(false);
-        console.log("Response Data:", getDashboardDetailsResponse?.data); // Check this in detail
 
         // Safely access employmentInfo to avoid destructuring errors
         const { isEmploymentDetailsSaved } =
@@ -220,7 +238,6 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           setStepCompleted(isEmploymentDetailsSaved);
         }
 
-        console.log("isEmploymentDetailsSaved:", isEmploymentDetailsSaved);
 
         // if (isEmploymentDetailsSaved) {
         const getProfileDetailsResponse = await axios.get(
@@ -230,9 +247,10 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           }
         );
 
-        console.log("Profile Details Response:", getProfileDetailsResponse);
 
         const EmpData = getProfileDetailsResponse?.data?.data;
+
+        console.log('form valuesssssss', formValues.employedSince,formValues)
 
         // Update form values based on the fetched data
         setFormValues({
@@ -241,7 +259,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           companyType: EmpData?.companyType || "",
           designation: EmpData?.designation || "",
           officeEmail: EmpData?.officeEmail || "",
-          employedSince: EmpData?.employedSince || "",
+          employedSince: dayjs(EmpData?.employedSince),
           officeAddrress: EmpData?.officeAddrress || "",
           landmark: EmpData?.landmark || "",
           city: EmpData?.city || "",
@@ -256,16 +274,23 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
     }
   };
 
+
+  const handleDate = (date) => {
+    console.log('dayjs', dayjs(date).format("YYYY/MM/DD"))
+    setFormValues(prev => ({ ...prev, employedSince: dayjs(date) }))
+    setSelectedDate(date ? dayjs(date) : null)
+  }
+
   useEffect(() => {
     if (prefillData) {
-      setFormValues(prefillData);
+      setFormValues({...prefillData,employedSince:dayjs( prefillData?.employedSince)});
       setStepCompleted(true);
     }
   }, [prefillData]);
 
-  useEffect(() => {
-    console.log("Updated Step Completed:", stepCompleted); // Check if state updates correctly
-  }, [stepCompleted]);
+  // useEffect(() => {
+  //   console.log("Updated Step Completed:", stepCompleted); // Check if state updates correctly
+  // }, [stepCompleted]);
 
   return (
     <>
@@ -416,15 +441,29 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
             name="employedSince"
             label="Employed Since"
             type="date"
-            value={formValues.employedSince || ""}
+            value={formValues?.employedSince || ""}
             onChange={handleInputChange}
             InputLabelProps={{ shrink: true }}
             sx={{ marginBottom: 2 }}
             required
           />
+          {console.log('selected date', new Date(selectedDate))}
+
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en">
+            <DatePicker
+              label="Date Picker"
+              value={ dayjs(formValues?.employedSince) }
+              onChange={handleDate}
+              slotProps={{
+                textField: { format: "DD/MM/YYYY" },
+                // field: { shouldRespectLeadingZeros: true },
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
           <TextField
             label="Pincode"
-            value={formValues.pincode || ""}
+            value={formValues?.pincode || ""}
             onChange={handlePincodeChange}
             fullWidth
             sx={{ marginBottom: 2 }}
@@ -432,7 +471,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           />
           <TextField
             label="City"
-            value={formValues.city || ""}
+            value={formValues?.city || ""}
             onChange={handleInputChange} // Make city editable
             name="city"
             fullWidth
@@ -441,7 +480,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           />
           <TextField
             label="State"
-            value={formValues.state || ""}
+            value={formValues?.state || ""}
             onChange={handleInputChange} // Make state editable
             name="state"
             fullWidth
