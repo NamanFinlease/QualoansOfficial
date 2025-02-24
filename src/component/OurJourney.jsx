@@ -15,7 +15,7 @@ import LoanTable from "./LoanTable";
 const OurJourney = () => {
   const navigate = useNavigate();
   const { sidebarOpen, sidebarExpanded } = useSidebar();
-  const [isRegistration, setRegistration] = useState(true); // Track the current process
+  const [isRegistering, setIsRegistering] = useState(true); // Track the current process
   const [isLoanApplied, setLoanApplied] = useState(false);
   const [isLoanTable, setLoanTable] = useState(false);
   const [loans, setLoans] = useState([]);
@@ -32,7 +32,7 @@ const OurJourney = () => {
           withCredentials: true,
         });
         if (response.status === 200) {
-          setRegistration(response.data.isRegistration);
+          setIsRegistering(response.data.isisRegistering);
           setLoanApplied(response.data.isLoanApplied);
         }
       } catch (error) {
@@ -80,7 +80,7 @@ const OurJourney = () => {
   }, []);
 
   const handleContinue = () => {
-    if (isRegistration) {
+    if (isRegistering) {
       navigate("/registration");
     } else {
       navigate("/loan-application");
@@ -192,7 +192,7 @@ const OurJourney = () => {
                   width: { xs: "100%", sm: "230px" },
                 }}
               >
-                {isRegistration ? "Registration" : "Loan Application"}
+                {isRegistering ? "Registration" : "Loan Application"}
               </Button>
               <Button
                 variant="contained"

@@ -40,7 +40,7 @@ const LoanApplication = () => {
         });
 
         if (response.data.success) {
-          if (!response.data.isRegistration) {
+          if (!response.data.isRegistering) {
             const {
               progressStatus,
               isDocumentUploaded,
@@ -193,7 +193,6 @@ const LoanApplication = () => {
   //     [stepName]: { completed: isCompleted, data },
   //   }));
   // };
-
 
   if (loading) {
     return <Typography>Loading...</Typography>;
