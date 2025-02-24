@@ -14,12 +14,14 @@ import {
 } from "@mui/material";
 import { LocationOn } from "@mui/icons-material"; // For Address Info Icon
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
-// const StepBox = ({
 //   icon,
 //   title,
 //   description,
@@ -104,12 +106,12 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [mobile, setMobile] = useState("");
 
   const handleFormChange = (key, value) => {
-    setFormValues((prev) => ({ ...prev, [key]: value }));
+    setFormValues((prev) => ({ ...prev, [key]: value.trim() }));
     if (error) setError("");
   };
 
   const handlePincodeChange = async (e) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
 
     if (/^\d{0,6}$/.test(value)) {
       setFormValues({ ...formValues, pincode: value });
@@ -125,8 +127,8 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             const { Block, State } = data[0].PostOffice[0];
             setFormValues((prev) => ({
               ...prev,
-              city: Block,
-              state: State,
+              city: Block.trim(),
+              state: State.trim(),
             }));
           } else {
             setFormValues((prev) => ({
@@ -156,16 +158,35 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
   };
 
   const handleSubmit = async () => {
-    if (Object.values(formValues).some((val) => !val)) {
+    const trimmedValues = Object.fromEntries(
+      Object.entries(formValues).map(([key, value]) => [key, value.trim()])
+    );
+    const formatteResidingSince = format(
+      new Date(trimmedValues.residingSince.split("-").reverse().join("-")),
+      "yyyy-MM-dd"
+    );
+
+    if (Object.values(trimmedValues).some((val) => !val)) {
       setError("Please fill out all fields.");
       return;
     }
+    const updatedDetails = { 
+      address:trimmedValues.address,
+      landmark: trimmedValues.landmark,
+      pincode:trimmedValues.pincode ,
+      city: trimmedValues.city,
+      state: trimmedValues.state,
+      residenceType: trimmedValues.residingSince,
+      residingSince: formatteResidingSince,
+
+      
+    };
 
     setIsFetching(true);
     try {
       const response = await axios.patch(
         `${BASE_URL}/currentResidence`,
-        formValues,
+        updatedDetails,
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -409,16 +430,23 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             </Select>
           </FormControl>
 
-          <TextField
-            label="Residing Since"
-            type="date"
-            value={formValues.residingSince}
-            onChange={(e) => handleFormChange("residingSince", e.target.value)}
-            fullWidth
-            sx={{ marginBottom: 2 }}
-            required
-            InputLabelProps={{ shrink: true }} // Ensures the label doesn't overlap with the input
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Residing Since"
+              value={
+                formValues.residingSince
+                  ? dayjs(formValues.residingSince)
+                  : null
+              }
+              onChange={(newValue) =>
+                handleFormChange(
+                  "residingSince",
+                  newValue ? newValue.format("YYYY-MM-DD") : ""
+                )
+              }
+              renderInput={(params) => <TextField {...params} fullWidth />}
+            />
+          </LocalizationProvider>
 
           {error && <Typography color="error">{error}</Typography>}
 

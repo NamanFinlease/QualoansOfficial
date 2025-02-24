@@ -134,11 +134,7 @@ const UploadDocuments = () => {
     const hasFileSelected = fileInputs.some((input) => input.file);
 
     if (!hasFileSelected) {
-      Swal.fire(
-        "Warning!",
-        "Please select at least one file to upload.",
-        "warning"
-      );
+      alert("Please select at least one file to upload.");
       return;
     }
 
@@ -152,8 +148,6 @@ const UploadDocuments = () => {
         formData.append(`remarks`, input.remarks); // Append remarks to formData
       }
     });
-
-    console.log("formData >>>>>>????? ", formData);
 
     try {
       // Call the mutation to upload the documents with formData
@@ -173,8 +167,27 @@ const UploadDocuments = () => {
       console.log("REs >>> ", response);
       if (response.status === 200) {
         setIsUploadSuccess(isUploadSuccess + 1);
-        console.log("inside if res >>>> ", response);
-        Swal.fire("Success!", "Documents uploaded successfully!", "success");
+        Swal.fire({
+          title: "Success!",
+          text: "Documents uploaded successfully!",
+          icon: "success",
+          width: window.innerWidth <= 600 ? "90%" : "30%", // 90% width on mobile, 30% on desktop
+          padding: window.innerWidth <= 600 ? "1rem" : "2rem", // Adjust padding for mobile
+          confirmButtonColor: "#FFA500", // Orange confirm button
+          customClass: {
+            popup: "custom-popup-responsive",
+            confirmButton: "confirm-button-orange",
+          },
+          didOpen: () => {
+            const popup = document.querySelector(".swal2-popup");
+
+            if (popup) {
+              popup.style.marginTop =
+                window.innerWidth <= 600 ? "20px" : "50px"; // Reduce margin for mobile
+              popup.style.fontSize = window.innerWidth <= 600 ? "14px" : "16px"; // Smaller font on mobile
+            }
+          },
+        });
         setFormValues({
           salarySlip: [],
           aadhaarFront: null,
@@ -199,10 +212,10 @@ const UploadDocuments = () => {
         `${BASE_URL}/getDocumentList`,
         { withCredentials: true }
       );
-      console.log(
-        "documentListResponse zsdss",
-        documentListResponse.data.documents
-      );
+      // console.log(
+      //   "documentListResponse zsdss",
+      //   documentListResponse.data.documents
+      // );
       const data = documentListResponse.data.documents;
       const result = {};
 
@@ -602,7 +615,6 @@ const UploadDocuments = () => {
         </Box>
       </Box>
 
-      {console.log("uploadedDocs >>??????> ", uploadedDocs)}
       <Box
         sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       >

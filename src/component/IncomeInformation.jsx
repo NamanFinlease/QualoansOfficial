@@ -36,6 +36,7 @@ const IncomeInformation = () => {
         }
 
         const data = await response.json();
+
         setIncome({
           employementType: data?.data?.incomeDetails?.employementType,
           monthlyIncome: data?.data?.incomeDetails?.monthlyIncome,
@@ -219,9 +220,11 @@ const IncomeInformation = () => {
                         fullWidth
                         name="nextSalaryDate"
                         type="date"
-                        value={moment(income.nextSalaryDate).format(
-                          "YYYY-MM-DD"
-                        )}
+                        value={
+                          income.nextSalaryDate
+                            ? moment(income.nextSalaryDate).format("YYYY-MM-DD")
+                            : ""
+                        }
                         onChange={handleChange}
                       />
                     </td>
@@ -233,7 +236,11 @@ const IncomeInformation = () => {
                         fullWidth
                         name="workingSince"
                         type="date"
-                        value={moment(income.workingSince).format("YYYY-MM-DD")}
+                        value={
+                          income.workingSince
+                            ? moment(income.workingSince).format("YYYY-MM-DD")
+                            : ""
+                        }
                         onChange={handleChange}
                       />
                     </td>

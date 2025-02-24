@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Modal,
   Box,
@@ -16,7 +16,12 @@ import { BASE_URL } from "../../baseURL";
 import yourImage from "../../assets/image/vidu-general-4-2025-01-18T06_43_27Z (1).gif"; // Import your image
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-const SelfieVerification = ({ onComplete, disabled, isVerified }) => {
+const SelfieVerification = ({
+  onComplete,
+  disabled,
+  isVerified,
+  prefillData,
+}) => {
   const [openModal, setOpenModal] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -25,11 +30,17 @@ const SelfieVerification = ({ onComplete, disabled, isVerified }) => {
 
   const [stepCompleted, setStepCompleted] = useState(false); // Track step completion
   const [isCameraOpen, setIsCameraOpen] = useState(false); // Track if camera is open
+  const [isSelfieUpdated, setSelfieUpdated] = useState(false);
   const webcamRef = useRef(null);
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     profileImage: "",
   });
+  useEffect(() => {
+    if (prefillData) {
+      setSelfieUpdated(true);
+    }
+  }, [prefillData]);
 
   const handleCompleteStep = async () => {
     if (disabled) return;
@@ -119,33 +130,27 @@ const SelfieVerification = ({ onComplete, disabled, isVerified }) => {
               title: "You have successfully registered to Qualoan!",
               html: `<span class="blink-text">Complete your loan application process.</span>`,
               imageUrl: yourImage,
-              imageWidth: "100%", // Set image width to 100% of the popup
+              imageWidth: "100%", // Responsive width
               imageHeight: "auto", // Maintain aspect ratio
               confirmButtonText: "Go to Loan Application",
-              confirmButtonColor: "#FFA500", // Set button color to orange
-              width: "30%", // Set the width of the popup
+              confirmButtonColor: "#FFA500", // Button color
+              width: window.innerWidth <= 600 ? "90%" : "30%", // Adjust width for mobile
               customClass: {
                 popup: "custom-popup",
                 confirmButton: "confirm-button-orange",
               },
               didOpen: () => {
-                // Apply custom styles after the popup has opened
                 const popup = document.querySelector(".swal2-popup");
                 const image = document.querySelector(".swal2-image");
                 const content = document.querySelector(".swal2-html-container");
 
                 if (popup && image && content) {
-                  // Add top margin to the popup
-                  popup.style.marginTop = "50px"; // Adjust this value as needed
-
-                  // Reduce padding inside the popup for a smaller height
-                  popup.style.padding = "10px"; // Adjust padding to reduce height
-
-                  // Remove margin from the image
+                  popup.style.marginTop =
+                    window.innerWidth <= 600 ? "20px" : "50px"; // Adjust for mobile
+                  popup.style.padding =
+                    window.innerWidth <= 600 ? "5px" : "10px"; // Smaller padding on mobile
                   image.style.margin = "0";
-
-                  // Reduce margin between the image and the text
-                  content.style.marginTop = "2px"; // Adjust this value to control spacing
+                  content.style.marginTop = "2px";
                 }
               },
             }).then((result) => {
@@ -188,9 +193,8 @@ const SelfieVerification = ({ onComplete, disabled, isVerified }) => {
         minWidth: 200,
         cursor: disabled || completed ? "not-allowed" : "pointer",
         textAlign: "left",
-        background:
-          //completed ? "linear-gradient(45deg, #28a745, #218838)" :
-          disabled ? "#d9d9d9" : "#F26722",
+        background: disabled ? "#D9D9D9" : "#F26722",
+
         color: completed || !disabled ? "white" : "#1c1c1c",
         "@media (max-width: 600px)": {
           width: "80%",
@@ -208,7 +212,11 @@ const SelfieVerification = ({ onComplete, disabled, isVerified }) => {
         }}
         disabled={disabled}
       >
-        {isVerified ? <CheckCircleIcon sx={{ color: "green" }} /> : icon}
+        {isLoading || isVerified ? (
+          <CheckCircleIcon sx={{ color: "green" }} />
+        ) : (
+          icon
+        )}
       </IconButton>
 
       {/* <IconButton

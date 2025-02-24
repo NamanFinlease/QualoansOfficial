@@ -11,14 +11,15 @@ import {
   DialogTitle,
   IconButton,
 } from "@mui/material";
+import { format } from "date-fns"; // Import date-fns format function
+
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import moment from "moment";
+// import moment from "moment";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from "dayjs";
 
 
@@ -126,39 +127,51 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const trimedValues = value.trimStart();
     if (stepData.fields.some((field) => field.name === name)) {
-      setFormValues({ ...formValues, [name]: value });
+      setFormValues({ ...formValues, [name]: trimedValues });
     } else {
-      setAddressValues({ ...addressValues, [name]: value });
+      setAddressValues({ ...addressValues, [name]: trimedValues });
     }
   };
 
   const handleEmploymentSubmit = async () => {
     try {
+      const trimmedFormValues = Object.fromEntries(
+        Object.entries(formValues).map(([key, value]) => [key, value.trim()])
+      );
+
+      const formattedEmployedSince = format(
+        new Date(
+          trimmedFormValues.employedSince.split("-").reverse().join("-")
+        ),
+        "yyyy-MM-dd"
+      ); // Convert to ISO format
+
       if (
-        !formValues.workFrom ||
-        !formValues.companyName ||
-        !formValues.companyType ||
-        !formValues.designation ||
-        !formValues.officeEmail ||
-        !formValues.employedSince ||
-        !formValues.designation
+        !trimmedFormValues.workFrom ||
+        !trimmedFormValues.companyName ||
+        !trimmedFormValues.companyType ||
+        !trimmedFormValues.designation ||
+        !trimmedFormValues.officeEmail ||
+        !trimmedFormValues.employedSince ||
+        !trimmedFormValues.designation
       ) {
         alert("All fields are required.");
         // return;
       }
 
       // Validate and Format Date
-      let formattedEmployedSince;
-      if (moment(formValues.employedSince, "YYYY-MM-DD", true).isValid()) {
-        formattedEmployedSince = moment(formValues.employedSince).toISOString();
-      } else {
-        alert("Invalid Date Format. Please enter a valid date.");
-        return;
-      }
+      // let formattedEmployedSince;
+      // if (moment(formValues.employedSince, "YYYY-MM-DD", true).isValid()) {
+      //   formattedEmployedSince = moment(formValues.employedSince).toISOString();
+      // } else {
+      //   alert("Invalid Date Format. Please enter a valid date.");
+      //   return;
+      // }
 
       const apiData = {
-        ...formValues,
+        ...trimmedFormValues,
         ...addressValues,
         employedSince: formattedEmployedSince, // Ensure correct date format
       };
@@ -191,7 +204,27 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
 
 
       if (response.status === 200) {
-        Swal.fire("Employment information submitted successfully!");
+        Swal.fire({
+          title: "Employment information submitted successfully!",
+          width: window.innerWidth <= 600 ? "90%" : "30%", // 90% width on mobile, 30% on desktop
+          padding: window.innerWidth <= 600 ? "1rem" : "2rem", // Adjust padding for mobile
+          confirmButtonColor: "#FFA500", // Button color (orange)
+          customClass: {
+            popup: "custom-popup-responsive",
+            confirmButton: "confirm-button-orange",
+          },
+          didOpen: () => {
+            const popup = document.querySelector(".swal2-popup");
+
+            if (popup) {
+              // Adjust popup styling for mobile
+              popup.style.marginTop =
+                window.innerWidth <= 600 ? "20px" : "50px";
+              popup.style.fontSize = window.innerWidth <= 600 ? "14px" : "16px"; // Smaller font on mobile
+            }
+          },
+        });
+
         setStepCompleted(true);
         setOpenModal(false);
         setIsEmploymentDetailsSaved(true);
@@ -201,6 +234,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
         }
       } else {
         // Swal.fire("Error submitting employment information.");
+
         alert(error.response.data.message);
         setOpenModal(false);
       }
@@ -277,7 +311,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
 
   const handleDate = (date) => {
     console.log('dayjs', dayjs(date).format("YYYY/MM/DD"))
-    setFormValues(prev => ({ ...prev, employedSince: dayjs(date) }))
+    setFormValues(prev => ({ ...prev, employedSince: dayjs(date).format("YYYY/MM/DD") }))
     setSelectedDate(date ? dayjs(date) : null)
   }
 

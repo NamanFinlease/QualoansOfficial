@@ -5,13 +5,15 @@ import {
   Grid,
   Avatar,
   Divider,
+  TextField,
   CircularProgress,
 } from "@mui/material";
+
+import dayjs from "dayjs"; // ✅ Import dayjs for handling dates
 import { BASE_URL } from "../baseURL";
 import { sharedStyles } from "./shared/styles";
 
-// import { getToken } from "../../tokenManager";
-// Define the UserProfile component
+
 const BasicInformation = () => {
   //   const token=getToken();
 
@@ -47,10 +49,7 @@ const BasicInformation = () => {
 
         // Parse the JSON data from the response
         const data = await response.json();
-        console.log(data);
-
-        console.log(data); // Log the fetched data after it's assigned
-
+    
         //   setUser(data); // Set the fetched data to the state
         setUser({
           fullName: data?.data?.personalDetails?.fullName,
@@ -197,7 +196,6 @@ const BasicInformation = () => {
                   {user.gender}
                 </td>
               </tr>
-
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
                 <td
                   style={{
@@ -206,7 +204,7 @@ const BasicInformation = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  DOB
+                  Date of Birth
                 </td>
                 <td
                   style={{
@@ -215,9 +213,10 @@ const BasicInformation = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {user.dob}
+                  {user.dob ? dayjs(user.dob).format("DD/MM/YYYY") : "N/A"}
                 </td>
               </tr>
+
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
                 <td
                   style={{

@@ -75,7 +75,7 @@ const DisbursalBankDetails = ({
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prev) => ({ ...prev, [name]: value }));
+    setFormValues((prev) => ({ ...prev, [name]: value.trimStart() }));
   };
 
   useEffect(() => {
@@ -115,6 +115,9 @@ const DisbursalBankDetails = ({
   }, []);
 
   const handleSubmit = async () => {
+    const trimmedValues = Object.fromEntries(
+      Object.entries(formValues).map(([key, value]) => [key, value.trim()])
+    );
     if (
       incomeDetails.employementType === "SELF EMPLOYED" ||
       incomeDetails.incomeMode === "CASH"
@@ -128,7 +131,7 @@ const DisbursalBankDetails = ({
     }
 
     const { accountNumber, confirmAccountNo, ifscCode, bankName, accountType } =
-      formValues;
+      trimmedValues;
 
     if (
       !accountNumber ||
@@ -150,7 +153,7 @@ const DisbursalBankDetails = ({
     try {
       const response = await axios.patch(
         `${BASE_URL}/disbursalBankDetails`,
-        formValues,
+        trimmedValues,
         {
           headers: {
             "Content-Type": "application/json",
