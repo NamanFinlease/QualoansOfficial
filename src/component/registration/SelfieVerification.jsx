@@ -135,6 +135,7 @@ const SelfieVerification = ({
               confirmButtonText: "Go to Loan Application",
               confirmButtonColor: "#FFA500", // Button color
               width: window.innerWidth <= 600 ? "90%" : "30%", // Adjust width for mobile
+
               customClass: {
                 popup: "custom-popup",
                 confirmButton: "confirm-button-orange",

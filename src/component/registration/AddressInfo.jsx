@@ -386,20 +386,18 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
               key={field}
               label={field.replace(/^\w/, (c) => c.toUpperCase())}
               value={formValues[field]}
-              onChange={
-                // field === "pincode"
-                //   ? handlePincodeChange
-                //   :
-                (e) => handleFormChange(field, e.target.value)
-              }
+              onChange={(e) => handleFormChange(field, e.target.value)}
               fullWidth
               sx={{ marginBottom: 2 }}
               required
+              InputLabelProps={{ shrink: true }}
             />
           ))}
 
           <FormControl fullWidth sx={{ marginBottom: 2 }}>
-            <InputLabel id="residence-type-label">Residence Type</InputLabel>
+            <InputLabel id="residence-type-label" shrink>
+              Residence Type
+            </InputLabel>
             <Select
               labelId="residence-type-label"
               value={formValues.residenceType}
@@ -432,7 +430,6 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
                   ? dayjs(formValues.residingSince)
                   : null
               }
-              // value={dayjs(formValues?.residingSince)}
               onChange={handleDate}
               sx={{
                 paddingBottom: "20px !important",

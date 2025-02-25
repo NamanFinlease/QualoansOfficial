@@ -391,9 +391,9 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                         ...formValues,
                         loanPurpose: e.target.value,
                         // Optionally reset otherLoanPurpose when not "OTHERS"
-                        otherLoanPurpose:
+                        othersInputs:
                           e.target.value === "OTHERS"
-                            ? formValues.otherLoanPurpose
+                            ? formValues.othersInputs
                             : "",
                       })
                     }
@@ -426,6 +426,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                     ))}
                   </Box>
                 )}
+                
                 <Box sx={{ marginBottom: 3 }}>
                   <Typography variant="subtitle1" gutterBottom>
                     Principal (Amount)

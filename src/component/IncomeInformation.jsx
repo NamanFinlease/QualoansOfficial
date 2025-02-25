@@ -36,6 +36,8 @@ const IncomeInformation = () => {
         }
 
         const data = await response.json();
+        console.log("Fetched Data:", data?.data?.incomeDetails?.nextSalaryDate);
+        console.log("....>>>>", data?.data?.incomeDetails?.workingSince);
 
         setIncome({
           employementType: data?.data?.incomeDetails?.employementType,
@@ -310,7 +312,7 @@ const IncomeInformation = () => {
                       Next Salary Date
                     </td>
                     <td style={styles.tableCell}>
-                      {moment(income.nextSalaryDate).format("DD-MM-YYYY")}
+                      {moment(income.nextSalaryDate).format("YYYY-MM-DD")}
                     </td>
                   </tr>
                   <tr style={styles.tableRow}>
@@ -325,7 +327,7 @@ const IncomeInformation = () => {
                       Working Since
                     </td>
                     <td style={styles.tableCell}>
-                      {moment(income.workingSince).format("DD-MM-YYYY")}
+                      {moment(income.workingSince).format("YYYY-MM-DD")}
                     </td>
                   </tr>
                   <tr style={styles.tableRow}>
