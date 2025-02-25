@@ -285,6 +285,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
         const EmpData = getProfileDetailsResponse?.data?.data;
 
         console.log('form valuesssssss', formValues.employedSince,formValues)
+        console.log(EmpData)
 
         // Update form values based on the fetched data
         setFormValues({
@@ -310,17 +311,30 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
 
 
   const handleDate = (date) => {
-    console.log('dayjs', dayjs(date).format("YYYY/MM/DD"))
+    console.log('dayjs', dayjs(date).format("YYYY/MM/DD"))  
     setFormValues(prev => ({ ...prev, employedSince: dayjs(date).format("YYYY/MM/DD") }))
     setSelectedDate(date ? dayjs(date) : null)
   }
 
   useEffect(() => {
     if (prefillData) {
-      setFormValues({...prefillData,employedSince:dayjs( prefillData?.employedSince)});
+      setFormValues({
+        ...prefillData,
+        employedSince: dayjs(prefillData?.employedSince).isValid() 
+          ? dayjs(prefillData?.employedSince) 
+          : dayjs(),
+      });
       setStepCompleted(true);
     }
   }, [prefillData]);
+
+  // useEffect(() => {
+  //   if (prefillData) {
+  //     console.log(prefillData)
+  //     setFormValues({...prefillData,employedSince:dayjs( prefillData?.employedSince)});
+  //     setStepCompleted(true);
+  //   }
+  // }, [prefillData]);
 
   // useEffect(() => {
   //   console.log("Updated Step Completed:", stepCompleted); // Check if state updates correctly
@@ -470,7 +484,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
 
           {/* Editable Pincode, City, and State */}
 
-          <TextField
+          {/* <TextField
             fullWidth
             name="employedSince"
             label="Employed Since"
@@ -481,18 +495,35 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
             sx={{ marginBottom: 2 }}
             required
           />
+          */}
           {console.log('selected date', new Date(selectedDate))}
 
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en">
             <DatePicker
-              label="Date Picker"
+              label="Employed Since"
               value={ dayjs(formValues?.employedSince) }
               onChange={handleDate}
+              sx={{
+                paddingBottom: "20px !important",
+                minWidth: "100%",
+                '& .MuiSvgIcon-root':{
+                  fill: "#000000",
+                },
+              }}
               slotProps={{
                 textField: { format: "DD/MM/YYYY" },
-                // field: { shouldRespectLeadingZeros: true },
               }}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  fullWidth
+                  InputLabelProps={{ shrink: true }}
+                  inputProps={{
+                    ...params.inputProps,
+                    min: today,
+                  }}
+                />
+              )}
             />
           </LocalizationProvider>
           <TextField
