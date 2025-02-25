@@ -18,7 +18,8 @@ import {
 import { format } from "date-fns"; // Import date-fns format function
 
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { BASE_URL } from "../../baseURL";
@@ -30,6 +31,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   const [isIncomeDetails, setisIncomeDetails] = useState(false);
   const [formValues, setFormValues] = useState({
     employementType: "",
@@ -41,6 +43,26 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
   });
   const [error, setError] = useState("");
 
+  const today = dayjs().format("YYYY-MM-DD");
+
+  const handleKeyDown = (e) => {
+    if (
+        e.key.length === 1 &&
+        !(e.key >= "0" && e.key <= "9") &&
+        e.key !== "."
+    ) {
+        e.preventDefault();
+    }
+    if (e.key === "." && e.target.value.includes(".")) {
+        e.preventDefault();
+    }
+  };
+
+  const handleDate = (date) => {
+      setFormValues(prev => ({ ...prev, nextSalaryDate: dayjs(date).format("YYYY/MM/DD") }))
+      setSelectedDate(date ? dayjs(date) : null)
+    }
+
   const handleFormChange = (key, value) => {
     const trimedValues = typeof value === "string" ? value.trim() : value;
     setFormValues((prev) => ({ ...prev, [key]: trimedValues }));
@@ -50,7 +72,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
 
     // Loan amount validation
     if (key === "obligations" && formValues.monthlyIncome) {
-      const loanAmount = parseFloat(trimmedValue) || 0;
+      const loanAmount = parseFloat(trimedValues) || 0;
       const monthlyIncome = parseFloat(formValues.monthlyIncome) || 0;
       const maxLoanAmount = 0.4 * monthlyIncome; // 40% of monthly income
 
@@ -64,7 +86,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
 
   const handleSubmit = async () => {
     const trimmedValues = Object.fromEntries(
-      Object.entries(formValues).map(([key, value]) => [key, value.trim()])
+      Object.entries(formValues).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value,])
     );
     const formatteNextSalary = format(
       new Date(trimmedValues.nextSalaryDate.split("-").reverse().join("-")),
@@ -77,7 +99,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
     );
 
     if (Object.values(trimmedValues).some((val) => !val)) {
-      setError("Please fill out all fields.");
+      setError("Please fill out the mandatory fields.");
       return;
     }
 
@@ -90,17 +112,17 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
       workingSince: formattedWorkingSince,
     };
 
-    if (
-      !employementType ||
-      !monthlyIncome ||
-      !obligations ||
-      !nextSalaryDate ||
-      !incomeMode ||
-      !workingSince
-    ) {
-      setError("Please fill out all fields.");
-      return;
-    }
+    // if (
+    //   !employementType ||
+    //   !monthlyIncome ||
+    //   !obligations ||
+    //   !nextSalaryDate ||
+    //   !incomeMode ||
+    //   !workingSince
+    // ) {
+    //   setError("Please fill out this fields.");
+    //   return;
+    // }
 
     setIsFetching(true);
     try {
@@ -302,6 +324,9 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
             mb: "20%",
             overflowY: "auto",
             maxHeight: "90vh",
+            '& .MuiFormControl-root':{
+              width:"100%",
+            },
           }}
         >
           <Typography sx={{ marginBottom: 2 }}>Income Information</Typography>
@@ -325,7 +350,8 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
 
           <TextField
             label="Monthly Income"
-            type="number"
+            type="text"
+            onKeyDown={handleKeyDown}
             value={formValues.monthlyIncome}
             onChange={(e) => handleFormChange("monthlyIncome", e.target.value)}
             fullWidth
@@ -334,7 +360,8 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
           />
           <TextField
             label="Loan Amount"
-            type="number"
+            type="text"
+            onKeyDown={handleKeyDown}
             value={formValues.obligations}
             onChange={(e) => handleFormChange("obligations", e.target.value)}
             fullWidth
@@ -343,51 +370,80 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
             error={!!error}
             helperText={error}
           />
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
+          
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en">
             <DatePicker
               label="Next Salary Date"
-              value={
-                formValues.nextSalaryDate
-                  ? new Date(formValues.nextSalaryDate)
-                  : null
-              }
-              onChange={(newValue) =>
-                handleFormChange(
-                  "nextSalaryDate",
-                  newValue.toISOString().split("T")[0]
-                )
-              }
+              sx={{
+                marginBottom:"15px",
+                '& .MuiSvgIcon-root':{
+                  fill: "#000000",
+                },
+                '& .MuiFormLabel-root':{
+                  color: "#000000",
+                },
+                '& .MuiOutlinedInput-notchedOutline':{
+                  borderColor: "transparent",
+                }
+              }}
+              value={ dayjs(formValues?.nextSalaryDate) }
+              onChange={(date) => {
+                setFormValues(prev => ({ ...prev, nextSalaryDate: dayjs(date).format("YYYY/MM/DD") }))
+              }}
+              slotProps={{
+                textField: { format: "DD/MM/YYYY" },
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   fullWidth
                   sx={{ marginBottom: 2 }}
                   required
+                  inputProps={{
+                    ...params.inputProps,
+                    min: today,
+                  }}
                 />
               )}
+              minDate={dayjs(today)}
             />
+          </LocalizationProvider>
 
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en">
             <DatePicker
               label="Working Since"
-              value={
-                formValues.workingSince
-                  ? new Date(formValues.workingSince)
-                  : null
-              }
-              onChange={(newValue) =>
-                handleFormChange(
-                  "workingSince",
-                  newValue.toISOString().split("T")[0]
-                )
-              }
+              sx={{
+                marginBottom:"15px",
+                '& .MuiSvgIcon-root':{
+                  fill: "#000000",
+                },
+                '& .MuiFormLabel-root':{
+                  color: "#000000",
+                },
+                '& .MuiOutlinedInput-notchedOutline':{
+                  borderColor: "transparent",
+                },
+              }}
+              value={ dayjs(formValues?.workingSince) }
+              onChange={(date) => {
+                setFormValues(prev => ({ ...prev, workingSince: dayjs(date).format("YYYY/MM/DD") }))
+              }}
+              slotProps={{
+                textField: { format: "DD/MM/YYYY" },
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   fullWidth
                   sx={{ marginBottom: 2 }}
                   required
+                  inputProps={{
+                    ...params.inputProps,
+                    max: today,
+                  }}
                 />
               )}
+              maxDate={dayjs(today)}
             />
           </LocalizationProvider>
           <Typography variant="body1" sx={{ fontWeight: "bold", mb: 2 }}>

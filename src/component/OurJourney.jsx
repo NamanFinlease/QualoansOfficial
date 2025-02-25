@@ -177,7 +177,44 @@ const OurJourney = () => {
                 marginTop: 2,
               }}
             >
-              <Button
+              {
+                isRegistering && !isLoanApplied ? (
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    onClick={() => navigate("/registration")}
+                    sx={{
+                      backgroundColor: "#ffff",
+                      color: "#000",
+                      px: 4,
+                      py: 1,
+                      fontWeight: 600,
+                      "&:hover": { backgroundColor: "#8b8887" },
+                      borderRadius: "30px",
+                    }}
+                  >
+                      Registration
+                  </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      onClick={() => navigate("/loan-application")}
+                      sx={{
+                        backgroundColor: "#ffff",
+                        color: "#000",
+                        px: 4,
+                        py: 1,
+                        fontWeight: 600,
+                        "&:hover": { backgroundColor: "#8b8887" },
+                        borderRadius: "30px",
+                      }}
+                    >
+                      Loan Application
+                    </Button>
+                  )
+              }
+              {/* <Button
                 variant="contained"
                 size="medium"
                 onClick={handleContinue}
@@ -193,7 +230,7 @@ const OurJourney = () => {
                 }}
               >
                 {isRegistering ? "Registration" : "Loan Application"}
-              </Button>
+              </Button> */}
               <Button
                 variant="contained"
                 onClick={() =>

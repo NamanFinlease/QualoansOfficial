@@ -452,6 +452,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
                   }}
                 />
               )}
+              maxDate={dayjs(today)}
             />
           </LocalizationProvider>
 
