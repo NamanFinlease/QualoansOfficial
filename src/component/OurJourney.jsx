@@ -32,7 +32,7 @@ const OurJourney = () => {
           withCredentials: true,
         });
         if (response.status === 200) {
-          setIsRegistering(response.data.isisRegistering);
+          setIsRegistering(response.data.isRegistering);
           setLoanApplied(response.data.isLoanApplied);
         }
       } catch (error) {

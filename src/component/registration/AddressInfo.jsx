@@ -12,175 +12,149 @@ import {
   CircularProgress,
   IconButton,
 } from "@mui/material";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+
 import { LocationOn } from "@mui/icons-material"; // For Address Info Icon
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
+import dayjs from "dayjs";
+import { format } from "date-fns";
+
 import axios from "axios";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 
-//   icon,
-//   title,
-//   description,
-//   onClick,
-//   disabled,
-//   completed,
-//   isVerified,
-// }) => (
-//   <Box
-//     onClick={onClick}
-//     sx={{
-//       display: "flex",
-//       flexDirection: "column",
-//       alignItems: "flex-start",
-//       justifyContent: "center",
-//       padding: 2,
-//       borderColor: disabled ? "#1c1c1c" : "#F26722",
-//       borderRadius: 3,
-//       margin: 1,
-//       width: "25%",
-//       minWidth: 200,
-//       cursor: disabled ? "not-allowed" : "pointer",
-//       textAlign: "left",
-//       background: disabled ? "#d9d9d9" : "#F26722",
-//       color: !disabled ? "white" : "#1c1c1c",
-//       "@media (max-width: 600px)": {
-//         width: "80%",
-//         margin: "auto",
-//       },
-//     }}
-//   >
-//     <IconButton
-//       sx={{
-//         color:
-//           // completed ? "white" :
-//           disabled ? "grey" : "white",
-//         ml: 1,
-//       }}
-//     >
-//       {completed || isVerified ? (
-//         <CheckCircleIcon sx={{ color: "#4caf50" }} />
-//       ) : (
-//         icon
-//       )}
-//     </IconButton>
-//     {/* <IconButton
-//       sx={{
-//         color: completed ? "white" : disabled ? "#1c1c1c" : "white",
-//         ml: 1,
-//       }}
-//     >
-//       {completed ? (
-//         <i className="fas fa-check-circle" style={{ fontSize: "24px" }}></i>
-//       ) : (
-//         icon
-//       )}
-//     </IconButton> */}
-//     <Box sx={{ ml: 2, flexGrow: 1 }}>
-//       <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
-//       <Typography variant="body2">{description}</Typography>
-//     </Box>
-//   </Box>
-// );
-
 const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [openModal, setOpenModal] = useState(false);
+  const [residingSince, setResidingSince] = useState("");
+
   const [isFetching, setIsFetching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [stepCompleted, setStepCompleted] = useState(false);
-  const [formValues, setFormValues] = useState({
+  let defaultvalue = {
     address: "",
     landmark: "",
     pincode: "",
     city: "",
     state: "",
     residenceType: "OWNED",
-    residingSince: "",
-  });
+    residingSince: dayjs(),
+  };
+  const [formValues, setFormValues] = useState(
+    prefillData && Object.keys(prefillData).length > 0
+      ? prefillData
+      : defaultvalue
+  );
+
   const [error, setError] = useState("");
   const [isAddressVerified, setIsAddressVerified] = useState(false);
   const [isMobileVerified, setIsMobileVerified] = useState(false);
   const [mobile, setMobile] = useState("");
-
+  const today = new Date();
   const handleFormChange = (key, value) => {
-    setFormValues((prev) => ({ ...prev, [key]: value.trim() }));
+    setFormValues((prev) => ({
+      ...prev,
+      [key]: typeof value === "string" ? value.trim() : value, // Only trim strings
+    }));
+
     if (error) setError("");
   };
 
-  const handlePincodeChange = async (e) => {
-    const value = e.target.value.trim();
+  // const handlePincodeChange = async (e) => {
+  //   const value = e.target.value.trim();
 
-    if (/^\d{0,6}$/.test(value)) {
-      setFormValues({ ...formValues, pincode: value });
+  //   if (/^\d{0,6}$/.test(value)) {
+  //     setFormValues({ ...formValues, pincode: value });
 
-      if (value.length === 6) {
-        try {
-          const response = await fetch(
-            `https://api.postalpincode.in/pincode/${value}`
-          );
-          const data = await response.json();
+  //     if (value.length === 6) {
+  //       try {
+  //         const response = await fetch(
+  //           `https://api.postalpincode.in/pincode/${value}`
+  //         );
+  //         const data = await response.json();
 
-          if (data[0].Status === "Success") {
-            const { Block, State } = data[0].PostOffice[0];
-            setFormValues((prev) => ({
-              ...prev,
-              city: Block.trim(),
-              state: State.trim(),
-            }));
-          } else {
-            setFormValues((prev) => ({
-              ...prev,
-              city: "",
-              state: "",
-            }));
+  //         if (data[0].Status === "Success") {
+  //           const { Block, State } = data[0].PostOffice[0];
+  //           setFormValues((prev) => ({
+  //             ...prev,
+  //             city: Block.trim(),
+  //             state: State.trim(),
+  //           }));
+  //         } else {
+  //           setFormValues((prev) => ({
+  //             ...prev,
+  //             city: "",
+  //             state: "",
+  //           }));
 
-            alert("Please enter a valid pincode.");
-          }
-        } catch (error) {
-          alert("Error fetching pincode data:", error);
-          alet(
-            "An error occurred while fetching data. Please try again later."
-          );
-        }
-      } else {
-        setFormValues((prev) => ({
-          ...prev,
-          city: "",
-          state: "",
-        }));
-      }
-    } else {
-      setFormValues({ ...formValues, pincode: "", city: "", state: "" });
-    }
+  //           alert("Please enter a valid pincode.");
+  //         }
+  //       } catch (error) {
+  //         alert("Error fetching pincode data:", error);
+  //         alet(
+  //           "An error occurred while fetching data. Please try again later."
+  //         );
+  //       }
+  //     } else {
+  //       setFormValues((prev) => ({
+  //         ...prev,
+  //         city: "",
+  //         state: "",
+  //       }));
+  //     }
+  //   } else {
+  //     setFormValues({ ...formValues, pincode: "", city: "", state: "" });
+  //   }
+  // };
+
+  const handleDate = (date) => {
+    console.log("dayjs", dayjs(date).format("YYYY/MM/DD"));
+    setFormValues((prev) => ({
+      ...prev,
+      residingSince: dayjs(date).format("YYYY/MM/DD"),
+    }));
+    setSelectedDate(date ? dayjs(date) : null);
   };
 
   const handleSubmit = async () => {
     const trimmedValues = Object.fromEntries(
-      Object.entries(formValues).map(([key, value]) => [key, value.trim()])
+      Object.entries(formValues).map(([key, value]) => [
+        key,
+        typeof value === "string" ? value.trim() : value, // Safely trim strings only
+      ])
     );
-    const formatteResidingSince = format(
-      new Date(trimmedValues.residingSince.split("-").reverse().join("-")),
-      "yyyy-MM-dd"
+    // const trimmedValues = Object.fromEntries(
+    //   Object.entries(formValues).map(([key, value]) => [key, value.trim()])
+    // );
+
+    const formattedResidingSince = format(
+      new Date(trimmedValues.residingSince),
+      "yyyy/MM/dd"
     );
 
     if (Object.values(trimmedValues).some((val) => !val)) {
       setError("Please fill out all fields.");
       return;
     }
-    const updatedDetails = { 
-      address:trimmedValues.address,
-      landmark: trimmedValues.landmark,
-      pincode:trimmedValues.pincode ,
-      city: trimmedValues.city,
-      state: trimmedValues.state,
-      residenceType: trimmedValues.residingSince,
-      residingSince: formatteResidingSince,
-
-      
+    const updatedDetails = {
+      ...trimmedValues,
+      residingSince: formattedResidingSince,
     };
+
+    // const updatedDetails = {
+    //   address: trimmedValues.address,
+    //   landmark: trimmedValues.landmark,
+    //   pincode: trimmedValues.pincode,
+    //   city: trimmedValues.city,
+    //   state: trimmedValues.state,
+    //   residenceType: trimmedValues.residenceType,
+    //   residingSince: formatteResidingSince,
+    // };
+
+    console.log("residingSince", residingSince);
 
     setIsFetching(true);
     try {
@@ -192,6 +166,8 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
           withCredentials: true,
         }
       );
+
+      console.log("response", response);
 
       if (response.status === 200) {
         Swal.fire("Address details updated successfully!");
@@ -253,6 +229,13 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             getProfileDetailsResponse?.data?.data?.residence;
 
           // Update formValues with residenceData
+          {
+            console.log(
+              "residenceData?.residingSince ",
+              residenceData.residingSince
+            );
+          }
+
           setFormValues({
             address: residenceData?.address || "",
             landmark: residenceData?.landmark || "",
@@ -260,7 +243,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             state: residenceData?.state || "",
             pincode: residenceData?.pincode || "",
             residenceType: residenceData?.residenceType || "OWNED",
-            residingSince: residenceData?.residingSince || "",
+            residingSince: dayjs(residenceData?.residingSince),
           });
         }
       }
@@ -269,20 +252,29 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
       alert("Error fetching data:", error);
     }
   };
-
   useEffect(() => {
-    if (prefillData && prefillData.address) {
+    if (prefillData) {
       setFormValues({
-        address: prefillData.address || "",
-        landmark: prefillData.landmark || "",
-        pincode: prefillData.pincode || "",
-        city: prefillData.city || "",
-        state: prefillData.state || "",
-        residenceType: prefillData.residenceType || "OWNED",
-        residingSince: prefillData.residingSince || "",
+        ...prefillData,
+        residingSince: dayjs(prefillData?.residingSince),
       });
+      setStepCompleted(true);
     }
   }, [prefillData]);
+
+  // useEffect(() => {
+  //   if (prefillData && prefillData.address) {
+  //     setFormValues({
+  //       address: prefillData.address || "",
+  //       landmark: prefillData.landmark || "",
+  //       pincode: prefillData.pincode || "",
+  //       city: prefillData.city || "",
+  //       state: prefillData.state || "",
+  //       residenceType: prefillData.residenceType || "OWNED",
+  //       residingSince: prefillData.residingSince || "",
+  //     });
+  //   }
+  // }, [prefillData]);
 
   const StepBox = ({
     icon,
@@ -429,22 +421,40 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
               ))}
             </Select>
           </FormControl>
+          {console.log(formValues.residingSince)}
 
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en">
             <DatePicker
               label="Residing Since"
+              type="date"
               value={
                 formValues.residingSince
                   ? dayjs(formValues.residingSince)
                   : null
               }
-              onChange={(newValue) =>
-                handleFormChange(
-                  "residingSince",
-                  newValue ? newValue.format("YYYY-MM-DD") : ""
-                )
-              }
-              renderInput={(params) => <TextField {...params} fullWidth />}
+              // value={dayjs(formValues?.residingSince)}
+              onChange={handleDate}
+              sx={{
+                paddingBottom: "20px !important",
+                minWidth: "100%",
+                "& .MuiSvgIcon-root": {
+                  fill: "#000000",
+                },
+              }}
+              slotProps={{
+                textField: { format: "DD/MM/YYYY" },
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  fullWidth
+                  InputLabelProps={{ shrink: true }}
+                  inputProps={{
+                    ...params.inputProps,
+                    min: today,
+                  }}
+                />
+              )}
             />
           </LocalizationProvider>
 

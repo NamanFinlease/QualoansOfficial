@@ -12,12 +12,6 @@ import {
   CircularProgress,
   IconButton,
 } from "@mui/material";
-import { format } from "date-fns"; // Import date-fns format function
-
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-
 import { Person } from "@mui/icons-material";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -51,6 +45,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
       const response = await axios.get(`${BASE_URL}/getProfileDetails`, {
         withCredentials: true,
       });
+      console.log(formValues);
 
       if (response.status === 200 && response.data.success) {
         const data = response.data.data.personalDetails;
@@ -85,10 +80,6 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
     const trimmedValues = Object.fromEntries(
       Object.entries(formValues).map(([key, value]) => [key, value.trim()])
     );
-    const formatteDOB = format(
-      new Date(trimmedValues.dob.split("-").reverse().join("-")),
-      "yyyy-MM-dd"
-    );
 
     if (!emailRegex.test(trimmedValues.personalEmail)) {
       setError("Please enter a valid email address.");
@@ -99,7 +90,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
       fullName: trimmedValues.fullName,
       mothersName: trimmedValues.mothersName,
       gender: trimmedValues.gender,
-      dob: formatteDOB,
+      dob: trimmedValues.dob,
       personalEmail: trimmedValues.personalEmail,
       maritalStatus: trimmedValues.maritalStatus,
       spouseName:
@@ -258,23 +249,17 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             error={!!error}
             helperText={error}
           />
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-              label="Date of Birth"
-              value={formValues.dob ? new Date(formValues.dob) : null}
-              onChange={(newValue) => handleFormChange("dob", newValue)}
-              disableFuture
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  fullWidth
-                  sx={{ marginBottom: 2 }}
-                  disabled={disabled}
-                />
-              )}
-            />
-          </LocalizationProvider>
-
+          <TextField
+            label="Date of Birth"
+            value={
+              formValues.dob
+                ? new Date(formValues.dob).toISOString().split("T")[0]
+                : ""
+            }
+            fullWidth
+            disabled
+            sx={{ marginBottom: 2 }}
+          />
           <FormControl fullWidth sx={{ marginBottom: 2 }}>
             <InputLabel>Gender</InputLabel>
             <Select
