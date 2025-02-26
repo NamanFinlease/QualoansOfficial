@@ -33,6 +33,7 @@ import LoanTable from "./component/LoanTable";
 import VerifyRepayment from "./component/VerifyRepayment";
 import SuccessPage from "./component/SuccessPage";
 import RepaymentLoan from "./component/RepaymentLoan";
+import UserDetails from "./component/registration/UserDetails";
 
 const MinimalLayout = ({ children }) => <div>{children}</div>;
 
@@ -101,6 +102,16 @@ function App() {
             }
           />
 
+          {/* <Route
+            path="/detailsForm"
+            element={
+              <ProtectedRoute requiresLogin={true}>
+                <MinimalLayout>
+                  <UserDetails />
+                </MinimalLayout>
+              </ProtectedRoute>
+            }
+          /> */}
           <Route
             path="/loan-application"
             element={

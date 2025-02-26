@@ -132,7 +132,7 @@ const UploadDocuments = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
     const hasFileSelected = fileInputs.some((input) => input.file);
-
+    setIsLoading(false)
     if (!hasFileSelected) {
       alert("Please select at least one file to upload.");
       return;

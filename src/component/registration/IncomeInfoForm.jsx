@@ -33,35 +33,43 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [isIncomeDetails, setisIncomeDetails] = useState(false);
-  const [formValues, setFormValues] = useState({
+  let defaultvalue = {
     employementType: "",
     monthlyIncome: "",
     obligations: "",
     nextSalaryDate: "",
     incomeMode: "",
     workingSince: "",
-  });
+  };
+  const [formValues, setFormValues] = useState(
+    prefillData && Object.keys(prefillData).length > 0
+      ? prefillData
+      : defaultvalue
+  );
   const [error, setError] = useState("");
 
   const today = dayjs().format("YYYY-MM-DD");
 
   const handleKeyDown = (e) => {
     if (
-        e.key.length === 1 &&
-        !(e.key >= "0" && e.key <= "9") &&
-        e.key !== "."
+      e.key.length === 1 &&
+      !(e.key >= "0" && e.key <= "9") &&
+      e.key !== "."
     ) {
-        e.preventDefault();
+      e.preventDefault();
     }
     if (e.key === "." && e.target.value.includes(".")) {
-        e.preventDefault();
+      e.preventDefault();
     }
   };
 
   const handleDate = (date) => {
-      setFormValues(prev => ({ ...prev, nextSalaryDate: dayjs(date).format("YYYY/MM/DD") }))
-      setSelectedDate(date ? dayjs(date) : null)
-    }
+    setFormValues((prev) => ({
+      ...prev,
+      nextSalaryDate: dayjs(date).format("YYYY/MM/DD"),
+    }));
+    setSelectedDate(date ? dayjs(date) : null);
+  };
 
   const handleFormChange = (key, value) => {
     const trimedValues = typeof value === "string" ? value.trim() : value;
@@ -86,16 +94,18 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
 
   const handleSubmit = async () => {
     const trimmedValues = Object.fromEntries(
-      Object.entries(formValues).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value,])
-    );
-    const formatteNextSalary = format(
-      new Date(trimmedValues.nextSalaryDate.split("-").reverse().join("-")),
-      "yyyy-MM-dd"
+      Object.entries(formValues).map(([key, value]) => [
+        key,
+        typeof value === "string" ? value.trim() : value,
+      ])
     );
 
-    const formattedWorkingSince = format(
-      new Date(trimmedValues.workingSince.split("-").reverse().join("-")),
-      "yyyy-MM-dd"
+    const formatteNextSalary = dayjs(trimmedValues.nextSalaryDate).format(
+      "YYYY/MM/DD"
+    );
+
+    const formattedWorkingSince = dayjs(trimmedValues.workingSince).format(
+      "YYYY/MM/DD"
     );
 
     if (Object.values(trimmedValues).some((val) => !val)) {
@@ -324,8 +334,8 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
             mb: "20%",
             overflowY: "auto",
             maxHeight: "90vh",
-            '& .MuiFormControl-root':{
-              width:"100%",
+            "& .MuiFormControl-root": {
+              width: "100%",
             },
           }}
         >
@@ -370,25 +380,28 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
             error={!!error}
             helperText={error}
           />
-          
+
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en">
             <DatePicker
               label="Next Salary Date"
               sx={{
-                marginBottom:"15px",
-                '& .MuiSvgIcon-root':{
+                marginBottom: "15px",
+                "& .MuiSvgIcon-root": {
                   fill: "#000000",
                 },
-                '& .MuiFormLabel-root':{
+                "& .MuiFormLabel-root": {
                   color: "#000000",
                 },
-                '& .MuiOutlinedInput-notchedOutline':{
-                  borderColor: "transparent",
-                }
+                // "& .MuiOutlinedInput-notchedOutline": {
+                //   borderColor: "transparent",
+                // },
               }}
-              value={ dayjs(formValues?.nextSalaryDate) }
+              value={dayjs(formValues?.nextSalaryDate)}
               onChange={(date) => {
-                setFormValues(prev => ({ ...prev, nextSalaryDate: dayjs(date).format("YYYY/MM/DD") }))
+                setFormValues((prev) => ({
+                  ...prev,
+                  nextSalaryDate: dayjs(date).format("YYYY/MM/DD"),
+                }));
               }}
               slotProps={{
                 textField: { format: "DD/MM/YYYY" },
@@ -397,8 +410,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
                 <TextField
                   {...params}
                   fullWidth
-                  sx={{ marginBottom: 2 }}
-                  required
+                  InputLabelProps={{ shrink: true }}
                   inputProps={{
                     ...params.inputProps,
                     min: today,
@@ -413,20 +425,23 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
             <DatePicker
               label="Working Since"
               sx={{
-                marginBottom:"15px",
-                '& .MuiSvgIcon-root':{
+                marginBottom: "15px",
+                "& .MuiSvgIcon-root": {
                   fill: "#000000",
                 },
-                '& .MuiFormLabel-root':{
+                "& .MuiFormLabel-root": {
                   color: "#000000",
                 },
-                '& .MuiOutlinedInput-notchedOutline':{
-                  borderColor: "transparent",
-                },
+                // "& .MuiOutlinedInput-notchedOutline": {
+                //   borderColor: "transparent",
+                // },
               }}
-              value={ dayjs(formValues?.workingSince) }
+              value={dayjs(formValues?.workingSince)}
               onChange={(date) => {
-                setFormValues(prev => ({ ...prev, workingSince: dayjs(date).format("YYYY/MM/DD") }))
+                setFormValues((prev) => ({
+                  ...prev,
+                  workingSince: dayjs(date).format("YYYY/MM/DD"),
+                }));
               }}
               slotProps={{
                 textField: { format: "DD/MM/YYYY" },
@@ -435,11 +450,10 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
                 <TextField
                   {...params}
                   fullWidth
-                  sx={{ marginBottom: 2 }}
-                  required
+                  InputLabelProps={{ shrink: true }}
                   inputProps={{
                     ...params.inputProps,
-                    max: today,
+                    min: today,
                   }}
                 />
               )}

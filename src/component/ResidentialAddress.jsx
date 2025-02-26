@@ -11,6 +11,7 @@ import { BASE_URL } from "../baseURL";
 import { sharedStyles } from "./shared/styles";
 import axios from "axios";
 import { format } from "date-fns";
+import moment from "moment";
 
 // Define the ResidentialAddress component
 const ResidentialAddress = () => {
@@ -63,19 +64,31 @@ const ResidentialAddress = () => {
     fetchResidentialData();
   }, []);
 
-  // Handle the save operation
   const handleSave = async () => {
+    setLoading(true);
     try {
+      const formattedResidenceSince = moment(
+        Residential.residingSince,
+        "YYYY-MM-DD",
+        true
+      ).isValid()
+        ? moment(Residential.residingSince).format("YYYY-MM-DD")
+        : "";
+
+      const updatedResident = {
+        ...Residential,
+        residingSince: formattedResidenceSince,
+      };
+
       const response = await axios.patch(
         `${BASE_URL}/currentResidence`,
-        Residential,
+        updatedResident,
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
 
-      // Note: axios returns status code in response.status, no 'ok' property.
       if (response.status !== 200) {
         throw new Error("Failed to update Residential data");
       }
@@ -83,8 +96,47 @@ const ResidentialAddress = () => {
       setEditMode(false); // Disable edit mode after saving
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
+
+  // Handle the save operation
+  // const handleSave = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const formatteResidenceSince = moment(
+  //       Residential.residingSince,
+  //       "YYYY-MM-DD",
+  //       true
+  //     ).isValid()
+  //       ? moment(Residential.residingSince).format("YYYY-MM-DD")
+  //       : moment(Residential.residingSince, "DD-MM-YYYY").format("YYYY-MM-DD");
+
+  //     const updatedResident = {
+  //       ...Residential,
+  //       residingSince: formatteResidenceSince,
+  //     };
+
+  //     const response = await axios.patch(
+  //       `${BASE_URL}/currentResidence`,
+  //       updatedResident,
+  //       {
+  //         headers: { "Content-Type": "application/json" },
+  //         withCredentials: true,
+  //       }
+  //     );
+
+  //     // Note: axios returns status code in response.status, no 'ok' property.
+  //     if (response.status !== 200) {
+  //       throw new Error("Failed to update Residential data");
+  //     }
+
+  //     setEditMode(false); // Disable edit mode after saving
+  //   } catch (err) {
+  //     setError(err.message);
+  //   }
+  // };
 
   // Handle change in input fields
   const handleChange = (e) => {
@@ -214,14 +266,17 @@ const ResidentialAddress = () => {
                       />
                     </td>
                   </tr>
+
                   <tr style={styles.tableRow}>
                     <td style={styles.tableCell}>Residence Since</td>
                     <td style={styles.tableCell}>
+                      {moment(Residential.residingSince).format("YYYY-MM-DD")}
+
                       <TextField
                         fullWidth
                         type="date"
                         name="residingSince"
-                        value={Residential.residingSince}
+                        value={Residential.residingSince || ""}
                         onChange={handleChange}
                       />
                     </td>

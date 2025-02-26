@@ -147,7 +147,7 @@ const SelfieVerification = ({
 
                 if (popup && image && content) {
                   popup.style.marginTop =
-                    window.innerWidth <= 600 ? "20px" : "50px"; // Adjust for mobile
+                    window.innerWidth <= 600 ? "20px" : "20px"; // Adjust for mobile
                   popup.style.padding =
                     window.innerWidth <= 600 ? "5px" : "10px"; // Smaller padding on mobile
                   image.style.margin = "0";

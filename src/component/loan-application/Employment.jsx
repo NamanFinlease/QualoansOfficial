@@ -11,6 +11,8 @@ import {
   DialogTitle,
   IconButton,
 } from "@mui/material";
+import { Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+
 import { format } from "date-fns"; // Import date-fns format function
 
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
@@ -21,7 +23,6 @@ import Swal from "sweetalert2";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-
 
 const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -37,11 +38,14 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
     city: "",
     state: "",
     pincode: "",
-  
-  }
+  };
 
   // console.log('empty object',!isEmptyObject(prefillData))
-  const [formValues, setFormValues] = useState((prefillData && Object.keys(prefillData).length > 0) ?prefillData:defaultvalue );
+  const [formValues, setFormValues] = useState(
+    prefillData && Object.keys(prefillData).length > 0
+      ? prefillData
+      : defaultvalue
+  );
   const [addressValues, setAddressValues] = useState({});
   const [stepData, setStepData] = useState({});
   const [stepCompleted, setStepCompleted] = useState(false);
@@ -51,7 +55,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
 
   const today = new Date();
 
-  console.log('form values',formValues)
+  console.log("form values", formValues);
   const openEmploymentModal = () => {
     if (disabled) return;
 
@@ -194,7 +198,6 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
 
       // const apiData = { ...formValues, ...addressValues };
 
-
       const response = await axios.patch(
         `${BASE_URL}/addEmploymentInfo`,
         apiData,
@@ -203,7 +206,6 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           withCredentials: true,
         }
       );
-
 
       if (response.status === 200) {
         Swal.fire({
@@ -258,7 +260,6 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
         }
       );
 
-
       if (getDashboardDetailsResponse.status === 200) {
         setIsLoading(false);
 
@@ -274,7 +275,6 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           setStepCompleted(isEmploymentDetailsSaved);
         }
 
-
         // if (isEmploymentDetailsSaved) {
         const getProfileDetailsResponse = await axios.get(
           `${BASE_URL}/getApplicationDetails?applicationStatus=employeeDetails`,
@@ -283,11 +283,10 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           }
         );
 
-
         const EmpData = getProfileDetailsResponse?.data?.data;
 
-        console.log('form valuesssssss', formValues.employedSince,formValues)
-        console.log(EmpData)
+        console.log("form valuesssssss", formValues.employedSince, formValues);
+        console.log(EmpData);
 
         // Update form values based on the fetched data
         setFormValues({
@@ -311,19 +310,21 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
     }
   };
 
-
   const handleDate = (date) => {
-    console.log('dayjs', dayjs(date).format("YYYY/MM/DD"))  
-    setFormValues(prev => ({ ...prev, employedSince: dayjs(date).format("YYYY/MM/DD") }))
-    setSelectedDate(date ? dayjs(date) : null)
-  }
+    console.log("dayjs", dayjs(date).format("YYYY/MM/DD"));
+    setFormValues((prev) => ({
+      ...prev,
+      employedSince: dayjs(date).format("YYYY/MM/DD"),
+    }));
+    setSelectedDate(date ? dayjs(date) : null);
+  };
 
   useEffect(() => {
     if (prefillData) {
       setFormValues({
         ...prefillData,
-        employedSince: dayjs(prefillData?.employedSince).isValid() 
-          ? dayjs(prefillData?.employedSince) 
+        employedSince: dayjs(prefillData?.employedSince).isValid()
+          ? dayjs(prefillData?.employedSince)
           : dayjs(),
       });
       setStepCompleted(true);
@@ -345,34 +346,6 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
   return (
     <>
       <Box
-        // sx={{
-        //   display: "flex",
-        //   flexDirection: "column",
-        //   alignItems: "flex-start",
-        //   padding: 3,
-        //   border: "1px solid #ddd",
-        //   borderRadius: 3,
-        //   background: disabled
-        //     ? "#ccc"
-        //     : stepCompleted
-        //     ? "green" // Change the background color to green when the step is completed
-        //     : "linear-gradient(45deg, #4D4D4E, orange)",
-        //   cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
-        //   height: 150,
-        //   width: "1o0%",
-        //   maxWidth: 350,
-        //   transition: "all 0.3s",
-        //   boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-        //   "&:hover": {
-        //     backgroundColor: disabled
-        //       ? "#ccc"
-        //       : stepCompleted
-        //       ? "green" // Keep the green background on hover if the step is completed
-        //       : "orange",
-        //     color: disabled ? "white" : "black",
-        //     transform: disabled ? "none" : "scale(1.03)",
-        //   },
-        // }}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -444,28 +417,33 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
                 )
             ) // Exclude pincode, city, and state if present in stepData.fields
             .map((field, index) => (
-              <Box key={index} sx={{ marginBottom: 2 }}>
+              <Box key={index} sx={{ marginBottom: 2, mt: 2 }}>
                 {field.type === "select" ? (
-                  <select
-                    name={field.name}
-                    onChange={handleInputChange}
-                    value={formValues[field.name] || ""}
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "4px",
+                  <FormControl
+                    fullWidth
+                    sx={{
+                      minWidth: { xs: 150, sm: 250, md: 300 }, // Responsive width
+                      marginBottom: 2,
                     }}
-                    required
                   >
-                    <option value="" disabled selected>
+                    <InputLabel id={`${field.name}-label`}>
                       {field.label}
-                    </option>
-                    {field.options?.map((option, idx) => (
-                      <option key={idx} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
+                    </InputLabel>
+                    <Select
+                      labelId={`${field.name}-label`}
+                      id={`${field.name}-select`}
+                      value={formValues[field.name] || ""}
+                      onChange={handleInputChange}
+                      name={field.name}
+                      label={field.label}
+                    >
+                      {field.options?.map((option, idx) => (
+                        <MenuItem key={idx} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 ) : (
                   <TextField
                     fullWidth
@@ -498,17 +476,17 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
             required
           />
           */}
-          {console.log('selected date', new Date(selectedDate))}
+          {console.log("selected date", new Date(selectedDate))}
 
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en">
             <DatePicker
               label="Employed Since"
-              value={ dayjs(formValues?.employedSince) }
+              value={dayjs(formValues?.employedSince)}
               onChange={handleDate}
               sx={{
                 paddingBottom: "20px !important",
                 minWidth: "100%",
-                '& .MuiSvgIcon-root':{
+                "& .MuiSvgIcon-root": {
                   fill: "#000000",
                 },
               }}

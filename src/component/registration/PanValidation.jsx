@@ -107,7 +107,6 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified }) => {
 
           // Retrieve the PAN number from the response
           const panNumber = getProfileDetailsResponse?.data?.data?.PAN;
-          console.log("vvvv>>>>", panNumber);
 
           if (panNumber) {
             setPan(panNumber); // Set the PAN number here

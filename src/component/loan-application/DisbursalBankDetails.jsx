@@ -282,11 +282,8 @@ const DisbursalBankDetails = ({
           minWidth: 200,
           cursor: disabled ? "not-allowed" : "pointer",
           textAlign: "left",
-          background:
-            //  completed
-            //   ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
-            //   :
-            disabled ? "#d9d9d9" : "#F26722",
+          background: disabled ? "#d9d9d9" : "#F26722",
+
           color:
             //  completed ||
             !disabled ? "white" : "#1c1c1c",

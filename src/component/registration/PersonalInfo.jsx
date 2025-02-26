@@ -185,7 +185,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
           {isPersonalInfoUpdated || isVerified ? (
             <CheckCircleIcon sx={{ color: "green" }} />
           ) : (
-            <Person sx={{ color: disabled ? "#1c1c1c" : "white" }} />
+            <Person sx={{ color: disabled ? "gray" : "white" }} />
           )}
         </IconButton>
         {/* <IconButton
