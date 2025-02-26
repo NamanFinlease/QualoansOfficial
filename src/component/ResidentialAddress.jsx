@@ -219,6 +219,7 @@ const ResidentialAddress = () => {
                     <td style={styles.tableCell}>
                       <TextField
                         fullWidth
+                        type="date"
                         name="residingSince"
                         value={Residential.residingSince}
                         onChange={handleChange}

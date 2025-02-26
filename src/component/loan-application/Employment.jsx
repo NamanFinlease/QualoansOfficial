@@ -49,6 +49,8 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isEmploymentDetailsSaved, setIsEmploymentDetailsSaved] = useState(false);
 
+  const today = new Date();
+
   console.log('form values',formValues)
   const openEmploymentModal = () => {
     if (disabled) return;
@@ -524,6 +526,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
                   }}
                 />
               )}
+              maxDate={dayjs(today)}
             />
           </LocalizationProvider>
           <TextField

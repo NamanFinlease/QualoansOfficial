@@ -178,7 +178,7 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
         const responseData = await response.json();
         onComplete({ bankStatement }); // Notify parent that upload is complete
         setBankStatementUploaded(true);
-        Swal.fire({
+        SweetAlert.fire({
           title: "Success",
           text: "Bank statement uploaded successfully!",
           icon: "success",
