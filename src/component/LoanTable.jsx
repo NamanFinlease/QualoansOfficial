@@ -191,12 +191,6 @@ const LoanTable = () => {
                     Repayment Amount
                   </TableCell>
                   <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
-                    Repayment Amount
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
-                    Outstanding Amount
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>
                     PAN
                   </TableCell>
                   <TableCell sx={{ fontWeight: "bold", textAlign: "left" }}>

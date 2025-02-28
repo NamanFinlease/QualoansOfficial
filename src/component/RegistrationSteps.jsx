@@ -20,7 +20,7 @@ const RegistrationSteps = () => {
   const { sidebarOpen, sidebarExpanded } = useSidebar();
   const [isVerified, setIsVerified] = useState({
     isMobileVerified: false,
-    isFormFilled: false,
+    // isFormFilled: false,
     isPanVerified: false,
     isPersonalInfoVerified: false,
     isAddressVerified: false,
@@ -36,6 +36,7 @@ const RegistrationSteps = () => {
       ? JSON.parse(savedSteps)
       : {
           mobileVerification: { completed: false, data: null },
+          // userDetails: { completed: false, data: null },
           panVerification: { completed: false, data: null },
           personalInfo: { completed: false, data: null },
           addressInfo: { completed: false, data: null },
@@ -45,18 +46,18 @@ const RegistrationSteps = () => {
   });
 
   // Separate state for userDetails
-  const [userDetails, setUserDetails] = useState(() => {
-    const savedUserDetails = localStorage.getItem("userDetails");
-    return savedUserDetails ? JSON.parse(savedUserDetails) : { data: {} };
-  });
+  // const [userDetails, setUserDetails] = useState(() => {
+  //   const savedUserDetails = localStorage.getItem("userDetails");
+  //   return savedUserDetails ? JSON.parse(savedUserDetails) : { data: {} };
+  // });
 
   useEffect(() => {
     localStorage.setItem("registrationSteps", JSON.stringify(steps));
   }, [steps]);
 
-  useEffect(() => {
-    localStorage.setItem("userDetails", JSON.stringify(userDetails));
-  }, [userDetails]);
+  // useEffect(() => {
+  //   localStorage.setItem("userDetails", JSON.stringify(userDetails));
+  // }, [userDetails]);
 
   useEffect(() => {
     const fetchProgress = async () => {
@@ -78,7 +79,7 @@ const RegistrationSteps = () => {
             isIncomeInfoVerified: response.data.isIncomeDetails,
             isSelfieVerified: response.data.selfieVerification,
           }));
-          setIsFormFilled(response.data.isFormFilled || false);
+          // setIsFormFilled(response.data.isFormFilled || false);
         }
       } catch (error) {
         console.error("Error fetching progress status:", error);
@@ -90,7 +91,7 @@ const RegistrationSteps = () => {
     fetchProgress();
   }, [
     isVerified.isMobileVerified,
-    isVerified.isFormFilled,
+    // isVerified.isFormFilled,
     isVerified.isPanVerified,
     isVerified.isPersonalInfoVerified,
     isVerified.isAddressVerified,
@@ -125,6 +126,12 @@ const RegistrationSteps = () => {
       localStorage.setItem("registrationSteps", JSON.stringify(updatedSteps));
       return updatedSteps;
     });
+    if (step === "mobileVerification") {
+      setIsVerified((prevState) => ({
+        ...prevState,
+        isMobileVerified: true, // Set mobile verified to true
+      }));
+    }
   };
 
   useEffect(() => {
@@ -223,38 +230,31 @@ const RegistrationSteps = () => {
           }}
         >
           <MobileVerification
-            onComplete={(data) =>
-              handleStepCompletion("mobileVerification", data)
-            }
+            onComplete={(data) =>handleStepCompletion("mobileVerification", data)}
             disabled={false}
             prefillData={steps.mobileVerification.data}
             isVerified={isVerified.isMobileVerified}
           />
-          {!isFormFilled && (
-            <UserDetails
-              onComplete={setUserDetails}
-              disabled={!isVerified.isMobileVerified}
-              isVerified={isVerified.isPanVerified}
-              isMobileVerified={isVerified.isMobileVerified}
-            />
-          )}
-          {/* <PANValidation
-            onComplete={(data) => handleStepCompletion("panVerification", data)}
-            disabled={
-              !isVerified.isFormFilled || !steps.isMobileVerified?.completed
-            }
-            prefillData={steps.panVerification.data}
-            isVerified={isVerified.isPanVerified}
+          
+          {/* <UserDetails
+            // onComplete={setUserDetails}
+            onComplete={(data) => handleStepCompletion("userDetails", data)}
+            disabled={!isVerified.isMobileVerified}
+            isVerified={isVerified.isFormFilled}
           /> */}
-
           <PANValidation
             onComplete={(data) => handleStepCompletion("panVerification", data)}
-            disabled={
-              !steps.mobileVerification.completed && !isVerified.isFormFilled
-            }
+            disabled={!isVerified.isMobileVerified}
             prefillData={steps.panVerification.data}
             isVerified={isVerified.isPanVerified}
           />
+
+          {/* <PANValidation
+            onComplete={(data) => handleStepCompletion("panVerification", data)}
+            disabled={!steps.mobileVerification.completed && !isVerified.isFormFilled}
+            prefillData={steps.panVerification.data}
+            isVerified={isVerified.isPanVerified}
+          /> */}
           <PersonalInfo
             onComplete={(data) => handleStepCompletion("personalInfo", data)}
             disabled={!steps.panVerification.completed}
