@@ -60,7 +60,7 @@ const MobileVerification = ({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify({ fathersName, PAN : pan }), // Pass father's name and PAN
+          body: JSON.stringify({ fathersName, PAN: pan }), // Pass father's name and PAN
         }
       );
       const data = await response.json();
@@ -227,13 +227,23 @@ const MobileVerification = ({
             name="pan"
             value={formValues.pan}
             onChange={(e) => {
+              const panValue = e.target.value.toUpperCase();
               setFormValues((prev) => ({
                 ...prev,
-                pan: e.target.value.trim(),
+                pan: panValue,
               }));
             }}
             placeholder="Enter your PAN"
-            required
+            error={
+              formValues.pan !== "" &&
+              !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(formValues.pan)
+            }
+            helperText={
+              formValues.pan !== "" &&
+              !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(formValues.pan)
+                ? "Invalid PAN format (e.g., ABCDE1234F)"
+                : ""
+            }
           />
 
           <Typography variant="body2" sx={{ color: "#1c1c1c", margin: 2 }}>
@@ -241,8 +251,8 @@ const MobileVerification = ({
               ? "Please enter your mobile number to receive an OTP."
               : "Please enter the OTP sent to your mobile number."}
           </Typography>
-          
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <InputField
               label={currentStep === "mobile" ? "Mobile Number" : "OTP"}
               value={currentStep === "mobile" ? mobile : otp}
@@ -267,10 +277,18 @@ const MobileVerification = ({
                   if (mobileRegex.test(mobile)) {
                     sendOTP(mobile, formValues.fathersName, formValues.pan); // Pass father's name and PAN
                   } else {
-                    alert("Invalid Input", "Enter a valid 10-digit number.", "warning");
+                    alert(
+                      "Invalid Input",
+                      "Enter a valid 10-digit number.",
+                      "warning"
+                    );
                   }
                 }}
-                sx={{ marginLeft: 1, backgroundColor: "#F26722", color: "white" }}
+                sx={{
+                  marginLeft: 1,
+                  backgroundColor: "#F26722",
+                  color: "white",
+                }}
               >
                 Send OTP
               </Button>
@@ -295,7 +313,11 @@ const MobileVerification = ({
                   if (otp.length === 6) {
                     verifyOTP(mobile, otp);
                   } else {
-                    alert("Invalid Input", "Enter a valid 6-digit OTP.", "warning");
+                    alert(
+                      "Invalid Input",
+                      "Enter a valid 6-digit OTP.",
+                      "warning"
+                    );
                   }
                 }}
                 sx={{ backgroundColor: "#F26722", color: "white" }}
@@ -311,7 +333,6 @@ const MobileVerification = ({
 };
 
 export default MobileVerification;
-
 
 // import React, { useState, useEffect } from "react";
 // import {

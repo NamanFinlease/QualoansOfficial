@@ -51,7 +51,8 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
   const [stepCompleted, setStepCompleted] = useState(false);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [isLoading, setIsLoading] = useState(false);
-  const [isEmploymentDetailsSaved, setIsEmploymentDetailsSaved] = useState(false);
+  const [isEmploymentDetailsSaved, setIsEmploymentDetailsSaved] =
+    useState(false);
 
   const today = new Date();
 
@@ -131,28 +132,49 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
     // }
   };
 
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   const trimedValues = value.trimStart();
+  //   if (stepData.fields.some((field) => field.name === name)) {
+  //     setFormValues({ ...formValues, [name]: trimedValues });
+  //   } else {
+  //     setAddressValues({ ...addressValues, [name]: trimedValues });
+  //   }
+  // };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    const trimedValues = value.trimStart();
+    const trimmedValue = typeof value === "string" ? value.trimStart() : value;
+
     if (stepData.fields.some((field) => field.name === name)) {
-      setFormValues({ ...formValues, [name]: trimedValues });
+      setFormValues({ ...formValues, [name]: trimmedValue });
     } else {
-      setAddressValues({ ...addressValues, [name]: trimedValues });
+      setAddressValues({ ...addressValues, [name]: trimmedValue });
     }
   };
 
   const handleEmploymentSubmit = async () => {
     try {
       const trimmedFormValues = Object.fromEntries(
-        Object.entries(formValues).map(([key, value]) => [key, value.trim()])
+        Object.entries(formValues).map(([key, value]) => [
+          key,
+          typeof value === "string" ? value.trim() : value, // Trim only if it's a string
+        ])
       );
 
-      const formattedEmployedSince = format(
-        new Date(
-          trimmedFormValues.employedSince.split("-").reverse().join("-")
-        ),
-        "yyyy-MM-dd"
-      ); // Convert to ISO format
+      // const trimmedFormValues = Object.fromEntries(
+      //   Object.entries(formValues).map(([key, value]) => [key, value.trim()])
+      // );
+
+      const formattedEmployedSince = dayjs(
+        trimmedFormValues.employedSince
+      ).format("YYYY-MM-DD");
+
+      // const formattedEmployedSince = format(
+      //   new Date(
+      //     trimmedFormValues.employedSince.split("-").reverse().join("-")
+      //   ),
+      //   "yyyy-MM-dd"
+      // ); // Convert to ISO format
 
       if (
         !trimmedFormValues.workFrom ||
@@ -206,6 +228,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           withCredentials: true,
         }
       );
+      console.log("response", response);
 
       if (response.status === 200) {
         Swal.fire({

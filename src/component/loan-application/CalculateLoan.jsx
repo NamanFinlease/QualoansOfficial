@@ -41,6 +41,31 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
 
   const [maxLoan, setMaxLoan] = useState(0);
 
+  // const fetchIncomeData = async () => {
+  //   try {
+  //     const response = await fetch(`${BASE_URL}/getProfileDetails`, {
+  //       method: "GET",
+  //       headers: { "Content-Type": "application/json" },
+  //       credentials: "include",
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch income data");
+  //     }
+
+  //     const data = await response.json();
+  //     const { incomeDetails } = data?.data || {};
+  //     setFormValues((prev) => ({
+  //       ...prev,
+  //       principal: incomeDetails?.monthlyIncome || 5000,
+  //     }));
+  //     setMaxLoan(incomeDetails?.monthlyIncome);
+  //   } catch (err) {
+  //     // setError(err.message);
+  //   } finally {
+  //     // setLoading(false);
+  //   }
+  // };
   const fetchIncomeData = async () => {
     try {
       const response = await fetch(`${BASE_URL}/getProfileDetails`, {
@@ -55,15 +80,18 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
 
       const data = await response.json();
       const { incomeDetails } = data?.data || {};
-      setFormValues((prev) => ({
-        ...prev,
-        principal: incomeDetails?.obligations || 5000,
-      }));
-      setMaxLoan(incomeDetails?.obligations);
+
+      if (incomeDetails?.monthlyIncome) {
+        const maxLoanAmount = Math.floor(incomeDetails.monthlyIncome * 0.4); // 40% of income
+
+        setFormValues((prev) => ({
+          ...prev,
+          principal: incomeDetails?.monthlyIncome || 5000, // Default principal
+        }));
+        setMaxLoan(maxLoanAmount); // Set maxLoan as 40% of salary
+      }
     } catch (err) {
-      // setError(err.message);
-    } finally {
-      // setLoading(false);
+      console.error("Error fetching income data:", err);
     }
   };
 
@@ -426,7 +454,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                     ))}
                   </Box>
                 )}
-                
+
                 <Box sx={{ marginBottom: 3 }}>
                   <Typography variant="subtitle1" gutterBottom>
                     Principal (Amount)
@@ -565,7 +593,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                     } */}
                   <TextField
                     type="text"
-                    value={formValues.tenure || 1}
+                    value={formValues.tenure || ""}
                     onChange={(e) => {
                       const inputValue = e.target.value; // Get the raw input string
 
@@ -662,7 +690,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                   <TextField
                     inputProps={{ maxLength: 4 }} // Limits input to 2 characters; adjust as needed
                     type="text"
-                    value={formValues.roi || 0.5}
+                    value={formValues.roi || ""}
                     onChange={(e) => {
                       const inputValue = e.target.value; // work with the raw string
 

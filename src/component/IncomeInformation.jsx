@@ -122,7 +122,7 @@ const IncomeInformation = () => {
       setLoading(false);
       // setIsDisable(false);
     } catch (err) {
-      setError(err.message);
+      alert(err.response.data.message);
     }
   };
 

@@ -22,56 +22,36 @@ const DocumentationStep = ({
   const navigate = useNavigate();
   const [stepCompleted, setStepCompleted] = useState(false); // Add this line to define stepCompleted state
 
-  useEffect(() => {
-    // if (isDocUploaded || isUploadSuccess) {
-    const fetchDocumentList = async () => {
-      const documentListResponse = await axios.get(
-        `${BASE_URL}/getDocumentList`,
-        { withCredentials: true }
-      );
-      console.log(
-        "documentListResponse zsdss",
-        documentListResponse.data.documents
-      );
-      const data = documentListResponse.data.documents;
-      const result = {};
+  // useEffect(() => {
+  //   // if (isDocUploaded || isUploadSuccess) {
+  //   const fetchDocumentList = async () => {
+  //     const documentListResponse = await axios.get(
+  //       `${BASE_URL}/getDocumentList`,
+  //       { withCredentials: true }
+  //     );
+  //     console.log(
+  //       "documentListResponse zsdss",
+  //       documentListResponse.data.documents
+  //     );
+  //     const data = documentListResponse.data.documents;
+  //     const result = {};
 
-      const requiredTypes = ["aadhaarFront", "salarySlip", "panCard"];
+  //     const requiredTypes = ["aadhaarFront", "salarySlip", "panCard"];
 
-      const hasAllRequired = requiredTypes.every((type) =>
-        data.some((item) => item.type === type)
-      );
+  //     const hasAllRequired = requiredTypes.every((type) =>
+  //       data.some((item) => item.type === type)
+  //     );
 
-      console.log("hasAllRequired", hasAllRequired);
+  //     console.log("hasAllRequired", hasAllRequired);
 
-      if (hasAllRequired) {
-        console.log("uploaded");
-        onComplete({ success: true, data: null });
-      }
-
-      // const requiredNames = ["salarySlip_1", "salarySlip_2", "salarySlip_3"];
-
-      // for (const item of data) {
-      //   if (requiredNames.includes(item.name) && !result[item.name]) {
-      //     result[item.name] = item;
-      //   }
-      // }
-
-      // const firstOccurrencesArray = Object.values(result);
-      // setFirstOccurrences(firstOccurrencesArray);
-
-      // setFormValues((prev) => ({
-      //   ...prev,
-      //   salarySlip: data.filter((doc) => doc.type === "salarySlip"),
-      //   aadhaarFront: data.find((doc) => doc.type === "aadhaarFront"),
-      //   aadhaarBack: data.find((doc) => doc.type === "aadhaarBack"),
-      //   panCard: data.find((doc) => doc.type === "panCard"),
-      //   others: data.filter((doc) => doc.type === "others"),
-      // }));
-    };
-    fetchDocumentList();
-    // }
-  }, []);
+  //     if (hasAllRequired) {
+  //       console.log("uploaded");
+  //       onComplete({ success: true, data: null });
+  //     }
+  //   };
+  //   fetchDocumentList();
+  //   // }
+  // }, []);
 
   // const handleDocumentationUpload = async () => {
   //   // Create a container element

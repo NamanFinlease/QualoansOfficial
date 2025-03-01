@@ -16,6 +16,7 @@ const UserProfile = () => {
   const [user, setUser] = useState({
     profileImage: "",
     fullName: "",
+    fathersName: "",
     PAN: "",
     aadhaarNumber: "",
     mobile: "",
@@ -43,7 +44,9 @@ const UserProfile = () => {
 
         setUser({
           profileImage: data?.data?.profileImage,
+
           fullName: data?.data?.personalDetails?.fullName,
+          fathersName: data?.data?.personalDetails.fathersName,
           PAN: data?.data?.PAN,
           aadhaarNumber: data?.data?.aadhaarNumber,
           mobile: data?.data?.mobile,
@@ -153,6 +156,27 @@ const UserProfile = () => {
             }}
           >
             <tbody>
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    width: "40%",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  Father's Name
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "#F26722",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {user.fathersName}
+                </td>
+              </tr>
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
                 <td
                   style={{

@@ -239,34 +239,6 @@ const DisbursalBankDetails = ({
   return (
     <>
       <Box
-        // sx={{
-        //   display: "flex",
-        //   flexDirection: "column",
-        //   alignItems: "flex-start",
-        //   padding: 3,
-        //   border: "1px solid #ddd",
-        //   borderRadius: 3,
-        //   background: disabled
-        //     ? "#ccc"
-        //     : stepCompleted
-        //     ? "green"
-        //     : "linear-gradient(45deg, #4D4D4E, orange)",
-        //   cursor: disabled ? "not-allowed" : "pointer",
-        //   height: 150,
-        //   width: "100%",
-        //   maxWidth: 350,
-        //   transition: "all 0.3s",
-        //   boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-        //   "&:hover": {
-        //     backgroundColor: disabled
-        //       ? "#ccc"
-        //       : stepCompleted
-        //       ? "green"
-        //       : "orange",
-        //     color: disabled ? "white" : "black",
-        //     transform: disabled ? "none" : "scale(1.03)",
-        //   },
-        // }}
         sx={{
           display: "flex",
           flexDirection: "column",

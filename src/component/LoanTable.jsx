@@ -299,6 +299,25 @@ const LoanTable = () => {
             </Box>
           </Container>
         )}
+        {loans.length > 0 && !loans.some((loan) => loan.isActive) && (
+          <Box display="flex" justifyContent="center" mt={3}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => (window.location.href = "/loan-application")}
+              sx={{
+                px: 3,
+                py: 1,
+                fontSize: "16px",
+                borderRadius: "30px",
+                backgroundColor: "#F26722",
+                "&:hover": { backgroundColor: "#bf4102" },
+              }}
+            >
+              Apply for Reloan
+            </Button>
+          </Box>
+        )}
       </Box>
     </>
   );

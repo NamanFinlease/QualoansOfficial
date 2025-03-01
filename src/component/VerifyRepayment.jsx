@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import WarningIcon from "@mui/icons-material/Warning";
 import { Grid, Box, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const VerifyRepayment = () => {
+  useEffect(() => {
+    Swal.fire({
+      title: "Transaction Success!",
+      text: "Your transaction has been successfully completed.",
+      icon: "success",
+      confirmButtonColor: "#F26722",
+    });
+  }, []);
   return (
     <>
       <Box
@@ -181,6 +191,51 @@ const VerifyRepayment = () => {
                 >
                   collection@qualoan.com
                 </a>
+                {/* Buttons for Navigation */}
+                <Box
+                  sx={{
+                    mt: 4,
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: 2,
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "#fff",
+                      color: "#F26722",
+                      fontWeight: "600",
+                      fontSize: "18px",
+                      padding: "10px 20px",
+                      borderRadius: "10px",
+                      "&:hover": {
+                        backgroundColor: "#FFD5B5",
+                      },
+                    }}
+                    onClick={() => navigate("/dashboard")}
+                  >
+                    Go to Dashboard
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "#fff",
+                      color: "#F26722",
+                      fontWeight: "600",
+                      fontSize: "18px",
+                      padding: "10px 20px",
+                      borderRadius: "10px",
+                      "&:hover": {
+                        backgroundColor: "#FFD5B5",
+                      },
+                    }}
+                    onClick={() => navigate("/loan-application")}
+                  >
+                    Go to Loan Application
+                  </Button>
+                </Box>
               </Box>
             </Grid>
           </Grid>
@@ -205,4 +260,3 @@ const VerifyRepayment = () => {
 };
 
 export default VerifyRepayment;
-

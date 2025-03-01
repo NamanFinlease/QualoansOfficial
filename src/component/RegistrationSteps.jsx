@@ -11,16 +11,12 @@ import SelfieVerification from "./registration/SelfieVerification";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
 import { useSidebar } from "../context/SidebarContext";
-import UserDetails from "./registration/UserDetails";
 
 const RegistrationSteps = () => {
   const navigate = useNavigate();
-  const [isFormFilled, setIsFormFilled] = useState(false);
-
   const { sidebarOpen, sidebarExpanded } = useSidebar();
   const [isVerified, setIsVerified] = useState({
     isMobileVerified: false,
-    // isFormFilled: false,
     isPanVerified: false,
     isPersonalInfoVerified: false,
     isAddressVerified: false,
@@ -36,7 +32,6 @@ const RegistrationSteps = () => {
       ? JSON.parse(savedSteps)
       : {
           mobileVerification: { completed: false, data: null },
-          // userDetails: { completed: false, data: null },
           panVerification: { completed: false, data: null },
           personalInfo: { completed: false, data: null },
           addressInfo: { completed: false, data: null },
@@ -44,20 +39,6 @@ const RegistrationSteps = () => {
           selfieVerification: { completed: false, data: null },
         };
   });
-
-  // Separate state for userDetails
-  // const [userDetails, setUserDetails] = useState(() => {
-  //   const savedUserDetails = localStorage.getItem("userDetails");
-  //   return savedUserDetails ? JSON.parse(savedUserDetails) : { data: {} };
-  // });
-
-  useEffect(() => {
-    localStorage.setItem("registrationSteps", JSON.stringify(steps));
-  }, [steps]);
-
-  // useEffect(() => {
-  //   localStorage.setItem("userDetails", JSON.stringify(userDetails));
-  // }, [userDetails]);
 
   useEffect(() => {
     const fetchProgress = async () => {
@@ -69,17 +50,91 @@ const RegistrationSteps = () => {
         console.log("response regg >> ??", response);
 
         if (response.data.success) {
+          // if (response.data.isRegistration) {
+          //   const { registrationStatus, isMobileVerify } = response.data;
+          //   // setIsVerified({ isMobileVerified: isMobileVerify });
+          //   // Map registrationStatus to step completion
+          //   const updatedSteps = {
+          //     mobileVerification: {
+          //       completed: [
+          //         "MOBILE_VERIFIED",
+          //         "PAN_VERIFIED",
+          //         "PERSONAL_DETAILS",
+          //         "CURRENT_RESIDENCE",
+          //         "INCOME_DETAILS",
+          //         "UPLOAD_PROFILE",
+          //         "COMPLETE_DETAILS",
+          //       ].includes(registrationStatus),
+          //       data: null,
+          //     },
+          //     panVerification: {
+          //       completed: [
+          //         "PAN_VERIFIED",
+          //         "PERSONAL_DETAILS",
+          //         "CURRENT_RESIDENCE",
+          //         "INCOME_DETAILS",
+          //         "UPLOAD_PROFILE",
+          //         "COMPLETE_DETAILS",
+          //       ].includes(registrationStatus),
+          //       data: null,
+          //     },
+          //     personalInfo: {
+          //       completed: [
+          //         "PERSONAL_DETAILS",
+          //         "CURRENT_RESIDENCE",
+          //         "INCOME_DETAILS",
+          //         "UPLOAD_PROFILE",
+          //         "COMPLETE_DETAILS",
+          //       ].includes(registrationStatus),
+          //       data: null,
+          //     },
+          //     addressInfo: {
+          //       completed: [
+          //         "CURRENT_RESIDENCE",
+          //         "INCOME_DETAILS",
+          //         "UPLOAD_PROFILE",
+          //         "COMPLETE_DETAILS",
+          //       ].includes(registrationStatus),
+          //       data: null,
+          //     },
+          //     incomeDetails: {
+          //       completed: [
+          //         "INCOME_DETAILS",
+          //         "UPLOAD_PROFILE",
+          //         "COMPLETE_DETAILS",
+          //       ].includes(registrationStatus),
+          //       data: null,
+          //     },
+          //     selfieVerification: {
+          //       completed: ["UPLOAD_PROFILE", "COMPLETE_DETAILS"].includes(
+          //         registrationStatus
+          //       ),
+          //       data: null,
+          //     },
+          //   };
+
+          //   setSteps(updatedSteps);
+          // }
+
+          // setIsVerified(
+          //   (prevState = {
+          //     ...prevState,
+          //     isMobileVerified: response.data.isMobileVerify,
+          //     isPanVerified: response.data.isPanVerify,
+          //     isPersonalInfoVerified: response.data.isPersonalDetails,
+          //     isAddressVerified: response.data.isCurrentResidence,
+          //     isIncomeInfoVerified: response.data.isIncomeDetails,
+          //   })
+          // );
+
           setIsVerified((prevState) => ({
             ...prevState,
             isMobileVerified: response.data.isMobileVerify,
-            isFormFilled: response.data.isFormFilled,
             isPanVerified: response.data.isPanVerify,
             isPersonalInfoVerified: response.data.isPersonalDetails,
             isAddressVerified: response.data.isCurrentResidence,
             isIncomeInfoVerified: response.data.isIncomeDetails,
-            isSelfieVerified: response.data.selfieVerification,
           }));
-          // setIsFormFilled(response.data.isFormFilled || false);
         }
       } catch (error) {
         console.error("Error fetching progress status:", error);
@@ -91,7 +146,6 @@ const RegistrationSteps = () => {
     fetchProgress();
   }, [
     isVerified.isMobileVerified,
-    // isVerified.isFormFilled,
     isVerified.isPanVerified,
     isVerified.isPersonalInfoVerified,
     isVerified.isAddressVerified,
@@ -109,34 +163,14 @@ const RegistrationSteps = () => {
     return (completedCount / totalSteps) * 100;
   };
 
-  // const handleStepCompletion = (step, data) => {
-  //   const updatedSteps = {
-  //     ...steps,
-  //     [step]: { completed: true, data },
-  //   };
-  //   setSteps(updatedSteps);
-  //   localStorage.setItem("registrationSteps", JSON.stringify(updatedSteps));
-  // };
   const handleStepCompletion = (step, data) => {
-    setSteps((prevSteps) => {
-      const updatedSteps = {
-        ...prevSteps,
-        [step]: { completed: true, data },
-      };
-      localStorage.setItem("registrationSteps", JSON.stringify(updatedSteps));
-      return updatedSteps;
-    });
-    if (step === "mobileVerification") {
-      setIsVerified((prevState) => ({
-        ...prevState,
-        isMobileVerified: true, // Set mobile verified to true
-      }));
-    }
+    const updatedSteps = {
+      ...steps,
+      [step]: { completed: true, data },
+    };
+    setSteps(updatedSteps);
+    localStorage.setItem("registrationSteps", JSON.stringify(updatedSteps));
   };
-
-  useEffect(() => {
-    localStorage.setItem("registrationSteps", JSON.stringify(steps));
-  }, [steps]);
 
   useEffect(() => {
     if (calculateProgress() === 100) {
@@ -144,19 +178,11 @@ const RegistrationSteps = () => {
     }
   }, [steps, navigate]);
 
-  // useEffect(() => {
-  //   if (isFormFilled) {
-  //     navigate("/detailsForm");
-  //   } else if (calculateProgress() === 100) {
-  //     navigate("/loan-application");
-  //   }
-  // }, [isFormFilled, isVerified, steps, navigate]);
-
   console.log("isVerified", isVerified);
 
   return (
     <>
-      <Dashboard />(
+      <Dashboard />
       <Box
         sx={{
           paddingX: 6,
@@ -171,14 +197,17 @@ const RegistrationSteps = () => {
           transition: "width 0.3s ease, margin-left 0.3s ease",
         }}
       >
-        {/* Registration Progress and Steps */}
         <Box
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", md: "row" },
+            flexDirection: { xs: "column", md: "row" }, // Column layout by default (for mobile)
             alignItems: "center",
             padding: 2,
             width: "100%",
+            "@media (minWidth: 600px)": {
+              flexDirection: "row", // Row layout for larger screens
+              justifyContent: "space-between", // Spread out the elements
+            },
           }}
         >
           <span
@@ -190,7 +219,11 @@ const RegistrationSteps = () => {
               width: "100%",
               textAlign: "left",
               fontFamily: '"Roboto", "Helvetica", "Arial", "sans-serif"',
-              marginBottom: "16px",
+              marginBottom: "16px", // Add margin to separate text from progress bar in column layout
+              "@media (minWidth: 600px)": {
+                width: "60%", // Text takes 60% of the width on larger screens
+                marginBottom: "0", // Remove margin on larger screens
+              },
             }}
           >
             Complete Your Profile Registration
@@ -198,6 +231,10 @@ const RegistrationSteps = () => {
           <Box
             sx={{
               width: "80%",
+              "@media (minWidth: 600px)": {
+                width: "40%", // Progress bar takes 40% width on larger screens
+                marginTop: 0, // No top margin on larger screens
+              },
             }}
           >
             <LinearProgress
@@ -217,7 +254,6 @@ const RegistrationSteps = () => {
           </Box>
         </Box>
 
-        {/* Registration Steps */}
         <Box
           sx={{
             display: "flex",
@@ -230,31 +266,19 @@ const RegistrationSteps = () => {
           }}
         >
           <MobileVerification
-            onComplete={(data) =>handleStepCompletion("mobileVerification", data)}
+            onComplete={(data) =>
+              handleStepCompletion("mobileVerification", data)
+            }
             disabled={false}
             prefillData={steps.mobileVerification.data}
             isVerified={isVerified.isMobileVerified}
           />
-          
-          {/* <UserDetails
-            // onComplete={setUserDetails}
-            onComplete={(data) => handleStepCompletion("userDetails", data)}
-            disabled={!isVerified.isMobileVerified}
-            isVerified={isVerified.isFormFilled}
-          /> */}
           <PANValidation
             onComplete={(data) => handleStepCompletion("panVerification", data)}
-            disabled={!isVerified.isMobileVerified}
+            disabled={!steps.mobileVerification.completed}
             prefillData={steps.panVerification.data}
             isVerified={isVerified.isPanVerified}
           />
-
-          {/* <PANValidation
-            onComplete={(data) => handleStepCompletion("panVerification", data)}
-            disabled={!steps.mobileVerification.completed && !isVerified.isFormFilled}
-            prefillData={steps.panVerification.data}
-            isVerified={isVerified.isPanVerified}
-          /> */}
           <PersonalInfo
             onComplete={(data) => handleStepCompletion("personalInfo", data)}
             disabled={!steps.panVerification.completed}
@@ -283,7 +307,6 @@ const RegistrationSteps = () => {
           />
         </Box>
       </Box>
-      )
     </>
   );
 };
