@@ -62,7 +62,6 @@
 //     setLoading(false);
 //   };
 
-
 //   return (
 //     <Box
 //       sx={{
@@ -308,8 +307,6 @@
 
 // export default AboutUs;
 
-
-
 import React, { useState } from "react";
 import axios from "axios";
 import { TextField, Button, Grid, Typography, Box } from "@mui/material";
@@ -349,7 +346,13 @@ const AboutUs = () => {
       );
 
       setResponseMessage("✅ Message sent successfully!");
-      setFormData({ fullName: "", email: "", phoneNo: "", message: "", source: "website" }); // Reset form
+      setFormData({
+        fullName: "",
+        email: "",
+        phoneNo: "",
+        message: "",
+        source: "website",
+      }); // Reset form
 
       // Show success popup
       Swal.fire({
@@ -359,9 +362,14 @@ const AboutUs = () => {
         confirmButtonText: "OK",
       });
     } catch (error) {
-      console.log(error)
-      setResponseMessage(`❌ Error sending message.${error.response.data.message} `);
-      console.error("API Error:", error.response ? error.response.data : error.message);
+      console.log(error);
+      setResponseMessage(
+        `❌ Error sending message.${error.response.data.message} `
+      );
+      console.error(
+        "API Error:",
+        error.response ? error.response.data : error.message
+      );
     }
 
     setLoading(false);
@@ -399,28 +407,64 @@ const AboutUs = () => {
         <Grid container spacing={4}>
           {/* Left Section */}
           <Grid item xs={12} md={6}>
-            <Typography variant="h4" sx={{ fontWeight: "bold", color: "#444", mb: 2 }}>
+            <Typography
+              variant="h4"
+              sx={{ fontWeight: "bold", color: "#444", mb: 2 }}
+            >
               We are always ready to help you and answer your questions
             </Typography>
             <Typography sx={{ color: "#555", fontSize: "18px", mb: 3 }}>
-              Your satisfaction is our priority, and we strive to offer prompt and reliable support at all times.
+              Your satisfaction is our priority, and we strive to offer prompt
+              and reliable support at all times.
             </Typography>
 
-            <Typography sx={{ fontWeight: "bold", fontSize: "18px", color: "#FF5722", mb: 1 }}>
+            <Typography
+              sx={{
+                fontWeight: "bold",
+                fontSize: "18px",
+                color: "#FF5722",
+                mb: 1,
+              }}
+            >
+              Grievance Redressal Officer
+            </Typography>
+            <Typography
+              sx={{
+                fontWeight: "bold",
+                fontSize: "18px",
+                color: "#FF5722",
+                mb: 1,
+              }}
+            >
               Call Center
             </Typography>
-            <Typography sx={{ mb: 1 }}>+917338437609</Typography>
+            <Typography sx={{ mb: 1 }}>+919990831500</Typography>
 
-            <Typography sx={{ fontWeight: "bold", fontSize: "18px", color: "#FF5722", mb: 1 }}>
+            <Typography
+              sx={{
+                fontWeight: "bold",
+                fontSize: "18px",
+                color: "#FF5722",
+                mb: 1,
+              }}
+            >
               Email
             </Typography>
-            <Typography sx={{ mb: 3 }}>credit@qualoan.com</Typography>
+            <Typography sx={{ mb: 3 }}>admin@qualoan.com</Typography>
 
-            <Typography sx={{ fontWeight: "bold", fontSize: "18px", color: "#FF5722", mb: 1 }}>
+            <Typography
+              sx={{
+                fontWeight: "bold",
+                fontSize: "18px",
+                color: "#FF5722",
+                mb: 1,
+              }}
+            >
               Location
             </Typography>
             <Typography>
-              Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road, Gurugram, 122001.
+              Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road, Gurugram,
+              122001.
             </Typography>
           </Grid>
 
@@ -436,7 +480,10 @@ const AboutUs = () => {
                 boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.15)",
               }}
             >
-              <Typography variant="h5" sx={{ fontWeight: "bold", mb: 3, textAlign: "center" }}>
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: "bold", mb: 3, textAlign: "center" }}
+              >
                 Get in Touch
               </Typography>
 
@@ -451,7 +498,12 @@ const AboutUs = () => {
                     value={formData.fullName}
                     onChange={handleChange}
                     InputProps={{ disableUnderline: false }}
-                    sx={{ "& .MuiInputBase-input": { fontSize: "16px", borderBottom: "2px solid #000" } }}
+                    sx={{
+                      "& .MuiInputBase-input": {
+                        fontSize: "16px",
+                        borderBottom: "2px solid #000",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -465,7 +517,12 @@ const AboutUs = () => {
                     value={formData.email}
                     onChange={handleChange}
                     InputProps={{ disableUnderline: false }}
-                    sx={{ "& .MuiInputBase-input": { fontSize: "16px", borderBottom: "2px solid #000" } }}
+                    sx={{
+                      "& .MuiInputBase-input": {
+                        fontSize: "16px",
+                        borderBottom: "2px solid #000",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -479,7 +536,12 @@ const AboutUs = () => {
                     value={formData.phoneNo}
                     onChange={handleChange}
                     InputProps={{ disableUnderline: false }}
-                    sx={{ "& .MuiInputBase-input": { fontSize: "16px", borderBottom: "2px solid #000" } }}
+                    sx={{
+                      "& .MuiInputBase-input": {
+                        fontSize: "16px",
+                        borderBottom: "2px solid #000",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -492,7 +554,12 @@ const AboutUs = () => {
                     rows={4}
                     value={formData.message}
                     onChange={handleChange}
-                    sx={{ "& .MuiInputBase-input": { fontSize: "16px", borderBottom: "2px solid #000" } }}
+                    sx={{
+                      "& .MuiInputBase-input": {
+                        fontSize: "16px",
+                        borderBottom: "2px solid #000",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -513,7 +580,12 @@ const AboutUs = () => {
                 </Grid>
                 {responseMessage && (
                   <Grid item xs={12}>
-                    <Typography sx={{ textAlign: "center", color: responseMessage.includes("✅") ? "green" : "red" }}>
+                    <Typography
+                      sx={{
+                        textAlign: "center",
+                        color: responseMessage.includes("✅") ? "green" : "red",
+                      }}
+                    >
                       {responseMessage}
                     </Typography>
                   </Grid>
@@ -540,9 +612,8 @@ const AboutUs = () => {
         />
       </Box> */}
 
-
-       {/* Google Map Section */}
-     <Box
+      {/* Google Map Section */}
+      <Box
         sx={{
           paddingX: 1,
           display: "flex",
@@ -563,12 +634,7 @@ const AboutUs = () => {
           }}
         />
       </Box>
-    </Box> 
-    
-   
-
-      
-    
+    </Box>
   );
 };
 

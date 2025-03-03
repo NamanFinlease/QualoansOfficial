@@ -204,7 +204,7 @@ const Footer = () => {
                     variant="h6"
                     sx={{ color: "#fff", fontWeight: 500, mb: 2 }}
                   >
-                    Contact Us
+                    Grievance Redressal Officer
                   </Typography>
                   <Box
                     component="ul"
@@ -219,7 +219,7 @@ const Footer = () => {
                           alignItems: "center",
                         }}
                       >
-                        <Email sx={{ mr: 1 }} /> credit@qualoan.com
+                        <Email sx={{ mr: 1 }} /> admin@qualoan.com
                       </Link>
                     </li>
                     <li>
@@ -231,7 +231,7 @@ const Footer = () => {
                           alignItems: "center",
                         }}
                       >
-                        <Phone sx={{ mr: 1 }} /> +917338437609
+                        <Phone sx={{ mr: 1 }} /> +919990831500
                       </Link>
                     </li>
                     <li>
