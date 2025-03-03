@@ -426,19 +426,9 @@ const AboutUs = () => {
                 mb: 1,
               }}
             >
-              Grievance Redressal Officer
+              Call Center
             </Typography>
-            <Typography
-              sx={{
-                fontWeight: "bold",
-                fontSize: "18px",
-                color: "#FF5722",
-                mb: 1,
-              }}
-            >
-              Call 
-            </Typography>
-            <Typography sx={{ mb: 1 }}>+919990831500</Typography>
+            <Typography sx={{ mb: 1 }}>+917338437609</Typography>
 
             <Typography
               sx={{
@@ -450,7 +440,7 @@ const AboutUs = () => {
             >
               Email
             </Typography>
-            <Typography sx={{ mb: 3 }}>admin@qualoan.com</Typography>
+            <Typography sx={{ mb: 3 }}>credit@qualoan.com</Typography>
 
             <Typography
               sx={{
