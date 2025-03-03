@@ -151,7 +151,7 @@ const Footer = () => {
                       </Link>
                     </li>
                     <li>
-                      <Link href="login-form" sx={linkStyle}>
+                      <Link href="apply-now" sx={linkStyle}>
                         Apply Now
                       </Link>
                     </li>
@@ -191,7 +191,7 @@ const Footer = () => {
                       </Link>
                     </li>
                     <li>
-                      <Link href="faq" sx={linkStyle}>
+                      <Link href="fqa" sx={linkStyle}>
                         FAQs
                       </Link>
                     </li>
@@ -204,7 +204,7 @@ const Footer = () => {
                     variant="h6"
                     sx={{ color: "#fff", fontWeight: 500, mb: 2 }}
                   >
-                    Contact Us
+                    Grievance Redressal Officer
                   </Typography>
                   <Box
                     component="ul"
@@ -219,7 +219,7 @@ const Footer = () => {
                           alignItems: "center",
                         }}
                       >
-                        <Email sx={{ mr: 1 }} /> credit@qualoan.com
+                        <Email sx={{ mr: 1 }} /> admin@qualoan.com
                       </Link>
                     </li>
                     <li>
@@ -231,7 +231,7 @@ const Footer = () => {
                           alignItems: "center",
                         }}
                       >
-                        <Phone sx={{ mr: 1 }} /> +917338437609
+                        <Phone sx={{ mr: 1 }} /> +919990831500
                       </Link>
                     </li>
                     <li>
@@ -243,8 +243,10 @@ const Footer = () => {
                           alignItems: "center",
                         }}
                       >
+                        {/* address */}
                         <LocationOn sx={{ mr: 1, mt: { xs: -5, md: -5 } }} />
-                        Address: S-370, Panchsheel Park,Delhi-110017, India
+                        Address: Office No. 229, 2nd Floor, Vipul Agora Mall, MG
+                        Road, Gurugram, 122001.
                       </Link>
                     </li>
                   </Box>
