@@ -74,6 +74,7 @@ const RepaymentLoan = () => {
   };
 
   const handlePaymentSubmit = async () => {
+    console.log('payment 1')
     // Validate loan amount
     if (!loanAmount || isNaN(loanAmount) || parseFloat(loanAmount) <= 0) {
       Swal.fire("Invalid Amount", "Please enter a valid loan amount.", "error");
@@ -105,6 +106,7 @@ const RepaymentLoan = () => {
           body: JSON.stringify(paymentData),
         }
       );
+      console.log('response',response)
 
       // Check if the response is successful
       if (!response.ok) {
@@ -112,14 +114,15 @@ const RepaymentLoan = () => {
           `Payment API call failed with status ${response.status}`
         );
       }
-
+      
       const data = await response.json();
+      console.log('data',data)
       if (data.status) {
         window.location.href =
-          "https://api.paytring.com/pay/token/" + data.order_id;
+        "https://api.paytring.com/pay/token/" + data.order_id;
         navigate("/verify-repayment");
-
-        console.log("paytring", paytring);
+        
+        // throw new Error("error rrrrrrrrrrrrr")
       }
     } catch (error) {
       // Handle error response
