@@ -204,7 +204,7 @@ const Footer = () => {
                     variant="h6"
                     sx={{ color: "#fff", fontWeight: 500, mb: 2 }}
                   >
-                    Grievance Redressal Officer
+                    Contact Us
                   </Typography>
                   <Box
                     component="ul"
@@ -219,7 +219,7 @@ const Footer = () => {
                           alignItems: "center",
                         }}
                       >
-                        <Email sx={{ mr: 1 }} /> admin@qualoan.com
+                        <Email sx={{ mr: 1 }} /> info@qualoan.com
                       </Link>
                     </li>
                     <li>
@@ -231,7 +231,7 @@ const Footer = () => {
                           alignItems: "center",
                         }}
                       >
-                        <Phone sx={{ mr: 1 }} /> +919990831500
+                        <Phone sx={{ mr: 1 }} /> +917338437609
                       </Link>
                     </li>
                     <li>
@@ -254,6 +254,23 @@ const Footer = () => {
               </Grid>
             </Grid>
           </Container>
+
+          <Typography
+            variant="body2"
+            style={{
+              textAlign: "center",
+              color: "#fff",
+              textShadow: "1px 1px 2px rgba(0, 0, 0, 0.7)",
+            }}
+          >
+            For any grievance please contact our Grievance Redressal Officer at{" "}
+            <a
+              href="mailto:admin@qualoan.com"
+              style={{ color: "#FFD700", textDecoration: "underline" }}
+            >
+              admin@qualoan.com
+            </a>
+          </Typography>
 
           {/* Footer Bottom */}
           <Box
