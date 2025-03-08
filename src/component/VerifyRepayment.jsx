@@ -3,18 +3,19 @@ import WarningIcon from "@mui/icons-material/Warning";
 import { Grid, Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const VerifyRepayment = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    Swal.fire({
-      title: "Transaction Success!",
-      text: "Your transaction has been successfully completed.",
-      icon: "success",
-      confirmButtonColor: "#F26722",
-    });
-  }, []);
+  // useEffect(() => {
+  //   Swal.fire({
+  //     title: "Transaction Success!",
+  //     text: "Your transaction has been successfully completed.",
+  //     icon: "success",
+  //     confirmButtonColor: "#F26722",
+  //   });
+  // }, []);
 
   return (
     <>
@@ -37,9 +38,9 @@ const VerifyRepayment = () => {
             fontFamily: "Inter",
           }}
         >
-          ⚠️ Beware of fraud! Always use our secure Repayment Website Link for
+          {/* ⚠️ Beware of fraud! Always use our secure Repayment Website Link for
           payments. Qua Loan is not responsible for payments made to other
-          accounts.
+          accounts. */}
         </Typography>
 
         <style>
@@ -77,7 +78,7 @@ const VerifyRepayment = () => {
               mb: 1,
             }}
           >
-            <WarningIcon sx={{ color: "#F26722", fontSize: "32px" }} />
+            <CheckCircleIcon sx={{ color: "green", fontSize: "32px" }} />
           </Box>
 
           <Typography
@@ -91,10 +92,10 @@ const VerifyRepayment = () => {
               fontFamily: "Inter",
             }}
           >
-            Important Payment Notice
+            Success!{" "}
           </Typography>
 
-          <Typography
+          {/* <Typography
             variant="body2"
             sx={{
               textAlign: "center",
@@ -103,9 +104,8 @@ const VerifyRepayment = () => {
               fontFamily: "Inter",
             }}
           >
-            We are not liable for payments made to personal accounts. Please use
-            only the official company account.
-          </Typography>
+            Your transaction has been successfully completed.
+          </Typography> */}
 
           <Typography
             variant="subtitle1"
@@ -117,7 +117,7 @@ const VerifyRepayment = () => {
               fontFamily: "Inter",
             }}
           >
-            Please repay your loan and interest to this bank account
+            Your transaction has been successfully completed.
           </Typography>
         </Box>
 
@@ -234,7 +234,7 @@ const VerifyRepayment = () => {
                     }}
                     onClick={() => navigate("/manage-repayments")}
                   >
-                    Repayment
+                    Go to Loan list
                   </Button>
                 </Box>
               </Box>
