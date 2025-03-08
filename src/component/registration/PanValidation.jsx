@@ -16,7 +16,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 import axios from "axios";
-const PANValidation = ({ onComplete, disabled, prefillData, isVerified }) => {
+const PANValidation = ({ onComplete, disabled, prefillData, isVerified, profileData }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [pan, setPan] = useState("");
   const [isFetching, setIsFetching] = useState(false);
@@ -25,9 +25,7 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified }) => {
 
   const [isPanValidated, setIsPanValidated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  console.log(prefillData)
-
+  
   // Prefill PAN data if available
   // useEffect(() => {
   //   if (prefillData) {
@@ -126,6 +124,14 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified }) => {
       setIsLoading(false); // Reset loading state after API call completes
     }
   };
+
+  useEffect(() => {
+    if (prefillData && prefillData.pan) {
+      setPan(prefillData.pan); // Set PAN from prefillData if available
+    } else if (profileData && profileData?.data?.PAN) {
+      setPan(profileData?.data?.PAN); // Set PAN from profileData if prefillData is null
+    }
+  }, [prefillData, profileData]);
 
   return (
     <>

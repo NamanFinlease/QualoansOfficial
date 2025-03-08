@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -39,6 +39,7 @@ const MobileVerification = ({
   disabled,
   prefillData,
   isVerified,
+  profileData
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [mobile, setMobile] = useState("");
@@ -49,6 +50,7 @@ const MobileVerification = ({
   const [formValues, setFormValues] = useState({
     fathersName: "",
     pan: "",
+    mobile : "",
   });
 
   const sendOTP = async (mobileNumber, fathersName, pan) => {
@@ -174,6 +176,18 @@ const MobileVerification = ({
       </Box>
     </Box>
   );
+
+  // Use useEffect to set form values from profileData
+  useEffect(() => {
+    if (profileData?.data) {
+      setFormValues({
+        fathersName: profileData?.data?.personalDetails?.fathersName || "",
+        pan: profileData.data.PAN || "",
+        mobile: profileData.data.mobile || "",
+      });
+      setMobile(profileData.data.mobile || ""); // Set mobile number if available
+    }
+  }, [profileData]);
 
   return (
     <>

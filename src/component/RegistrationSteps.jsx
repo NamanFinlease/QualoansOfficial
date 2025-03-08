@@ -15,7 +15,7 @@ import { useSidebar } from "../context/SidebarContext";
 const RegistrationSteps = () => {
   const navigate = useNavigate();
   const { sidebarOpen, sidebarExpanded } = useSidebar();
-  
+  const [profileData, setProfileData] = useState(null);
   const [isVerified, setIsVerified] = useState({
     isMobileVerified: false,
     isPanVerified: false,
@@ -71,6 +71,24 @@ const RegistrationSteps = () => {
     };
 
     fetchProgress();
+  }, []);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/getProfileDetails`, {
+          withCredentials: true,
+        });
+
+        if (response.data.success) {
+          setProfileData(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching progress status:", error);
+      }
+    };
+
+    fetchProfileData();
   }, []);
 
   const calculateProgress = () => {
@@ -180,12 +198,14 @@ const RegistrationSteps = () => {
             disabled={false}
             prefillData={steps.mobileVerification.data}
             isVerified={isVerified.isMobileVerified}
+            profileData={profileData}
           />
           <PANValidation
             onComplete={(data) => handleStepCompletion("panVerification", data)}
             disabled={!isVerified.isMobileVerified}
             prefillData={steps.panVerification.data}
             isVerified={isVerified.isPanVerified}
+            profileData={profileData}
           />
           {console.log(steps.panVerification.data)}
           <PersonalInfo
