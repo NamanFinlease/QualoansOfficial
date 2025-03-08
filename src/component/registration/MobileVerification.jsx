@@ -212,7 +212,7 @@ const MobileVerification = ({
             onChange={(e) => {
               setFormValues((prev) => ({
                 ...prev,
-                fathersName: e.target.value.trim(),
+                fathersName: e.target.value,
               }));
             }}
             placeholder="Enter your father's name"
@@ -227,13 +227,17 @@ const MobileVerification = ({
             name="pan"
             value={formValues.pan}
             onChange={(e) => {
-              const panValue = e.target.value.toUpperCase();
+              let panValue = e.target.value.toUpperCase().trim();
+              if (panValue.length > 10) {
+                panValue = panValue.slice(0, 10);
+              }
               setFormValues((prev) => ({
                 ...prev,
                 pan: panValue,
               }));
             }}
             placeholder="Enter your PAN"
+            maxLength={10}
             error={
               formValues.pan !== "" &&
               !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(formValues.pan)

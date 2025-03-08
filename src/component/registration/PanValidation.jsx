@@ -26,6 +26,8 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [isPanValidated, setIsPanValidated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  console.log(prefillData)
+
   // Prefill PAN data if available
   // useEffect(() => {
   //   if (prefillData) {
@@ -66,6 +68,8 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified }) => {
       });
 
       const data = await response.json();
+
+      console.log(data)
 
       if (response.ok) {
         setIsPanValidated(true);
@@ -219,10 +223,18 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified }) => {
           <TextField
             label="PAN Number"
             value={pan} // Bind to the pan state
-            onChange={handlePanChange}
+            // onChange={handlePanChange}
+            onChange={(e) => {
+              const inputValue = e.target.value.toUpperCase(); // Convert to uppercase
+              const formattedValue = inputValue.replace(/[^A-Z0-9]/g, ""); // Allow only alphanumeric characters
+              if (formattedValue.length <= 10) {
+                setPan(formattedValue); // Update state only if within limit
+              }
+            }}
             disabled={isFetching || disabled}
             fullWidth
             variant="outlined"
+            maxLength={10}
             placeholder="Enter your PAN number"
             sx={{
               marginBottom: 2,
