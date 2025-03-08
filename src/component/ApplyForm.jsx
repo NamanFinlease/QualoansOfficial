@@ -39,7 +39,7 @@ const ApplyForm = () => {
     pinCode: "",
     salary: "",
     loanAmount: "",
-    source: "website",
+    source: "marketing",
   });
   const [formErrors, setFormErrors] = useState({});
   const [animationState, setAnimationState] = useState([]);
@@ -148,7 +148,7 @@ const ApplyForm = () => {
     // Proceed with form submission if there are no errors
     try {
       const response = await fetch(
-        `https://api.qualoan.com/api/leads/landingPageData`,
+        `https://preprod-crm.api.qualoan.com/api/marketing/leads`,
 
         {
           method: "POST",
@@ -159,7 +159,7 @@ const ApplyForm = () => {
             ...formValues,
 
             termsAccepted,
-            source: "website",
+            source: "marketing",
           }),
         }
       );

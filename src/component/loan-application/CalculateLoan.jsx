@@ -86,7 +86,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
 
         setFormValues((prev) => ({
           ...prev,
-          principal: incomeDetails?.monthlyIncome || 5000, // Default principal
+          principal: maxLoanAmount || 5000, // Default principal
         }));
         setMaxLoan(maxLoanAmount); // Set maxLoan as 40% of salary
       }

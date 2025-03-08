@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import WarningIcon from "@mui/icons-material/Warning";
-import { Grid, Box, Typography } from "@mui/material";
+import { Grid, Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const VerifyRepayment = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     Swal.fire({
       title: "Transaction Success!",
@@ -13,6 +15,7 @@ const VerifyRepayment = () => {
       confirmButtonColor: "#F26722",
     });
   }, []);
+
   return (
     <>
       <Box
@@ -48,7 +51,6 @@ const VerifyRepayment = () => {
         `}
         </style>
       </Box>
-      {/* Alert Banner */}
 
       <Box
         sx={{
@@ -57,7 +59,6 @@ const VerifyRepayment = () => {
           padding: "20px",
         }}
       >
-        {/* Warning Section */}
         <Box
           sx={{
             background: "#F5F5F5",
@@ -100,7 +101,6 @@ const VerifyRepayment = () => {
               color: "#1c1c1c",
               fontSize: { xs: "14px", sm: "16px" },
               fontFamily: "Inter",
-              //   mb: 2,
             }}
           >
             We are not liable for payments made to personal accounts. Please use
@@ -120,6 +120,7 @@ const VerifyRepayment = () => {
             Please repay your loan and interest to this bank account
           </Typography>
         </Box>
+
         <Box
           sx={{
             background: "#F26722",
@@ -191,7 +192,7 @@ const VerifyRepayment = () => {
                 >
                   collection@qualoan.com
                 </a>
-                {/* Buttons for Navigation */}
+
                 <Box
                   sx={{
                     mt: 4,
@@ -213,9 +214,9 @@ const VerifyRepayment = () => {
                         backgroundColor: "#FFD5B5",
                       },
                     }}
-                    onClick={() => navigate("/dashboard")}
+                    onClick={() => navigate("/")}
                   >
-                    Go to Dashboard
+                    Home
                   </Button>
 
                   <Button
@@ -231,9 +232,9 @@ const VerifyRepayment = () => {
                         backgroundColor: "#FFD5B5",
                       },
                     }}
-                    onClick={() => navigate("/loan-application")}
+                    onClick={() => navigate("/manage-repayments")}
                   >
-                    Go to Loan Application
+                    Repayment
                   </Button>
                 </Box>
               </Box>
@@ -244,10 +245,6 @@ const VerifyRepayment = () => {
 
       <style>
         {`
-          @keyframes scroll-text {
-            from { transform: translateX(100%); }
-            to { transform: translateX(-100%); }
-          }
           @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
