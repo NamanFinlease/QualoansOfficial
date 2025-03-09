@@ -241,7 +241,7 @@ const SelfieVerification = ({
 
     try {
       const dashboardResponse = await axios.get(
-        `${BASE_URL}/api/user/getDashboardDetails`,
+        `${BASE_URL}/getDashboardDetails`,
         {
           withCredentials: true,
         }
@@ -256,7 +256,7 @@ const SelfieVerification = ({
 
         if (isProfileImage) {
           const profileResponse = await axios.get(
-            `${BASE_URL}/api/user/getProfileDetails`,
+            `${BASE_URL}/getProfileDetails`,
             {
               withCredentials: true,
             }
