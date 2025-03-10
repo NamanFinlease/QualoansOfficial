@@ -16,7 +16,13 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { BASE_URL } from "../../baseURL";
 import Swal from "sweetalert2";
 import axios from "axios";
-const PANValidation = ({ onComplete, disabled, prefillData, isVerified, profileData }) => {
+const PANValidation = ({
+  onComplete,
+  disabled,
+  prefillData,
+  isVerified,
+  profileData,
+}) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [pan, setPan] = useState("");
   const [isFetching, setIsFetching] = useState(false);
@@ -25,7 +31,7 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified, profileD
 
   const [isPanValidated, setIsPanValidated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Prefill PAN data if available
   // useEffect(() => {
   //   if (prefillData) {
@@ -67,7 +73,7 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified, profileD
 
       const data = await response.json();
 
-      console.log(data)
+      console.log(data);
 
       if (response.ok) {
         setIsPanValidated(true);
@@ -108,11 +114,18 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified, profileD
           );
 
           // Retrieve the PAN number from the response
-          const panNumber = getProfileDetailsResponse?.data?.data?.PAN;
+          // const panNumber = getProfileDetailsResponse?.data?.data?.PAN;
+          if (response.status === 200 && response.data.success) {
+            const panNumber = getProfileDetailsResponse?.data?.data?.PAN;
 
-          if (panNumber) {
-            setPan(panNumber); // Set the PAN number here
-            console.log("PAN set: ", panNumber); // Log for debugging
+            setFormValues({
+              pan: panNumber.PAN || "",
+            });
+            setOpenModal(true);
+
+            // if (panNumber) {
+            //   setPan(panNumber); // Set the PAN number here
+            //   console.log("PAN set: ", panNumber); // Log for debugging
           } else {
             console.error("PAN number is not available in profile data.");
           }
@@ -125,13 +138,22 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified, profileD
     }
   };
 
+  // useEffect(() => {
+  //   if (prefillData && prefillData.pan) {
+  //     setPan(prefillData.pan); // Set PAN from prefillData if available
+  //   } else if (profileData && profileData?.data?.PAN) {
+  //     setPan(profileData?.data?.PAN); // Set PAN from profileData if prefillData is null
+  //   }
+  // }, [prefillData, profileData]);
   useEffect(() => {
-    if (prefillData && prefillData.pan) {
-      setPan(prefillData.pan); // Set PAN from prefillData if available
-    } else if (profileData && profileData?.data?.PAN) {
-      setPan(profileData?.data?.PAN); // Set PAN from profileData if prefillData is null
+    if (openDialog) {
+      if (prefillData && prefillData.pan) {
+        setPan(prefillData.pan); // Prefill PAN from prefillData
+      } else if (profileData && profileData?.data?.PAN) {
+        setPan(profileData?.data?.PAN); // Prefill PAN from profileData
+      }
     }
-  }, [prefillData, profileData]);
+  }, [openDialog, prefillData, profileData]);
 
   return (
     <>
@@ -172,9 +194,9 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified, profileD
           sx={{
             color:
               //  isPanValidated ||
-            
-              disabled ? "grey" : "white",      
-                    ml: 1,
+
+              disabled ? "grey" : "white",
+            ml: 1,
           }}
           disabled={disabled}
         >
@@ -229,14 +251,7 @@ const PANValidation = ({ onComplete, disabled, prefillData, isVerified, profileD
           <TextField
             label="PAN Number"
             value={pan} // Bind to the pan state
-            // onChange={handlePanChange}
-            onChange={(e) => {
-              const inputValue = e.target.value.toUpperCase(); // Convert to uppercase
-              const formattedValue = inputValue.replace(/[^A-Z0-9]/g, ""); // Allow only alphanumeric characters
-              if (formattedValue.length <= 10) {
-                setPan(formattedValue); // Update state only if within limit
-              }
-            }}
+            onChange={handlePanChange}
             disabled={isFetching || disabled}
             fullWidth
             variant="outlined"

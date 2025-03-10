@@ -59,7 +59,11 @@ function App() {
   return (
     <SidebarProvider>
       <div>
+        {/* <video className="bg-video" src={myVideo} autoPlay loop muted></video> */}
+
         {showHeaderFooter && <Header />}
+        {/* {showHeaderFooter && <Navbar />} */}
+
         <Routes>
           {/* Routes with Header and Footer */}
 
@@ -68,7 +72,7 @@ function App() {
           <Route path="/" element={<MainContent />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />
-          <Route path="/apply-now" element={<ApplyNow />} />
+          {/* <Route path="/apply-now" element={<ApplyNow />} /> */}
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/repay-now" element={<RepaymentLoan />} />
           <Route path="/terms-condition" element={<TermsAndConditions />} />
