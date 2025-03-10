@@ -7,6 +7,7 @@ import FrontPage from "../component/FrontPage";
 import WhoWeAre from "../component/WhoWeAre";
 import AutoplayCarousel from "../component/CarouselItemDetail";
 import Header from "./Header";
+import { OurApp } from "../component/OurApp";
 function MainContent() {
   return (
     <div>
@@ -15,7 +16,7 @@ function MainContent() {
       <FrontPage />
       <WhoWeAre />
       <LoanCalculator />
-
+      <OurApp />
       <AutoplayCarousel />
 
       <LoanCalculate />
