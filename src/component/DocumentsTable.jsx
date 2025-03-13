@@ -65,15 +65,7 @@ const DocumentsTable = ({ uploadedDocs, remarks }) => {
     }
   };
 
-  // useEffect(() => {
-  //     if (isSuccess && data) {
-  //         const fileUrl = data?.url;
-  //         const newTab = window.open(fileUrl, '_blank', 'noopener,noreferrer');
-  //         if(newTab) window.focus()
-
-  //     }
-
-  // }, [isSuccess, data])
+ 
   return (
     <Box sx={{ overflowX: "auto", width: "100%" }}>
       <TableContainer

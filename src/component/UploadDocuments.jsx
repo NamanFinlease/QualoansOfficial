@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-// import { tokens } from "../theme";
 import {
   Typography,
   Button,
@@ -20,7 +19,6 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import DocumentsTable from "./DocumentsTable";
-// import useAuthStore from "./store/authStore";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
 import { useNavigate } from "react-router-dom";
@@ -132,7 +130,7 @@ const UploadDocuments = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
     const hasFileSelected = fileInputs.some((input) => input.file);
-    setIsLoading(false)
+    setIsLoading(false);
     if (!hasFileSelected) {
       alert("Please select at least one file to upload.");
       return;
@@ -150,8 +148,6 @@ const UploadDocuments = () => {
     });
 
     try {
-      // Call the mutation to upload the documents with formData
-      //   await uploadDocuments({ id: leadData._id, docsData: formData }).unwrap();
       const response = await axios.patch(
         `${BASE_URL}/uploadDocuments`,
         formData,
@@ -165,6 +161,7 @@ const UploadDocuments = () => {
       // console.log("Response data:", response.data);
 
       console.log("REs >>> ", response);
+
       if (response.status === 200) {
         setIsUploadSuccess(isUploadSuccess + 1);
         Swal.fire({
@@ -212,14 +209,16 @@ const UploadDocuments = () => {
         `${BASE_URL}/getDocumentList`,
         { withCredentials: true }
       );
-      // console.log(
-      //   "documentListResponse zsdss",
-      //   documentListResponse.data.documents
-      // );
+
       const data = documentListResponse.data.documents;
       const result = {};
 
-      const requiredTypes = ["aadhaarFront", "salarySlip", "panCard"];
+      const requiredTypes = [
+        "aadhaarFront",
+        "aadhaarBack",
+        "salarySlip",
+        "panCard",
+      ];
 
       const hasAllRequired = requiredTypes.every((type) =>
         data.some((item) => item.type === type)
@@ -295,16 +294,42 @@ const UploadDocuments = () => {
     return result;
   }
 
+
   const handleContinueBtn = () => {
-    if (requiredField) {
-      navigate(`/loan-application`);
+    const isReloan = true; // Example: track if it's a reloan
+
+    if (isReloan) {
+      // In reloan, only salary slips are required
+      if (
+        !formValues.salarySlip ||
+        formValues.salarySlip.length < requiredSalarySlips
+      ) {
+        Swal.fire(
+          "Warning!",
+          "Please upload 3 Salary Slips for reloan.",
+          "warning"
+        );
+        return;
+      }
     } else {
-      Swal.fire(
-        "Warning!",
-        "Please upload all the required documents",
-        "warning"
-      );
+      // For new loan, all other documents are required
+      if (
+        !formValues.aadhaarFront ||
+        !formValues.aadhaarBack ||
+        !formValues.panCard ||
+        !formValues.salarySlip
+      ) {
+        Swal.fire(
+          "Warning!",
+          "Please upload all required documents: Aadhaar Front, Aadhaar Back, and PAN Card.",
+          "warning"
+        );
+        return;
+      }
     }
+
+    // If all required documents are uploaded, proceed
+    navigate(`/loan-application`);
   };
 
   return (

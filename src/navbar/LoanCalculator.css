@@ -1,0 +1,358 @@
+.LoanCalculator{
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 70px;
+  }
+  
+  .LoanCalculator h1{
+    z-index: 0;
+    font-size: 34px;
+    color: #0033cc;
+    margin-bottom: 20px;
+  }
+  
+  .LoanCalculator .p1{
+    color: black;
+    font-size: 18px;
+    margin: 0;
+    z-index: 0;
+  }
+  
+  .LoanCalculator .p2{
+    color: black;
+    font-size: 18px;
+    margin:0px 0px 30px 0px;
+    z-index: 0;
+  }
+  
+  .LoanCalculator-content {
+    position: relative;
+    display: flex;
+    /* padding-top: 40px; */
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background: linear-gradient(270deg, rgba(0, 255, 255, 0.2), rgba(102, 0, 255, 0.1), #fff38739);
+    color: black;
+    height: 900px;
+    width: 95%;
+    border-radius: 30px;
+    margin-top: 30px;
+    z-index: 0;
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.3);
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #b0b0b0; /* Grey thumb */
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #b0b0b0; /* Grey thumb */
+  cursor: pointer;
+}
+
+.limits {
+  padding-top: 20px;
+  font-size: 14px;
+  color: #000000; /* Soft grey text */
+  margin-top: 30px;
+  text-align: center;
+}
+
+.emi-range {
+  background: #ffffff;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  width: 45%;
+  margin-left: 10px;
+  height: 560px;
+
+}
+
+.emi-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  width: 45%;
+  margin-left: 10px;
+  height: 560px;
+}
+
+.emi-circle canvas {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+}
+
+@media (max-width: 768px) {
+.emi-circle {
+    max-width: 300px; 
+}
+}
+
+@media (max-width: 480px) {
+.emi-circle {
+    max-width: 200px; /* Further adjust size for very small screens */
+    height: 200px !important;
+    margin-top: 10px;
+
+}
+}
+
+
+.results {
+  height: auto;
+  width: auto;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid-item {
+  background-color: #ffffff7f; 
+  border-radius: 12px;
+  padding: 10px 0px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+}
+
+.grid-icon {
+  font-size: 25px;
+  color: #181414; 
+  margin-bottom: 10px;
+}
+
+.grid-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #a0a0a0; 
+}
+
+.grid-value {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333; /* Dark grey for values */
+  margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+  .results {
+      padding: 15px;
+  }
+
+  /* .grid-container {
+      grid-template-columns: 1fr;
+  } */
+
+  .grid-item {
+      padding: 10px 15px;
+  }
+}
+
+
+.slider-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.slider-scale {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: 20px; /* Adjust to position the scale correctly */
+  width: 100%;
+  font-size: 12px;
+  color: #1c1b1b;
+}
+
+
+.calculation1{
+  padding: 0px 20px;
+  height: 500px;
+  width: 45%;
+  border-radius: 12px;
+  background-color: #ffffff7f;
+}
+
+.calculation2{
+  height: 500px;
+  width: 45%;
+  border-radius: 12px;
+  background-color: #ffffff7f;
+}
+
+.calculation-section {
+
+  margin-top: 10px;
+  margin-bottom: 4px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #9AA6B2;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px;
+  background: #9AA6B2;
+  border-radius: 5px;
+}
+
+input[type="range"]:focus {
+  outline: none;
+}
+/* Interest Rate Scale */
+.slider-scale-interest {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: 20px; /* Adjust to position the scale correctly */
+  width: 100%;
+  font-size: 12px;
+  color: #555;
+}
+
+.scale-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tick {
+  width: 2px;
+  height: 12px;
+  background-color: #555;
+}
+
+.scale-label {
+  margin-top: 5px;
+  font-size: 16px;
+}
+
+.slider-value {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-top: -10px;
+}
+
+.slider {
+width: 100%;
+margin: 10px 0;
+appearance: none;
+height: 8px;
+border-radius: 5px;
+background: #d3d3d3;
+outline: none;
+opacity: 0.7;
+transition: 0.3s ease;
+}
+
+.slider::-webkit-slider-thumb {
+appearance: none;
+width: 20px;
+height: 20px;
+border-radius: 50%;
+background: #b0b0b0;
+cursor: pointer;
+margin-top: -6px; /* Align thumb properly */
+}
+
+.slider::-moz-range-thumb {
+width: 20px;
+height: 20px;
+border-radius: 50%;
+background: #b0b0b0;
+cursor: pointer;
+margin-top: -6px; /* Align thumb properly */
+}
+
+.block-title {
+margin-top: 50px; /* Adds space from the top */
+margin-bottom: 30px; /* Adds space at the bottom */
+padding: 30px 15px; /* Adds padding to make the text appear centered */
+border-radius: 10px; /* Rounded corners */
+transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+opacity: 0; /* Initially hidden for animation */
+animation: fadeIn 1.5s ease-in-out forwards, bounce 1s ease-in-out 1.5s; /* Animation */
+}
+
+.block-title:hover {
+transform: translateY(-5px); /* Slight lift effect */
+}
+
+.block-title h1 {
+font-family: 'Arial', sans-serif; /* Modern font family */
+font-size: 36px; /* Larger font size */
+color: #333; /* Dark text color */
+font-weight: bold; /* Make the text bold */
+letter-spacing: 1px; /* Slight spacing between letters */
+text-transform: uppercase; /* Make the text all uppercase */
+}
+
+.block-title b {
+color: black; /* Green color for the bold text */
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+0% {
+  opacity: 0;
+}
+100% {
+  opacity: 1;
+}
+}
+
+/* Bounce Animation */
+@keyframes bounce {
+0% {
+  transform: translateY(0);
+}
+50% {
+  transform: translateY(-10px); /* Bounce upwards */
+}
+100% {
+  transform: translateY(0); /* Return to original position */
+}
+}
+
+
+
