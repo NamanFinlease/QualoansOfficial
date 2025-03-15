@@ -9,7 +9,7 @@ const blink = keyframes`
   50% { opacity: 0.5; }
   100% { opacity: 1; }
 `;
-const apkLink = "/app-release.apk"; // Update with your actual APK filename
+const apkLink = "https://globals3diigitaloceanbucket.blr1.cdn.digitaloceanspaces.com/QUAASSESTS/app-release.apk"; // Update with your actual APK filename
 
 export const OurApp = () => {
   return (
