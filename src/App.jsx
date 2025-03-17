@@ -22,7 +22,7 @@ import UserPreview from "./component/UserPreview";
 // import LoanDetailsTable from "./component/LoanDetailsTable";
 // import LoanStatus from "./component/LoanStatus";
 // import PaymentOptions from "./component/PaymentOptions";
-import LoanCalculator from "./component/LoanCalculator";
+// import LoanCalculator from "./component/LoanCalculator";
 import LoginForm from "./component/LoginForm";
 import RepayLoan from "./component/RepayLoan";
 import ProtectedRoute from "./ProtectedRoute";
@@ -34,6 +34,7 @@ import VerifyRepayment from "./component/VerifyRepayment";
 import SuccessPage from "./component/SuccessPage";
 import RepaymentLoan from "./component/RepaymentLoan";
 import UserDetails from "./component/registration/UserDetails";
+import LoanCalculator from "./navbar/LoanCalculator";
 
 const MinimalLayout = ({ children }) => <div>{children}</div>;
 

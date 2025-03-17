@@ -14,6 +14,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MissionImage from "../assets/image/Our-Mission.jpg"; // Import your mission image here
 import technologyGif from "../assets/image/Repayment (2).gif"; // Importing the GIF
 import Header from "../navbar/Header";
+import CarouselItemDetail from "./CarouselItemDetail";
 
 const techSteps = [
   {
@@ -72,7 +73,8 @@ const AboutUs = () => {
 
       <Box
         sx={{
-          background: "#f9f9f9",
+          marginTop: { xs: "20%", md: "5%" },
+          // background: '#f9f9f9',
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -111,13 +113,16 @@ const AboutUs = () => {
           sx={{
             marginTop: "50px", // Margin on top
             fontFamily: "Inter",
-            fontSize: { xs: "2.4rem", md: "3rem" },
+            fontSize: { xs: "2.4rem", md: "2.5rem" },
             fontWeight: 700, // Font weight
             lineHeight: "73px", // Line height
             letterSpacing: "-0.408px", // Letter spacing
             textAlign: "center",
-            color: "#fc8403",
+            color: "navy",
             marginBottom: { xs: "20px", md: "2px" }, // Responsive margin-bottom
+            "&:hover": {
+              color: "#fc8403",
+            },
           }}
         >
           About Us
@@ -205,8 +210,11 @@ const AboutUs = () => {
               component="h2"
               gutterBottom
               sx={{
-                color: "#fc8403",
+                color: "navy",
                 fontWeight: "bold",
+                "&:hover": {
+                  color: "#fc8403",
+                },
               }}
             >
               Our Mission
@@ -294,8 +302,11 @@ const AboutUs = () => {
               component="h2"
               gutterBottom
               sx={{
-                color: "#fc8403",
+                color: "navy",
                 fontWeight: "bold",
+                "&:hover": {
+                  color: "#fc8403",
+                },
               }}
             >
               Our Vision
@@ -357,7 +368,7 @@ const AboutUs = () => {
               sx={{
                 fontWeight: "bold",
                 mb: 4,
-                color: "#fc8403",
+                color: "navy",
                 fontSize: { xs: "2.4rem", md: "2.5rem" },
                 fontFamily: "Arial, sans-serif",
                 opacity: isVisible ? 1 : 0,
@@ -365,6 +376,9 @@ const AboutUs = () => {
                 textAlign: "left", // Keeps the text aligned to the left
                 width: { xs: "100%", md: "auto" }, // Ensures width is properly adjusted
                 margin: { xs: 0, md: "0 auto" }, // Centers the text on larger screens, aligns left on small screens
+                "&:hover": {
+                  color: "#fc8403",
+                },
               }}
             >
               Our Technology
@@ -443,12 +457,14 @@ const AboutUs = () => {
                         sx={{
                           color: "black",
                           "&:hover": {
-                            backgroundColor: "#fc8403",
-                            color: "white",
+                            backgroundImage:
+                              "linear-gradient(270deg, hsla(188, 100%, 59%, 0.163), rgba(102, 0, 255, 0.108), #fff38739)",
+                            color: "orange",
                           },
                           "&.Mui-expanded": {
-                            backgroundColor: "#fc8403",
-                            color: "white",
+                            backgroundImage:
+                              "linear-gradient(270deg, hsla(188, 100%, 59%, 0.163), rgba(102, 0, 255, 0.108), #fff38739)",
+                            color: "orange",
                           },
                         }}
                       >
@@ -520,7 +536,7 @@ const AboutUs = () => {
           </Box>
         </Box>
 
-        <WhyChooseUs />
+        <CarouselItemDetail />
       </Box>
     </>
   );

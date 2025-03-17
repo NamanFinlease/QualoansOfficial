@@ -10,13 +10,13 @@ import {
   YouTube,
 } from "@mui/icons-material";
 import { Container, Grid, Typography, Link, Box } from "@mui/material";
-import logo from "../assets/image/White.webp";
+import logo from "../assets/image/Artboard 1.webp";
 import TwitterIcon from "../assets/image/x.jpg"; // Replace with the correct path to your image
 
 const linkStyle = {
   display: "flex",
   alignItems: "center",
-  color: "#fff",
+  color: "black",
   fontSize: "1rem",
   textDecoration: "none",
   marginBottom: "8px",
@@ -30,7 +30,7 @@ const Footer = () => {
   return (
     <Box
       sx={{
-        background: "#f9f9f9",
+        // background: "#f9f9f9",
         width: "100%",
         display: "flex",
       }}
@@ -39,7 +39,9 @@ const Footer = () => {
         sx={{
           margin: 5,
           borderRadius: 10,
-          backgroundColor: "rgb(47, 47, 47)",
+          background:
+            "linear-gradient(270deg, hsla(188,100%,59%,0.16), rgba(102,0,255,0.1), #fff38739)",
+          // backgroundColor: "rgb(47, 47, 47)",
           padding: {
             xs: "40px 20px", // padding for extra small screens (mobile)
             sm: "60px 30px", // padding for small screens (tablet)
@@ -132,13 +134,17 @@ const Footer = () => {
                 <Grid item xs={12} sm={4} sx={{ paddingTop: "12px" }}>
                   <Typography
                     variant="h6"
-                    sx={{ color: "#fff", fontWeight: 500, mb: 2 }}
+                    sx={{ color: "black", fontWeight: 500, mb: 2 }}
                   >
                     Fast Links
                   </Typography>
                   <Box
                     component="ul"
-                    sx={{ listStyleType: "none", padding: 0, margin: 0 }}
+                    sx={{
+                      listStyleType: "none",
+                      padding: 0,
+                      margin: 0,
+                    }}
                   >
                     <li>
                       <Link href="/" sx={linkStyle}>
@@ -172,13 +178,17 @@ const Footer = () => {
                 <Grid item xs={12} sm={4} sx={{ paddingTop: "12px" }}>
                   <Typography
                     variant="h6"
-                    sx={{ color: "#fff", fontWeight: 500, mb: 2 }}
+                    sx={{ color: "black", fontWeight: 500, mb: 2 }}
                   >
                     Resources
                   </Typography>
                   <Box
                     component="ul"
-                    sx={{ listStyleType: "none", padding: 0, margin: 0 }}
+                    sx={{
+                      listStyleType: "none",
+                      padding: 0,
+                      margin: 0,
+                    }}
                   >
                     <li>
                       <Link href="terms-condition" sx={linkStyle}>
@@ -202,7 +212,7 @@ const Footer = () => {
                 <Grid item xs={12} sm={4} sx={{ paddingTop: "12px" }}>
                   <Typography
                     variant="h6"
-                    sx={{ color: "#fff", fontWeight: 500, mb: 2 }}
+                    sx={{ color: "black", fontWeight: 500, mb: 2 }}
                   >
                     Grievance Redressal Officer
                   </Typography>
@@ -217,9 +227,11 @@ const Footer = () => {
                           ...linkStyle,
                           display: "flex",
                           alignItems: "center",
+                          color: "black",
                         }}
                       >
-                        <Email sx={{ mr: 1 }} /> admin@qualoan.com
+                        <Email sx={{ mr: 1, color: "black" }} />{" "}
+                        admin@qualoan.com
                       </Link>
                     </li>
                     <li>
@@ -229,9 +241,10 @@ const Footer = () => {
                           ...linkStyle,
                           display: "flex",
                           alignItems: "center",
+                          color: "black",
                         }}
                       >
-                        <Phone sx={{ mr: 1 }} /> +919990831500
+                        <Phone sx={{ mr: 1, color: "black" }} /> +919990831500
                       </Link>
                     </li>
                     <li>
@@ -241,10 +254,13 @@ const Footer = () => {
                           ...linkStyle,
                           display: "flex",
                           alignItems: "center",
+                          color: "black",
                         }}
                       >
                         {/* address */}
-                        <LocationOn sx={{ mr: 1, mt: { xs: -5, md: -5 } }} />
+                        <LocationOn
+                          sx={{ mr: 1, mt: { xs: -5, md: -5 }, color: "black" }}
+                        />
                         Address: Office No. 229, 2nd Floor, Vipul Agora Mall, MG
                         Road, Gurugram, 122001.
                       </Link>
@@ -269,8 +285,8 @@ const Footer = () => {
             <Typography
               variant="body2"
               style={{
-                color: "#fff",
-                textShadow: "1px 1px 2px rgba(0, 0, 0, 0.7)",
+                color: "black",
+                // textShadow: "1px 1px 2px rgba(0, 0, 0, 0.7)",
               }}
             >
               Copyright &copy; 2024 QUA Loan. All Rights Reserved.

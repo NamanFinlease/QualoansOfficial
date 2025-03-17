@@ -98,7 +98,7 @@ const LoanCalculator = () => {
           borderRadius: { xs: "40px", md: "0" }, // No border radius on small screens, 40px on larger screens
 
           paddingY: 4, // Adds vertical padding
-          backgroundColor: "#f9f9f9", // Dark overlay for readability
+          // backgroundColor: "#f9f9f9", // Dark overlay for readability
         }}
       >
         <Box

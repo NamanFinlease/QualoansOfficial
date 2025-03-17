@@ -1,7 +1,8 @@
 import React from "react";
 import { Box, Typography, Button, keyframes } from "@mui/material";
 import myImage from "../assets/image/download-app.png";
-import DownloadIcon from "@mui/icons-material/Download";
+// import DownloadIcon from "@mui/icons-material/Download";
+import DownloadIcon from "../assets/image/android.png";
 
 // Define the blinking animation
 const blink = keyframes`
@@ -9,7 +10,7 @@ const blink = keyframes`
   50% { opacity: 0.5; }
   100% { opacity: 1; }
 `;
-const apkLink = "/app-release.apk"; // Update with your actual APK filename
+const apkLink = "https://globals3diigitaloceanbucket.blr1.cdn.digitaloceanspaces.com/QUAASSESTS/app-release.apk"; // Update with your actual APK filename
 
 export const OurApp = () => {
   return (
@@ -53,8 +54,8 @@ export const OurApp = () => {
             flexDirection: "column",
             justifyContent: "space-evenly",
             gap: 3,
-            width: { xs: "100%", md: "50%" },
-            pb: { xs: 3, md: 5 },
+            width: { xs: "100%", md: "70%" },
+            pb: { xs: 3, md: 2 },
             ml: { md: 5 }, // Added margin-left for gap on larger screens
           }}
         >
@@ -133,7 +134,14 @@ export const OurApp = () => {
             <a href={apkLink} download style={{ textDecoration: "none" }}>
               <Button
                 variant="contained"
-                startIcon={<DownloadIcon />}
+                startIcon={
+                  <Box
+                    component="img"
+                    src={DownloadIcon} // Your custom image
+                    alt="Download"
+                    sx={{ width: 30, height: 30, filter: "invert(1)" }} // Adjust the size
+                  />
+                }
                 sx={{
                   backgroundColor: "orange",
                   color: "white",

@@ -140,7 +140,7 @@ const RepaymentLoan = () => {
 
       <Box
         sx={{
-          background: "#fff",
+          // background: "#fff",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
