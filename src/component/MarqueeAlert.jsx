@@ -4,6 +4,7 @@ const MarqueeAlert = () => {
   return (
     <Box
       sx={{
+        mt: { xs: "20%", md: "10%" },
         overflow: "hidden",
         whiteSpace: "nowrap",
         width: "100%",

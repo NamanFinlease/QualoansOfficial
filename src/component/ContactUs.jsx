@@ -376,10 +376,11 @@ const AboutUs = () => {
   };
 
   return (
-    <Box sx={{ background: "#f9f9f9", minHeight: "100vh", padding: "40px" }}>
+    <Box sx={{ minHeight: "100vh", padding: "40px" }}>
       {/* Banner Section */}
       <Box
         sx={{
+          marginTop: { xs: "20%", md: "5%" },
           position: "relative",
           width: "100%",
           height: { xs: "20vh", md: "60vh" },

@@ -35,6 +35,8 @@ const LoanCalculator = () => {
   return (
     <Box
       sx={{
+        mt: { xs: "15%", md: "5%" },
+
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -57,9 +59,9 @@ const LoanCalculator = () => {
       >
         <Typography
           variant="h4"
-          color="#0033cc"
+          color="navy"
           mb={2}
-          sx={{ fontWeight: 600, textAlign: "center" }}
+          sx={{ fontWeight: 700, textAlign: "center" }}
         >
           Personal Loan Calculator
         </Typography>

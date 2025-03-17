@@ -2,14 +2,13 @@ import React from "react";
 import { Box, Button, Typography, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
 import myVideo from "../assets/image/loan-company1.mp4";
-import myImage from "../assets/image/first-page-img.jpg";
 
 export const HomepageInfo = () => {
   return (
     <Box sx={{ mt: 8, width: "100%", position: "relative", mb: 5 }}>
       <Box
         sx={{
-          paddingTop: "5px",
+          paddingTop: { xs: "20px", md: "5px" },
           width: "100%",
           height: { xs: "auto", md: "500px" },
           background:

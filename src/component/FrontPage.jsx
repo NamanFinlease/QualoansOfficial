@@ -12,7 +12,7 @@ const FrontPage = () => {
         overflowX: "hidden",
         width: "100%",
         height: "auto",
-        backgroundColor: "#f9f9f9",
+        // backgroundColor: "#f9f9f9",
         backgroundSize: "cover",
         backgroundPosition: "center",
         display: "flex",

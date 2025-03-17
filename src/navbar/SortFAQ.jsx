@@ -49,7 +49,7 @@ const SortFAQ = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        backgroundColor: "#f9f9f9",
+        // backgroundColor: "#f9f9f9",
         backdropFilter: "blur(5px)",
 
         // Responsive background image styling
@@ -69,10 +69,13 @@ const SortFAQ = () => {
         sx={{
           textAlign: "center",
           fontWeight: "bold",
-          color: "#fc8403",
+          color: "navy",
           mb: 4,
-          fontSize: { xs: "1.8rem", sm: "2.5rem", md: "3rem" }, // Adjust font size based on screen size
+          fontSize: { xs: "1.8rem", sm: "2.5rem", md: "2.5rem" }, // Adjust font size based on screen size
           fontFamily: "Arial, sans-serif",
+          "&:hover": {
+            color: "orange",
+          },
         }}
       >
         Frequently Asked Questions
@@ -112,10 +115,10 @@ const SortFAQ = () => {
                         transition: "color 0.3s ease",
                         fontSize: "2.5rem", // Adjust this value to increase the size
                         ".Mui-expanded &": {
-                          color: "white",
+                          color: "black",
                         },
                         "&:hover": {
-                          color: "white",
+                          color: "black",
                         },
                       }}
                     />
@@ -127,12 +130,15 @@ const SortFAQ = () => {
                     color: "black",
                     transition: "background-color 0.3s ease",
                     "&:hover": {
-                      backgroundColor: "#fc8403",
-                      color: "white",
+                      backgroundImage:
+                        "linear-gradient(270deg, hsla(188, 100%, 59%, 0.163), rgba(102, 0, 255, 0.108), #fff38739)",
+                      color: "orange",
                     },
+
                     "&.Mui-expanded": {
-                      backgroundColor: "#fc8403",
-                      color: "white",
+                      backgroundImage:
+                        "linear-gradient(270deg, hsla(188, 100%, 59%, 0.163), rgba(102, 0, 255, 0.108), #fff38739)",
+                      color: "orange",
                     },
                   }}
                 >

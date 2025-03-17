@@ -21,15 +21,37 @@ a {
 a:hover {
   color: #535bf2;
 }
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 
 body {
-  
   margin: 0;
+  min-width: 80vw;
+  min-height: 100vh;
+  overflow-x: hidden; /* Prevents horizontal scrolling */
+  background: linear-gradient(270deg, rgba(65, 251, 251, 0.2), rgba(134, 240, 240, 0.2), rgba(166, 119, 236, 0.1), white);
+  background-size: 400% 400%;
+  animation: gradientAnimation 8s ease infinite;
+}
+
+
+/* body {
+  
+  margin: 0; */
   /* display: flex; */
   /* place-items: center; */
-  min-width:80vw ;
+  /* min-width:80vw ;
   min-height: 90vh;
-}
+} */
 
 h1 {
   font-size: 3.2em;

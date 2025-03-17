@@ -290,10 +290,10 @@ const LoginForm = ({ setLoginComleted }) => {
           borderTopLeftRadius: 40,
           borderBottomRightRadius: 40,
           padding: 4,
-          backgroundColor: "#ffffff",
+          backgroundColor: "rgba(249, 249, 249, 0.7)", // Adjust the opacity (0.7 for semi-transparent)
           maxWidth: "900px",
           margin: "auto",
-          mt: 8,
+          mt: 18,
           mb: 8,
           gap: { xs: 2, md: 4 },
         }}
@@ -304,6 +304,7 @@ const LoginForm = ({ setLoginComleted }) => {
           src={loginGif} // Ensure loginGif points to your GIF file
           alt="Login Illustration"
           sx={{
+            mixBlendMode: "darken",
             width: { xs: "100%", md: "40%" },
             height: "auto",
             borderRadius: 2,
