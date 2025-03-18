@@ -6,6 +6,10 @@ import {
   Divider,
   Button,
   TextField,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
 } from "@mui/material";
 import { BASE_URL } from "../baseURL";
 import { sharedStyles } from "./shared/styles";
@@ -27,7 +31,7 @@ const ResidentialAddress = () => {
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const residenceOptions = ["OWNED", "RENTED", "PARENTAL", "COMPANY PROVIDED"];
   // Fetch Residential details from the backend API
   useEffect(() => {
     const fetchResidentialData = async () => {
@@ -63,8 +67,71 @@ const ResidentialAddress = () => {
 
     fetchResidentialData();
   }, []);
+  // const handleSave = async () => {
+  //   // Check if any field is empty
+  //   if (
+  //     !Residential.address ||
+  //     !Residential.landmark ||
+  //     !Residential.city ||
+  //     !Residential.state ||
+  //     !Residential.pincode ||
+  //     !Residential.residenceType ||
+  //     !Residential.residingSince
+  //   ) {
+  //     setError("All fields are required!");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+  //   try {
+  //     const formattedResidenceSince = moment(
+  //       Residential.residingSince,
+  //       "YYYY-MM-DD",
+  //       true
+  //     ).isValid()
+  //       ? moment(Residential.residingSince).format("YYYY-MM-DD")
+  //       : "";
+
+  //     const updatedResident = {
+  //       ...Residential,
+  //       residingSince: formattedResidenceSince,
+  //     };
+
+  //     const response = await axios.patch(
+  //       `${BASE_URL}/currentResidence`,
+  //       updatedResident,
+  //       {
+  //         headers: { "Content-Type": "application/json" },
+  //         withCredentials: true,
+  //       }
+  //     );
+
+  //     if (response.status !== 200) {
+  //       throw new Error("Failed to update Residential data");
+  //     }
+
+  //     setEditMode(false); // Disable edit mode after saving
+  //     setError(null); // Clear error message after successful save
+  //   } catch (err) {
+  //     setError(err.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleSave = async () => {
+    if (
+      !Residential.address ||
+      !Residential.landmark ||
+      !Residential.city ||
+      !Residential.state ||
+      !Residential.pincode ||
+      !Residential.residenceType ||
+      !Residential.residingSince
+    ) {
+      alert("All fields are required!");
+      return;
+    }
     setLoading(true);
     try {
       const formattedResidenceSince = moment(
@@ -100,43 +167,6 @@ const ResidentialAddress = () => {
       setLoading(false);
     }
   };
-
-  // Handle the save operation
-  // const handleSave = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const formatteResidenceSince = moment(
-  //       Residential.residingSince,
-  //       "YYYY-MM-DD",
-  //       true
-  //     ).isValid()
-  //       ? moment(Residential.residingSince).format("YYYY-MM-DD")
-  //       : moment(Residential.residingSince, "DD-MM-YYYY").format("YYYY-MM-DD");
-
-  //     const updatedResident = {
-  //       ...Residential,
-  //       residingSince: formatteResidenceSince,
-  //     };
-
-  //     const response = await axios.patch(
-  //       `${BASE_URL}/currentResidence`,
-  //       updatedResident,
-  //       {
-  //         headers: { "Content-Type": "application/json" },
-  //         withCredentials: true,
-  //       }
-  //     );
-
-  //     // Note: axios returns status code in response.status, no 'ok' property.
-  //     if (response.status !== 200) {
-  //       throw new Error("Failed to update Residential data");
-  //     }
-
-  //     setEditMode(false); // Disable edit mode after saving
-  //   } catch (err) {
-  //     setError(err.message);
-  //   }
-  // };
 
   // Handle change in input fields
   const handleChange = (e) => {
@@ -208,6 +238,11 @@ const ResidentialAddress = () => {
                         name="address"
                         value={Residential.address}
                         onChange={handleChange}
+                        required
+                        error={!Residential.address}
+                        helperText={
+                          !Residential.address ? "Address is required" : ""
+                        }
                       />
                     </td>
                   </tr>
@@ -219,9 +254,15 @@ const ResidentialAddress = () => {
                         name="landmark"
                         value={Residential.landmark}
                         onChange={handleChange}
+                        required
+                        error={!Residential.landmark}
+                        helperText={
+                          !Residential.landmark ? "Landmark is required" : ""
+                        }
                       />
                     </td>
                   </tr>
+
                   <tr style={styles.tableRow}>
                     <td style={styles.tableCell}>Pincode</td>
                     <td style={styles.tableCell}>
@@ -230,9 +271,15 @@ const ResidentialAddress = () => {
                         name="pincode"
                         value={Residential.pincode}
                         onChange={handleChange}
+                        required
+                        error={!Residential.pincode}
+                        helperText={
+                          !Residential.pincode ? "Pincode is required" : ""
+                        }
                       />
                     </td>
                   </tr>
+
                   <tr style={styles.tableRow}>
                     <td style={styles.tableCell}>City</td>
                     <td style={styles.tableCell}>
@@ -241,9 +288,13 @@ const ResidentialAddress = () => {
                         name="city"
                         value={Residential.city}
                         onChange={handleChange}
+                        required
+                        error={!Residential.city}
+                        helperText={!Residential.city ? "City is required" : ""}
                       />
                     </td>
                   </tr>
+
                   <tr style={styles.tableRow}>
                     <td style={styles.tableCell}>State</td>
                     <td style={styles.tableCell}>
@@ -252,32 +303,64 @@ const ResidentialAddress = () => {
                         name="state"
                         value={Residential.state}
                         onChange={handleChange}
+                        required
+                        error={!Residential.state}
+                        helperText={
+                          !Residential.state ? "State is required" : ""
+                        }
                       />
                     </td>
                   </tr>
+
                   <tr style={styles.tableRow}>
                     <td style={styles.tableCell}>Residence Type</td>
                     <td style={styles.tableCell}>
-                      <TextField
+                      <FormControl
                         fullWidth
-                        name="residenceType"
-                        value={Residential.residenceType}
-                        onChange={handleChange}
-                      />
+                        error={!Residential.residenceType}
+                        required
+                      >
+                        <Select
+                          name="residenceType"
+                          value={Residential.residenceType}
+                          onChange={handleChange}
+                          displayEmpty
+                        >
+                          <MenuItem value="" disabled>
+                            Select Residence Type
+                          </MenuItem>
+                          {residenceOptions.map((option) => (
+                            <MenuItem key={option} value={option}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        {!Residential.residenceType && (
+                          <FormHelperText>
+                            Residence Type is required
+                          </FormHelperText>
+                        )}
+                      </FormControl>
                     </td>
                   </tr>
 
                   <tr style={styles.tableRow}>
                     <td style={styles.tableCell}>Residence Since</td>
                     <td style={styles.tableCell}>
-                      {moment(Residential.residingSince).format("YYYY-MM-DD")}
-
                       <TextField
                         fullWidth
                         type="date"
                         name="residingSince"
                         value={Residential.residingSince || ""}
                         onChange={handleChange}
+                        required
+                        error={!Residential.residingSince}
+                        helperText={
+                          !Residential.residingSince
+                            ? "Residence Since is required"
+                            : ""
+                        }
+                        InputLabelProps={{ shrink: true }}
                       />
                     </td>
                   </tr>

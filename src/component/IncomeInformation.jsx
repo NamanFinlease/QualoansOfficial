@@ -81,6 +81,17 @@ const IncomeInformation = () => {
 
   // Handle save operation to update income information in the backend
   const handleSave = async () => {
+    if (
+      !income.employementType ||
+      !income.monthlyIncome ||
+      !income.obligations ||
+      !income.nextSalaryDate ||
+      !income.workingSince ||
+      !income.incomeMode
+    ) {
+      alert("Please fill all the fields");
+      return;
+    }
     setLoading(true);
     try {
       const formattedNextSalaryDate = moment(
@@ -186,6 +197,8 @@ const IncomeInformation = () => {
                         name="employementType"
                         value={income.employementType}
                         onChange={handleChange}
+                        error={!income.employementType}
+                        helperText={!income.employementType ? "Required" : ""}
                       />
                     </td>
                   </tr>
@@ -197,6 +210,8 @@ const IncomeInformation = () => {
                         name="monthlyIncome"
                         value={income.monthlyIncome}
                         onChange={handleChange}
+                        error={!income.monthlyIncome}
+                        helperText={!income.monthlyIncome ? "Required" : ""}
                       />
                     </td>
                   </tr>
@@ -208,8 +223,10 @@ const IncomeInformation = () => {
                         name="obligations"
                         value={income.obligations}
                         onChange={handleChange}
-                        error={!!loanError}
-                        helperText={loanError}
+                        error={!income.obligations}
+                        helperText={
+                          !income.obligations ? "Required" : loanError
+                        }
                         type="number"
                       />
                     </td>
@@ -217,7 +234,6 @@ const IncomeInformation = () => {
                   <tr style={styles.tableRow}>
                     <td style={styles.tableCell}>Next Salary Date</td>
                     <td style={styles.tableCell}>
-                      {/* Use type="date" for proper date input */}
                       <TextField
                         fullWidth
                         name="nextSalaryDate"
@@ -228,6 +244,8 @@ const IncomeInformation = () => {
                             : ""
                         }
                         onChange={handleChange}
+                        error={!income.nextSalaryDate}
+                        helperText={!income.nextSalaryDate ? "Required" : ""}
                       />
                     </td>
                   </tr>
@@ -244,6 +262,8 @@ const IncomeInformation = () => {
                             : ""
                         }
                         onChange={handleChange}
+                        error={!income.workingSince}
+                        helperText={!income.workingSince ? "Required" : ""}
                       />
                     </td>
                   </tr>
@@ -255,6 +275,8 @@ const IncomeInformation = () => {
                         name="incomeMode"
                         value={income.incomeMode}
                         onChange={handleChange}
+                        error={!income.incomeMode}
+                        helperText={!income.incomeMode ? "Required" : ""}
                       />
                     </td>
                   </tr>

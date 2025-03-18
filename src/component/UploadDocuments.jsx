@@ -53,6 +53,7 @@ const UploadDocuments = () => {
   const [firstOccurrences, setFirstOccurrences] = useState([]);
   const [requiredSalarySlips] = useState(3);
   const [requiredField, setRequiredField] = useState(false);
+  const [loans, setLoans] = useState([]);
 
   useEffect(() => {
     const getPreviousData = async () => {
@@ -126,6 +127,25 @@ const UploadDocuments = () => {
     const updatedInputs = fileInputs.filter((_, i) => i !== index);
     setFileInputs(updatedInputs);
   };
+
+  useEffect(() => {
+    const fetchLoans = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(`${BASE_URL}/loanList`, {
+          withCredentials: true,
+        });
+
+        setLoans(response?.data?.loanList[0]?.isClosed);
+      } catch (error) {
+        console.error("Error fetching loans:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLoans();
+  }, []); // Ensure dependencies are correctly managed
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -201,6 +221,121 @@ const UploadDocuments = () => {
       console.error("Upload error:", error); // Log error for debugging
     }
   };
+  // const handleSubmit = async () => {
+  //   setIsLoading(true);
+
+  //   // Check if loan is closed (reloan case)
+  //   const isClosed = loans;
+
+  //   if (isClosed) {
+  //     if (
+  //       !formValues.salarySlip ||
+  //       formValues.salarySlip.length < requiredSalarySlips
+  //     ) {
+  //       Swal.fire(
+  //         "Warning!",
+  //         "Please upload 3 Salary Slips for reloan.",
+  //         "warning"
+  //       );
+  //       setIsLoading(false);
+  //       return;
+  //     }
+  //   } else {
+  //     // For new loans, all required documents must be uploaded
+  //     if (
+  //       !formValues.aadhaarFront ||
+  //       !formValues.aadhaarBack ||
+  //       !formValues.panCard ||
+  //       !formValues.salarySlip
+  //     ) {
+  //       Swal.fire(
+  //         "Warning!",
+  //         "Please upload all required documents: Aadhaar Front, Aadhaar Back, PAN Card, and Salary Slips.",
+  //         "warning"
+  //       );
+  //       setIsLoading(false);
+  //       return;
+  //     }
+  //   }
+
+  //   // Check if any file is selected for upload
+  //   const hasFileSelected = fileInputs.some((input) => input.file);
+  //   if (!hasFileSelected) {
+  //     Swal.fire(
+  //       "Warning!",
+  //       "Please select at least one file to upload.",
+  //       "warning"
+  //     );
+  //     setIsLoading(false);
+  //     return;
+  //   }
+
+  //   // Prepare FormData for uploading documents
+  //   const formData = new FormData();
+  //   fileInputs.forEach((input) => {
+  //     if (input.file) {
+  //       formData.append(selectedDocType, input.file); // Append file
+  //       formData.append("remarks", input.remarks); // Append remarks
+  //     }
+  //   });
+
+  //   try {
+  //     const response = await axios.patch(
+  //       `${BASE_URL}/uploadDocuments`,
+  //       formData,
+  //       {
+  //         headers: { "Content-Type": "multipart/form-data" },
+  //         withCredentials: true,
+  //       }
+  //     );
+
+  //     if (response.status === 200) {
+  //       setIsUploadSuccess(isUploadSuccess + 1);
+  //       Swal.fire({
+  //         title: "Success!",
+  //         text: "Documents uploaded successfully!",
+  //         icon: "success",
+  //         width: window.innerWidth <= 600 ? "90%" : "30%",
+  //         padding: window.innerWidth <= 600 ? "1rem" : "2rem",
+  //         confirmButtonColor: "#FFA500",
+  //         customClass: {
+  //           popup: "custom-popup-responsive",
+  //           confirmButton: "confirm-button-orange",
+  //         },
+  //         didOpen: () => {
+  //           const popup = document.querySelector(".swal2-popup");
+  //           if (popup) {
+  //             popup.style.marginTop =
+  //               window.innerWidth <= 600 ? "20px" : "50px";
+  //             popup.style.fontSize = window.innerWidth <= 600 ? "14px" : "16px";
+  //           }
+  //         },
+  //       });
+
+  //       // Reset state after successful upload
+  //       setFormValues({
+  //         salarySlip: [],
+  //         aadhaarFront: null,
+  //         aadhaarBack: null,
+  //         panCard: null,
+  //         others: [],
+  //       });
+  //       setFileInputs([{ file: null, remarks: "" }]);
+  //       setSelectedDocType(null);
+  //       setIsLoading(false);
+
+  //       // Navigate to loan application if all conditions are met
+  //       navigate(`/loan-application`);
+  //     }
+  //   } catch (error) {
+  //     Swal.fire(
+  //       error.response?.data?.message || "Error uploading documents!",
+  //       "error"
+  //     );
+  //     console.error("Upload error:", error);
+  //     setIsLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     // if (isDocUploaded || isUploadSuccess) {
@@ -294,12 +429,10 @@ const UploadDocuments = () => {
     return result;
   }
 
-
   const handleContinueBtn = () => {
-    const isReloan = true; // Example: track if it's a reloan
+    const isClosed = loans;
 
-    if (isReloan) {
-      // In reloan, only salary slips are required
+    if (isClosed) {
       if (
         !formValues.salarySlip ||
         formValues.salarySlip.length < requiredSalarySlips
