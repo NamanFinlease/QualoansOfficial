@@ -270,16 +270,21 @@ const Footer = () => {
             style={{
               textAlign: "center",
               color: "black",
-              textShadow: "1px 1px 2px rgba(0, 0, 0, 0.7)",
+              textShadow: "1px 1px 2px rgba(0, 0, 0, 0.3)",
             }}
           >
             For any grievance please contact our Grievance Redressal Officer at{" "}
-            <a
+            <Link
               href="mailto:admin@qualoan.com"
-              style={{ color: "#FFD700", textDecoration: "underline" }}
+              sx={{
+                color: "navy",
+                textDecoration: "underline",
+                fontSize: "1rem",
+                "&:hover": { color: "orange" },
+              }}
             >
               admin@qualoan.com
-            </a>
+            </Link>
           </Typography>
           {/* Footer Bottom */}
           <Box
