@@ -235,7 +235,7 @@ const Footer = () => {
                       </Link>
                     </li>
                     <li>
-                      <Link
+                      {/* <Link
                         href="contact-us"
                         sx={{
                           ...linkStyle,
@@ -245,7 +245,7 @@ const Footer = () => {
                         }}
                       >
                         <Phone sx={{ mr: 1, color: "black" }} /> +919990831500
-                      </Link>
+                      </Link> */}
                     </li>
                     <li>
                       <Link
