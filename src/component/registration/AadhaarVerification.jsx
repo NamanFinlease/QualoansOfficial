@@ -1,0 +1,329 @@
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
+import PhoneIcon from "@mui/icons-material/PhoneIphone";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Swal from "sweetalert2";
+import { BASE_URL } from "../../baseURL";
+import { a } from "framer-motion/client";
+import axios from "axios";
+
+const InputField = ({ label, value, onChange, placeholder }) => (
+  <TextField
+    fullWidth
+    variant="outlined"
+    label={label}
+    value={value}
+    onChange={onChange}
+    placeholder={placeholder}
+    sx={{
+      input: { color: "black" },
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": { borderColor: "black" },
+        "&:hover fieldset": { borderColor: "#ffcc00" },
+      },
+    }}
+  />
+);
+
+const AadhaarVerification = ({
+  onComplete,
+  disabled,
+  prefillData,
+  isVerified,
+  profileData,
+}) => {
+  const [openDialog, setOpenDialog] = useState(false);
+  // const [mobile, setMobile] = useState("");
+  const [aadhaar, setAadhaar] = useState("");
+  const [otp, setOtp] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentStep, setCurrentStep] = useState("aadhaar");
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [formValues, setFormValues] = useState({
+    aadhaar: "",
+  });
+
+  const sendOTP = async (aadhaar) => {
+    console.log("aadhaarNumber", aadhaar);
+
+    try {
+      setIsLoading(true);
+
+      const response = await axios.get(`${BASE_URL}/aadhaar/${aadhaar}`, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true, // Ensures cookies are sent
+      });
+
+      console.log("API Response:", response.data);
+
+      if (response.data.success) {
+        setCurrentStep("otp");
+      } else {
+        throw new Error(response.data.message || "Failed to fetch OTP.");
+      }
+    } catch (error) {
+      alert("Error: " + (error.response?.data?.message || error.message));
+      console.error("Error fetching OTP:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // console.log("isOtpVerified changed:", isOtpVerified);
+  }, [isOtpVerified]);
+
+  const verifyOTP = async (aadhaar, otpCode) => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${BASE_URL}/submit-aadhaar-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          otp: otpCode,
+          aadhaar_number: aadhaar,
+          consent: "Y",
+        }),
+        // body: JSON.stringify({ mobile: mobileNumber, otp: otpCode }),
+      });
+      // const data = await response.json();
+      if (response.status === 200) {
+        Swal.fire(
+          "Verified",
+          "Aadhaar number verified successfully!",
+          "success"
+        );
+        setIsOtpVerified(true);
+        onComplete({ aadhaar: aadhaar, verified: true });
+        setOpenDialog(false);
+      } else {
+        throw new Error("Invalid OTP. Please try again.");
+      }
+    } catch (error) {
+      alert("Invalid OTP. Please Enter Valid OTP", error.message, "error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // console.log("aadhaar", aadhaar); // Pehli baar undefined ho sakta hai
+  }, [aadhaar]);
+
+  const resendOTP = () => {
+    console.log("Resending OTP...");
+
+    setOtp("");
+    console.log("aadhaar", aadhaar);
+
+    if (aadhaar) {
+      // formValues.aadhaar ki jagah direct aadhaar state ka use karein
+
+      sendOTP(aadhaar);
+    } else {
+      alert("Please enter an Aadhaar number to resend OTP.");
+    }
+  };
+
+  const handleModalClick = async () => {
+    setOpenDialog(true);
+    setIsLoading(true);
+    // Fetch dashboard details and set mobile number if available
+    // ... (existing code)
+  };
+
+  const StepBox = ({
+    icon,
+    title,
+    description,
+    onClick,
+    disabled,
+    completed,
+  }) => (
+    <Box
+      onClick={!disabled ? onClick : null}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        padding: 2,
+        borderColor: disabled ? "#1c1c1c" : "#F26722",
+        borderRadius: 3,
+        margin: 1,
+        width: "25%",
+        minWidth: 200,
+        cursor: disabled ? "not-allowed" : "pointer",
+        textAlign: "left",
+        background: disabled ? "#d9d9d9" : "#F26722",
+        color: !disabled ? "white" : "#1c1c1c",
+        "@media (max-width: 600px)": {
+          width: "80%",
+          margin: "auto",
+        },
+      }}
+    >
+      <IconButton
+        sx={{
+          color: disabled ? "grey" : "white",
+          ml: 1,
+        }}
+      >
+        {completed || isVerified ? (
+          <CheckCircleIcon sx={{ color: "green" }} />
+        ) : (
+          icon
+        )}
+      </IconButton>
+      <Box sx={{ ml: 2, flexGrow: 1 }}>
+        <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
+        <Typography variant="body2">{description}</Typography>
+      </Box>
+    </Box>
+  );
+
+  // Use useEffect to set form values from profileData
+  useEffect(() => {
+    if (profileData?.data) {
+      setFormValues({
+        // fathersName: profileData?.data?.personalDetails?.fathersName || "",
+        // pan: profileData.data.PAN || "",
+        aadhaar: profileData.data.aadhaar || "",
+      });
+      setAadhaar(profileData.data.aadhaar || ""); // Set mobile number if available
+    }
+  }, [profileData]);
+
+  return (
+    <>
+      <StepBox
+        icon={<PhoneIcon />}
+        title="Aadhar Verification"
+        description="Verify your Aadhar number"
+        onClick={handleModalClick}
+        disabled={disabled}
+        completed={isOtpVerified}
+      />
+
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        PaperProps={{
+          sx: {
+            padding: 3,
+            borderRadius: 3,
+            background: "white",
+            boxShadow: 3,
+          },
+        }}
+      >
+        <DialogTitle sx={{ color: "#1c1c1c", textAlign: "left" }}>
+          <Typography variant="h6">Enter Aadhaar Number</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{ color: "#1c1c1c", margin: 2 }}>
+            {currentStep === "aadhaar"
+              ? "Please enter your addhaar number to receive an OTP."
+              : "Please enter the OTP sent to your aadhaar registerd mobile number."}
+          </Typography>
+
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <InputField
+              label={currentStep === "aadhaar" ? "Aadhaar Number" : "OTP"}
+              value={currentStep === "aadhaar" ? aadhaar : otp}
+              onChange={(e) => {
+                if (currentStep === "aadhaar") {
+                  setAadhaar(e.target.value.trim());
+                  setFormValues({
+                    ...formValues,
+                    aadhaar: e.target.value.trim(),
+                  });
+                } else {
+                  setOtp(e.target.value.trim()); // OTP input field update hoga
+                }
+              }}
+              disabled={isLoading || isOtpVerified}
+              placeholder={
+                currentStep === "aadhaar"
+                  ? "Enter your Aadhaar number"
+                  : "Enter OTP"
+              }
+            />
+
+            {currentStep === "aadhaar" && (
+              <Button
+                variant="contained"
+                onClick={() => {
+                  const aadhaarRegex = /^\d{12}$/;
+                  if (aadhaarRegex.test(aadhaar)) {
+                    sendOTP(aadhaar);
+                  } else {
+                    alert(
+                      "Invalid Input",
+                      "Enter a valid 12-digit Aadhaar number.",
+                      "warning"
+                    );
+                  }
+                }}
+                sx={{
+                  marginLeft: 1,
+                  backgroundColor: "#F26722",
+                  color: "white",
+                }}
+              >
+                Send OTP
+              </Button>
+            )}
+          </Box>
+        </DialogContent>
+
+        <DialogActions>
+          <>
+            {currentStep === "otp" && !isOtpVerified && (
+              <Button
+                variant="outlined"
+                onClick={resendOTP}
+                sx={{ color: "#1c1c1c", borderColor: "#1c1c1c" }}
+              >
+                Resend OTP
+              </Button>
+            )}
+            {currentStep === "otp" && (
+              <Button
+                variant="contained"
+                onClick={() => {
+                  if (otp.length === 6) {
+                    verifyOTP(aadhaar, otp);
+                  } else {
+                    alert(
+                      "Invalid Input",
+                      "Enter a valid 6-digit OTP.",
+                      "warning"
+                    );
+                  }
+                }}
+                sx={{ backgroundColor: "#F26722", color: "white" }}
+              >
+                Verify OTP
+              </Button>
+            )}
+          </>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+};
+
+export default AadhaarVerification;

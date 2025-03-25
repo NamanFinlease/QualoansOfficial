@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Grid, Box, Typography, LinearProgress } from "@mui/material";
 import Dashboard from "./Dashboard";
-import MobileVerification from "./registration/MobileVerification";
 import PANValidation from "./registration/PanValidation";
 import PersonalInfo from "./registration/PersonalInfo";
 import AddressInfo from "./registration/AddressInfo";
@@ -11,14 +10,16 @@ import SelfieVerification from "./registration/SelfieVerification";
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
 import { useSidebar } from "../context/SidebarContext";
+import AadhaarVerification from "./registration/AadhaarVerification";
 
 const RegistrationSteps = () => {
   const navigate = useNavigate();
   const { sidebarOpen, sidebarExpanded } = useSidebar();
   const [profileData, setProfileData] = useState(null);
   const [isVerified, setIsVerified] = useState({
-    isMobileVerified: false,
+    // isMobileVerified: false,
     isPanVerified: false,
+    isAaddharVerified: false,
     isPersonalInfoVerified: false,
     isAddressVerified: false,
     isIncomeInfoVerified: false,
@@ -28,8 +29,9 @@ const RegistrationSteps = () => {
   const totalSteps = 6; // Total steps in the registration process
 
   const [steps, setSteps] = useState({
-    mobileVerification: { completed: false, data: null },
+    // mobileVerification: { completed: false, data: null },
     panVerification: { completed: false, data: null },
+    aadhaarVerification: { completed: false, data: null },
     personalInfo: { completed: false, data: null },
     addressInfo: { completed: false, data: null },
     incomeDetails: { completed: false, data: null },
@@ -46,8 +48,9 @@ const RegistrationSteps = () => {
         if (response.data.success) {
           setIsVerified((prevState) => ({
             ...prevState,
-            isMobileVerified: response.data.isMobileVerify,
+            // isMobileVerified: response.data.isMobileVerify,
             isPanVerified: response.data.isPanVerify,
+            isAaddharVerified: response.data.isAadharVerify,
             isPersonalInfoVerified: response.data.isPersonalDetails,
             isAddressVerified: response.data.isCurrentResidence,
             isIncomeInfoVerified: response.data.isIncomeDetails,
@@ -57,12 +60,34 @@ const RegistrationSteps = () => {
           // Update steps based on the fetched data
           setSteps((prevSteps) => ({
             ...prevSteps,
-            mobileVerification: { completed: response.data.isMobileVerify, data: null },
-            panVerification: { completed: response.data.isPanVerify, data: null },
-            personalInfo: { completed: response.data.isPersonalDetails, data: null },
-            addressInfo: { completed: response.data.isCurrentResidence, data: null },
-            incomeDetails: { completed: response.data.isIncomeDetails, data: null },
-            selfieVerification: { completed: response.data.selfieVerification, data: null },
+            // mobileVerification: {
+            //   completed: response.data.isMobileVerify,
+            //   data: null,
+            // },
+            panVerification: {
+              completed: response.data.isPanVerify,
+              data: null,
+            },
+            aadhaarVerification: {
+              completed: response.data.isAadharVerify,
+              data: null,
+            },
+            personalInfo: {
+              completed: response.data.isPersonalDetails,
+              data: null,
+            },
+            addressInfo: {
+              completed: response.data.isCurrentResidence,
+              data: null,
+            },
+            incomeDetails: {
+              completed: response.data.isIncomeDetails,
+              data: null,
+            },
+            selfieVerification: {
+              completed: response.data.selfieVerification,
+              data: null,
+            },
           }));
         }
       } catch (error) {
@@ -104,10 +129,10 @@ const RegistrationSteps = () => {
       [step]: { completed: true, data },
     }));
 
-    if (step === "mobileVerification") {
+    if (step === "panVerification") {
       setIsVerified((prevState) => ({
         ...prevState,
-        isMobileVerified: true,
+        isPanVerified: true,
       }));
     }
   };
@@ -193,24 +218,37 @@ const RegistrationSteps = () => {
             width: "100%",
           }}
         >
-          <MobileVerification
-            onComplete={(data) => handleStepCompletion("mobileVerification", data)}
-            disabled={false}
-            prefillData={steps.mobileVerification.data}
-            isVerified={isVerified.isMobileVerified}
-            profileData={profileData}
-          />
           <PANValidation
             onComplete={(data) => handleStepCompletion("panVerification", data)}
-            disabled={!isVerified.isMobileVerified}
+            disabled={false}
             prefillData={steps.panVerification.data}
             isVerified={isVerified.isPanVerified}
             profileData={profileData}
           />
           {console.log(steps.panVerification.data)}
+
+          {/* <AadhaarVerification
+            onComplete={(data) =>
+              handleStepCompletion("mobileVerification", data)
+            }
+            disabled={!steps.panVerification.completed}
+            prefillData={steps.mobileVerification.data}
+            isVerified={isVerified.isMobileVerified}
+            profileData={profileData}
+          /> */}
+
+          <AadhaarVerification
+            onComplete={(data) =>
+              handleStepCompletion("aadharVerification", data)
+            }
+            disabled={!steps.panVerification.completed}
+            prefillData={steps.aadhaarVerification.data}
+            isVerified={isVerified.isAaddharVerified}
+            profileData={profileData}
+          />
           <PersonalInfo
             onComplete={(data) => handleStepCompletion("personalInfo", data)}
-            disabled={!steps.panVerification.completed}
+            disabled={!steps.aadhaarVerification.completed}
             prefillData={steps.personalInfo.data}
             isVerified={isVerified.isPersonalInfoVerified}
           />
@@ -227,7 +265,9 @@ const RegistrationSteps = () => {
             isVerified={isVerified.isIncomeInfoVerified}
           />
           <SelfieVerification
-            onComplete={(data) => handleStepCompletion("selfieVerification", data)}
+            onComplete={(data) =>
+              handleStepCompletion("selfieVerification", data)
+            }
             disabled={!steps.incomeDetails.completed}
             prefillData={steps.selfieVerification.data}
             isVerified={isVerified.isSelfieVerified}
@@ -239,7 +279,6 @@ const RegistrationSteps = () => {
 };
 
 export default RegistrationSteps;
-
 
 // import React, { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
@@ -485,7 +524,6 @@ export default RegistrationSteps;
 // };
 
 // export default RegistrationSteps;
-
 
 // import React, { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";

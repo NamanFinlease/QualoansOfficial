@@ -323,7 +323,7 @@ const LoanApplication = () => {
             prefillData={steps.fetchDocument.data}
             isUploaded={isUploaded.isDocumentUploaded}
           />
-
+          {console.log("isUploaded", isUploaded)}
           <DisbursalBankDetails
             onComplete={(data) =>
               handleStepCompletion("disbursalBankDetail", true, data)

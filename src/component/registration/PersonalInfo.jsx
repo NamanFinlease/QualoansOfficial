@@ -24,6 +24,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
   const [formValues, setFormValues] = useState({
     fullName: "",
     mothersName: "",
+    fathersName: "",
     gender: "",
     personalEmail: "",
     maritalStatus: "",
@@ -52,6 +53,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
         setFormValues({
           fullName: data.fullName || "",
           mothersName: data.mothersName || "",
+          fathersName: data.fathersName || "",
           gender: data.gender || "",
           personalEmail: data.personalEmail || "",
           maritalStatus: data.maritalStatus || "",
@@ -89,6 +91,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
     const updatedDetails = {
       fullName: trimmedValues.fullName,
       mothersName: trimmedValues.mothersName,
+      fathersName: trimmedValues.fathersName,
       gender: trimmedValues.gender,
       dob: trimmedValues.dob,
       personalEmail: trimmedValues.personalEmail,
@@ -250,6 +253,15 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             helperText={error}
           />
           <TextField
+            label="Father's Name"
+            value={formValues.fathersName}
+            onChange={(e) => handleFormChange("fathersName", e.target.value)}
+            fullWidth
+            sx={{ marginBottom: 2 }}
+            error={!!error}
+            helperText={error}
+          />
+          <TextField
             label="Date of Birth"
             value={
               formValues.dob
@@ -260,18 +272,26 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             disabled
             sx={{ marginBottom: 2 }}
           />
-          <FormControl fullWidth sx={{ marginBottom: 2 }}>
+          {/* <FormControl fullWidth sx={{ marginBottom: 2 }}>
             <InputLabel>Gender</InputLabel>
             <Select
               value={formValues.gender}
-              onChange={(e) => handleFormChange("gender", e.target.value)}
+              // onChange={(e) => handleFormChange("gender", e.target.value)}
               label="Gender"
             >
               <MenuItem value="M">Male</MenuItem>
               <MenuItem value="F">Female</MenuItem>
               <MenuItem value="O">Other</MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
+
+          <TextField
+            label="Gender"
+            value={formValues.gender}
+            fullWidth
+            disabled
+            sx={{ marginBottom: 2 }}
+          />
           <FormControl fullWidth sx={{ marginBottom: 2 }}>
             <InputLabel>Marital Status</InputLabel>
             <Select

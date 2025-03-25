@@ -27,7 +27,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import logo from "../assets/image/White.webp";
+import logo from "../assets/image/Artboard 1.webp";
 import { BASE_URL } from "../baseURL";
 import { getToken } from "../../tokenManager";
 import { useNavigate } from "react-router-dom";
@@ -153,17 +153,21 @@ const Dashboard = () => {
       <AppBar
         position="fixed"
         sx={{
-          background: "#1C1C1C",
+          
+          // background: "#1C1C1C",
+          background:
+            "linear-gradient(270deg, rgba(244, 67, 54, 0.2), rgba(76, 175, 80, 0.1), #FFDB58)",
+          boxShadow: "0 5px 10px rgba(0, 0, 0, 0.3)",
+          borderRadius: "50px",
           color: "#fff",
-          boxShadow: "none",
-          height: "64px",
+          height: "80px",
           zIndex: 1201,
         }}
       >
         <Toolbar>
           <IconButton
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            sx={{ color: "white", marginRight: 2 }}
+            sx={{ color: "black", marginRight: 2 }}
           >
             {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
           </IconButton>
@@ -195,13 +199,15 @@ const Dashboard = () => {
           sx={{
             width: sidebarExpanded ? 240 : 70,
             height: "100vh",
-            background: "#1C1C1C",
+            borderLeft: "0px solid transparent",
+            // background:
+            //   "linear-gradient(180deg, #FFDB58,rgba(76, 175, 80, 0.1), rgba(244, 67, 54, 0.2))",
             position: "fixed",
-            top: "60px",
+            top: "80px",
             left: 0,
             bottom: 0,
             zIndex: 1200,
-            boxShadow: 3,
+            // boxShadow: 3,
             color: "#fff",
             transition: "width 0.3s ease",
             display: "flex",
@@ -212,13 +218,15 @@ const Dashboard = () => {
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
             sx={{
               color: "white",
+
               position: "absolute",
-              right: -15,
-              top: "50%",
+              right: -20,
+              top: { xs: "20%", md: "40%" },
               transform: "translateY(-50%)",
-              backgroundColor: "#1C1C1C",
+              backgroundColor: "gray",
               "&:hover": {
-                backgroundColor: "#F26722",
+                backgroundColor: "d6d6d6",
+                color: "black",
               },
               width: 30,
               height: 30,
@@ -251,6 +259,8 @@ const Dashboard = () => {
                     sx={{
                       padding: sidebarExpanded ? "8px 16px" : "8px",
                       justifyContent: sidebarExpanded ? "flex-start" : "center",
+                      backgroundColor: "gray",
+                      borderRadius: "50px",
                       "&:hover": {
                         backgroundColor: "#d6d6d6",
                       },
@@ -287,7 +297,7 @@ const Dashboard = () => {
                         backgroundColor:
                           location.pathname === option.link
                             ? "#e0e0e0"
-                            : "transparent",
+                            : "gray",
                         "&:hover": { backgroundColor: "#d6d6d6" },
                         borderRadius: "22px",
                       }}

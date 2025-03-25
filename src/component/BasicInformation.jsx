@@ -13,7 +13,6 @@ import dayjs from "dayjs"; // ✅ Import dayjs for handling dates
 import { BASE_URL } from "../baseURL";
 import { sharedStyles } from "./shared/styles";
 
-
 const BasicInformation = () => {
   //   const token=getToken();
 
@@ -21,6 +20,7 @@ const BasicInformation = () => {
   const [user, setUser] = useState({
     fullName: "",
     mothersName: "",
+    fathersName: "",
     gender: "",
     dob: "",
     personalEmail: "",
@@ -49,12 +49,14 @@ const BasicInformation = () => {
 
         // Parse the JSON data from the response
         const data = await response.json();
-    
+
         //   setUser(data); // Set the fetched data to the state
         setUser({
           fullName: data?.data?.personalDetails?.fullName,
           gender: data?.data?.personalDetails?.gender,
           mothersName: data?.data?.personalDetails?.mothersName,
+          fathersName: data?.data?.personalDetails?.fathersName,
+
           dob: data?.data?.personalDetails?.dob, // Fixed field for Date of Birth
           personalEmail: data?.data?.personalDetails?.personalEmail,
           maritalStatus: data?.data?.personalDetails?.maritalStatus,
@@ -174,6 +176,26 @@ const BasicInformation = () => {
                   }}
                 >
                   {user.mothersName}
+                </td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  Father's Name
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "#F26722",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {user.fathersName}
                 </td>
               </tr>
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
