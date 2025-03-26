@@ -5,7 +5,7 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import SweetAlert from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import DocumentUploadModal from "../DocumentUploadModal";
+// import DocumentUploadModal from "../DocumentUploadModal";
 import { BASE_URL } from "../../baseURL";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
