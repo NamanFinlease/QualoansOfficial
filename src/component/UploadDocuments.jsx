@@ -146,16 +146,17 @@ const UploadDocuments = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
     const hasFileSelected = fileInputs.some((input) => input.file);
-    setIsLoading(false);
     if (!hasFileSelected) {
       alert("Please select at least one file to upload.");
+      setIsLoading(false);
+
       return;
     }
 
     const formData = new FormData();
 
     // Prepare data to be sent to the FormData
-    fileInputs.forEach((input, index) => {
+    fileInputs.forEach((input) => {
       console.log("input ??? ", input);
       if (input.file) {
         formData.append(`${selectedDocType}`, input.file); // Append file to formData
@@ -210,11 +211,13 @@ const UploadDocuments = () => {
         });
         setFileInputs([{ file: null, remarks: "" }]); // Reset file inputs
         setSelectedDocType(null);
-        setIsLoading(false);
+        // setIsLoading(false);
       }
     } catch (error) {
       Swal.fire(error.response?.data?.message || "Error!");
       console.error("Upload error:", error); // Log error for debugging
+    } finally {
+      setIsLoading(false); // Reset loading state after success or failure
     }
   };
   useEffect(() => {
