@@ -61,7 +61,6 @@ const UploadDocuments = () => {
         `${BASE_URL}/getDashboardDetails`,
         { withCredentials: true }
       );
-    
 
       if (getDashboardDetailsResponse.data.success) {
         const { isDocumentUploaded } = getDashboardDetailsResponse.data;
@@ -218,7 +217,7 @@ const UploadDocuments = () => {
       console.error("Upload error:", error); // Log error for debugging
     }
   };
-    useEffect(() => {
+  useEffect(() => {
     // if (isDocUploaded || isUploadSuccess) {
     const fetchDocumentList = async () => {
       const documentListResponse = await axios.get(
@@ -314,30 +313,19 @@ const UploadDocuments = () => {
     const isClosed = loans;
 
     if (isClosed) {
-      // Check if at least 3 salary slips are uploaded
       if (
         !formValues.salarySlip ||
         formValues.salarySlip.length < requiredSalarySlips
       ) {
         Swal.fire(
           "Warning!",
-          "Please upload the last 3 months' salary slips for a reloan.",
-          "warning"
-        );
-        return;
-      }
-
-      // Ensure that the latest salary slip is newly uploaded
-      if (formValues.salarySlip.length >= requiredSalarySlips) {
-        Swal.fire(
-          "Warning!",
-          "For reloan, you must upload a new salary slip.",
+          "Please upload last 3 month Salary Slips for reloan.",
           "warning"
         );
         return;
       }
     } else {
-      // For a new loan, all required documents must be uploaded
+      // For new loan, all other documents are required
       if (
         !formValues.aadhaarFront ||
         !formValues.aadhaarBack ||
@@ -346,7 +334,7 @@ const UploadDocuments = () => {
       ) {
         Swal.fire(
           "Warning!",
-          "Please upload all required documents: Aadhaar Front, Aadhaar Back, PAN Card, and Salary Slip.",
+          "Please upload all required documents: Aadhaar Front, Aadhaar Back, and PAN Card.",
           "warning"
         );
         return;
@@ -356,41 +344,6 @@ const UploadDocuments = () => {
     // If all required documents are uploaded, proceed
     navigate(`/loan-application`);
   };
-  // const handleContinueBtn = () => {
-  //   const isClosed = loans;
-
-  //   if (isClosed) {
-  //     if (
-  //       !formValues.salarySlip ||
-  //       formValues.salarySlip.length < requiredSalarySlips
-  //     ) {
-  //       Swal.fire(
-  //         "Warning!",
-  //         "Please upload last 3 month Salary Slips for reloan.",
-  //         "warning"
-  //       );
-  //       return;
-  //     }
-  //   } else {
-  //     // For new loan, all other documents are required
-  //     if (
-  //       !formValues.aadhaarFront ||
-  //       !formValues.aadhaarBack ||
-  //       !formValues.panCard ||
-  //       !formValues.salarySlip
-  //     ) {
-  //       Swal.fire(
-  //         "Warning!",
-  //         "Please upload all required documents: Aadhaar Front, Aadhaar Back, and PAN Card.",
-  //         "warning"
-  //       );
-  //       return;
-  //     }
-  //   }
-
-  //   // If all required documents are uploaded, proceed
-  //   navigate(`/loan-application`);
-  // };
 
   return (
     <>
