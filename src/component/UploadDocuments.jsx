@@ -61,6 +61,7 @@ const UploadDocuments = () => {
         `${BASE_URL}/getDashboardDetails`,
         { withCredentials: true }
       );
+    
 
       if (getDashboardDetailsResponse.data.success) {
         const { isDocumentUploaded } = getDashboardDetailsResponse.data;
@@ -217,7 +218,7 @@ const UploadDocuments = () => {
       console.error("Upload error:", error); // Log error for debugging
     }
   };
-  useEffect(() => {
+    useEffect(() => {
     // if (isDocUploaded || isUploadSuccess) {
     const fetchDocumentList = async () => {
       const documentListResponse = await axios.get(
