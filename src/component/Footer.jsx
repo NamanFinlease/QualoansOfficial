@@ -33,20 +33,18 @@ const Footer = () => {
         // background: "#f9f9f9",
         width: "100%",
         display: "flex",
+        justifyContent: "center",
       }}
     >
       <Box
         sx={{
-          margin: 5,
+          maxWidth: "1400px", // Adjust width for larger screens
+          width: "100%",
+          margin: { xs: "5%", md: "auto", lg: "5%" },
           borderRadius: 10,
           background:
             "linear-gradient(270deg, hsla(188,100%,59%,0.16), rgba(102,0,255,0.1), #fff38739)",
-          // backgroundColor: "rgb(47, 47, 47)",
-          padding: {
-            xs: "40px 20px", // padding for extra small screens (mobile)
-            sm: "60px 30px", // padding for small screens (tablet)
-            md: "80px 30px", // padding for medium and larger screens (desktop)
-          },
+          padding: { xs: "40px 20px", sm: "60px 30px", md: "80px 30px" },
           color: "#fff",
           position: "relative",
           boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)",
