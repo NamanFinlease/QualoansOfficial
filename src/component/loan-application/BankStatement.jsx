@@ -122,10 +122,6 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
   //   handlePreview();
   // }, []);
 
-  const handleOpenModal = () => {
-    if (!disabled) setIsModalOpen(true);
-  };
-
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setBankStatement(prefillData || null); // Reset upload state if closed
@@ -137,11 +133,7 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
       // Check file type
       const validFileTypes = ["application/pdf"];
       if (!validFileTypes.includes(file.type)) {
-        SweetAlert.fire(
-          "Error",
-          "Please upload a valid file (PDF, JPG, PNG).",
-          "error"
-        );
+        alert("Please upload a valid file (PDF, JPG, PNG).");
         return;
       }
 

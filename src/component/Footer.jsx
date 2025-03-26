@@ -33,20 +33,18 @@ const Footer = () => {
         // background: "#f9f9f9",
         width: "100%",
         display: "flex",
+        justifyContent: "center",
       }}
     >
       <Box
         sx={{
-          margin: 5,
+          maxWidth: "1400px", // Adjust width for larger screens
+          width: "100%",
+          margin: { xs: "5%", md: "auto", lg: "5%" },
           borderRadius: 10,
           background:
             "linear-gradient(270deg, hsla(188,100%,59%,0.16), rgba(102,0,255,0.1), #fff38739)",
-          // backgroundColor: "rgb(47, 47, 47)",
-          padding: {
-            xs: "40px 20px", // padding for extra small screens (mobile)
-            sm: "60px 30px", // padding for small screens (tablet)
-            md: "80px 30px", // padding for medium and larger screens (desktop)
-          },
+          padding: { xs: "40px 20px", sm: "60px 30px", md: "80px 30px" },
           color: "#fff",
           position: "relative",
           boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)",
@@ -214,7 +212,7 @@ const Footer = () => {
                     variant="h6"
                     sx={{ color: "black", fontWeight: 500, mb: 2 }}
                   >
-                    Grievance Redressal Officer
+                    Contact Us
                   </Typography>
                   <Box
                     component="ul"
@@ -227,11 +225,9 @@ const Footer = () => {
                           ...linkStyle,
                           display: "flex",
                           alignItems: "center",
-                          color: "black",
                         }}
                       >
-                        <Email sx={{ mr: 1, color: "black" }} />{" "}
-                        admin@qualoan.com
+                        <Email sx={{ mr: 1 }} /> info@qualoan.com
                       </Link>
                     </li>
                     <li>
@@ -241,10 +237,9 @@ const Footer = () => {
                           ...linkStyle,
                           display: "flex",
                           alignItems: "center",
-                          color: "black",
                         }}
                       >
-                        <Phone sx={{ mr: 1, color: "black" }} /> +919990831500
+                        <Phone sx={{ mr: 1 }} /> +917338437609
                       </Link>
                     </li>
                     <li>
@@ -254,13 +249,10 @@ const Footer = () => {
                           ...linkStyle,
                           display: "flex",
                           alignItems: "center",
-                          color: "black",
                         }}
                       >
                         {/* address */}
-                        <LocationOn
-                          sx={{ mr: 1, mt: { xs: -5, md: -5 }, color: "black" }}
-                        />
+                        <LocationOn sx={{ mr: 1, mt: { xs: -5, md: -5 } }} />
                         Address: Office No. 229, 2nd Floor, Vipul Agora Mall, MG
                         Road, Gurugram, 122001.
                       </Link>
@@ -271,6 +263,27 @@ const Footer = () => {
             </Grid>
           </Container>
 
+          <Typography
+            variant="body2"
+            style={{
+              textAlign: "center",
+              color: "black",
+              textShadow: "1px 1px 2px rgba(0, 0, 0, 0.3)",
+            }}
+          >
+            For any grievance please contact our Grievance Redressal Officer at{" "}
+            <Link
+              href="mailto:admin@qualoan.com"
+              sx={{
+                color: "navy",
+                textDecoration: "underline",
+                fontSize: "1rem",
+                "&:hover": { color: "orange" },
+              }}
+            >
+              admin@qualoan.com
+            </Link>
+          </Typography>
           {/* Footer Bottom */}
           <Box
             mt={2}
