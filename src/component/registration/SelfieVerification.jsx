@@ -194,7 +194,7 @@ const SelfieVerification = ({
         minWidth: 200,
         cursor: disabled || completed ? "not-allowed" : "pointer",
         textAlign: "left",
-        background: disabled ? "#D9D9D9" : "#F26722",
+        background: disabled ? "#D9D9D9" : "rgb(72, 145, 193)",
 
         color: completed || !disabled ? "white" : "#1c1c1c",
         "@media (max-width: 600px)": {

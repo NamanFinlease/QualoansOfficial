@@ -264,7 +264,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
           padding: 2,
           borderColor:
             // completed ? "green" :
-            disabled ? "#1c1c1c" : "#F26722",
+            disabled ? "#1c1c1c" : "rgb(72, 145, 193)",
           borderRadius: 3,
           margin: 1,
           width: "25%",

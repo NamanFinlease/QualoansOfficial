@@ -91,17 +91,17 @@ const OurJourney = () => {
     {
       title: "Quick Disbursement",
       description: "Get funds in your account within 30 minutes",
-      icon: <SpeedIcon sx={{ fontSize: 40, color: "#F26722" }} />,
+      icon: <SpeedIcon sx={{ fontSize: 40, color: "#2E86C1" }} />,
     },
     {
       title: "Competitive Rates",
       description: "Competitive interest rates",
-      icon: <AccountBalanceIcon sx={{ fontSize: 40, color: "#F26722" }} />,
+      icon: <AccountBalanceIcon sx={{ fontSize: 40, color: "#2E86C1" }} />,
     },
     {
       title: "Zero Collateral",
       description: "No collateral deposit required",
-      icon: <SecurityIcon sx={{ fontSize: 40, color: "#F26722" }} />,
+      icon: <SecurityIcon sx={{ fontSize: 40, color: "#2E86C1" }} />,
     },
   ];
 
@@ -111,7 +111,7 @@ const OurJourney = () => {
       <Box
         sx={{
           padding: { xs: 2, sm: 3 },
-          backgroundColor: "#f8f9fa",
+          // backgroundColor: "#f8f9fa",
           minHeight: "100vh",
           width: `calc(100% - ${
             sidebarOpen ? (sidebarExpanded ? 240 : 70) : 0
@@ -124,7 +124,7 @@ const OurJourney = () => {
         <Box
           sx={{
             background: "linear-gradient(135deg, #1a237e 0%, #0d47a1 100%)",
-            borderRadius: "20px",
+            borderRadius: "50px",
             padding: { xs: 4, md: 6 },
             color: "white",
             textAlign: "center",
@@ -141,7 +141,7 @@ const OurJourney = () => {
               left: 0,
               right: 0,
               bottom: 0,
-              background: "#F26722",
+              background: "#2E86C1",
               zIndex: 0,
             }}
           />
@@ -177,43 +177,41 @@ const OurJourney = () => {
                 marginTop: 2,
               }}
             >
-              {
-                isRegistering && !isLoanApplied ? (
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    onClick={() => navigate("/registration")}
-                    sx={{
-                      backgroundColor: "#ffff",
-                      color: "#000",
-                      px: 4,
-                      py: 1,
-                      fontWeight: 600,
-                      "&:hover": { backgroundColor: "#8b8887" },
-                      borderRadius: "30px",
-                    }}
-                  >
-                      Registration
-                  </Button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      size="medium"
-                      onClick={() => navigate("/loan-application")}
-                      sx={{
-                        backgroundColor: "#ffff",
-                        color: "#000",
-                        px: 4,
-                        py: 1,
-                        fontWeight: 600,
-                        "&:hover": { backgroundColor: "#8b8887" },
-                        borderRadius: "30px",
-                      }}
-                    >
-                      Loan Application
-                    </Button>
-                  )
-              }
+              {isRegistering && !isLoanApplied ? (
+                <Button
+                  variant="contained"
+                  size="medium"
+                  onClick={() => navigate("/registration")}
+                  sx={{
+                    backgroundColor: "#ffff",
+                    color: "#000",
+                    px: 4,
+                    py: 1,
+                    fontWeight: 600,
+                    "&:hover": { backgroundColor: "#8b8887" },
+                    borderRadius: "30px",
+                  }}
+                >
+                  Registration
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  size="medium"
+                  onClick={() => navigate("/loan-application")}
+                  sx={{
+                    backgroundColor: "#ffff",
+                    color: "#000",
+                    px: 4,
+                    py: 1,
+                    fontWeight: 600,
+                    "&:hover": { backgroundColor: "#8b8887" },
+                    borderRadius: "30px",
+                  }}
+                >
+                  Loan Application
+                </Button>
+              )}
               {/* <Button
                 variant="contained"
                 size="medium"
@@ -375,7 +373,7 @@ const OurJourney = () => {
                     width: 40,
                     height: 40,
                     borderRadius: "50%",
-                    backgroundColor: "#F26722",
+                    backgroundColor: "#2E86C1",
                     color: "white",
                     display: "flex",
                     alignItems: "center",
@@ -436,7 +434,7 @@ const OurJourney = () => {
                 startIcon={<span>📞</span>}
                 onClick={() => (window.location.href = "tel:+917338437609")}
                 sx={{
-                  backgroundColor: "#F26722",
+                  backgroundColor: "#2E86C1",
                   "&:hover": { backgroundColor: "#1C1C1C" },
                 }}
               >

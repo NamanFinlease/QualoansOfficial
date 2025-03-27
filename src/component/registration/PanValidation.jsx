@@ -174,7 +174,7 @@ const PANValidation = ({
           textAlign: "left",
           background:
             // isPanValidated ? "linear-gradient(45deg, #28a745, #218838)":
-            disabled ? "#d9d9d9" : "#F26722",
+            disabled ? "#d9d9d9" : "rgb(72, 145, 193)",
           color:
             // isPanValidated ||
             disabled ? "white" : "#1c1c1c",

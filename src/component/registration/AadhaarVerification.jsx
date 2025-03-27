@@ -53,40 +53,83 @@ const AadhaarVerification = ({
   const [formValues, setFormValues] = useState({
     aadhaar: "",
   });
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [isResendingOtp, setIsResendingOtp] = useState(false);
 
   const sendOTP = async (aadhaar) => {
-    console.log("aadhaarNumber", aadhaar);
-
+    setIsSendingOtp(true);
     try {
-      setIsLoading(true);
-
       const response = await axios.get(`${BASE_URL}/aadhaar/${aadhaar}`, {
         headers: { "Content-Type": "application/json" },
-        withCredentials: true, // Ensures cookies are sent
+        withCredentials: true,
       });
 
-      console.log("API Response:", response.data);
-
-      if (response.data.success) {
+      if (response.status === 200) {
+        alert("OTP sent to your Aadhaar registered mobile number");
         setCurrentStep("otp");
       } else {
         throw new Error(response.data.message || "Failed to fetch OTP.");
       }
     } catch (error) {
       alert("Error: " + (error.response?.data?.message || error.message));
-      console.error("Error fetching OTP:", error);
     } finally {
-      setIsLoading(false);
+      setIsSendingOtp(false);
     }
   };
 
   useEffect(() => {
-    // console.log("isOtpVerified changed:", isOtpVerified);
-  }, [isOtpVerified]);
+    if (isOtpVerified) {
+      console.log("OTP verified successfully! Moving to the next step.");
+      onComplete({ aadhaar: aadhaar, verified: true });
+      setOpenDialog(false); // Close modal
+    }
+  }, [isOtpVerified, aadhaar]);
+
+  // useEffect(() => {
+  //   if (isOtpVerified) {
+  //     console.log("OTP verified successfully! State updated.");
+  //     onComplete({ aadhaar: aadhaar, verified: true });
+  //     setOpenDialog(false); // Modal close karne ke liye
+  //   }
+  // }, [isOtpVerified]);
+
+  // const verifyOTP = async (aadhaar, otpCode) => {
+  //   setIsVerifyingOtp(true);
+  //   try {
+  //     const response = await fetch(`${BASE_URL}/submit-aadhaar-otp`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       credentials: "include",
+  //       body: JSON.stringify({
+  //         otp: otpCode,
+  //         aadhaar_number: aadhaar,
+  //         consent: "Y",
+  //       }),
+  //     });
+
+  //     if (response.status === 200) {
+  //       Swal.fire(
+  //         "Verified",
+  //         "Aadhaar number verified successfully!",
+  //         "success"
+  //       );
+
+  //       setIsOtpVerified(true); // OTP verified state update
+  //       setOpenDialog(false);
+  //     } else {
+  //       alert("Invalid OTP. Please try again.");
+  //     }
+  //   } catch (error) {
+  //     alert(error.response?.data?.message || "Error verifying OTP.");
+  //   } finally {
+  //     setIsVerifyingOtp(false);
+  //   }
+  // };
 
   const verifyOTP = async (aadhaar, otpCode) => {
+    setIsVerifyingOtp(true);
     try {
-      setIsLoading(true);
       const response = await fetch(`${BASE_URL}/submit-aadhaar-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -96,9 +139,8 @@ const AadhaarVerification = ({
           aadhaar_number: aadhaar,
           consent: "Y",
         }),
-        // body: JSON.stringify({ mobile: mobileNumber, otp: otpCode }),
       });
-      // const data = await response.json();
+
       if (response.status === 200) {
         Swal.fire(
           "Verified",
@@ -107,41 +149,84 @@ const AadhaarVerification = ({
         );
         setIsOtpVerified(true);
         onComplete({ aadhaar: aadhaar, verified: true });
+
         setOpenDialog(false);
       } else {
-        throw new Error("Invalid OTP. Please try again.");
+        alert("Invalid OTP. Please try again.");
       }
     } catch (error) {
-      alert("Invalid OTP. Please Enter Valid OTP", error.message, "error");
+      alert(error.response.data.message);
     } finally {
-      setIsLoading(false);
+      setIsVerifyingOtp(true);
     }
   };
 
-  useEffect(() => {
-    // console.log("aadhaar", aadhaar); // Pehli baar undefined ho sakta hai
-  }, [aadhaar]);
+  // useEffect(() => {}, [aadhaar]);
 
   const resendOTP = () => {
-    console.log("Resending OTP...");
-
+    setIsResendingOtp(true);
     setOtp("");
-    console.log("aadhaar", aadhaar);
 
     if (aadhaar) {
-      // formValues.aadhaar ki jagah direct aadhaar state ka use karein
-
       sendOTP(aadhaar);
     } else {
       alert("Please enter an Aadhaar number to resend OTP.");
     }
+
+    setTimeout(() => setIsResendingOtp(false), 2000); // Simulate API delay
   };
+
+  // const handleModalClick = async () => {
+  //   setOpenDialog(true);
+  //   setIsLoading(true);
+  //   // Fetch dashboard details and set mobile number if available
+  //   // ... (existing code)
+  // };
 
   const handleModalClick = async () => {
     setOpenDialog(true);
     setIsLoading(true);
-    // Fetch dashboard details and set mobile number if available
-    // ... (existing code)
+
+    try {
+      const getDashboardDetailsResponse = await axios.get(
+        `${BASE_URL}/getDashboardDetails`,
+        { withCredentials: true }
+      );
+
+      if (getDashboardDetailsResponse.status === 200) {
+        setIsLoading(false);
+        const { isAadharVerify } = getDashboardDetailsResponse.data;
+
+        console.log("isAadharVerify:", isAadharVerify);
+
+        setAadhaar(isAadharVerify ? "Verified" : ""); // Set Aadhaar verification status
+        console.log("aadhaar:>>>>>>>>", aadhaar);
+
+        if (isAadharVerify) {
+          setIsOtpVerified(true); // Mark as verified
+          onComplete({ aadhaar: aadhaar, verified: true }); // Ensure parent state updates
+
+          setOpenDialog(false); // Close modal if already verified
+        } else {
+          // Fetch Aadhaar-related profile details if not verified
+          const getProfileDetailsResponse = await axios.get(
+            `${BASE_URL}/getProfileDetails`,
+            { withCredentials: true }
+          );
+
+          const aadhaarVerify =
+            getProfileDetailsResponse?.data?.data?.aadhaarNumber;
+          console.log("aadhaarVerify:>>>>>>>>", aadhaarVerify);
+
+          setFormValues({
+            aadhaar: aadhaarVerify?.aadhaar || "",
+          });
+        }
+      }
+    } catch (error) {
+      setIsLoading(false);
+      alert("Error fetching data: " + error.message);
+    }
   };
 
   const StepBox = ({
@@ -167,7 +252,7 @@ const AadhaarVerification = ({
         minWidth: 200,
         cursor: disabled ? "not-allowed" : "pointer",
         textAlign: "left",
-        background: disabled ? "#d9d9d9" : "#F26722",
+        background: disabled ? "#d9d9d9" : "rgb(72, 145, 193)",
         color: !disabled ? "white" : "#1c1c1c",
         "@media (max-width: 600px)": {
           width: "80%",
@@ -283,7 +368,11 @@ const AadhaarVerification = ({
                   color: "white",
                 }}
               >
-                Send OTP
+                {isSendingOtp ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "Send OTP"
+                )}
               </Button>
             )}
           </Box>
@@ -297,9 +386,14 @@ const AadhaarVerification = ({
                 onClick={resendOTP}
                 sx={{ color: "#1c1c1c", borderColor: "#1c1c1c" }}
               >
-                Resend OTP
+                {isResendingOtp ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "Resend OTP"
+                )}
               </Button>
             )}
+
             {currentStep === "otp" && (
               <Button
                 variant="contained"
@@ -316,7 +410,11 @@ const AadhaarVerification = ({
                 }}
                 sx={{ backgroundColor: "#F26722", color: "white" }}
               >
-                Verify OTP
+                {isVerifyingOtp ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "Verify OTP"
+                )}
               </Button>
             )}
           </>

@@ -154,7 +154,7 @@ const LoginForm = ({ setLoginComleted }) => {
 
       console.log("OTP Verification Response:", response);
 
-      if (response.data?.success) {
+      if (response.status === 200) {
         setSuccessMessage("OTP verified successfully!");
         localStorage.setItem("isLogin", "true");
 

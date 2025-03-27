@@ -166,7 +166,7 @@ const DocumentationStep = ({
             //  completed
             //   ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
             //   :
-            disabled ? "#d9d9d9" : "#F26722",
+            disabled ? "#d9d9d9" : "rgb(72, 145, 193)",
           color:
             //  completed ||
             !disabled ? "white" : "#1c1c1c",

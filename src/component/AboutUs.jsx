@@ -15,30 +15,39 @@ import MissionImage from "../assets/image/Our-Mission.jpg"; // Import your missi
 import technologyGif from "../assets/image/Repayment (2).gif"; // Importing the GIF
 import Header from "../navbar/Header";
 import CarouselItemDetail from "./CarouselItemDetail";
-
-const techSteps = [
-  {
-    number: "01",
-    title: "Quick Credit Assessments",
-    description:
-      "Through seamless integration with credit bureaus and bank accounts, our system evaluates your credit profile instantly, enabling quick loan approvals.",
-  },
-  {
-    number: "02",
-    title: "User-Friendly Interface",
-    description:
-      "Our website and mobile app are designed with the user in mind, ensuring that the loan application, approval, and disbursement process is easy and convenient.",
-  },
-  {
-    number: "03",
-    title: "Real-Time Tracking",
-    description:
-      "Once your loan application is submitted, you can track its status in real-time via our website or mobile app, making the process transparent and efficient.",
-  },
-];
+import { Helmet } from "react-helmet-async";
 
 const AboutUs = () => {
-  <Header />;
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Qua Loan",
+    url: "https://www.qualoan.com/",
+    logo: "https://www.qualoan.com/assets/Artboard%201-B9NCLcrg.webp",
+    description:
+      "Qua Loan provides instant loans of up to ₹1 lakh to salaried employees in India.",
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: "+917338437609",
+        contactType: "customer service",
+        areaServed: "IN",
+        availableLanguage: [
+          "English",
+          "Hindi",
+          "Kannada",
+          "Bengali",
+          "Marathi",
+        ],
+      },
+    ],
+    sameAs: [
+      "https://www.facebook.com/people/Qualoan/61570006966590/",
+      "https://www.instagram.com/qualoan/",
+      "https://www.youtube.com/channel/UCH4UYltubKJPkE4RkrE3cjA",
+    ],
+    changefreq: "yearly",
+  };
 
   const [isVisible, setIsVisible] = useState(false);
   const faqRef = useRef(null);
@@ -69,6 +78,11 @@ const AboutUs = () => {
 
   return (
     <>
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Helmet>
       {/* <Header/> */}
 
       <Box

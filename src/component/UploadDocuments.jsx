@@ -430,19 +430,30 @@ const UploadDocuments = () => {
     const isClosed = loans;
 
     if (isClosed) {
+      // Check if at least 3 salary slips are uploaded
       if (
         !formValues.salarySlip ||
         formValues.salarySlip.length < requiredSalarySlips
       ) {
         Swal.fire(
           "Warning!",
-          "Please upload 3 Salary Slips for reloan.",
+          "Please upload the last 3 months' salary slips for a reloan.",
+          "warning"
+        );
+        return;
+      }
+
+      // Ensure that the latest salary slip is newly uploaded
+      if (formValues.salarySlip.length >= requiredSalarySlips) {
+        Swal.fire(
+          "Warning!",
+          "For reloan, you must upload a new salary slip.",
           "warning"
         );
         return;
       }
     } else {
-      // For new loan, all other documents are required
+      // For a new loan, all required documents must be uploaded
       if (
         !formValues.aadhaarFront ||
         !formValues.aadhaarBack ||
@@ -451,7 +462,7 @@ const UploadDocuments = () => {
       ) {
         Swal.fire(
           "Warning!",
-          "Please upload all required documents: Aadhaar Front, Aadhaar Back, and PAN Card.",
+          "Please upload all required documents: Aadhaar Front, Aadhaar Back, PAN Card, and Salary Slip.",
           "warning"
         );
         return;
@@ -461,6 +472,42 @@ const UploadDocuments = () => {
     // If all required documents are uploaded, proceed
     navigate(`/loan-application`);
   };
+
+  // const handleContinueBtn = () => {
+  //   const isClosed = loans;
+
+  //   if (isClosed) {
+  //     if (
+  //       !formValues.salarySlip ||
+  //       formValues.salarySlip.length < requiredSalarySlips
+  //     ) {
+  //       Swal.fire(
+  //         "Warning!",
+  //         "Please upload last 3 month Salary  for reloan.",
+  //         "warning"
+  //       );
+  //       return;
+  //     }
+  //   } else {
+  //     // For new loan, all other documents are required
+  //     if (
+  //       !formValues.aadhaarFront ||
+  //       !formValues.aadhaarBack ||
+  //       !formValues.panCard ||
+  //       !formValues.salarySlip
+  //     ) {
+  //       Swal.fire(
+  //         "Warning!",
+  //         "Please upload all required documents: Aadhaar Front, Aadhaar Back, and PAN Card.",
+  //         "warning"
+  //       );
+  //       return;
+  //     }
+  //   }
+
+  //   // If all required documents are uploaded, proceed
+  //   navigate(`/loan-application`);
+  // };
 
   return (
     <>

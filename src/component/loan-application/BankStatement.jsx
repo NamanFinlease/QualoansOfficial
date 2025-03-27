@@ -301,7 +301,7 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
           minWidth: 200,
           cursor: disabled ? "not-allowed" : "pointer",
           textAlign: "left",
-          background: disabled ? "#d9d9d9" : "#F26722",
+          background: disabled ? "#d9d9d9" : "rgb(72, 145, 193)",
           color: !disabled ? "white" : "#1c1c1c",
           "@media (max-width: 600px)": {
             width: "80%",

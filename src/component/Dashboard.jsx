@@ -11,6 +11,7 @@ import {
   AppBar,
   Toolbar,
   Avatar,
+  Button,
   Divider,
   Tooltip,
 } from "@mui/material";
@@ -153,15 +154,15 @@ const Dashboard = () => {
       <AppBar
         position="fixed"
         sx={{
-          
           // background: "#1C1C1C",
           background:
-            "linear-gradient(270deg, rgba(244, 67, 54, 0.2), rgba(76, 175, 80, 0.1), #FFDB58)",
+            "linear-gradient(270deg,rgba(76, 175, 80, 0.1),  rgb(72, 145, 193), rgb(72, 145, 193))",
           boxShadow: "0 5px 10px rgba(0, 0, 0, 0.3)",
           borderRadius: "50px",
           color: "#fff",
           height: "80px",
           zIndex: 1201,
+          justifyContent: "center", // Ensures vertical centering
         }}
       >
         <Toolbar>
@@ -174,21 +175,45 @@ const Dashboard = () => {
           <img src={logo} alt="Logo" style={{ height: 40, marginRight: 16 }} />
 
           <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              marginLeft: "auto",
-              // marginRight: { xs: 4, md: 0 },
-            }}
+            sx={{ display: "flex", alignItems: "center", marginLeft: "auto" }}
           >
-            <Typography sx={{ marginRight: 2 }}>
-              {loading ? "Loading..." : profileData.name}
-            </Typography>
-            <Avatar
-              src={profileData.profileImageUrl}
-              sx={{ width: 40, height: 40, borderRadius: "50%" }}
-              alt="Profile"
-            />
+            <Button
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                padding: "8px 16px",
+                backgroundColor: "white",
+                borderRadius: "25px",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Soft shadow
+                textTransform: "none",
+                transition: "all 0.3s ease-in-out", // Smooth transition
+                "&:hover": {
+                  backgroundColor: "#f8f8f8",
+                  boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.15)", // Enhanced hover effect
+                },
+              }}
+            >
+              <Typography
+                sx={{
+                  marginRight: 1.5,
+                  color: "black",
+                  fontWeight: "500",
+                  fontSize: "16px",
+                }}
+              >
+                {loading ? "Loading..." : profileData.name}
+              </Typography>
+              <Avatar
+                src={profileData.profileImageUrl}
+                sx={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  border: "2px solid #ddd",
+                }}
+                alt="Profile"
+              />
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>
@@ -259,7 +284,7 @@ const Dashboard = () => {
                     sx={{
                       padding: sidebarExpanded ? "8px 16px" : "8px",
                       justifyContent: sidebarExpanded ? "flex-start" : "center",
-                      backgroundColor: "gray",
+                      backgroundColor: " rgb(72, 145, 193)",
                       borderRadius: "50px",
                       "&:hover": {
                         backgroundColor: "#d6d6d6",
@@ -297,7 +322,7 @@ const Dashboard = () => {
                         backgroundColor:
                           location.pathname === option.link
                             ? "#e0e0e0"
-                            : "gray",
+                            : " rgb(72, 145, 193)",
                         "&:hover": { backgroundColor: "#d6d6d6" },
                         borderRadius: "22px",
                       }}
