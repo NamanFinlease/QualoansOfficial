@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { TextField, Button, Grid, Typography, Box } from "@mui/material";
 import Swal from "sweetalert2";
@@ -67,74 +67,28 @@ const ContactUs = () => {
   };
 
   useEffect(() => {
-    // Schema for structured data (JSON-LD)
+    // Schema for structured data (JSON-LD) for an Organization
     const schema = {
       "@context": "https://schema.org",
-      "@type": "FinancialService",
-      "name": "Qua Loan",
-      "url": "https://www.qualoan.com/",
-      "logo": "https://www.qualoan.com/assets/Artboard%201-B9NCLcrg.webp",
-      "image": "https://www.qualoan.com/assets/Artboard%201-B9NCLcrg.webp",
-      "description":
-        "Qua Loan provides instant personal loans with minimal paperwork. Get fast approval and improve your credit score with our short-term loan solutions.",
-      "foundingDate": "2020",
-      "address": {
+      "@type": "Organization",
+      name: "Qualoan",
+      url: "https://www.qualoan.com/contact-us",
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: "+917338437609",
+        contactType: "Customer Service",
+        areaServed: "IN",
+        availableLanguage: ["English", "Hindi", "Kannada"],
+        email: "info@qualoan.com",
+      },
+      address: {
         "@type": "PostalAddress",
-        "streetAddress": "Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road",
-        "addressLocality": "Gurugram",
-        "postalCode": "122001",
-        "addressCountry": "IN",
+        streetAddress: "Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road",
+        addressLocality: "Gurugram",
+        addressRegion: "Haryana",
+        postalCode: "122001",
+        addressCountry: "IN",
       },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 28.4681,
-        "longitude": 77.0446,
-      },
-      "telephone": "+917338437609",
-      "sameAs": [
-        "https://www.facebook.com/people/Qualoan/61570006966590/",
-        "https://www.instagram.com/qualoan/",
-        "https://www.youtube.com/channel/UCH4UYltubKJPkE4RkrE3cjA",
-      ],
-      "openingHoursSpecification": [
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Monday", "opens": "09:00", "closes": "18:00" },
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "09:00", "closes": "18:00" },
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "09:00", "closes": "18:00" },
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "09:00", "closes": "18:00" },
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "18:00" },
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "18:00" },
-      ],
-      "paymentAccepted": ["UPI", "Net Banking", "Credit Card", "Debit Card"],
-      "areaServed": [
-        {
-          "@type": "GeoCircle",
-          "geoMidpoint": {
-            "@type": "GeoCoordinates",
-            "latitude": 28.4681,
-            "longitude": 77.0446,
-          },
-          "geoRadius": 500,
-        },
-      ],
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.7",
-        "reviewCount": "1523",
-      },
-      "review": [
-        {
-          "@type": "Review",
-          "author": { "@type": "Person", "name": "Pardeep Kumar" },
-          "reviewBody": "got an instant loan with fact approval!",
-          "reviewRating": { "@type": "Rating", "ratingValue": "5" },
-        },
-        {
-          "@type": "Review",
-          "author": { "@type": "Person", "name": "Neha Sharma" },
-          "reviewBody": "Got my loan within 24 hours. Excellent support!",
-          "reviewRating": { "@type": "Rating", "ratingValue": "4.5" },
-        },
-      ],
     };
 
     // Add the schema to the document's head
@@ -148,7 +102,6 @@ const ContactUs = () => {
       document.head.removeChild(script);
     };
   }, []);
-
 
   return (
     <Box sx={{ minHeight: "100vh", padding: "40px" }}>

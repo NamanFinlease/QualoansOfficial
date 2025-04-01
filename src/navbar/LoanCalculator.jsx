@@ -15,7 +15,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { Helmet } from "react-helmet-async";
 
 const LoanCalculator = () => {
   const [loanAmount, setLoanAmount] = useState(5000);
@@ -33,117 +32,65 @@ const LoanCalculator = () => {
 
   const isMobile = useMediaQuery("(max-width: 900px)");
 
-  const structuredData = {
-    "@context": "https://schema.org/",
-    "@type": "Product",
-    name: "Loan Calculator",
-    image: "https://www.qualoan.com/assets/Our-Visson-D3dXsFU-.jpg",
-    description:
-      "Calculate your loan effortlessly with our user-friendly platform. Adjust amounts, tenure, and interest rates to see the total cost and make informed financial decisions.",
-    brand: {
-      "@type": "Brand",
-      name: "Qua loan",
-    },
-    sku: "",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.75",
-      ratingCount: "2",
-      reviewCount: "2",
-    },
-    review: [
-      {
-        "@type": "Review",
-        name: "Priya Verma",
-        reviewBody: "Got my loan within 24 hours. Excellent support!",
-        reviewRating: {
-          "@type": "Rating",
-          ratingValue: "4.5",
-        },
-        datePublished: "2025-01-23",
-        author: {
-          "@type": "Person",
-          name: "admin",
-        },
-        publisher: {
-          "@type": "Organization",
-          name: "qua loan",
-        },
-      },
-      {
-        "@type": "Review",
-        name: "Amit Sharma",
-        reviewBody:
-          "Very smooth loan process with fast approval. Highly recommended!",
-        reviewRating: {
-          "@type": "Rating",
-          ratingValue: "5",
-        },
-        datePublished: "2025-03-14",
-        author: {
-          "@type": "Person",
-          name: "admin",
-        },
-        publisher: {
-          "@type": "Organization",
-          name: "qua loan",
-        },
-      },
-    ],
-    changefreq: "yearly",
-  };
-
-  // useEffect to update schema dynamically
   useEffect(() => {
-    const updatedStructuredData = {
-      ...structuredData,
-      aggregateRating: {
-        ...structuredData.aggregateRating,
-        ratingValue: totalAmount > 100000 ? "5" : "4.75", // Example dynamic update
+    // Schema for structured data (JSON-LD) for the Personal Loan Calculator page
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "Personal Loan Calculator - QUA Loan",
+      url: "https://www.qualoan.com/calculator",
+      description:
+        "Use QUA Loan's personal loan calculator to calculate your loan amount, tenure, and interest. Get an estimate of your total loan cost in just a few clicks.",
+      mainEntity: {
+        "@type": "HowTo",
+        name: "How to Use the Personal Loan Calculator",
+        description:
+          "Follow these steps to calculate your personal loan amount and total cost using QUA Loan's loan calculator.",
+        step: [
+          {
+            "@type": "HowToStep",
+            name: "Step 1: Enter the Loan Amount",
+            text: "Adjust the loan amount slider to select the amount you wish to borrow, ranging from ₹5,000 to ₹100,000.",
+          },
+          {
+            "@type": "HowToStep",
+            name: "Step 2: Select Loan Tenure",
+            text: "Choose the loan tenure in days, between 1 and 90 days.",
+          },
+          {
+            "@type": "HowToStep",
+            name: "Step 3: Set Interest Rate",
+            text: "Set the interest rate percentage, ranging from 0.5% to 2.75%, to calculate your loan's interest.",
+          },
+          {
+            "@type": "HowToStep",
+            name: "Step 4: View the Result",
+            text: "The calculator will show you the total interest, total amount to be repaid, and loan details based on your inputs.",
+          },
+        ],
       },
-      review: [
-        ...structuredData.review,
-        {
-          "@type": "Review",
-          name: "New User",
-          reviewBody: `Loan processed with total amount ₹${totalAmount.toLocaleString()}`,
-          reviewRating: {
-            "@type": "Rating",
-            ratingValue: (totalAmount > 100000 ? 5 : 4).toString(),
-          },
-          datePublished: new Date().toISOString(),
-          author: {
-            "@type": "Person",
-            name: "admin",
-          },
-          publisher: {
-            "@type": "Organization",
-            name: "qua loan",
-          },
-        },
-      ],
+      publisher: {
+        "@type": "Organization",
+        name: "Qualoan",
+        url: "https://www.qualoan.com",
+        logo: "https://www.qualoan.com/assets/Artboard%201-B9NCLcrg.webp",
+      },
     };
 
-    // Inject the updated schema into the head
-    const scriptTag = document.createElement("script");
-    scriptTag.type = "application/ld+json";
-    scriptTag.innerHTML = JSON.stringify(updatedStructuredData);
-    document.head.appendChild(scriptTag);
+    // Add the schema to the document's head
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.innerHTML = JSON.stringify(schema);
+    document.head.appendChild(script);
 
-    // Cleanup on component unmount or dependency change
+    // Cleanup function to remove the schema when the component is unmounted
     return () => {
-      document.head.removeChild(scriptTag);
+      document.head.removeChild(script);
     };
-  }, [loanAmount, loanTenure, interestRate]); // Re-run when state changes
+  }, []);
 
   return (
     <>
-      <Helmet>
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
-        </script>
-      </Helmet>
-
       <Box
         sx={{
           mt: { xs: "15%", md: "5%" },
