@@ -15,6 +15,7 @@ import BankDetails from "./BankDetails";
 import HDFC_QR from "./HDFC_QR";
 import MarqueeAlert from "./MarqueeAlert.jsx";
 import WarningMessage from "./WarningMessage";
+import QuaLoanQR from "./QuaLoanQR.jsx";
 
 const RepaymentLoan = () => {
   const navigate = useNavigate();
@@ -150,7 +151,11 @@ const RepaymentLoan = () => {
         <WarningMessage />
         {!isSubmitted && (
           <>
-            <Box spacing={3} alignItems="center" sx={{ width: "100%" }}>
+            <Box
+              spacing={3}
+              alignItems="center"
+              sx={{ width: "100%", backgroundColor: "#fff" }}
+            >
               <Grid
                 container
                 spacing={2}
@@ -161,14 +166,49 @@ const RepaymentLoan = () => {
                   justifyContent: "space-around",
                 }}
               >
-                <HDFC_QR />
-                <div>
+                <Box
+                  sx={{
+                    backgroundColor: "#f5f5f5",
+                    border: "2px solid #ccc",
+                    padding: 3,
+                    borderRadius: 2,
+                    boxShadow: 2,
+                    display: "flex",
+                    flexDirection: { xs: "column", md: "row" },
+                    gap: 2,
+                    justifyContent: "space-between",
+                    //  alignItems: "center",
+                    width: "auto",
+                  }}
+                >
+                  <HDFC_QR />
                   <BankDetails />
-                  <PaymentProof />
+                </Box>
+
+                <div
+                  style={{
+                    backgroundColor: "#f5f5f5",
+                    border: "3px solid #ccc",
+                    padding: 25,
+                    borderRadius: 4,
+                    boxShadow: 2,
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 2,
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "auto",
+                  }}
+                >
+                  {" "}
+                  <QuaLoanQR />
                 </div>
               </Grid>
             </Box>
-
+            <div>
+              {" "}
+              <PaymentProof />
+            </div>
             <style>
               {`
                   @keyframes scroll-text {

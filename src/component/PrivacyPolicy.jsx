@@ -95,7 +95,7 @@ const PrivacyPolicy = () => {
         "If you have any questions, please contact us at:",
         "• Email: info@qualoan.com",
         "• Phone: +917338437609",
-        "• Address:S-370, Panchsheel Park,Delhi-110017, India",
+        "• Address:Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road, Gurugram, 122001.",
       ],
     },
   ];
