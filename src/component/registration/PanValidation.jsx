@@ -288,7 +288,7 @@ const PANValidation = ({
               <Button
                 variant="contained"
                 onClick={handleSubmitPan}
-                sx={{ backgroundColor: "#F26722", color: "white" }}
+                sx={{ backgroundColor: "rgb(72, 145, 193)", color: "white" }}
               >
                 Submit
               </Button>

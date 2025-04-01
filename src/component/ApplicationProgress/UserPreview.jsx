@@ -25,7 +25,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PendingIcon from "@mui/icons-material/Pending";
-import Dashboard from "./Dashboard";
+import Dashboard from "../Dashboard";
 import UserProfile from "./UserProfile";
 import BasicInformation from "./BasicInformation";
 import ResidentialAddress from "./ResidentialAddress";
@@ -34,7 +34,7 @@ import LoanDetails from "./LoanDetails";
 import EmploymentInformation from "./EmploymentInformation";
 import DisbursalBankDetails from "./DisbursalBankDetails";
 import DocumentUploadDetails from "./DocumentUploadDetails";
-import { useSidebar } from "../context/SidebarContext";
+import { useSidebar } from "../../context/SidebarContext";
 
 const items = [
   { label: "User Profile", value: "user-profile", icon: <AccountCircleIcon /> },
@@ -108,7 +108,7 @@ export default function UserPreview() {
             }px)`,
             marginLeft: `${sidebarOpen ? (sidebarExpanded ? 240 : 90) : 0}px`,
             transition: "width 0.3s ease, margin-left 0.3s ease",
-            backgroundColor: "#F26722",
+            backgroundColor: "rgb(72, 145, 193)",
             borderRadius: 1,
           }}
         >
@@ -134,7 +134,7 @@ export default function UserPreview() {
             onChange={(e) => setActiveComponent(e.target.value)}
             label="Select Component"
             sx={{
-              backgroundColor: "#f26722",
+              backgroundColor: "rgb(72, 145, 193)",
               color: "#fff", // Ensures the text color is white
               ".MuiOutlinedInput-notchedOutline": {
                 borderColor: "#fff",
@@ -198,7 +198,7 @@ export default function UserPreview() {
             elevation={0}
             sx={{
               width: isSmallScreen ? "100%" : 320,
-              background: "#F26722",
+              background: "rgb(72, 145, 193)",
               position: isSmallScreen ? "relative" : "sticky",
               top: 20,
               height: isSmallScreen ? "auto" : "80vh",

@@ -13,11 +13,11 @@ import PrivacyPolicy from "./component/PrivacyPolicy";
 import TermsAndConditions from "./component/TermsAndConditions";
 import FAQs from "./component/FAQs";
 import Dashboard from "./component/Dashboard";
-import RegistrationSteps from "./component/RegistrationSteps";
-import LoanApplication from "./component/LoanApplication";
+import RegistrationSteps from "./component/registration/RegistrationSteps";
+import LoanApplication from "./component/loan-application/LoanApplication";
 import Calculator from "./component/loan-application/CalculateLoan";
 import OurJourney from "./component/OurJourney";
-import UserPreview from "./component/UserPreview";
+import UserPreview from "./component/ApplicationProgress/UserPreview";
 // import LoanRepaymentComponent from "./component/LoanRepaymentComponent";
 // import LoanDetailsTable from "./component/LoanDetailsTable";
 // import LoanStatus from "./component/LoanStatus";
@@ -28,13 +28,14 @@ import RepayLoan from "./component/RepayLoan";
 import ProtectedRoute from "./ProtectedRoute";
 import { SidebarProvider } from "./context/SidebarContext";
 import LandingPage from "./component/LandingPage";
-import UploadDocuments from "./component/UploadDocuments";
+import UploadDocuments from "./component/loan-application/UploadDocuments";
 import LoanTable from "./component/LoanTable";
 import VerifyRepayment from "./component/VerifyRepayment";
 import SuccessPage from "./component/SuccessPage";
 import RepaymentLoan from "./component/RepaymentLoan";
 import UserDetails from "./component/registration/UserDetails";
 import LoanCalculator from "./navbar/LoanCalculator";
+import PersonalInfo from "./component/registration/PersonalInfo";
 
 const MinimalLayout = ({ children }) => <div>{children}</div>;
 
@@ -140,11 +141,11 @@ function App() {
           />
 
           {/* <Route
-            path="/calculator-loan"
+            path="/personal-info"
             element={
               <ProtectedRoute>
                 <MinimalLayout>
-                  <Calculator />
+                  <PersonalInfo />
                 </MinimalLayout>
               </ProtectedRoute>
             }

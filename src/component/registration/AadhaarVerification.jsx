@@ -78,54 +78,24 @@ const AadhaarVerification = ({
     }
   };
 
+  // useEffect(() => {
+  //   if (isOtpVerified) {
+  //     console.log("OTP verified successfully! Moving to the next step.");
+  //     onComplete({ aadhaar, verified: true });
+  //     setOpenDialog(false);
+  //   }
+  // }, [isOtpVerified]);
   useEffect(() => {
     if (isOtpVerified) {
       console.log("OTP verified successfully! Moving to the next step.");
-      onComplete({ aadhaar: aadhaar, verified: true });
-      setOpenDialog(false); // Close modal
+      onComplete({ aadhaar, verified: true });
+      setOpenDialog(false);
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 100); // 500ms ke delay ke baad reload hoga
     }
   }, [isOtpVerified, aadhaar]);
-
-  // useEffect(() => {
-  //   if (isOtpVerified) {
-  //     console.log("OTP verified successfully! State updated.");
-  //     onComplete({ aadhaar: aadhaar, verified: true });
-  //     setOpenDialog(false); // Modal close karne ke liye
-  //   }
-  // }, [isOtpVerified]);
-
-  // const verifyOTP = async (aadhaar, otpCode) => {
-  //   setIsVerifyingOtp(true);
-  //   try {
-  //     const response = await fetch(`${BASE_URL}/submit-aadhaar-otp`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       credentials: "include",
-  //       body: JSON.stringify({
-  //         otp: otpCode,
-  //         aadhaar_number: aadhaar,
-  //         consent: "Y",
-  //       }),
-  //     });
-
-  //     if (response.status === 200) {
-  //       Swal.fire(
-  //         "Verified",
-  //         "Aadhaar number verified successfully!",
-  //         "success"
-  //       );
-
-  //       setIsOtpVerified(true); // OTP verified state update
-  //       setOpenDialog(false);
-  //     } else {
-  //       alert("Invalid OTP. Please try again.");
-  //     }
-  //   } catch (error) {
-  //     alert(error.response?.data?.message || "Error verifying OTP.");
-  //   } finally {
-  //     setIsVerifyingOtp(false);
-  //   }
-  // };
 
   const verifyOTP = async (aadhaar, otpCode) => {
     setIsVerifyingOtp(true);
@@ -147,6 +117,7 @@ const AadhaarVerification = ({
           "Aadhaar number verified successfully!",
           "success"
         );
+
         setIsOtpVerified(true);
         onComplete({ aadhaar: aadhaar, verified: true });
 
@@ -157,7 +128,7 @@ const AadhaarVerification = ({
     } catch (error) {
       alert(error.response.data.message);
     } finally {
-      setIsVerifyingOtp(true);
+      setIsVerifyingOtp(false);
     }
   };
 
@@ -364,7 +335,7 @@ const AadhaarVerification = ({
                 }}
                 sx={{
                   marginLeft: 1,
-                  backgroundColor: "#F26722",
+                  backgroundColor: "rgb(72, 145, 193)",
                   color: "white",
                 }}
               >
@@ -408,7 +379,7 @@ const AadhaarVerification = ({
                     );
                   }
                 }}
-                sx={{ backgroundColor: "#F26722", color: "white" }}
+                sx={{ backgroundColor: "#rgb(72, 145, 193)", color: "white" }}
               >
                 {isVerifyingOtp ? (
                   <CircularProgress size={24} color="inherit" />

@@ -176,7 +176,8 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
           icon: "success",
           width: window.innerWidth <= 600 ? "90%" : "30%", // 90% width on mobile, 30% on desktop
           padding: window.innerWidth <= 600 ? "1rem" : "2rem", // Adjust padding for mobile
-          confirmButtonColor: "#FFA500", // Orange button
+          confirmButtonColor: "rgb(72, 145, 193)",
+
           customClass: {
             popup: "custom-popup-responsive",
             confirmButton: "confirm-button-orange",
@@ -228,18 +229,23 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
         }
       );
       console.log(
-        "getDashboardDetailsResponse.data",
+        "getDashboardDetailsResponse.dataW###@@@@@",
         getDashboardDetailsResponse
       ); // Add this line to inspect the response
 
       if (getDashboardDetailsResponse.status === 200) {
         setIsUploading(false);
 
-        const { isEmploymentDetailsSaved } = getDashboardDetailsResponse.data;
-        setStepCompleted(isEmploymentDetailsSaved);
+        const { isBankStatementUploaded } =
+          getDashboardDetailsResponse.data || {};
+        setStepCompleted(isBankStatementUploaded);
 
         // if (isUploaded) {
-        console.log("isEmploymentDetailsSaved", isEmploymentDetailsSaved);
+        console.log(
+          "isEmploymentDetailsSaved@@@@!!!@@@@",
+
+          isBankStatementUploaded
+        );
 
         const getProfileDetailsResponse = await axios.get(
           `${BASE_URL}/getDocumentStatus`,
@@ -360,7 +366,8 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
         </DialogTitle>
         <DialogContent>
           <Typography variant="body1" sx={{ marginBottom: 2 }}>
-            Please upload your bank statement in PDF format only.
+            Please upload your <strong> last 6 month</strong> bank statement in
+            PDF format only.
           </Typography>
           <Button
             variant="contained"
@@ -441,7 +448,7 @@ const BankStatement = ({ onComplete, disabled, prefillData, isUploaded }) => {
             disabled={!bankStatement || isUploading}
             variant="contained"
             sx={{
-              backgroundColor: "orange",
+              backgroundColor: "rgb(72, 145, 193)",
               "&:hover": {
                 backgroundColor: "#FF7043",
               },

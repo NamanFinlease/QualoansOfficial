@@ -1,91 +1,86 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
-import { BASE_URL } from "../baseURL";
-import { getToken } from "../../tokenManager";
-import { sharedStyles } from "./shared/styles";
+import {
+  Box,
+  Typography,
+  Grid,
+  Avatar,
+  Divider,
+  CircularProgress,
+} from "@mui/material";
+import { BASE_URL } from "../../baseURL"; // ✅ Import the base URL for API requests
+import { sharedStyles } from "../shared/styles";
 
-// Define loan the  component
-const LoanDetails = () => {
-  const token = getToken();
-
-  // State to store loan data
-  const [loan, setLoan] = useState({
-    principal: "",
-    totalPayble: "",
-    roi: "",
-    tenure: "",
-    loanPurpose: "",
+// Define the UserProfile component
+const UserProfile = () => {
+  // State to store user data
+  const [user, setUser] = useState({
+    profileImage: "",
+    fullName: "",
+    // fathersName: "",
+    PAN: "",
+    aadhaarNumber: "",
+    mobile: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch loan details from the backend API
+  // Fetch user details from the backend API
   useEffect(() => {
-    const fetchLoanData = async () => {
+    const fetchUserData = async () => {
       try {
-        //   const token =
-        //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+        const response = await fetch(`${BASE_URL}/getProfileDetails`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // This ensures cookies and other credentials are sent with the request
+        });
 
-        const response = await fetch(
-          `${BASE_URL}/getApplicationDetails?applicationStatus=loanDetails`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              // Authorization: `Bearer ${token}`, // Uncomment if token is needed
-            },
-            credentials: "include", // Ensures that cookies are included with the request
-          }
-        );
-
-        // console.log(response);
-
-        // Check if the response status is OK
         if (!response.ok) {
-          throw new Error("Failed to fetch loan data");
+          throw new Error("Failed to fetch user data");
         }
 
-        // Parse the JSON data from the response
         const data = await response.json();
 
-        setLoan({
-          principal: data?.data?.principal,
-          totalPayble: data?.data?.totalPayble,
-          roi: data?.data?.roi, // Fixed field for Date of Birth
-          tenure: data?.data?.tenure,
-          loanPurpose: data?.data?.loanPurpose, // Corrected syntax issue
+        setUser({
+          profileImage: data?.data?.profileImage,
+
+          fullName: data?.data?.personalDetails?.fullName,
+          // fathersName: data?.data?.personalDetails.fathersName,
+          PAN: data?.data?.PAN,
+          aadhaarNumber: data?.data?.aadhaarNumber,
+          mobile: data?.data?.mobile,
         });
       } catch (err) {
-        setError(err.message); // Handle any errors
+        setError(err.message);
       } finally {
-        setLoading(false); // Set loading to false once the API request is complete
+        setLoading(false);
       }
     };
 
-    fetchLoanData(); // Call the fetch function
+    fetchUserData(); // Call the fetch function
   }, []); // Empty dependency array to fetch data only once when the component mounts
 
   // Show loading state while fetching data
-
   if (loading) {
     return (
-      <Typography variant="h6" align="center">
-        Loading...
-      </Typography>
+      <Box sx={sharedStyles.loadingContainer}>
+        <CircularProgress sx={{ color: "#F26722" }} />
+      </Box>
     );
   }
 
   // Show error if there's an issue with the API request
   if (error) {
     return (
-      <Typography variant="h6" align="center" color="error">
-        {error}
-      </Typography>
+      <Box sx={sharedStyles.loadingContainer}>
+        <Typography color="error">{error}</Typography>
+      </Box>
     );
   }
 
-  // If no loan data, show a message
-  if (!loan) {
+  // If no user data, show a message
+  if (!user) {
     return (
       <Typography variant="h6" align="center">
         No user data found.
@@ -96,14 +91,13 @@ const LoanDetails = () => {
   return (
     <Box sx={sharedStyles.containerBox}>
       <Typography variant="h4" sx={sharedStyles.title}>
-        Loan Information
+        User Profile
       </Typography>
 
       {/* Profile Picture */}
 
-      <Divider sx={sharedStyles.divider} />
+      {/* <Divider sx={sharedStyles.divider} /> */}
 
-      {/* Profile Details (Stacked in a column) */}
       <div
         style={{
           width: "100%",
@@ -123,6 +117,36 @@ const LoanDetails = () => {
             boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
           }}
         >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mb: 3,
+            }}
+          >
+            <Avatar
+              alt={user.fullName}
+              src={user.profileImage}
+              sx={{
+                width: 120,
+                height: 120,
+                border: "3px solid white",
+                boxShadow: 3,
+              }}
+            />
+          </Box>
+
+          <Typography
+            variant="h5"
+            sx={{
+              ...sharedStyles.fieldValue,
+              textAlign: "center",
+              mb: 2,
+              fontWeight: "500",
+            }}
+          >
+            {user.fullName}
+          </Typography>
           <table
             style={{
               width: "100%",
@@ -132,6 +156,27 @@ const LoanDetails = () => {
             }}
           >
             <tbody>
+              {/* <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    width: "40%",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  Father's Name
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "#F26722",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {user.fathersName}
+                </td>
+              </tr> */}
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
                 <td
                   style={{
@@ -141,36 +186,16 @@ const LoanDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Principal
+                  PAN Number
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {loan.principal}
-                </td>
-              </tr>
-              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
-                <td
-                  style={{
-                    padding: "16px",
-                    fontWeight: "bold",
-                    backgroundColor: "#f5f5f5",
-                  }}
-                >
-                  Rate of interest (ROI)
-                </td>
-                <td
-                  style={{
-                    padding: "16px",
-                    color: "#F26722",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {loan.roi}
+                  {user.PAN}
                 </td>
               </tr>
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
@@ -181,16 +206,16 @@ const LoanDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Tenure (Days)
+                  Aadhaar Number
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {loan.tenure}
+                  {user.aadhaarNumber}
                 </td>
               </tr>
               <tr>
@@ -201,16 +226,16 @@ const LoanDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Loan Purpose
+                  Mobile Number
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {loan.loanPurpose}
+                  {user.mobile}
                 </td>
               </tr>
             </tbody>
@@ -221,4 +246,4 @@ const LoanDetails = () => {
   );
 };
 
-export default LoanDetails;
+export default UserProfile;

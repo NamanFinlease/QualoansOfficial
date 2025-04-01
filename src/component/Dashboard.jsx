@@ -30,7 +30,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import logo from "../assets/image/Artboard 1.webp";
 import { BASE_URL } from "../baseURL";
-import { getToken } from "../../tokenManager";
+// import { getToken } from "../../tokenManager";
 import { useNavigate } from "react-router-dom";
 import { useSidebar } from "../context/SidebarContext";
 
@@ -46,7 +46,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const location = useLocation();
-  const token = getToken();
+  // const token = getToken();
   const navigate = useNavigate();
 
   // Calculate the sidebar width based on state
@@ -228,6 +228,10 @@ const Dashboard = () => {
             // background:
             //   "linear-gradient(180deg, #FFDB58,rgba(76, 175, 80, 0.1), rgba(244, 67, 54, 0.2))",
             position: "fixed",
+            borderRight: "4px solid rgb(72, 145, 193)",
+            borderTopRightRadius: "30px",
+
+            borderBottomRightRadius: "30px",
             top: "80px",
             left: 0,
             bottom: 0,
@@ -243,14 +247,17 @@ const Dashboard = () => {
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
             sx={{
               color: "white",
+              borderRadius: "40%",
 
               position: "absolute",
-              right: -20,
-              top: { xs: "20%", md: "40%" },
+              right: sidebarExpanded ? -20 : -15, // Ensuring it's always at the right of the sidebar
+              top: sidebarExpanded
+                ? { xs: "25%", md: "43%" }
+                : { xs: "20%", md: "41%" }, // Adjusted based on sidebar state
               transform: "translateY(-50%)",
-              backgroundColor: "gray",
+              backgroundColor: "rgb(72, 145, 193)",
               "&:hover": {
-                backgroundColor: "d6d6d6",
+                backgroundColor: "rgb(78, 141, 184)",
                 color: "black",
               },
               width: 30,

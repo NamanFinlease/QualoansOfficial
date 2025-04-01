@@ -497,7 +497,7 @@ const IncomeInfoForm = ({ onComplete, disabled, prefillData, isVerified }) => {
               variant="contained"
               onClick={handleSubmit}
               disabled={isFetching}
-              sx={{ backgroundColor: "#F26722", color: "white" }}
+              sx={{ backgroundColor: "rgb(72, 145, 193)", color: "white" }}
             >
               {isFetching ? <CircularProgress size={24} /> : "Submit"}
             </Button>

@@ -143,7 +143,10 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
   // };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    const trimmedValue = typeof value === "string" ? value.trimStart() : value;
+    const trimmedValue =
+      typeof value === "string"
+        ? value.trimStart().replace(/\s+/g, " ")
+        : value;
 
     if (stepData.fields.some((field) => field.name === name)) {
       setFormValues({ ...formValues, [name]: trimmedValue });
@@ -157,7 +160,9 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
       const trimmedFormValues = Object.fromEntries(
         Object.entries(formValues).map(([key, value]) => [
           key,
-          typeof value === "string" ? value.trim() : value, // Trim only if it's a string
+          typeof value === "string"
+            ? value.trimStart().replace(/\s+/g, " ")
+            : value,
         ])
       );
 
@@ -235,7 +240,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           title: "Employment information submitted successfully!",
           width: window.innerWidth <= 600 ? "90%" : "30%", // 90% width on mobile, 30% on desktop
           padding: window.innerWidth <= 600 ? "1rem" : "2rem", // Adjust padding for mobile
-          confirmButtonColor: "#FFA500", // Button color (orange)
+          confirmButtonColor: "rgb(72, 145, 193)", // Button color (orange)
           customClass: {
             popup: "custom-popup-responsive",
             confirmButton: "confirm-button-orange",
@@ -564,7 +569,7 @@ const Employment = ({ onComplete, disabled, prefillData, isUploaded }) => {
           <Button
             onClick={handleEmploymentSubmit}
             color="primary"
-            sx={{ backgroundColor: "#F26722", color: "white" }}
+            sx={{ backgroundColor: "rgb(72, 145, 193)", color: "white" }}
           >
             Submit
           </Button>

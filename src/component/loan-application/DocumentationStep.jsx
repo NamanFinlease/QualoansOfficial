@@ -9,7 +9,6 @@ import withReactContent from "sweetalert2-react-content";
 import { BASE_URL } from "../../baseURL";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Dashboard from "../Dashboard";
 
 const MySwal = withReactContent(SweetAlert);
 
@@ -22,131 +21,13 @@ const DocumentationStep = ({
   const navigate = useNavigate();
   const [stepCompleted, setStepCompleted] = useState(false); // Add this line to define stepCompleted state
 
-  // useEffect(() => {
-  //   // if (isDocUploaded || isUploadSuccess) {
-  //   const fetchDocumentList = async () => {
-  //     const documentListResponse = await axios.get(
-  //       `${BASE_URL}/getDocumentList`,
-  //       { withCredentials: true }
-  //     );
-  //     console.log(
-  //       "documentListResponse zsdss",
-  //       documentListResponse.data.documents
-  //     );
-  //     const data = documentListResponse.data.documents;
-  //     const result = {};
-
-  //     const requiredTypes = ["aadhaarFront", "salarySlip", "panCard"];
-
-  //     const hasAllRequired = requiredTypes.every((type) =>
-  //       data.some((item) => item.type === type)
-  //     );
-
-  //     console.log("hasAllRequired", hasAllRequired);
-
-  //     if (hasAllRequired) {
-  //       console.log("uploaded");
-  //       onComplete({ success: true, data: null });
-  //     }
-  //   };
-  //   fetchDocumentList();
-  //   // }
-  // }, []);
-
-  // const handleDocumentationUpload = async () => {
-  //   // Create a container element
-  //   const container = document.createElement("div");
-
-  //   // Render the React component into the container
-  //   ReactDOM.render(
-  //     <DocumentUploadModal prefillData={prefillData} isUploaded={isUploaded} />,
-  //     container
-  //   );
-
-  //   // Use SweetAlert2 to display the container
-  //   MySwal.fire({
-  //     html: container,
-  //     showConfirmButton: false,
-  //     width: "800px",
-  //     margin: "0px",
-  //     padding: 0,
-  //     willClose: () => {
-  //       // Clean up React rendering when SweetAlert closes
-  //       ReactDOM.unmountComponentAtNode(container);
-  //     },
-  //   });
-
-  //   // After successful upload, mark the step as completed
-  //   setStepCompleted(true); // Set stepCompleted to true after the upload is handled
-
-  //   onComplete({ completed: true, data: prefillData });
-  // };
-
   const handleDocumentationUpload = async () => {
     navigate("/upload-document");
-
-    // // Create a container element
-    // const container = document.createElement("div");
-
-    // // Render the React component into the container
-    // ReactDOM.render(
-    //   // <DocumentUploadModal prefillData={prefillData} isUploaded={isUploaded} />,
-    //   <UploadDocuments />,
-
-    //   container
-    // );
-
-    // // Use SweetAlert2 to display the container
-    // MySwal.fire({
-    //   html: container,
-    //   showConfirmButton: false,
-    //   width: "800px",
-    //   margin: "0px",
-    //   padding: 0,
-    //   willClose: () => {
-    //     // Clean up React rendering when SweetAlert closes
-    //     ReactDOM.unmountComponentAtNode(container);
-    //   },
-    // });
-
-    // // After successful upload, mark the step as completed
-    // setStepCompleted(true); // Set stepCompleted to true after the upload is handled
-
-    // onComplete({ completed: true, data: prefillData });
   };
 
   return (
     <>
       <Box
-        // sx={{
-        //   display: "flex",
-        //   flexDirection: "column",
-        //   alignItems: "flex-start",
-        //   padding: 3,
-        //   border: "1px solid #ddd",
-        //   borderRadius: 3,
-        //   background: disabled
-        //     ? "#ccc"
-        //     : stepCompleted
-        //     ? "green" // Change the background color to green when the step is completed
-        //     : "linear-gradient(45deg, #4D4D4E, orange)",
-        //   cursor: disabled ? "not-allowed" : "pointer", // Disable the cursor if disabled
-        //   height: 150,
-        //   width: "100%",
-        //   maxWidth: 350,
-        //   transition: "all 0.3s",
-        //   boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-        //   "&:hover": {
-        //     backgroundColor: disabled
-        //       ? "#ccc"
-        //       : stepCompleted
-        //       ? "green" // Keep the green background on hover if the step is completed
-        //       : "orange",
-        //     color: disabled ? "white" : "black",
-        //     transform: disabled ? "none" : "scale(1.03)",
-        //   },
-        // }}
-
         sx={{
           display: "flex",
           flexDirection: "column",

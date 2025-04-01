@@ -75,7 +75,10 @@ const DisbursalBankDetails = ({
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prev) => ({ ...prev, [name]: value.trimStart() }));
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: value.trimStart().replace(/\s+/g, " "),
+    }));
   };
 
   useEffect(() => {
@@ -116,7 +119,12 @@ const DisbursalBankDetails = ({
 
   const handleSubmit = async () => {
     const trimmedValues = Object.fromEntries(
-      Object.entries(formValues).map(([key, value]) => [key, value.trim()])
+      Object.entries(formValues).map(([key, value]) => [
+        key,
+        typeof value === "string"
+          ? value.trimStart().replace(/\s+/g, " ")
+          : value,
+      ])
     );
     if (
       incomeDetails.employementType === "SELF EMPLOYED" ||
@@ -387,7 +395,7 @@ const DisbursalBankDetails = ({
               variant="contained"
               onClick={handleSubmit}
               sx={{
-                backgroundColor: "#F26722",
+                backgroundColor: "rgb(72, 145, 193)",
                 color: "white",
                 // "&:hover": {
                 //   backgroundColor: "#ff7f00",
@@ -437,7 +445,7 @@ const DisbursalBankDetails = ({
               px: 4,
               mb: 5,
               mt: 2,
-              backgroundColor: "orange",
+              backgroundColor: "rgb(72, 145, 193)",
               color: "white",
               "&:hover": {
                 backgroundColor: "#4D4D4E",

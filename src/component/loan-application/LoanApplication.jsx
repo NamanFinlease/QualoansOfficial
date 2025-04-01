@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
-import Employment from "./loan-application/Employment";
-import BankStatement from "./loan-application/BankStatement";
-import DocumentationStep from "./loan-application/DocumentationStep";
-import DisbursalBankDetails from "./loan-application/DisbursalBankDetails";
-import LoanCalculator from "./loan-application/CalculateLoan";
-import Dashboard from "./Dashboard";
+import Employment from "./Employment";
+import BankStatement from "./BankStatement";
+import DocumentationStep from "./DocumentationStep";
+import DisbursalBankDetails from "./DisbursalBankDetails";
+import LoanCalculator from "./CalculateLoan";
+import Dashboard from "../Dashboard";
 import axios from "axios";
-import { BASE_URL } from "../baseURL";
-import { useSidebar } from "../context/SidebarContext";
+import { BASE_URL } from "../../baseURL";
+import { useSidebar } from "../../context/SidebarContext";
 import { pre, s } from "framer-motion/client";
 
 const LoanApplication = () => {

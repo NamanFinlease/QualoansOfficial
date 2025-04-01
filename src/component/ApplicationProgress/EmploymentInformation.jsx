@@ -1,66 +1,74 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Grid,
-  Avatar,
-  Divider,
-  TextField,
-  CircularProgress,
-} from "@mui/material";
+import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
+import { BASE_URL } from "./../../baseURL";
+// import { getToken } from "../../tokenManager";
+import { format } from "date-fns";
 
-import dayjs from "dayjs"; // ✅ Import dayjs for handling dates
-import { BASE_URL } from "../baseURL";
-import { sharedStyles } from "./shared/styles";
-
-const BasicInformation = () => {
-  //   const token=getToken();
+import { sharedStyles } from "./../shared/styles";
+// Define the UserProfile component
+const EmploymentInformation = () => {
+  // const token = getToken();
 
   // State to store user data
-  const [user, setUser] = useState({
-    fullName: "",
-    mothersName: "",
-    fathersName: "",
-    gender: "",
-    dob: "",
-    personalEmail: "",
-    maritalStatus: "",
-    spouseName: "",
+  const [employment, setEmployment] = useState({
+    workFrom: "",
+    officeEmail: "",
+    companyName: "",
+    employedSince: "",
+    companyType: "",
+    statedesignation: "",
+    officeAddrress: "",
+    landmark: "",
+    city: "",
+    state: "",
+    pincode: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch user details from the backend API
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A"; // Handle empty or null values
+    const parsedDate = new Date(dateString);
+    if (isNaN(parsedDate)) return "Invalid Date";
+    return format(parsedDate, "dd-MM-yyyy");
+  };
+  // Fetch employment details from the backend API
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchEmploymentData = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/getProfileDetails`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // Ensures cookies and credentials are included in the request
-        });
+        const response = await fetch(
+          `${BASE_URL}/getApplicationDetails?applicationStatus=employeeDetails`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include", // This sends cookies and credentials along with the request
+          }
+        );
+        console.log("response", response);
 
         // Check if the response status is OK
         if (!response.ok) {
-          throw new Error("Failed to fetch user data");
+          throw new Error("Failed to fetch employment data");
         }
 
         // Parse the JSON data from the response
         const data = await response.json();
+        console.log("data", data);
 
-        //   setUser(data); // Set the fetched data to the state
-        setUser({
-          fullName: data?.data?.personalDetails?.fullName,
-          gender: data?.data?.personalDetails?.gender,
-          mothersName: data?.data?.personalDetails?.mothersName,
-          fathersName: data?.data?.personalDetails?.fathersName,
-
-          dob: data?.data?.personalDetails?.dob, // Fixed field for Date of Birth
-          personalEmail: data?.data?.personalDetails?.personalEmail,
-          maritalStatus: data?.data?.personalDetails?.maritalStatus,
-          spouseName: data?.data?.personalDetails?.spouseName, // Corrected syntax issue
+        setEmployment({
+          workFrom: data?.data?.workFrom,
+          officeEmail: data?.data?.officeEmail,
+          companyName: data?.data?.companyName,
+          companyType: data?.data?.companyType,
+          employedSince: data?.data?.employedSince,
+          designation: data?.data?.designation,
+          officeAddrress: data?.data?.officeAddrress,
+          landmark: data?.data?.landmark,
+          city: data?.data?.city,
+          state: data?.data?.state,
+          pincode: data?.data?.pincode,
         });
       } catch (err) {
         setError(err.message); // Handle any errors
@@ -69,7 +77,7 @@ const BasicInformation = () => {
       }
     };
 
-    fetchUserData(); // Call the fetch function
+    fetchEmploymentData(); // Call the fetch function
   }, []); // Empty dependency array to fetch data only once when the component mounts
 
   // Show loading state while fetching data
@@ -91,11 +99,11 @@ const BasicInformation = () => {
     );
   }
 
-  // If no user data, show a message
-  if (!user) {
+  // If no employment data, show a message
+  if (!employment) {
     return (
       <Typography variant="h6" align="center">
-        No user data found.
+        No employment data found.
       </Typography>
     );
   }
@@ -103,12 +111,14 @@ const BasicInformation = () => {
   return (
     <Box sx={sharedStyles.containerBox}>
       <Typography variant="h4" sx={sharedStyles.title}>
-        Basic Information
+        Employment Information
       </Typography>
 
       {/* Profile Picture */}
 
       <Divider sx={sharedStyles.divider} />
+
+      {/* Profile Details (Stacked in a column) */}
       <div
         style={{
           width: "100%",
@@ -146,36 +156,16 @@ const BasicInformation = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Full Name
+                  Work From
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {user.fullName}
-                </td>
-              </tr>
-              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
-                <td
-                  style={{
-                    padding: "16px",
-                    fontWeight: "bold",
-                    backgroundColor: "#f5f5f5",
-                  }}
-                >
-                  Mother's Name
-                </td>
-                <td
-                  style={{
-                    padding: "16px",
-                    color: "#F26722",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {user.mothersName}
+                  {employment.workFrom}
                 </td>
               </tr>
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
@@ -186,56 +176,16 @@ const BasicInformation = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Father's Name
+                  Office Email
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {user.fathersName}
-                </td>
-              </tr>
-              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
-                <td
-                  style={{
-                    padding: "16px",
-                    fontWeight: "bold",
-                    backgroundColor: "#f5f5f5",
-                  }}
-                >
-                  Gender
-                </td>
-                <td
-                  style={{
-                    padding: "16px",
-                    color: "#F26722",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {user.gender}
-                </td>
-              </tr>
-              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
-                <td
-                  style={{
-                    padding: "16px",
-                    fontWeight: "bold",
-                    backgroundColor: "#f5f5f5",
-                  }}
-                >
-                  Date of Birth
-                </td>
-                <td
-                  style={{
-                    padding: "16px",
-                    color: "#F26722",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {user.dob ? dayjs(user.dob).format("DD/MM/YYYY") : "N/A"}
+                  {employment.officeEmail}
                 </td>
               </tr>
 
@@ -247,16 +197,37 @@ const BasicInformation = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Personal Email
+                  Employed Since
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {user.personalEmail}
+                  {formatDate(employment.employedSince)}
+                </td>
+              </tr>
+
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  Company Name
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "rgb(72, 145, 193)",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {employment.companyName}
                 </td>
               </tr>
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
@@ -267,16 +238,96 @@ const BasicInformation = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Marital Status
+                  Designation
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {user.maritalStatus}
+                  {employment.designation}
+                </td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  Office Address
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "rgb(72, 145, 193)",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {employment.officeAddrress}
+                </td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  Landmark
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "rgb(72, 145, 193)",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {employment.landmark}
+                </td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  City
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "rgb(72, 145, 193)",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {employment.city}
+                </td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  State
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "rgb(72, 145, 193)",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {employment.state}
                 </td>
               </tr>
               <tr>
@@ -287,16 +338,16 @@ const BasicInformation = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Spouse Name
+                  Pincode
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {user.spouseName}
+                  {employment.pincode}
                 </td>
               </tr>
             </tbody>
@@ -307,4 +358,4 @@ const BasicInformation = () => {
   );
 };
 
-export default BasicInformation;
+export default EmploymentInformation;

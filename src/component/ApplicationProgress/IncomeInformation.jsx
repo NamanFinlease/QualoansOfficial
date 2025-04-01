@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Divider, Button, TextField } from "@mui/material";
-import { BASE_URL } from "../baseURL";
-import { sharedStyles } from "./shared/styles";
-import moment from "moment";
+import { BASE_URL } from "../../baseURL"; // ✅ Import the base URL for API requests
+import { sharedStyles } from "../shared/styles";
 import axios from "axios";
+import moment from "moment";
 
 const IncomeInformation = () => {
   // State to store income data
@@ -384,7 +384,7 @@ const IncomeInformation = () => {
               <Button
                 variant="contained"
                 sx={{
-                  backgroundColor: "#F26722",
+                  backgroundColor: "rgb(72, 145, 193)",
                   "&:hover": { backgroundColor: "#d65e1b" },
                   ml: 2,
                 }}
@@ -403,7 +403,7 @@ const IncomeInformation = () => {
 
 const styles = {
   tableCell: {
-    color: "orange",
+    color: "rgb(72, 145, 193)",
     padding: "16px",
     fontWeight: "bold",
     backgroundColor: "white",

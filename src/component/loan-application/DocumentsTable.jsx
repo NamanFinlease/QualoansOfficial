@@ -18,7 +18,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 // import { useLazyGetLeadDocsQuery } from '../Service/Query';
 import Swal from "sweetalert2";
-import { BASE_URL } from "../baseURL";
+import { BASE_URL } from "../../baseURL";
 import axios from "axios";
 import withReactContent from "sweetalert2-react-content";
 
@@ -65,7 +65,6 @@ const DocumentsTable = ({ uploadedDocs, remarks }) => {
     }
   };
 
- 
   return (
     <Box sx={{ overflowX: "auto", width: "100%" }}>
       <TableContainer
@@ -73,7 +72,7 @@ const DocumentsTable = ({ uploadedDocs, remarks }) => {
         sx={{
           marginTop: 6,
           borderRadius: "20px",
-          border: `1px solid #F26722`,
+          border: `1px solid rgb(72, 145, 193)`,
           overflow: "hidden",
           width: {
             xs: "100%", // full width on mobile
@@ -88,7 +87,7 @@ const DocumentsTable = ({ uploadedDocs, remarks }) => {
           <TableHead>
             <TableRow
               sx={{
-                backgroundColor: "#F26722",
+                backgroundColor: "rgb(72, 145, 193)",
                 color: "#fff",
               }}
             >
@@ -123,7 +122,7 @@ const DocumentsTable = ({ uploadedDocs, remarks }) => {
                     onClick={() => handlePreview(doc.id, doc.type)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    sx={{ color: "#F26722" }}
+                    sx={{ color: "rgb(72, 145, 193)" }}
                   >
                     <VisibilityIcon />
                   </IconButton>

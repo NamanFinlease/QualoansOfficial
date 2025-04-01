@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Grid, Box, Typography, LinearProgress } from "@mui/material";
-import Dashboard from "./Dashboard";
-import PANValidation from "./registration/PanValidation";
-import PersonalInfo from "./registration/PersonalInfo";
-import AddressInfo from "./registration/AddressInfo";
-import IncomeInfoForm from "./registration/IncomeInfoForm";
-import SelfieVerification from "./registration/SelfieVerification";
+import Dashboard from "../Dashboard";
+import PANValidation from "./PanValidation";
+import PersonalInfo from "./PersonalInfo";
+import AddressInfo from "./AddressInfo";
+import IncomeInfoForm from "./IncomeInfoForm";
+import SelfieVerification from "./SelfieVerification";
 import axios from "axios";
-import { BASE_URL } from "../baseURL";
-import { useSidebar } from "../context/SidebarContext";
-import AadhaarVerification from "./registration/AadhaarVerification";
+import { BASE_URL } from "../../baseURL";
+import { useSidebar } from "../../context/SidebarContext";
+import AadhaarVerification from "./AadhaarVerification";
 
 const RegistrationSteps = () => {
   const navigate = useNavigate();
@@ -105,7 +105,7 @@ const RegistrationSteps = () => {
           withCredentials: true,
         });
 
-        if (response.data.success) {
+        if (response.status === 200) {
           setProfileData(response.data);
         }
       } catch (error) {
@@ -142,12 +142,12 @@ const RegistrationSteps = () => {
       [step]: { completed: true, data },
     }));
 
-    if (step === "aadhaarVerification") {
-      setIsVerified((prevState) => ({
-        ...prevState,
-        isAaddharVerified: true,
-      }));
-    }
+    // if (step === "aadhaarVerification") {
+    //   setIsVerified((prevState) => ({
+    //     ...prevState,
+    //     isAaddharVerified: true,
+    //   }));
+    // }
   };
 
   useEffect(() => {
@@ -257,8 +257,10 @@ const RegistrationSteps = () => {
             disabled={!steps.panVerification.completed}
             prefillData={steps.aadhaarVerification.data}
             isVerified={isVerified.isAaddharVerified}
-            // profileData={profileData}
+            profileData={profileData}
           />
+          {console.log(isVerified.isAaddharVerified)}
+
           <PersonalInfo
             onComplete={(data) => handleStepCompletion("personalInfo", data)}
             disabled={!steps.aadhaarVerification.completed}

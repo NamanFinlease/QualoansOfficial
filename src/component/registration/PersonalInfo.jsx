@@ -118,7 +118,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
           title: " Submitted successfully!",
           width: window.innerWidth <= 600 ? "90%" : "30%", // 90% width on mobile, 30% on desktop
           padding: window.innerWidth <= 600 ? "1rem" : "2rem", // Adjust padding for mobile
-          confirmButtonColor: "#FFA500", // Button color (orange)
+          confirmButtonColor: "rgb(72, 145, 193)", // Button color (orange)
           customClass: {
             popup: "custom-popup-responsive",
             confirmButton: "confirm-button-orange",
@@ -249,17 +249,24 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             onChange={(e) => handleFormChange("mothersName", e.target.value)}
             fullWidth
             sx={{ marginBottom: 2 }}
-            error={!!error}
-            helperText={error}
+            error={!formValues.mothersName} // Empty value par error show hoga
+            helperText={
+              !formValues.mothersName ? "Mother's Name is required" : ""
+            }
+            required
           />
+
           <TextField
             label="Father's Name"
             value={formValues.fathersName}
             onChange={(e) => handleFormChange("fathersName", e.target.value)}
             fullWidth
             sx={{ marginBottom: 2 }}
-            error={!!error}
-            helperText={error}
+            error={!formValues.fathersName} // Empty value par error show hoga
+            helperText={
+              !formValues.fathersName ? "father's Name is required" : ""
+            }
+            required
           />
           <TextField
             label="Date of Birth"
@@ -272,18 +279,6 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             disabled
             sx={{ marginBottom: 2 }}
           />
-          {/* <FormControl fullWidth sx={{ marginBottom: 2 }}>
-            <InputLabel>Gender</InputLabel>
-            <Select
-              value={formValues.gender}
-              // onChange={(e) => handleFormChange("gender", e.target.value)}
-              label="Gender"
-            >
-              <MenuItem value="M">Male</MenuItem>
-              <MenuItem value="F">Female</MenuItem>
-              <MenuItem value="O">Other</MenuItem>
-            </Select>
-          </FormControl> */}
 
           <TextField
             label="Gender"
@@ -330,7 +325,7 @@ const PersonalInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
               variant="contained"
               onClick={handleSubmit}
               disabled={isFetching}
-              sx={{ backgroundColor: "#F26722", color: "white" }}
+              sx={{ backgroundColor: "rgb(72, 145, 193)", color: "white" }}
             >
               {isFetching ? <CircularProgress size={24} /> : "Submit"}
             </Button>

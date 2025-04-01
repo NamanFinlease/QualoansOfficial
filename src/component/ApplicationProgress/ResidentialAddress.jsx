@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
+  FormHelperText,
   Typography,
   Grid,
   Divider,
@@ -11,8 +12,8 @@ import {
   InputLabel,
   MenuItem,
 } from "@mui/material";
-import { BASE_URL } from "../baseURL";
-import { sharedStyles } from "./shared/styles";
+import { BASE_URL } from "../../baseURL";
+import { sharedStyles } from "../shared/styles";
 import axios from "axios";
 import { format } from "date-fns";
 import moment from "moment";
@@ -488,7 +489,7 @@ const ResidentialAddress = () => {
               variant="contained"
               sx={{
                 mt: 2,
-                backgroundColor: "#F26722",
+                backgroundColor: "rgb(72, 145, 193)",
                 "&:hover": { backgroundColor: "#d65e1b" },
                 ml: 2,
               }}
@@ -505,7 +506,7 @@ const ResidentialAddress = () => {
 
 const styles = {
   tableCell: {
-    color: "orange",
+    color: "rgb(72, 145, 193)",
     padding: "16px",
     fontWeight: "bold",
     backgroundColor: "white",

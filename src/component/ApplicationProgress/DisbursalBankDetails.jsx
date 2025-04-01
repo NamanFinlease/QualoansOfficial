@@ -1,89 +1,88 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Grid,
-  Avatar,
-  Divider,
-  CircularProgress,
-} from "@mui/material";
-import { BASE_URL } from "../baseURL";
-import { sharedStyles } from "./shared/styles";
+import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
+import { BASE_URL } from "../../baseURL";
+import { sharedStyles } from "../shared/styles";
 
 // Define the UserProfile component
-const UserProfile = () => {
+const DisbursalBankDetails = () => {
   // State to store user data
-  const [user, setUser] = useState({
-    profileImage: "",
-    fullName: "",
-    // fathersName: "",
-    PAN: "",
-    aadhaarNumber: "",
-    mobile: "",
+  const [disbursal, setDisbursal] = useState({
+    bankName: "",
+    accountNumber: "",
+    ifscCode: "",
+    accountType: "",
+    branchName: "",
+    beneficiaryName: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch user details from the backend API
+  // Fetch disbursal details from the backend API
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchDisbursalData = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/getProfileDetails`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // This ensures cookies and other credentials are sent with the request
-        });
+        const response = await fetch(
+          `${BASE_URL}/getApplicationDetails?applicationStatus=disbursalBankDetails`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              // Authorization: `Bearer ${token}`, // Uncomment and use token if required
+            },
+            credentials: "include", // Ensures cookies and credentials are included in the request
+          }
+        );
 
+        // Check if the response status is OK
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
         }
 
+        // Parse the JSON data from the response
         const data = await response.json();
 
-        setUser({
-          profileImage: data?.data?.profileImage,
-
-          fullName: data?.data?.personalDetails?.fullName,
-          // fathersName: data?.data?.personalDetails.fathersName,
-          PAN: data?.data?.PAN,
-          aadhaarNumber: data?.data?.aadhaarNumber,
-          mobile: data?.data?.mobile,
+        setDisbursal({
+          beneficiaryName: data?.data?.beneficiaryName,
+          branchName: data?.data?.branchName,
+          bankName: data?.data?.bankName,
+          accountNumber: data?.data?.accountNumber,
+          ifscCode: data?.data?.ifscCode,
+          accountType: data?.data?.accountType,
         });
       } catch (err) {
-        setError(err.message);
+        setError(err.message); // Handle any errors
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading to false once the API request is complete
       }
     };
 
-    fetchUserData(); // Call the fetch function
+    fetchDisbursalData(); // Call the fetch function
   }, []); // Empty dependency array to fetch data only once when the component mounts
 
   // Show loading state while fetching data
+
   if (loading) {
     return (
-      <Box sx={sharedStyles.loadingContainer}>
-        <CircularProgress sx={{ color: "#F26722" }} />
-      </Box>
+      <Typography variant="h6" align="center">
+        Loading...
+      </Typography>
     );
   }
 
   // Show error if there's an issue with the API request
   if (error) {
     return (
-      <Box sx={sharedStyles.loadingContainer}>
-        <Typography color="error">{error}</Typography>
-      </Box>
+      <Typography variant="h6" align="center" color="error">
+        {error}
+      </Typography>
     );
   }
 
-  // If no user data, show a message
-  if (!user) {
+  // If no disbursal data, show a message
+  if (!disbursal) {
     return (
       <Typography variant="h6" align="center">
-        No user data found.
+        No disbursal data found.
       </Typography>
     );
   }
@@ -91,41 +90,8 @@ const UserProfile = () => {
   return (
     <Box sx={sharedStyles.containerBox}>
       <Typography variant="h4" sx={sharedStyles.title}>
-        User Profile
+        Bank Details
       </Typography>
-
-      {/* Profile Picture */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          mb: 3,
-        }}
-      >
-        <Avatar
-          alt={user.fullName}
-          src={user.profileImage}
-          sx={{
-            width: 120,
-            height: 120,
-            border: "3px solid white",
-            boxShadow: 3,
-          }}
-        />
-      </Box>
-
-      <Typography
-        variant="h5"
-        sx={{
-          ...sharedStyles.fieldValue,
-          textAlign: "center",
-          mb: 2,
-          fontWeight: "500",
-        }}
-      >
-        {user.fullName}
-      </Typography>
-
       <Divider sx={sharedStyles.divider} />
 
       <div
@@ -156,27 +122,6 @@ const UserProfile = () => {
             }}
           >
             <tbody>
-              {/* <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
-                <td
-                  style={{
-                    padding: "16px",
-                    fontWeight: "bold",
-                    width: "40%",
-                    backgroundColor: "#f5f5f5",
-                  }}
-                >
-                  Father's Name
-                </td>
-                <td
-                  style={{
-                    padding: "16px",
-                    color: "#F26722",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {user.fathersName}
-                </td>
-              </tr> */}
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
                 <td
                   style={{
@@ -186,16 +131,16 @@ const UserProfile = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  PAN Number
+                  Beneficiary Name
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {user.PAN}
+                  {disbursal.beneficiaryName}
                 </td>
               </tr>
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
@@ -206,16 +151,76 @@ const UserProfile = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Aadhaar Number
+                  Bank Name
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {user.aadhaarNumber}
+                  {disbursal.bankName}
+                </td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  Account Number
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "rgb(72, 145, 193)",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {disbursal.accountNumber}
+                </td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  IFSC Code
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "rgb(72, 145, 193)",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {disbursal.ifscCode}
+                </td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
+                <td
+                  style={{
+                    padding: "16px",
+                    fontWeight: "bold",
+                    backgroundColor: "#f5f5f5",
+                  }}
+                >
+                  Branch Name
+                </td>
+                <td
+                  style={{
+                    padding: "16px",
+                    color: "rgb(72, 145, 193)",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {disbursal.branchName}
                 </td>
               </tr>
               <tr>
@@ -226,16 +231,16 @@ const UserProfile = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Mobile Number
+                  Account Type
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {user.mobile}
+                  {disbursal.accountType}
                 </td>
               </tr>
             </tbody>
@@ -246,4 +251,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default DisbursalBankDetails;

@@ -271,11 +271,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
           minWidth: 200,
           cursor: disabled ? "not-allowed" : "pointer",
           textAlign: "left",
-          background:
-            //  completed
-            //   ? "linear-gradient(45deg, #28a745, #218838)" // Green gradient when step is complete
-            //   :
-            disabled ? "#d9d9d9" : "#F26722",
+          background: disabled ? "#d9d9d9" : "rgb(72, 145, 193)",
           color:
             //  completed ||
             !disabled ? "white" : "#1c1c1c",
@@ -377,7 +373,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                 <Box
                   sx={{
                     padding: 1,
-                    background: "#ff5722",
+                    background: "rgb(72, 145, 193)",
                     borderRadius: "3px",
                     color: "#fff",
                     fontWeight: "bold",
@@ -409,7 +405,24 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                   minHeight: "300px",
                 }}
               >
-                <FormControl required fullWidth sx={{ marginBottom: 3 }}>
+                <FormControl
+                  required
+                  fullWidth
+                  sx={{
+                    marginBottom: 3,
+                    backgroundColor: "rgb(72, 145, 193)", // Background color added
+                    borderRadius: "8px", // Rounded corners
+                    "& .MuiInputLabel-root": {
+                      color: "black", // Label color white
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      color: "black", // Selected text color white
+                    },
+                    "& .MuiSelect-icon": {
+                      color: "white", // Dropdown icon color white
+                    },
+                  }}
+                >
                   <InputLabel>Purpose of Loan</InputLabel>
                   <Select
                     value={formValues.loanPurpose}
@@ -418,13 +431,20 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                       setFormValues({
                         ...formValues,
                         loanPurpose: e.target.value,
-                        // Optionally reset otherLoanPurpose when not "OTHERS"
                         othersInputs:
                           e.target.value === "OTHERS"
                             ? formValues.othersInputs
                             : "",
                       })
                     }
+                    MenuProps={{
+                      PaperProps: {
+                        sx: {
+                          backgroundColor: "rgb(72, 145, 193)", // Dropdown background color
+                          color: "white", // Dropdown text color white
+                        },
+                      },
+                    }}
                   >
                     <MenuItem value="TRAVEL">TRAVEL</MenuItem>
                     <MenuItem value="MEDICAL">MEDICAL</MenuItem>
@@ -486,7 +506,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                     fullWidth
                     sx={{
                       marginBottom: 2,
-                      background: "transparent",
+                      background: "rgb(72, 145, 193)",
                       borderRadius: "16px",
                       "& .MuiOutlinedInput-root": {
                         borderRadius: "16px",
@@ -495,10 +515,11 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                         borderColor: "rgba(0, 0, 0, 0.23)", // Default border color
                       },
                       "&:hover .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "#1976d2", // Border color on hover
+                        borderColor: "rgb(72, 145, 193)", // Border color on hover
                       },
                       // Remove spinner arrows
                       '& input[type="text"]': {
+                        color: "white",
                         MozAppearance: "textfield", // For Firefox
                       },
                       '& input[type="text"]::-webkit-outer-spin-button, & input[type="text"]::-webkit-inner-spin-button':
@@ -509,38 +530,6 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                     }}
                   />
 
-                  {/* <Typography variant="subtitle1" gutterBottom>
-                    Loan Amount (₹)
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    // label="Enter Loan Amount"
-                    value={formValues.principal}
-                    onChange={(e, newValue) => {
-                      const value = Number(e.target.value);
-                      if (value >= 5000 && value <= 100000) {
-                        setFormValues(() => ({
-                          ...formValues,
-                          principal: newValue,
-                        }));
-                      }
-                    }}
-                    variant="outlined"
-                    margin="normal"
-                    type="number"
-                  /> */}
-                  {/* <Slider
-                    value={formValues.principal}
-                    min={5000}
-                    max={100000}
-                    step={500}
-                    onChange={(e, newValue) =>
-                      setFormValues(() => ({
-                        ...formValues,
-                        principal: newValue,
-                      }))
-                    }
-                    valueLabelDisplay="auto" */}
                   <Slider
                     value={formValues.principal}
                     min={5000}
@@ -556,7 +545,22 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                       { value: 5000, label: "5K" },
                       { value: 100000, label: "100K" },
                     ]}
-                    sx={{ color: "#fc8403" }}
+                    sx={{
+                      color: "rgb(72, 145, 193)", // Main slider color
+                      "& .MuiSlider-thumb": {
+                        backgroundColor: "white", // Thumb color (circle)
+                        border: "2px solid rgb(72, 145, 193)", // Thumb border
+                      },
+                      "& .MuiSlider-track": {
+                        backgroundColor: "rgb(72, 145, 193)", // Track color
+                      },
+                      "& .MuiSlider-rail": {
+                        backgroundColor: "rgba(72, 145, 193, 0.3)", // Rail color (unfilled part)
+                      },
+                      "& .MuiSlider-markLabel": {
+                        color: "black", // Labels (5K, 100K) color
+                      },
+                    }}
                   />
                 </Box>
 
@@ -624,7 +628,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                     fullWidth
                     sx={{
                       marginBottom: 2,
-                      background: "transparent",
+                      background: "rgb(72, 145, 193)",
                       borderRadius: "16px",
                       "& .MuiOutlinedInput-root": {
                         borderRadius: "16px",
@@ -633,9 +637,10 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                         borderColor: "rgba(0, 0, 0, 0.23)",
                       },
                       "&:hover .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "#1976d2",
+                        borderColor: "rgb(72, 145, 193)",
                       },
                       '& input[type="text"]': {
+                        color: "white",
                         MozAppearance: "textfield",
                       },
                       '& input[type="text"]::-webkit-outer-spin-button, & input[type="text"]::-webkit-inner-spin-button':
@@ -662,7 +667,22 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                       { value: 1, label: "1" },
                       { value: 90, label: "90" },
                     ]}
-                    sx={{ color: "#fc8403" }}
+                    sx={{
+                      color: "rgb(72, 145, 193)", // Main slider color
+                      "& .MuiSlider-thumb": {
+                        backgroundColor: "white", // Thumb color (circle)
+                        border: "2px solid rgb(72, 145, 193)", // Thumb border
+                      },
+                      "& .MuiSlider-track": {
+                        backgroundColor: "rgb(72, 145, 193)", // Track color
+                      },
+                      "& .MuiSlider-rail": {
+                        backgroundColor: "rgba(72, 145, 193, 0.3)", // Rail color (unfilled part)
+                      },
+                      "& .MuiSlider-markLabel": {
+                        color: "black", // Labels (5K, 100K) color
+                      },
+                    }}
                   />
                 </Box>
 
@@ -729,7 +749,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                     fullWidth
                     sx={{
                       marginBottom: 1,
-                      background: "transparent",
+                      background: "rgb(72, 145, 193)",
                       borderRadius: "16px",
                       "& .MuiOutlinedInput-root": {
                         borderRadius: "16px",
@@ -741,6 +761,7 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                         borderColor: "#1976d2",
                       },
                       "& input[type=text]": {
+                        color: "white",
                         MozAppearance: "textfield",
                       },
                       "& input[type=text]::-webkit-outer-spin-button, & input[type=text]::-webkit-inner-spin-button":
@@ -767,7 +788,22 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                       { value: 2.75, label: "2.75%" },
                     ]}
                     valueLabelDisplay="auto"
-                    sx={{ color: "#fc8403" }}
+                    sx={{
+                      color: "rgb(72, 145, 193)", // Main slider color
+                      "& .MuiSlider-thumb": {
+                        backgroundColor: "white", // Thumb color (circle)
+                        border: "2px solid rgb(72, 145, 193)", // Thumb border
+                      },
+                      "& .MuiSlider-track": {
+                        backgroundColor: "rgb(72, 145, 193)", // Track color
+                      },
+                      "& .MuiSlider-rail": {
+                        backgroundColor: "rgba(72, 145, 193, 0.3)", // Rail color (unfilled part)
+                      },
+                      "& .MuiSlider-markLabel": {
+                        color: "black", // Labels (5K, 100K) color
+                      },
+                    }}
                   />
                 </Box>
 
@@ -803,7 +839,10 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                     variant="contained"
                     onClick={handleSubmit}
                     disabled={isLoading}
-                    sx={{ backgroundColor: "#F26722", color: "white" }}
+                    sx={{
+                      backgroundColor: "rgb(72, 145, 193)",
+                      color: "white",
+                    }}
                   >
                     {isLoading ? "Submitting..." : "Submit"}
                   </Button>

@@ -1,53 +1,59 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Avatar, Divider } from "@mui/material";
-import { BASE_URL } from "../baseURL";
-import { sharedStyles } from "./shared/styles";
+import { BASE_URL } from "../../baseURL";
+import { getToken } from "../../../tokenManager";
+import { sharedStyles } from "../shared/styles";
 
-// Define the UserProfile component
-const DisbursalBankDetails = () => {
-  // State to store user data
-  const [disbursal, setDisbursal] = useState({
-    bankName: "",
-    accountNumber: "",
-    ifscCode: "",
-    accountType: "",
-    branchName: "",
-    beneficiaryName: "",
+// Define loan the  component
+const LoanDetails = () => {
+  const token = getToken();
+
+  // State to store loan data
+  const [loan, setLoan] = useState({
+    principal: "",
+    totalPayble: "",
+    roi: "",
+    tenure: "",
+    loanPurpose: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch disbursal details from the backend API
+  // Fetch loan details from the backend API
   useEffect(() => {
-    const fetchDisbursalData = async () => {
+    const fetchLoanData = async () => {
       try {
+        //   const token =
+        //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UzZmQxMDczYjMxNTQyNjU3YTI3ZSIsImlhdCI6MTczNjMyNzEyMiwiZXhwIjoxNzM4OTE5MTIyfQ.SDrVOSRa2_x5RC6JBRtdL_yzxkZQPn61dJHmLpI4oQI";
+
         const response = await fetch(
-          `${BASE_URL}/getApplicationDetails?applicationStatus=disbursalBankDetails`,
+          `${BASE_URL}/getApplicationDetails?applicationStatus=loanDetails`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              // Authorization: `Bearer ${token}`, // Uncomment and use token if required
+              // Authorization: `Bearer ${token}`, // Uncomment if token is needed
             },
-            credentials: "include", // Ensures cookies and credentials are included in the request
+            credentials: "include", // Ensures that cookies are included with the request
           }
         );
 
+        // console.log(response);
+
         // Check if the response status is OK
         if (!response.ok) {
-          throw new Error("Failed to fetch user data");
+          throw new Error("Failed to fetch loan data");
         }
 
         // Parse the JSON data from the response
         const data = await response.json();
 
-        setDisbursal({
-          beneficiaryName: data?.data?.beneficiaryName,
-          branchName: data?.data?.branchName,
-          bankName: data?.data?.bankName,
-          accountNumber: data?.data?.accountNumber,
-          ifscCode: data?.data?.ifscCode,
-          accountType: data?.data?.accountType,
+        setLoan({
+          principal: data?.data?.principal,
+          totalPayble: data?.data?.totalPayble,
+          roi: data?.data?.roi, // Fixed field for Date of Birth
+          tenure: data?.data?.tenure,
+          loanPurpose: data?.data?.loanPurpose, // Corrected syntax issue
         });
       } catch (err) {
         setError(err.message); // Handle any errors
@@ -56,7 +62,7 @@ const DisbursalBankDetails = () => {
       }
     };
 
-    fetchDisbursalData(); // Call the fetch function
+    fetchLoanData(); // Call the fetch function
   }, []); // Empty dependency array to fetch data only once when the component mounts
 
   // Show loading state while fetching data
@@ -78,11 +84,11 @@ const DisbursalBankDetails = () => {
     );
   }
 
-  // If no disbursal data, show a message
-  if (!disbursal) {
+  // If no loan data, show a message
+  if (!loan) {
     return (
       <Typography variant="h6" align="center">
-        No disbursal data found.
+        No user data found.
       </Typography>
     );
   }
@@ -90,10 +96,14 @@ const DisbursalBankDetails = () => {
   return (
     <Box sx={sharedStyles.containerBox}>
       <Typography variant="h4" sx={sharedStyles.title}>
-        Bank Details
+        Loan Information
       </Typography>
+
+      {/* Profile Picture */}
+
       <Divider sx={sharedStyles.divider} />
 
+      {/* Profile Details (Stacked in a column) */}
       <div
         style={{
           width: "100%",
@@ -131,36 +141,16 @@ const DisbursalBankDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Beneficiary Name
+                  Principal
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {disbursal.beneficiaryName}
-                </td>
-              </tr>
-              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
-                <td
-                  style={{
-                    padding: "16px",
-                    fontWeight: "bold",
-                    backgroundColor: "#f5f5f5",
-                  }}
-                >
-                  Bank Name
-                </td>
-                <td
-                  style={{
-                    padding: "16px",
-                    color: "#F26722",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {disbursal.bankName}
+                  {loan.principal}
                 </td>
               </tr>
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
@@ -171,36 +161,16 @@ const DisbursalBankDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Account Number
+                  Rate of interest (ROI)
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {disbursal.accountNumber}
-                </td>
-              </tr>
-              <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
-                <td
-                  style={{
-                    padding: "16px",
-                    fontWeight: "bold",
-                    backgroundColor: "#f5f5f5",
-                  }}
-                >
-                  IFSC Code
-                </td>
-                <td
-                  style={{
-                    padding: "16px",
-                    color: "#F26722",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {disbursal.ifscCode}
+                  {loan.roi}
                 </td>
               </tr>
               <tr style={{ borderBottom: "1px solid #e0e0e0" }}>
@@ -211,16 +181,16 @@ const DisbursalBankDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Branch Name
+                  Tenure (Days)
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {disbursal.branchName}
+                  {loan.tenure}
                 </td>
               </tr>
               <tr>
@@ -231,16 +201,16 @@ const DisbursalBankDetails = () => {
                     backgroundColor: "#f5f5f5",
                   }}
                 >
-                  Account Type
+                  Loan Purpose
                 </td>
                 <td
                   style={{
                     padding: "16px",
-                    color: "#F26722",
+                    color: "rgb(72, 145, 193)",
                     fontWeight: "bold",
                   }}
                 >
-                  {disbursal.accountType}
+                  {loan.loanPurpose}
                 </td>
               </tr>
             </tbody>
@@ -251,4 +221,4 @@ const DisbursalBankDetails = () => {
   );
 };
 
-export default DisbursalBankDetails;
+export default LoanDetails;

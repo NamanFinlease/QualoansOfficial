@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Divider } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CloseIcon from "@mui/icons-material/Close";
-import { BASE_URL } from "../baseURL";
-import { sharedStyles } from "./shared/styles";
+import { BASE_URL } from "../../baseURL";
+import { sharedStyles } from "../shared/styles";
 
 const DocumentUploadDetails = () => {
   const [singleDocuments, setSingleDocuments] = useState([]);

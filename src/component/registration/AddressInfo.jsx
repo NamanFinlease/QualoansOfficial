@@ -57,12 +57,14 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
   const handleFormChange = (key, value) => {
     setFormValues((prev) => ({
       ...prev,
-      [key]: typeof value === "string" ? value.trim() : value, // Only trim strings
+      [key]:
+        typeof value === "string"
+          ? value.trimStart().replace(/\s+/g, " ")
+          : value,
     }));
 
     if (error) setError("");
   };
-
   // const handlePincodeChange = async (e) => {
   //   const value = e.target.value.trim();
 
@@ -111,7 +113,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
   // };
 
   const handleDate = (date) => {
-    console.log("dayjs", dayjs(date).format("YYYY/MM/DD"));
+    // console.log("dayjs", dayjs(date).format("YYYY/MM/DD"));
     setFormValues((prev) => ({
       ...prev,
       residingSince: dayjs(date).format("YYYY/MM/DD"),
@@ -120,16 +122,17 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
   };
 
   const handleSubmit = async () => {
+   
+
     const trimmedValues = Object.fromEntries(
       Object.entries(formValues).map(([key, value]) => [
         key,
-        typeof value === "string" ? value.trim() : value, // Safely trim strings only
+        typeof value === "string"
+          ? value.trimStart().replace(/\s+/g, " ")
+          : value,
       ])
     );
-    // const trimmedValues = Object.fromEntries(
-    //   Object.entries(formValues).map(([key, value]) => [key, value.trim()])
-    // );
-
+   
     const formattedResidingSince = format(
       new Date(trimmedValues.residingSince),
       "yyyy/MM/dd"
@@ -144,18 +147,6 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
       residingSince: formattedResidingSince,
     };
 
-    // const updatedDetails = {
-    //   address: trimmedValues.address,
-    //   landmark: trimmedValues.landmark,
-    //   pincode: trimmedValues.pincode,
-    //   city: trimmedValues.city,
-    //   state: trimmedValues.state,
-    //   residenceType: trimmedValues.residenceType,
-    //   residingSince: formatteResidingSince,
-    // };
-
-    console.log("residingSince", residingSince);
-
     setIsFetching(true);
     try {
       const response = await axios.patch(
@@ -167,7 +158,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
         }
       );
 
-      console.log("response", response);
+      // console.log("response", response);
 
       if (response.status === 200) {
         Swal.fire("Address details updated successfully!");
@@ -198,16 +189,16 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
         }
       );
 
-      console.log(
-        "getDashboardDetailsResponse >>> ",
-        getDashboardDetailsResponse
-      );
+      // console.log(
+      //   "getDashboardDetailsResponse >>> ",
+      //   getDashboardDetailsResponse
+      // );
 
       if (getDashboardDetailsResponse.status === 200) {
         setIsLoading(false);
         const { isCurrentResidence } = getDashboardDetailsResponse.data;
 
-        console.log("isCurrentResidence:", isCurrentResidence);
+        // console.log("isCurrentResidence:", isCurrentResidence);
 
         // Set the value of isAddressVerified based on the fetched response
         setIsAddressVerified(isCurrentResidence);
@@ -220,21 +211,8 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
             }
           );
 
-          // console.log(
-          //   "getProfileDetailsResponse >>> ",
-          //   getProfileDetailsResponse
-          // );
-
           const residenceData =
             getProfileDetailsResponse?.data?.data?.residence;
-
-          // Update formValues with residenceData
-          {
-            console.log(
-              "residenceData?.residingSince ",
-              residenceData.residingSince
-            );
-          }
 
           setFormValues({
             address: residenceData?.address || "",
@@ -262,20 +240,6 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
     }
   }, [prefillData]);
 
-  // useEffect(() => {
-  //   if (prefillData && prefillData.address) {
-  //     setFormValues({
-  //       address: prefillData.address || "",
-  //       landmark: prefillData.landmark || "",
-  //       pincode: prefillData.pincode || "",
-  //       city: prefillData.city || "",
-  //       state: prefillData.state || "",
-  //       residenceType: prefillData.residenceType || "OWNED",
-  //       residingSince: prefillData.residingSince || "",
-  //     });
-  //   }
-  // }, [prefillData]);
-
   const StepBox = ({
     icon,
     title,
@@ -288,7 +252,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
     <Box
       onClick={onClick}
       sx={{
-        display: "flex",
+        // display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
         justifyContent: "center",
@@ -380,7 +344,6 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
           <Typography sx={{ marginBottom: 2 }}>
             Current Residence Information
           </Typography>
-
           {["address", "landmark", "pincode", "city", "state"].map((field) => (
             <TextField
               key={field}
@@ -393,7 +356,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
               InputLabelProps={{ shrink: true }}
             />
           ))}
-
+          {/* {console.log(formValues.address)}; */}
           <FormControl fullWidth sx={{ marginBottom: 2 }}>
             <InputLabel id="residence-type-label" shrink>
               Residence Type
@@ -419,8 +382,6 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
               ))}
             </Select>
           </FormControl>
-          {console.log(formValues.residingSince)}
-
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en">
             <DatePicker
               label="Residing Since"
@@ -455,9 +416,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
               maxDate={dayjs(today)}
             />
           </LocalizationProvider>
-
           {error && <Typography color="error">{error}</Typography>}
-
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Button
               variant="outlined"
@@ -471,7 +430,7 @@ const AddressInfo = ({ onComplete, disabled, prefillData, isVerified }) => {
               variant="contained"
               onClick={handleSubmit}
               disabled={isFetching || stepCompleted}
-              sx={{ backgroundColor: "#F26722", color: "white" }}
+              sx={{ backgroundColor: "rgb(72, 145, 193)", color: "white" }}
             >
               {isFetching ? <CircularProgress size={24} /> : "Submit"}
             </Button>

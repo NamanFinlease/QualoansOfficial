@@ -133,7 +133,7 @@ const SelfieVerification = ({
               imageWidth: "100%", // Responsive width
               imageHeight: "auto", // Maintain aspect ratio
               confirmButtonText: "Go to Loan Application",
-              confirmButtonColor: "#FFA500", // Button color
+              confirmButtonColor: "rgb(72, 145, 193)", // Button color
               width: window.innerWidth <= 600 ? "90%" : "30%", // Adjust width for mobile
 
               customClass: {
@@ -380,7 +380,7 @@ const SelfieVerification = ({
                   padding: "10px",
                   textTransform: "none",
                   fontSize: "16px",
-                  backgroundColor: "#F26722",
+                  backgroundColor: "rgb(72, 145, 193)",
                   color: "white",
                 }}
               >
