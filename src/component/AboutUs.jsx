@@ -15,58 +15,72 @@ import MissionImage from "../assets/image/Our-Mission.jpg"; // Import your missi
 import technologyGif from "../assets/image/Repayment (2).gif"; // Importing the GIF
 import Header from "../navbar/Header";
 import CarouselItemDetail from "./CarouselItemDetail";
+import { Helmet } from "react-helmet-async";
 
 const AboutUs = () => {
-  useEffect(() => {
-    // Schema for structured data (JSON-LD) for an Organization
-    const schema = {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: "Qualoan",
-      url: "https://www.qualoan.com/about-us",
-      logo: "https://www.qualoan.com/assets/Artboard%201-B9NCLcrg.webp",
-      sameAs: [
-        "https://www.facebook.com/people/Qualoan/61570006966590/",
-        "https://x.com/info826568",
-        "https://www.instagram.com/qualoan/",
-      ],
-      contactPoint: {
-        "@type": "ContactPoint",
-        telephone: "+917338437609",
-        contactType: "Customer Service",
-        areaServed: "IN",
-        availableLanguage: ["English", "Hindi", "Kannada"],
-        email: "info@qualoan.com",
-      },
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road",
-        addressLocality: "Gurugram",
-        addressRegion: "Haryana",
-        postalCode: "122001",
-        addressCountry: "IN",
-      },
-      description:
-        "Qualoan is an online platform offering quick and hassle-free personal loans to salaried individuals, backed by Naman Finlease Private Limited, an RBI registered NBFC. We aim to provide accessible financial solutions to meet personal needs like emergencies, home improvement, and celebrations.",
-    };
-
-    // Add the schema to the document's head
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.innerHTML = JSON.stringify(schema);
-    document.head.appendChild(script);
-
-    // Cleanup function to remove the schema when the component is unmounted
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Qualoan",
+    url: "https://www.qualoan.com/about-us",
+    logo: "https://www.qualoan.com/assets/Artboard%201-B9NCLcrg.webp",
+    sameAs: [
+      "https://www.facebook.com/people/Qualoan/61570006966590/",
+      "https://x.com/info826568",
+      "https://www.instagram.com/qualoan/",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: "+917338437609",
+      contactType: "Customer Service",
+      areaServed: "IN",
+      availableLanguage: ["English", "Hindi", "Kannada"],
+      email: "info@qualoan.com",
+    },
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road",
+      addressLocality: "Gurugram",
+      addressRegion: "Haryana",
+      postalCode: "122001",
+      addressCountry: "IN",
+    },
+    description:
+      "Qualoan is an online platform offering quick and hassle-free personal loans to salaried individuals, backed by Naman Finlease Private Limited, an RBI registered NBFC. We aim to provide accessible financial solutions to meet personal needs like emergencies, home improvement, and celebrations.",
+  };
 
   const [isVisible, setIsVisible] = useState(false);
   const faqRef = useRef(null);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (faqRef.current) {
+      observer.observe(faqRef.current);
+    }
+
+    return () => {
+      if (faqRef.current) {
+        observer.unobserve(faqRef.current);
+      }
+    };
+  }, []);
+
   return (
     <>
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Helmet>
+      {/* <Header/> */}
+
       <Box
         sx={{
           marginTop: { xs: "20%", md: "5%" },
