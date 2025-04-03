@@ -15,6 +15,8 @@ import BankDetails from "./BankDetails";
 import HDFC_QR from "./HDFC_QR";
 import MarqueeAlert from "./MarqueeAlert.jsx";
 import WarningMessage from "./WarningMessage";
+import QuaLoanQR from "./QuaLoanQR.jsx";
+import repay from "../assets/image/Qua-Repayment.jpg"; // Correct image path for about us
 
 const RepaymentLoan = () => {
   const navigate = useNavigate();
@@ -136,54 +138,105 @@ const RepaymentLoan = () => {
 
   return (
     <>
-      <MarqueeAlert />
+      {/* <MarqueeAlert /> */}
 
-      <Box
-        sx={{
-          // background: "#fff",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          padding: { xs: "20px", sm: "45px" },
-        }}
-      >
-        <WarningMessage />
-        {!isSubmitted && (
-          <>
-            <Box spacing={3} alignItems="center" sx={{ width: "100%" }}>
-              <Grid
-                container
-                spacing={2}
-                alignItems="center"
-                mt={3}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                }}
-              >
-                <HDFC_QR />
-                <div>
-                  <BankDetails />
-                  <PaymentProof />
-                </div>
-              </Grid>
-            </Box>
+      <Box>
+        {/* Banner Section */}
+        <Box
+          sx={{
+            marginTop: { xs: "25%", md: "5%" },
+            // background: '#f9f9f9',
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            // minHeight: "100vh",
+            padding: { xs: "20px", sm: "45px" }, // Adjust padding for small screens
+          }}
+        >
+          <Box
+            sx={{
+              position: "relative",
+              width: "100%",
+              height: { xs: "20vh", md: "65vh" },
+              overflow: "hidden",
+              borderRadius: "20px",
+              // mb: 5,
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <Box
+              component="img"
+              src={repay}
+              alt="Repay Loan"
+              sx={{
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </Box>
+        </Box>
 
-            <style>
-              {`
-                  @keyframes scroll-text {
-                    from { transform: translateX(100%); }
-                    to { transform: translateX(-100%); }
-                  }
-                  @keyframes pulse {
-                    0% { transform: scale(1); }
-                    50% { transform: scale(1.05); }
-                    100% { transform: scale(1); }
-                  }
-                `}
-            </style>
-          </>
-        )}
+        {/* Main Content Section */}
+        <Box>
+          <WarningMessage />
+          {!isSubmitted && (
+            <>
+              <Box sx={{ width: "100%", backgroundColor: "#fff" }}>
+                <Grid
+                  container
+                  spacing={2}
+                  alignItems="center"
+                  mt={3}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      backgroundColor: "#f5f5f5",
+                      border: "2px solid #ccc",
+                      padding: 3,
+                      borderRadius: 2,
+                      boxShadow: 2,
+                      display: "flex",
+                      flexDirection: { xs: "column", md: "row" },
+                      gap: 2,
+                      justifyContent: "space-between",
+                      width: "auto",
+                    }}
+                  >
+                    <HDFC_QR />
+                    <BankDetails />
+                  </Box>
+
+                  <div
+                    style={{
+                      backgroundColor: "#f5f5f5",
+                      border: "3px solid #ccc",
+                      padding: 25,
+                      borderRadius: 4,
+                      boxShadow: 2,
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: 2,
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      width: "auto",
+                    }}
+                  >
+                    <QuaLoanQR />
+                  </div>
+                </Grid>
+              </Box>
+              <div>
+                <PaymentProof />
+              </div>
+            </>
+          )}
+        </Box>
       </Box>
     </>
   );

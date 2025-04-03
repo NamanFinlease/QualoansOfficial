@@ -22,6 +22,9 @@ const PaymentProof = () => {
           left: 0,
           right: 0,
           bottom: 0,
+
+          boxShadow: "0px 10px 20px rgba(72, 70, 70, 0.2)", // Bottom shadow
+          border: "3px solid rgb(205, 205, 207)",
           background: "rgba(255, 142, 83, 0.05)",
           borderRadius: "12px",
         },

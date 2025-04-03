@@ -1,4 +1,14 @@
-import { Box, Typography, Tooltip, IconButton } from "@mui/material";
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+  Tooltip,
+  IconButton,
+} from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 const bankDetails = [
@@ -11,31 +21,62 @@ const bankDetails = [
 ];
 
 const CopyButton = ({ text }) => (
-  <Tooltip title={`Copy ${text}`}>
+  <Tooltip title="Copy">
     <IconButton
       onClick={() => navigator.clipboard.writeText(text)}
       size="small"
-      sx={{ ml: 1 }}
     >
       <ContentCopyIcon fontSize="small" />
     </IconButton>
   </Tooltip>
 );
 
-const BankDetails = () => (
-  <Box sx={{ padding: "20px" }}>
-    {bankDetails.map(({ label, value }) => (
-      <Typography
-        key={label}
-        variant="body1"
-        sx={{ color: "black", fontFamily: "Inter" }}
-      >
-        <strong>{label}:</strong> {value}
-        <CopyButton text={value} />
-        <br />
-      </Typography>
-    ))}
+const BankDetailsTable = () => (
+  <Box
+    sx={{
+      width: "100%",
+      maxWidth: { xs: "100%", sm: 400 }, // Full width on small screens
+      margin: "auto",
+      mt: 2,
+      paddingTop: 10,
+      px: { xs: 1, sm: 2 }, // Adjust padding for small screens
+    }}
+  >
+    <Box sx={{ overflowX: "auto" }}>
+      {" "}
+      {/* Enables horizontal scrolling if needed */}
+      <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
+        <Table size="small">
+          <TableBody>
+            {bankDetails.map(({ label, value }) => (
+              <TableRow key={label}>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: { xs: "12px", sm: "14px" },
+                    py: { xs: 0.5, sm: 1 },
+                  }}
+                >
+                  {label}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontSize: { xs: "12px", sm: "14px" },
+                    py: { xs: 0.5, sm: 1 },
+                  }}
+                >
+                  {value}
+                </TableCell>
+                <TableCell sx={{ py: { xs: 0.5, sm: 1 } }}>
+                  <CopyButton text={value} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   </Box>
 );
 
-export default BankDetails;
+export default BankDetailsTable;

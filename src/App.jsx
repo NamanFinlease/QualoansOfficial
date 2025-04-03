@@ -23,7 +23,7 @@ import UserPreview from "./component/ApplicationProgress/UserPreview";
 // import LoanStatus from "./component/LoanStatus";
 // import PaymentOptions from "./component/PaymentOptions";
 // import LoanCalculator from "./component/LoanCalculator";
-import LoginForm from "./component/LoginForm";
+import LoginForm from "./component/LoginForm/LoginForm";
 import RepayLoan from "./component/RepayLoan";
 import ProtectedRoute from "./ProtectedRoute";
 import { SidebarProvider } from "./context/SidebarContext";
@@ -36,6 +36,7 @@ import RepaymentLoan from "./component/RepaymentLoan";
 import UserDetails from "./component/registration/UserDetails";
 import LoanCalculator from "./navbar/LoanCalculator";
 import PersonalInfo from "./component/registration/PersonalInfo";
+import MarqueeAlert from "./component/MarqueeAlert";
 
 const MinimalLayout = ({ children }) => <div>{children}</div>;
 
@@ -62,10 +63,8 @@ function App() {
     <SidebarProvider>
       <div>
         {/* <video className="bg-video" src={myVideo} autoPlay loop muted></video> */}
-
         {showHeaderFooter && <Header />}
         {/* {showHeaderFooter && <Navbar />} */}
-
         <Routes>
           {/* Routes with Header and Footer */}
 
@@ -226,6 +225,8 @@ function App() {
           /> */}
         </Routes>
         {showHeaderFooter && <Footer />}
+        {showHeaderFooter && <MarqueeAlert />}{" "}
+        {/* Add MarqueeComponent after Footer */}
       </div>
     </SidebarProvider>
   );

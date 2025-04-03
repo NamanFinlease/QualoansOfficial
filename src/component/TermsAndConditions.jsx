@@ -1,9 +1,70 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Typography, Container, Paper, Divider } from "@mui/material";
 import { Fade } from "@mui/material";
 import Header from "../navbar/Header";
 
 const TermsAndConditions = () => {
+  useEffect(() => {
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "Terms and Conditions - QUA Loan",
+      url: "https://www.qualoan.com/terms-condition",
+      description:
+        "The Terms and Conditions page of QUA Loan outlines the legal agreement between you and Naman Finlease Private Limited, governing the use of our website and services.",
+      mainEntity: {
+        "@type": "Article",
+        headline: "Terms and Conditions",
+        author: {
+          "@type": "Organization",
+          name: "Qualoan",
+        },
+        publisher: {
+          "@type": "Organization",
+          name: "Qualoan",
+          url: "https://www.qualoan.com",
+          logo: "https://www.qualoan.com/assets/Artboard%201-B9NCLcrg.webp",
+        },
+        datePublished: "2024-01-01",
+        dateModified: "2024-01-01",
+        text: "1. Introduction: QUA Loan provides personal loans to salaried individuals under the regulatory oversight of Naman Finlease Private Limited. 2. Eligibility Criteria: Applicants must be 21-60 years old, salaried, meet income criteria, and have a satisfactory credit score. 3. Loan Application Process: Includes registration, document submission, and credit assessment. 4. Loan Terms: Loan amounts, interest rates, and repayment schedules based on the applicant’s profile. 5. Fees and Charges: May include processing fees, late payment charges, and other fees. 6. Loan Disbursement: Upon approval, funds are credited directly to the bank account. 7. Loan Repayment: Repayments via NACH, UPI, or other methods. 8. Default and Consequences: Late payments result in additional fees, negative credit reporting, and legal action. 9. Cancellation of Loan: Loan can be canceled before disbursement. After disbursement, prepayment is allowed with conditions. 10. Data Privacy and Security: We ensure secure handling of your personal and financial information. 11. User Responsibilities: Accurate information must be provided during registration and application. 12. Amendments to Terms: Terms can be modified and will be posted on the website. 13. Dispute Resolution: Disputes resolved under the jurisdiction of Delhi courts. 14. Limitation of Liability: Limited liability for losses except as stated in the loan agreement. 15. Governing Law: These terms are governed by Indian laws.",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "Qualoan",
+        url: "https://www.qualoan.com",
+        logo: "https://www.qualoan.com/assets/Artboard%201-B9NCLcrg.webp",
+        contactPoint: {
+          "@type": "ContactPoint",
+          telephone: "+917338437609",
+          contactType: "Customer Service",
+          areaServed: "IN",
+          availableLanguage: ["English", "Hindi", "Kannada"],
+          email: "info@qualoan.com",
+        },
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road",
+          addressLocality: "Gurugram",
+          addressRegion: "Haryana",
+          postalCode: "122001",
+          addressCountry: "IN",
+        },
+      },
+    };
+
+    // Add the schema to the document's head
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.innerHTML = JSON.stringify(schema);
+    document.head.appendChild(script);
+
+    // Cleanup function to remove the schema when the component is unmounted
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   return (
     <div>
       {/* <Header/> */}

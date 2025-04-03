@@ -23,6 +23,7 @@ const WarningMessage = () => {
           letterSpacing: "-0.408px",
           mb: 2,
           textAlign: "center",
+          boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)", // Bottom shadow
         }}
       >
         <Box

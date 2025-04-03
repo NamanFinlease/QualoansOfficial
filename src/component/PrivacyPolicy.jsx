@@ -9,7 +9,6 @@ import {
   Fade,
 } from "@mui/material";
 import privacyImage from "../assets/image/Untitled-1.jpg";
-import Header from "../navbar/Header";
 
 const PrivacyPolicy = () => {
   const sections = [
@@ -95,7 +94,7 @@ const PrivacyPolicy = () => {
         "If you have any questions, please contact us at:",
         "• Email: info@qualoan.com",
         "• Phone: +917338437609",
-        "• Address:S-370, Panchsheel Park,Delhi-110017, India",
+        "• Address:Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road, Gurugram, 122001.",
       ],
     },
   ];
@@ -112,6 +111,67 @@ const PrivacyPolicy = () => {
 
     return () => {
       if (policyRef.current) observer.unobserve(policyRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "Privacy Policy - QUA Loan",
+      url: "https://www.qualoan.com/privacy-policy",
+      description:
+        "The Privacy Policy of QUA Loan outlining how we collect, use, share, and protect your personal information.",
+      mainEntity: {
+        "@type": "Article",
+        headline: "Privacy Policy",
+        author: {
+          "@type": "Organization",
+          name: "Qualoan",
+        },
+        publisher: {
+          "@type": "Organization",
+          name: "Qualoan",
+          url: "https://www.qualoan.com",
+          logo: "https://www.qualoan.com/images/logo.png",
+        },
+        datePublished: "2024-01-01",
+        dateModified: "2024-01-01",
+        text: "1. Information We Collect: We collect personal, financial, and transactional information as part of our loan services. 2. How We Use Your Information: Your information is used for loan processing, service improvement, communication, and compliance. 3. Sharing Your Information: We may share your data with third parties such as credit bureaus, legal authorities, and our parent company. 4. Data Security: We use encryption and secure servers to protect your data. 5. Cookies and Tracking: We use cookies to improve your browsing experience. 6. Your Rights: You have rights regarding your data, including access, correction, and deletion. 7. Retention of Information: We retain data only for necessary business or legal purposes. 8. Third-Party Links: We are not responsible for third-party privacy practices. 9. Children’s Privacy: We do not collect data from children under 18. 10. Policy Updates: Our policy may change periodically. 11. Contact Us: For any queries, contact us via email, phone, or at our office.",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "Qualoan",
+        url: "https://www.qualoan.com",
+        logo: "https://www.qualoan.com/assets/Artboard%201-B9NCLcrg.webp",
+        contactPoint: {
+          "@type": "ContactPoint",
+          telephone: "+917338437609",
+          contactType: "Customer Service",
+          areaServed: "IN",
+          availableLanguage: ["English", "Hindi", "Kannada"],
+          email: "info@qualoan.com",
+        },
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "Office No. 229, 2nd Floor, Vipul Agora Mall, MG Road",
+          addressLocality: "Gurugram",
+          addressRegion: "Haryana",
+          postalCode: "122001",
+          addressCountry: "IN",
+        },
+      },
+    };
+
+    // Add the schema to the document's head
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.innerHTML = JSON.stringify(schema);
+    document.head.appendChild(script);
+
+    // Cleanup function to remove the schema when the component is unmounted
+    return () => {
+      document.head.removeChild(script);
     };
   }, []);
 

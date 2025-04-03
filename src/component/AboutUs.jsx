@@ -56,11 +56,7 @@ const AboutUs = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
+        setIsVisible(entry.isIntersecting);
       },
       { threshold: 0.1 }
     );
@@ -83,7 +79,6 @@ const AboutUs = () => {
           {JSON.stringify(structuredData)}
         </script>
       </Helmet>
-      {/* <Header/> */}
 
       <Box
         sx={{

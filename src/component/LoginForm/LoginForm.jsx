@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { setToken } from "../../tokenManager";
 import Swal from "sweetalert2";
 import {
   Button,
@@ -12,9 +11,12 @@ import {
   Grid,
 } from "@mui/material";
 import axios from "axios";
-import loginGif from "../assets/image/Untitled design (2) (1).gif"; // Adjust the path based on your project structure
-import Header from "../navbar/Header";
-import { BASE_URL } from "../baseURL";
+import loginGif from "../../assets/image/Untitled design (2) (1).gif"; // Adjust the path based on your project structure
+import Header from "../../navbar/Header";
+import { BASE_URL } from "../../baseURL";
+import BlueBoxCard from "./BlueBoxCard";
+import SimpleBarChart from "../../Bar/SimpleBarChart";
+import EligibilityCriteria from "./EligiblityCriteria";
 
 const fadeIn = keyframes`
   from {
@@ -337,8 +339,8 @@ const LoginForm = ({ setLoginComleted }) => {
           justifyContent: "space-between",
           alignItems: "center",
           boxShadow: 4,
-          borderTopLeftRadius: 40,
-          borderBottomRightRadius: 40,
+          // borderTopLeftRadius: 40,
+          // borderBottomRightRadius: 40,
           padding: 4,
           backgroundColor: "rgba(249, 249, 249, 0.7)", // Adjust the opacity (0.7 for semi-transparent)
           maxWidth: "900px",
@@ -435,7 +437,7 @@ const LoginForm = ({ setLoginComleted }) => {
                 onClick={sendOtp}
                 sx={{
                   marginBottom: 2,
-                  backgroundColor: "orange",
+                  backgroundColor: "rgb(72, 145, 193)",
                   "&:hover": { backgroundColor: "darkorange" },
                   fontWeight: "bold",
                 }}
@@ -521,6 +523,10 @@ const LoginForm = ({ setLoginComleted }) => {
           )}
         </Box>
       </Box>
+
+      <BlueBoxCard />
+      <SimpleBarChart />
+      <EligibilityCriteria />
     </>
   );
 };

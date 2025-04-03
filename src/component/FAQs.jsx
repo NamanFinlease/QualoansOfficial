@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Accordion,
   AccordionSummary,
@@ -24,6 +24,130 @@ const FAQs = () => {
             transform: translateY(0);
         }
     `;
+  useEffect(() => {
+    // Schema for structured data (JSON-LD) for FAQPage
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "What is QUA Loan?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "QUA Loan is an online platform offering quick and hassle-free personal loans to salaried individuals. As part of Naman Finlease Private Limited (An RBI registered NBFC), we aim to provide accessible financial solutions to meet your personal needs, whether it's for emergencies, home improvement, or celebrations.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Who is eligible to apply for a personal loan from QUA Loan?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "To be eligible for a personal loan, you must be:\n• A salaried individual\n• Aged between 21 and 60 years\n• Employed with a recognized organization for at least 6 months\n• Earning a minimum monthly salary as per our criteria.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What documents are required to apply for a personal loan?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "You will need to submit the following documents:\n• Proof of identity (Aadhaar, PAN card, passport, etc.)\n• Proof of address (utility bills, Aadhaar, etc.)\n• Salary slips for the last three months\n• Bank statements for the last six months.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How much can I borrow from Qua Loan?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Qua Loan offers personal loans ranging from ₹5,000 to ₹1,00,000 depending on your salary, repayment capacity, and credit score.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What is the interest rate on personal loans at Qua Loan?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "The interest rate varies based on your credit profile, loan amount, and tenure. Typically, our rates are competitive and designed to be affordable for salaried individuals. Contact us to get a personalized quote.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How long does it take to get the loan approved and disbursed?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Once you submit your application and documents, our team processes your request quickly. Loan approval usually takes a few minutes, and funds are disbursed within 5 minutes upon approval.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Can I repay my loan early?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes, Qua Loan allows early repayment of loans. Please review your loan agreement or contact us for details.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How does Qua Loan assess my creditworthiness?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "We assess your loan eligibility based on factors such as your monthly income, credit score, job stability, and repayment history. A good credit score increases your chances of getting approved with a favorable interest rate.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Can I apply for a loan if I have a low credit score?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes, you can still apply for a loan with a low credit score. However, the approval decision and interest rate may vary based on your overall financial profile and ability to repay the loan.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How do I repay my loan to Qua Loan?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "You can repay your loan through various payment options such as NACH (National Automated Clearing House), direct debit, or online payments via our website.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Is my personal and financial information safe with Qua Loan?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Absolutely. Qua Loan uses advanced security measures, including encryption and secure servers, to ensure your personal and financial data is protected. We adhere to all data privacy regulations and take confidentiality seriously.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Can I check the status of my loan application?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes, you can easily track the status of your loan application through our website by logging into your account. You will also receive updates via email and SMS at each stage of the process.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How can I contact customer support for further assistance?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "You can reach our customer support team through our website's contact form, by email at support@qualoan.com, or by calling our helpline during business hours. We're here to assist you with any questions or concerns.",
+          },
+        },
+      ],
+    };
+
+    // Add the schema to the document's head
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.innerHTML = JSON.stringify(schema);
+    document.head.appendChild(script);
+
+    // Cleanup function to remove the schema when the component is unmounted
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
 
   return (
     <>
