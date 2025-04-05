@@ -211,7 +211,7 @@ const UploadDocuments = () => {
         });
         setFileInputs([{ file: null, remarks: "" }]); // Reset file inputs
         setSelectedDocType(null);
-        // setIsLoading(false);
+        setIsLoading(false);
       }
     } catch (error) {
       Swal.fire(error.response?.data?.message || "Error!");

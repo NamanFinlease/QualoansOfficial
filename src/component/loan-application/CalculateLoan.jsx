@@ -388,8 +388,8 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                 <Typography
                   sx={{ marginTop: 2, color: "#555", textAlign: "center" }}
                 >
-                  Experience fast approvals and easy repayments with flexible
-                  terms.
+                  <strong>Note</strong> : The actual rate of interest may vary
+                  and will be clearly mentioned in the sanction letter.
                 </Typography>
               </Box>
 
@@ -405,28 +405,32 @@ const LoanCalculator = ({ onComplete, disabled, isUploaded }) => {
                   minHeight: "300px",
                 }}
               >
+                <InputLabel>Purpose of Loan</InputLabel>
                 <FormControl
                   required
                   fullWidth
                   sx={{
                     marginBottom: 3,
-                    backgroundColor: "rgb(72, 145, 193)", // Background color added
+                    backgroundColor: "rgb(72, 145, 193)", // Background color
                     borderRadius: "8px", // Rounded corners
+                    border: "2px solid white", // Full-width white border
                     "& .MuiInputLabel-root": {
-                      color: "black", // Label color white
+                      color: "black", // Label color
                     },
                     "& .MuiOutlinedInput-root": {
-                      color: "black", // Selected text color white
+                      color: "white", // Selected text color white
+                      "& fieldset": {
+                        border: "none", // Removes default border to keep custom styling
+                      },
                     },
                     "& .MuiSelect-icon": {
                       color: "white", // Dropdown icon color white
                     },
                   }}
                 >
-                  <InputLabel>Purpose of Loan</InputLabel>
                   <Select
                     value={formValues.loanPurpose}
-                    label="Purpose of Loan"
+                    label="Select"
                     onChange={(e) =>
                       setFormValues({
                         ...formValues,

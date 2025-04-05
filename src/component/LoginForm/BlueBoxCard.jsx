@@ -12,17 +12,18 @@ const BlueBoxCard = () => {
         sx={{
           backgroundColor: "rgb(72, 145, 193)", // Light blue color
           padding: 2,
-          borderRadius: 2,
+          // borderRadius: 2,
           display: "flex",
-          flexDirection: "row",
+          flexDirection: { xs: "column", sm: "row" }, // Column on mobile, row on larger screens
           gap: 2,
           color: "white",
+          alignItems: "center",
         }}
       >
         <Box
           sx={{
             padding: 2,
-            width: "50%",
+            width: { xs: "100%", sm: "50%" }, // Full width on mobile
             borderRadius: 1,
             textAlign: "center",
           }}
@@ -49,7 +50,7 @@ const BlueBoxCard = () => {
         <Box
           sx={{
             padding: 2,
-            width: "50%",
+            width: { xs: "100%", sm: "50%" }, // Full width on mobile
             borderRadius: 1,
             textAlign: "center",
           }}
@@ -62,13 +63,15 @@ const BlueBoxCard = () => {
             transition={{ duration: 1, delay: 0.3 }}
           >
             <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
-              Emergency Loan
+              Personal Loan
             </Typography>
             <Typography>
-              An emergency loan is designed to provide quick financial relief
-              during unexpected situations. These loans usually come with fixed
-              interest rates, structured monthly repayments, and do not require
-              collateral. They are ideal for handling urgent expenses with ease!
+              A Personal Loan is a hassle-free way to meet your financial needs,
+              whether it's for medical expenses, home renovations, education, or
+              any urgent requirement. These loans come with fixed interest
+              rates, structured monthly repayments, and no collateral
+              requirements, making them a convenient and flexible borrowing
+              option.
             </Typography>
           </motion.div>
         </Box>

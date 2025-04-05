@@ -9,6 +9,8 @@ import {
   CircularProgress,
   keyframes,
   Grid,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import axios from "axios";
 import loginGif from "../../assets/image/Untitled design (2) (1).gif"; // Adjust the path based on your project structure
@@ -17,7 +19,9 @@ import { BASE_URL } from "../../baseURL";
 import BlueBoxCard from "./BlueBoxCard";
 import SimpleBarChart from "../../Bar/SimpleBarChart";
 import EligibilityCriteria from "./EligiblityCriteria";
-
+import backgroundImage from "../../assets/image/QUA Loan logo cover.png"; // Adjust the path based on your project structure
+import RatesAndFees from "./RatesAndFees";
+import AddressAndCredential from "./AddressAndCredential";
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -52,6 +56,7 @@ const LoginForm = ({ setLoginComleted }) => {
   const [loadingOtp, setLoadingOtp] = useState(false); // Track loading for Resend OTP
   const [loadingVerify, setLoadingVerify] = useState(false); // Track loading for Verify OTP
   // const [mobile, setMobile] = useState("");
+  const [checkedIn, setCheckedIn] = useState(false);
 
   const [transactionId, setTransactionId] = useState("");
   const [fwdp, setFwdp] = useState("");
@@ -182,114 +187,6 @@ const LoginForm = ({ setLoginComleted }) => {
     }
   };
 
-  // const verifyOtp = async () => {
-  //   if (!otp.every((digit) => digit)) {
-  //     setErrorMessage("Please enter the OTP.");
-  //     return;
-  //   }
-
-  //   if (!mobileNumber) {
-  //     setErrorMessage("Mobile number is missing. Please resend the OTP.");
-  //     return;
-  //   }
-
-  //   setLoadingVerify(true);
-  //   // if (setLoadingVerify) {
-  //   //   setOtp(["", "", "", "", "", ""]); // Clear OTP input fields
-  //   // }
-  //   setErrorMessage("");
-
-  //   setSuccessMessage("");
-
-  //   try {
-  //     if (userAlreadyRegistered) {
-  //       // Create the request body for mobile OTP verification
-  //       const mobileOtpRequest = {
-  //         mobile: mobileNumber,
-  //         otp: otp.join(""), // Join the OTP array into a single string
-  //         isAlreadyRegisterdUser: true,
-  //       };
-
-  //       console.log("Mobile OTP Request:", mobileOtpRequest);
-
-  //       const mobileOtpResponse = await axios.post(
-  //         `${BASE_URL}/mobile/verify-otp`,
-  //         mobileOtpRequest,
-  //         { withCredentials: true }
-  //       );
-
-  //       console.log("Mobile OTP Response:", mobileOtpResponse);
-
-  //       if (mobileOtpResponse.data?.success) {
-  //         setSuccessMessage("OTP verified successfully!");
-  //         localStorage.setItem("isLogin", "true");
-
-  //         // Show SweetAlert and redirect after "OK" click
-  //         Swal.fire({
-  //           title: "OTP Verified!",
-  //           text: "You will now be redirected to your dashboard.",
-  //           icon: "success",
-  //           confirmButtonText: "OK",
-  //         }).then(() => {
-  //           console.log("Redirecting to dashboard...");
-  //           window.location.href = "/ourjourney"; // Redirect to the 'ourjourney' page after OTP is verified
-  //           navigate("/ourjourney"); // Redirect to the 'ourjourney' page after OTP is verified
-  //         });
-  //       } else {
-  //         setErrorMessage(mobileOtpResponse.data.message || "Invalid OTP.");
-  //       }
-  //     } else {
-  //       if (!transactionId || !fwdp || !codeVerifier) {
-  //         setErrorMessage("Missing necessary data for OTP verification.");
-  //         return;
-  //       }
-
-  //       // Create the request body for Aadhaar OTP verification
-  //       const requestBody = {
-  //         otp: otp.join(""),
-  //         transactionId,
-  //         fwdp,
-  //         codeVerifier,
-  //       };
-
-  //       console.log("Aadhaar OTP Request Body:", requestBody);
-
-  //       const response = await axios.post(
-  //         `${BASE_URL}/mobile/verify-otp`,
-  //         requestBody,
-  //         { withCredentials: true }
-  //       );
-
-  //       if (response.data?.success) {
-  //         setSuccessMessage("OTP verified successfully!");
-  //         localStorage.setItem("isLogin", "true");
-
-  //         // Show SweetAlert and redirect after "OK" click
-  //         Swal.fire({
-  //           title: "OTP Verified!",
-  //           text: "You will now be redirected to your dashboard.",
-  //           icon: "success",
-  //           confirmButtonText: "OK",
-  //         }).then(() => {
-  //           navigate("/ourjourney"); // Redirect to the 'ourjourney' page after OTP is verified
-  //         });
-  //       } else {
-  //         setErrorMessage(response.data.message || "Invalid OTP.");
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error verifying OTP:", error);
-  //     setErrorMessage(
-  //       error.response?.data?.message ||
-  //         "An error occurred while verifying OTP."
-  //     );
-  //   } finally {
-  //     setLoadingVerify(false);
-  //   }
-  // };
-
-  //
-
   const handleOtpChange = (e, index) => {
     const newOtp = [...otp];
     const value = e.target.value;
@@ -334,199 +231,247 @@ const LoginForm = ({ setLoginComleted }) => {
       {/* <Header /> */}
       <Box
         sx={{
+          mt: { xs: 15, md: 10 },
+          minHeight: "100vh",
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
           display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          justifyContent: "space-between",
-          alignItems: "center",
-          boxShadow: 4,
-          // borderTopLeftRadius: 40,
-          // borderBottomRightRadius: 40,
-          padding: 4,
-          backgroundColor: "rgba(249, 249, 249, 0.7)", // Adjust the opacity (0.7 for semi-transparent)
-          maxWidth: "900px",
-          margin: "auto",
-          mt: 18,
-          mb: 8,
-          gap: { xs: 2, md: 4 },
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: { xs: 2, sm: 3, md: 4 },
         }}
       >
-        {/* GIF Box */}
-        <Box
-          component="img"
-          src={loginGif} // Ensure loginGif points to your GIF file
-          alt="Login Illustration"
-          sx={{
-            mixBlendMode: "darken",
-            width: { xs: "100%", md: "40%" },
-            height: "auto",
-            borderRadius: 2,
-            animation: `${rotateIn} 1s ease-in-out`,
-            objectFit: "cover",
-          }}
-        />
-
-        {/* Form Box */}
         <Box
           sx={{
-            padding: { xs: 3, md: 5 },
-            borderRadius: 3,
-            maxWidth: "400px",
-            width: "100%",
-            animation: `${fadeIn} 1s ease-in-out`,
-            backgroundColor: "#f9f9f9",
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "space-between",
+            alignItems: "center",
+            boxShadow: 4,
+            padding: { xs: 2, sm: 3, md: 4 },
+            backgroundColor: "white",
+            maxWidth: "900px",
+            margin: "auto",
+            mb: 5,
+            gap: { xs: 2, md: 4 },
+            borderRadius: 2, // Rounded corners for better appearance
           }}
         >
-          <Typography
-            variant="h4"
-            align="center"
-            sx={{ marginBottom: 3, fontWeight: "bold", color: "#4D4D4E" }}
+          {/* GIF Box */}
+          <Box
+            component="img"
+            src={loginGif}
+            alt="Login Illustration"
+            sx={{
+              mixBlendMode: "darken",
+              width: { xs: "80%", sm: "60%", md: "40%" },
+              height: "auto",
+              borderRadius: 2,
+              animation: `${rotateIn} 1s ease-in-out`,
+              objectFit: "cover",
+            }}
+          />
+
+          {/* Form Box */}
+          <Box
+            sx={{
+              padding: { xs: 2, md: 3 },
+              borderRadius: 3,
+              width: "100%",
+              animation: `${fadeIn} 1s ease-in-out`,
+            }}
           >
-            Login
-          </Typography>
-
-          {/* Error & Success Messages */}
-          {errorMessage && (
             <Typography
-              color="error"
-              variant="body2"
+              variant="h5"
+              align="center"
               sx={{
                 marginBottom: 2,
-                backgroundColor: "#f44336",
-                color: "#fff",
-                padding: 1,
-                borderRadius: 1,
+                fontWeight: "bold",
+                color: "#4D4D4E",
               }}
             >
-              {errorMessage}
+              Login
             </Typography>
-          )}
-          {successMessage && (
-            <Typography
-              color="success"
-              variant="body2"
-              sx={{
-                marginBottom: 2,
-                backgroundColor: "#4caf50",
-                color: "#fff",
-                padding: 1,
-                borderRadius: 1,
-              }}
-            >
-              {successMessage}
-            </Typography>
-          )}
 
-          {/* OTP Section */}
-          {!otpSent ? (
-            <>
-              <TextField
-                label="Mobile Number"
-                variant="outlined"
-                fullWidth
-                value={mobileNumber}
-                onChange={handleMobileChange}
-                error={mobileError}
-                helperText={
-                  mobileError ? "Enter a valid 10-digit Mobile number" : ""
-                }
-                sx={{ marginBottom: 2 }}
-              />
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={sendOtp}
+            {/* Error & Success Messages */}
+            {errorMessage && (
+              <Typography
+                color="error"
+                variant="body2"
                 sx={{
                   marginBottom: 2,
-                  backgroundColor: "rgb(72, 145, 193)",
-                  "&:hover": { backgroundColor: "darkorange" },
-                  fontWeight: "bold",
+                  backgroundColor: "#f44336",
+                  color: "#fff",
+                  padding: 1,
+                  borderRadius: 1,
+                  textAlign: "center",
                 }}
-                disabled={loadingOtp}
               >
-                {loadingOtp ? <CircularProgress size={24} /> : "Send OTP"}
-              </Button>
-            </>
-          ) : (
-            <>
-              <Typography
-                variant="h6"
-                sx={{ marginBottom: 2, color: "#4D4D4E" }}
-              >
-                Enter OTP sent to your mobile
+                {errorMessage}
               </Typography>
-              <Box
+            )}
+            {successMessage && (
+              <Typography
+                color="success"
+                variant="body2"
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  gap: 1,
+                  marginBottom: 2,
+                  backgroundColor: "#4caf50",
+                  color: "#fff",
+                  padding: 1,
+                  borderRadius: 1,
+                  textAlign: "center",
                 }}
               >
-                {otp.map((digit, index) => (
-                  <TextField
-                    key={index}
-                    id={`otp-input-${index}`}
-                    value={digit}
-                    onChange={(e) => handleOtpChange(e, index)}
-                    onKeyDown={(e) => handleKeyDown(e, index)}
-                    onFocus={() => handleFocus(index)}
-                    variant="outlined"
-                    inputProps={{ maxLength: 1 }}
-                    sx={{
-                      width: "40px",
-                      textAlign: "center",
-                    }}
-                  />
-                ))}
-              </Box>
-              <Grid container spacing={2} sx={{ marginTop: 2 }}>
-                <Grid item xs={6}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    onClick={verifyOtp}
-                    sx={{
-                      backgroundColor: "#FFA500",
-                      fontWeight: "bold",
-                      "&:hover": { backgroundColor: "#FF8C00" },
-                    }}
-                    disabled={loadingOtp || loadingVerify} // Disable if either is loading
-                  >
-                    {loadingVerify ? (
-                      <CircularProgress size={24} color="inherit" />
-                    ) : (
-                      "Verify OTP"
-                    )}
-                  </Button>
-                </Grid>
-                <Grid item xs={6}>
-                  <Button
-                    variant="outlined"
-                    fullWidth
-                    onClick={sendOtp}
-                    sx={{
-                      borderColor: "#4D4D4E",
-                      color: "#4D4D4E",
-                      fontWeight: "bold",
-                      "&:hover": { backgroundColor: "#f1f1f1" },
-                    }}
-                    disabled={loadingVerify || loadingOtp} // Disable if either is loading
-                  >
-                    {loadingOtp ? (
-                      <CircularProgress size={24} color="inherit" />
-                    ) : (
-                      "Resend OTP"
-                    )}
-                  </Button>
-                </Grid>
-              </Grid>
-            </>
-          )}
-        </Box>
-      </Box>
+                {successMessage}
+              </Typography>
+            )}
 
-      <BlueBoxCard />
-      <SimpleBarChart />
+            {/* OTP Section */}
+            {!otpSent ? (
+              <>
+                <TextField
+                  label="Mobile Number"
+                  variant="outlined"
+                  fullWidth
+                  value={mobileNumber}
+                  onChange={handleMobileChange}
+                  error={mobileError}
+                  helperText={
+                    mobileError ? "Enter a valid 10-digit Mobile number" : ""
+                  }
+                  sx={{ marginBottom: 2 }}
+                />
+
+                <FormControlLabel
+                  sx={{ alignItems: "flex-start", marginBottom: 2 }}
+                  control={
+                    <Checkbox
+                      checked={checkedIn}
+                      onChange={(e) => setCheckedIn(e.target.checked)}
+                      sx={{ color: "rgb(72, 145, 193)", paddingTop: "4px" }}
+                    />
+                  }
+                  label={
+                    <Typography variant="body2" sx={{ color: "#4D4D4E" }}>
+                      By checking this box, I give my consent to receive digital
+                      communications, including calls, SMS, emails, and WhatsApp
+                      messages, on my provided phone number, email address, and
+                      app from qualoan. Additionally, I confirm that I have read
+                      and agree to your{" "}
+                      <a href="/terms-condition" style={{ color: "blue" }}>
+                        Terms and Conditions
+                      </a>{" "}
+                      and{" "}
+                      <a href="/privacy-policy" style={{ color: "blue" }}>
+                        Privacy Policy
+                      </a>
+                      .
+                    </Typography>
+                  }
+                />
+
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={sendOtp}
+                  sx={{
+                    marginBottom: 2,
+                    backgroundColor: "rgb(72, 145, 193)",
+                    "&:hover": { backgroundColor: "darkorange" },
+                    fontWeight: "bold",
+                  }}
+                  disabled={!checkedIn || loadingOtp} // <-- important
+                >
+                  {loadingOtp ? <CircularProgress size={24} /> : "Send OTP"}
+                </Button>
+              </>
+            ) : (
+              <>
+                <Typography
+                  variant="h6"
+                  sx={{ marginBottom: 2, color: "#4D4D4E" }}
+                >
+                  Enter OTP sent to your mobile
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 1,
+                  }}
+                >
+                  {otp.map((digit, index) => (
+                    <TextField
+                      key={index}
+                      id={`otp-input-${index}`}
+                      value={digit}
+                      onChange={(e) => handleOtpChange(e, index)}
+                      onKeyDown={(e) => handleKeyDown(e, index)}
+                      onFocus={() => handleFocus(index)}
+                      variant="outlined"
+                      inputProps={{ maxLength: 1 }}
+                      sx={{
+                        width: "40px",
+                        textAlign: "center",
+                      }}
+                    />
+                  ))}
+                </Box>
+                <Grid container spacing={2} sx={{ marginTop: 2 }}>
+                  <Grid item xs={6}>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      onClick={verifyOtp}
+                      sx={{
+                        backgroundColor: "rgb(72, 145, 193)",
+                        fontWeight: "bold",
+                        "&:hover": { backgroundColor: "#FF8C00" },
+                      }}
+                      disabled={loadingOtp || loadingVerify} // Disable if either is loading
+                    >
+                      {loadingVerify ? (
+                        <CircularProgress size={24} color="inherit" />
+                      ) : (
+                        "Verify OTP"
+                      )}
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      variant="outlined"
+                      fullWidth
+                      onClick={sendOtp}
+                      sx={{
+                        borderColor: "#4D4D4E",
+                        color: "#4D4D4E",
+                        fontWeight: "bold",
+                        "&:hover": { backgroundColor: "#f1f1f1" },
+                      }}
+                      disabled={loadingVerify || loadingOtp} // Disable if either is loading
+                    >
+                      {loadingOtp ? (
+                        <CircularProgress size={24} color="inherit" />
+                      ) : (
+                        "Resend OTP"
+                      )}
+                    </Button>
+                  </Grid>
+                </Grid>
+              </>
+            )}
+          </Box>
+        </Box>
+
+        <BlueBoxCard />
+        <SimpleBarChart />
+      </Box>
       <EligibilityCriteria />
+      <RatesAndFees />
+      <AddressAndCredential />
     </>
   );
 };

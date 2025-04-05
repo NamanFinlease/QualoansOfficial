@@ -38,7 +38,7 @@ body {
   min-width: 80vw;
   min-height: 100vh;
   overflow-x: hidden; /* Prevents horizontal scrolling */
-  background: linear-gradient(270deg, rgba(65, 251, 251, 0.2), rgba(134, 240, 240, 0.2), rgba(166, 119, 236, 0.1), white);
+  /* background: linear-gradient(270deg, rgba(65, 251, 251, 0.2), rgba(134, 240, 240, 0.2), rgba(166, 119, 236, 0.1), white); */
   background-size: 400% 400%;
   animation: gradientAnimation 8s ease infinite;
 }

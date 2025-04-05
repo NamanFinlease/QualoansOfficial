@@ -379,7 +379,7 @@ const AadhaarVerification = ({
                     );
                   }
                 }}
-                sx={{ backgroundColor: "#rgb(72, 145, 193)", color: "white" }}
+                sx={{ backgroundColor: "rgb(72, 145, 193)", color: "white" }}
               >
                 {isVerifyingOtp ? (
                   <CircularProgress size={24} color="inherit" />

@@ -40,7 +40,7 @@ const Footer = () => {
         sx={{
           maxWidth: "1400px", // Adjust width for larger screens
           width: "100%",
-          margin: { xs: "5%", md: "auto", lg: "5%" },
+          margin: { xs: "5%", md: "auto", lg: "2%" },
           borderRadius: 10,
           background:
             "linear-gradient(270deg, hsla(188,100%,59%,0.16), rgba(102,0,255,0.1), #fff38739)",
